@@ -1,21 +1,21 @@
 import CoreGraphics
 
 
-extension CGPoint {
+public extension CGPoint {
 
-	func pointByOffsetting(offset: CGPoint) -> CGPoint {
+	public func pointByOffsetting(offset: CGPoint) -> CGPoint {
 		return CGPoint(x: x + offset.x, y: y + offset.y)
 	}
 
-	func pointByOffsetting(#dx: CGFloat, dy: CGFloat) -> CGPoint {
+	public func pointByOffsetting(#dx: CGFloat, dy: CGFloat) -> CGPoint {
 		return CGPoint(x: x + dx, y: dy)
 	}
 
-	func pointByOffsetting(#dx: CGFloat) -> CGPoint {
+	public func pointByOffsetting(#dx: CGFloat) -> CGPoint {
 		return CGPoint(x: x + dx, y: y)
 	}
 
-	func pointByOffsetting(#dy: CGFloat) -> CGPoint {
+	public func pointByOffsetting(#dy: CGFloat) -> CGPoint {
 		return CGPoint(x: x, y: y + dy)
 	}
 }

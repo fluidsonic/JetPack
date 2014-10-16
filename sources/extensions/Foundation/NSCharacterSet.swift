@@ -1,9 +1,9 @@
 import Foundation
 
 
-extension NSCharacterSet {
+public extension NSCharacterSet {
 
-	class func URLPathComponentAllowedCharacterSet() -> NSCharacterSet {
+	public class func URLPathComponentAllowedCharacterSet() -> NSCharacterSet {
 		struct Static {
 			static let value: NSCharacterSet = {
 				let set = NSMutableCharacterSet()
@@ -17,7 +17,7 @@ extension NSCharacterSet {
 		return Static.value
 	}
 
-	class func URLQueryParameterAllowedCharacterSet() -> NSCharacterSet {
+	public class func URLQueryParameterAllowedCharacterSet() -> NSCharacterSet {
 		struct Static {
 			static let value: NSCharacterSet = {
 				let set = NSMutableCharacterSet()

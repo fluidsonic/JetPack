@@ -1,13 +1,13 @@
 import CoreGraphics
 
 
-struct CGMath {
+public struct CGMath {
 
-	static let pi            = CGFloat(M_PI)
-	static let radiansRight  = CGFloat(0)
-	static let radiansBottom = pi / 2
-	static let radiansLeft   = pi
-	static let radiansTop    = (3 * pi) / 2
+	public static let pi            = CGFloat(M_PI)
+	public static let radiansRight  = CGFloat(0)
+	public static let radiansBottom = pi / 2
+	public static let radiansLeft   = pi
+	public static let radiansTop    = (3 * pi) / 2
 
 	private init() {}
 }

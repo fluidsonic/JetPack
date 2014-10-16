@@ -1,6 +1,7 @@
 import Foundation
 
-protocol SetType : ArrayLiteralConvertible, Equatable, SequenceType {
+
+public protocol SetType : ArrayLiteralConvertible, Equatable, SequenceType {
 
 	typealias Element
 

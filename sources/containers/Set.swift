@@ -1,49 +1,50 @@
 import Foundation
 
-struct Set<T : Hashable>: SetType {
+
+public struct Set<T : Hashable>: SetType {
 
 	typealias Element = T
 
 	private var elements: [T : T]
 
 
-	init() {
+	public init() {
 		self.init(minimumCapacity: 2)
 	}
 
 
-	init(minimumCapacity: Int) {
+	public init(minimumCapacity: Int) {
 		elements = [T : T](minimumCapacity: minimumCapacity)
 	}
 
 
-	init(element: T) {
+	public init(element: T) {
 		self.init(minimumCapacity: 1)
 
 		add(element)
 	}
 
 
-	init(elements: T...) {
+	public init(elements: T...) {
 		self.init(minimumCapacity: elements.count)
 
 		union(elements)
 	}
 
 
-	init<S : SequenceType where S.Generator.Element == T>(elements: S) {
+	public init<S : SequenceType where S.Generator.Element == T>(elements: S) {
 		self.init()
 
 		union(elements)
 	}
 
 
-	init(_ set: Set<T>) {
+	public init(_ set: Set<T>) {
 		elements = set.elements
 	}
 
 
-	mutating func add(element: T) -> Bool {
+	public mutating func add(element: T) -> Bool {
 		if contains(element) {
 			return false
 		}
@@ -54,17 +55,17 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	var any: T? {
+	public var any: T? {
 		return first(elements.keys)
 	}
 
 
-	func contains(element: T) -> Bool {
+	public func contains(element: T) -> Bool {
 		return (elements[element] != nil)
 	}
 
 
-	func contains(matches: (T) -> Bool) -> Bool {
+	public func contains(matches: (T) -> Bool) -> Bool {
 		for (element, _) in elements {
 			if matches(element) {
 				return true
@@ -75,12 +76,12 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	var count: Int {
+	public var count: Int {
 		return elements.count
 	}
 
 
-	mutating func filter(includeElement: (T) -> Bool) {
+	public mutating func filter(includeElement: (T) -> Bool) {
 		var excludes = [T]()
 		for (element, _) in elements {
 			if !includeElement(element) {
@@ -92,7 +93,7 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	func filtered(includeElement: (T) -> Bool) -> Set<T> {
+	public func filtered(includeElement: (T) -> Bool) -> Set<T> {
 		var newSet = Set<T>()
 		for (element, _) in elements {
 			if includeElement(element) {
@@ -104,22 +105,22 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	mutating func intersect<S : SetType where S.Element == T>(set: S) {
+	public mutating func intersect<S : SetType where S.Element == T>(set: S) {
 		filter { set.contains($0) }
 	}
 
 
-	func intersected<S : SetType where S.Element == T>(set: S) -> Set<T> {
+	public func intersected<S : SetType where S.Element == T>(set: S) -> Set<T> {
 		return filtered { set.contains($0) }
 	}
 
 
-	func intersects<S : SetType where S.Element == T>(set: S) -> Bool {
+	public func intersects<S : SetType where S.Element == T>(set: S) -> Bool {
 		return contains { set.contains($0) }
 	}
 
 
-	func isSubsetOf<S : SetType where S.Element == T>(set: S) -> Bool {
+	public func isSubsetOf<S : SetType where S.Element == T>(set: S) -> Bool {
 		for (element, _) in elements {
 			if !set.contains(element) {
 				return false
@@ -130,7 +131,7 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	func mapped<U : Hashable>(transform: (T) -> U) -> Set<U> {
+	public func mapped<U : Hashable>(transform: (T) -> U) -> Set<U> {
 		var newSet = Set<U>(minimumCapacity: count)
 		for (element, _) in elements {
 			newSet.add(transform(element))
@@ -140,19 +141,19 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	func member(element: T) -> T? {
+	public func member(element: T) -> T? {
 		return elements[element]
 	}
 
 
-	mutating func minus<S : SequenceType where S.Generator.Element == T>(sequence: S) {
+	public mutating func minus<S : SequenceType where S.Generator.Element == T>(sequence: S) {
 		for element in SequenceOf<T>(sequence) {
 			remove(element)
 		}
 	}
 
 
-	func minused<S : SequenceType where S.Generator.Element == T>(sequence: S) -> Set<T> {
+	public func minused<S : SequenceType where S.Generator.Element == T>(sequence: S) -> Set<T> {
 		var copy = self
 		copy.minus(sequence)
 
@@ -160,19 +161,19 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	var isEmpty: Bool {
+	public var isEmpty: Bool {
 		return elements.isEmpty
 	}
 
 
-	mutating func union<S : SequenceType where S.Generator.Element == T>(sequence: S) {
+	public mutating func union<S : SequenceType where S.Generator.Element == T>(sequence: S) {
 		for element in SequenceOf<T>(sequence) {
 			add(element)
 		}
 	}
 
 
-	func unioned<S : SequenceType where S.Generator.Element == T>(sequence: S) -> Set<T> {
+	public func unioned<S : SequenceType where S.Generator.Element == T>(sequence: S) -> Set<T> {
 		var copy = self
 		copy.union(sequence)
 
@@ -180,22 +181,22 @@ struct Set<T : Hashable>: SetType {
 	}
 
 
-	mutating func remove(element: T) -> T? {
+	public mutating func remove(element: T) -> T? {
 		return elements.removeValueForKey(element)
 	}
 
 
-	mutating func removeAll() {
+	public mutating func removeAll() {
 		removeAll(keepCapacity: false)
 	}
 
 
-	mutating func removeAll(#keepCapacity: Bool) {
+	public mutating func removeAll(#keepCapacity: Bool) {
 		elements.removeAll(keepCapacity: keepCapacity)
 	}
 
 
-	mutating func replace(element: T) -> T? {
+	public mutating func replace(element: T) -> T? {
 		let previousElement = elements[element]
 		elements[element] = element
 
@@ -206,7 +207,7 @@ struct Set<T : Hashable>: SetType {
 
 extension Set: ArrayLiteralConvertible {
 
-	init(arrayLiteral elements: T...) {
+	public init(arrayLiteral elements: T...) {
 		self.init(elements: elements)
 	}
 }
@@ -214,7 +215,7 @@ extension Set: ArrayLiteralConvertible {
 
 extension Set: DebugPrintable {
 
-	var debugDescription: String {
+	public var debugDescription: String {
 		return description
 	}
 }
@@ -222,7 +223,7 @@ extension Set: DebugPrintable {
 
 extension Set: Printable {
 
-	var description: String {
+	public var description: String {
 		var description = "Set["
 
 		var isFirstElement = true
@@ -249,13 +250,13 @@ extension Set: SequenceType {
 	typealias Generator = MapSequenceGenerator<DictionaryGenerator<T, T>, T>
 
 
-	func generate() -> Generator {
+	public func generate() -> Generator {
 		return elements.keys.generate()
 	}
 }
 
 
-func ==<T> (a: Set<T>, b: Set<T>) -> Bool {
+public func ==<T> (a: Set<T>, b: Set<T>) -> Bool {
 	if a.count != b.count {
 		return false
 	}

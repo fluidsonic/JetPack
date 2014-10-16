@@ -1,1 +1,1 @@
-typealias Block = () -> ()
+public typealias Block = () -> ()

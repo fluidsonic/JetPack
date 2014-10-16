@@ -1,12 +1,12 @@
 import Foundation
 
 
-typealias ObservatoryExit = Void -> Bool
+public typealias ObservatoryExit = Void -> Bool
 
 
-class Observatory<Event> {
+public class Observatory<Event> {
 
-	typealias Observer = (Event, ObservatoryExit) -> Void
+	public typealias Observer = (Event, ObservatoryExit) -> Void
 
 	private typealias Subscription = ObservatorySubscription<Event>
 
@@ -16,7 +16,7 @@ class Observatory<Event> {
 	/// Subscribes to events from this observatory and returns a closure which can be called to unsubscribe.
 	///
 	/// Getting 'expression resolves to an unused function' error when calling this method? You have to store the method's return value somewhere, even if temporary!
-	func enter(#observer: Observer) -> ObservatoryExit {
+	public func enter(#observer: Observer) -> ObservatoryExit {
 		var subscription: Subscription?
 
 		var exitToken: dispatch_once_t = 0
@@ -42,7 +42,10 @@ class Observatory<Event> {
 	}
 
 
-	func notify(#event: Event) {
+	public init() {}
+
+
+	public func notify(#event: Event) {
 		let subscriptions = self.subscriptions
 		for subscription in subscriptions {
 			subscription.notify(event: event)
@@ -50,7 +53,7 @@ class Observatory<Event> {
 	}
 
 
-	var observerCount: Int {
+	public var observerCount: Int {
 		return subscriptions.count
 	}
 }

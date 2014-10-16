@@ -1,3 +1,5 @@
+// make public once the compiler allows it
+
 extension Dictionary {
 
 	mutating func mapValues(transform: Value -> Value) {

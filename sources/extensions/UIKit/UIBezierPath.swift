@@ -1,9 +1,9 @@
 import UIKit
 
 
-extension UIBezierPath {
+public extension UIBezierPath {
 
-	func addRoundedCorner(#direction: RoundedCornerDirection, radius: CGFloat) {
+	public func addRoundedCorner(#direction: RoundedCornerDirection, radius: CGFloat) {
 		if radius <= 0 {
 			return
 		}
@@ -129,7 +129,7 @@ extension UIBezierPath {
 	}
 
 
-	enum RoundedCornerDirection {
+	public enum RoundedCornerDirection {
 		case DownLeft
 		case DownRight
 		case LeftDown

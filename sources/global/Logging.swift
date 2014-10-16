@@ -1,4 +1,4 @@
-func LOG(_ message: (@autoclosure () -> String)? = nil, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
+public func LOG(_ message: (@autoclosure () -> String)? = nil, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
 	#if LOG
 		let fileName = file.stringValue.lastPathComponent.stringByDeletingPathExtension
 
@@ -13,7 +13,7 @@ func LOG(_ message: (@autoclosure () -> String)? = nil, function: StaticString =
 }
 
 
-func WARN(_ message: (@autoclosure () -> String)? = nil, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
+public func WARN(_ message: (@autoclosure () -> String)? = nil, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
 	#if LOG
 		let evaluatedMessage = message?()
 		if let evaluatedMessage = evaluatedMessage {

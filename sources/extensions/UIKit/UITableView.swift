@@ -4,7 +4,7 @@ import UIKit
 private let _UITableViewSupportsAutomaticCellHeight = (UIDevice.currentDevice().systemVersion.compare("8", options: NSStringCompareOptions.NumericSearch) != NSComparisonResult.OrderedAscending)
 
 
-extension UITableView {
+public extension UITableView {
 
-	class var supportsAutomaticCellHeight: Bool { return _UITableViewSupportsAutomaticCellHeight }
+	public class var supportsAutomaticCellHeight: Bool { return _UITableViewSupportsAutomaticCellHeight }
 }
