@@ -1,5 +1,3 @@
-import JetPack  // allows adding this file directly to your project's build sources
-
 // make public once the compiler allows it
 
 extension Array {

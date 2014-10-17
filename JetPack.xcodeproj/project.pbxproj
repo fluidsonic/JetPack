@@ -32,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4915412019F16065004F7A01 /* JetPack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JetPack.swift; sourceTree = "<group>"; };
 		49FD7E3D19F00DE600C562FA /* JetPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JetPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49FD7E6519F00EC900C562FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49FD7E6D19F0158600C562FA /* Definitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		49FD7E5719F00E9400C562FA /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				4915412019F16065004F7A01 /* JetPack.swift */,
 				49FD7EA219F0196400C562FA /* containers */,
 				49FD7E6B19F0158600C562FA /* extensions */,
 				49FD7E6C19F0158600C562FA /* global */,
@@ -375,12 +377,14 @@
 		49FD7E5219F00DE600C562FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 			};
 			name = Debug;
 		};
 		49FD7E5319F00DE600C562FA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 			};
 			name = Release;
 		};
@@ -403,6 +407,7 @@
 				49FD7E5319F00DE600C562FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
