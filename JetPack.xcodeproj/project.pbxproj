@@ -330,6 +330,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "//:configuration = Debug\n\n//:configuration = Release\n\n//:completeSettings = some\nCONFIGURATION_BUILD_DIR\n";
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
