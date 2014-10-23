@@ -47,7 +47,7 @@ public extension String {
 			return self
 		}
 
-		return self[startIndex ..< advance(startIndex, length)] + "…"
+		return self[startIndex ..< advance(startIndex, length - 1)] + "…"
 	}
 
 
