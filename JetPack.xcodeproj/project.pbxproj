@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49CDCD7B19FA65EE00596989 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDCD7A19FA65EE00596989 /* Window.swift */; };
 		49FD7E6F19F0158600C562FA /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E6D19F0158600C562FA /* Definitions.swift */; };
 		49FD7E7019F0158600C562FA /* Threading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E6E19F0158600C562FA /* Threading.swift */; };
 		49FD7E7219F0159F00C562FA /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E7119F0159F00C562FA /* Logging.swift */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		4915412019F16065004F7A01 /* JetPack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JetPack.swift; sourceTree = "<group>"; };
+		49CDCD7A19FA65EE00596989 /* Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		49FD7E3D19F00DE600C562FA /* JetPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JetPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49FD7E6519F00EC900C562FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49FD7E6D19F0158600C562FA /* Definitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Definitions.swift; sourceTree = "<group>"; };
@@ -71,6 +73,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49CDCD7919FA65DF00596989 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				49CDCD7A19FA65EE00596989 /* Window.swift */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
 		49FD7E3119F009CA00C562FA = {
 			isa = PBXGroup;
 			children = (
@@ -96,6 +106,7 @@
 				49FD7EA219F0196400C562FA /* containers */,
 				49FD7E6B19F0158600C562FA /* extensions */,
 				49FD7E6C19F0158600C562FA /* global */,
+				49CDCD7919FA65DF00596989 /* ui */,
 				49FD7EA519F0196400C562FA /* uncategorized */,
 			);
 			path = sources;
@@ -272,6 +283,7 @@
 				49FD7E9F19F018BB00C562FA /* CGFloat.swift in Sources */,
 				49FD7E8719F0177A00C562FA /* NSCharacterSet.swift in Sources */,
 				49FD7E9719F0181500C562FA /* UIBezierPath.swift in Sources */,
+				49CDCD7B19FA65EE00596989 /* Window.swift in Sources */,
 				49FD7E8C19F0178C00C562FA /* CGMath.swift in Sources */,
 				49FD7E8919F0177A00C562FA /* Dictionary.swift in Sources */,
 				49FD7E8819F0177A00C562FA /* NSDate.swift in Sources */,
