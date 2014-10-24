@@ -23,6 +23,12 @@ public extension UIView {
 		return sizeThatFits(CGSize(width: width, height: CGFloat.max)).height
 	}
 
+	public func removeAllSubviews() {
+		for subview in reverse(subviews) {
+			subview.removeFromSuperview()
+		}
+	}
+
 	public func sizeThatFits() -> CGSize {
 		return sizeThatFits(CGSize.maxSize)
 	}
