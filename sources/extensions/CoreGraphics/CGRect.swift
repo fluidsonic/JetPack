@@ -31,7 +31,7 @@ public extension CGRect {
 		mutating set { left = newValue.x - (width / 2); top = newValue.y - (height / 2) }
 	}
 
-	public var jheight: CGFloat {  // rename once the ambigous call problem is resolved
+	var height: CGFloat {  // make public once the ambigous call problem is solved
 		get { return size.height }
 		mutating set { size.height = newValue }
 	}
@@ -61,7 +61,7 @@ public extension CGRect {
 		mutating set { right = newValue.x; top = newValue.y }
 	}
 
-	public var jwidth: CGFloat {  // rename once the ambigous call problem is resolved
+	var width: CGFloat {  // make public once the ambigous call problem is solved
 		get { return size.width }
 		mutating set { size.width = newValue }
 	}
