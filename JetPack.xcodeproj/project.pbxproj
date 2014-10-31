@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49B26A841A03F41700192FE8 /* NSSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B26A831A03F41700192FE8 /* NSSet.swift */; };
 		49CDCD7B19FA65EE00596989 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDCD7A19FA65EE00596989 /* Window.swift */; };
 		49FD7E6F19F0158600C562FA /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E6D19F0158600C562FA /* Definitions.swift */; };
 		49FD7E7019F0158600C562FA /* Threading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E6E19F0158600C562FA /* Threading.swift */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		4915412019F16065004F7A01 /* JetPack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JetPack.swift; sourceTree = "<group>"; };
+		49B26A831A03F41700192FE8 /* NSSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSSet.swift; sourceTree = "<group>"; };
 		49CDCD7A19FA65EE00596989 /* Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		49FD7E3D19F00DE600C562FA /* JetPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JetPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		49FD7E6519F00EC900C562FA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 			children = (
 				49FD7E8219F0177A00C562FA /* NSCharacterSet.swift */,
 				49FD7E8319F0177A00C562FA /* NSDate.swift */,
+				49B26A831A03F41700192FE8 /* NSSet.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				49FD7E9D19F0187000C562FA /* Debugging.swift in Sources */,
 				49FD7EAA19F0196400C562FA /* Observatory.swift in Sources */,
 				49FD7E9219F017D600C562FA /* CGRect.swift in Sources */,
+				49B26A841A03F41700192FE8 /* NSSet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
