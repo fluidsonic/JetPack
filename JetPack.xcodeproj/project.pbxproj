@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		497961761A2793C7006DC59C /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497961751A2793C7006DC59C /* UIEdgeInsets.swift */; };
+		497961781A27942C006DC59C /* UIOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497961771A27942C006DC59C /* UIOffset.swift */; };
 		49B26A841A03F41700192FE8 /* NSSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B26A831A03F41700192FE8 /* NSSet.swift */; };
 		49CDCD7B19FA65EE00596989 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDCD7A19FA65EE00596989 /* Window.swift */; };
 		49FD7E6F19F0158600C562FA /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E6D19F0158600C562FA /* Definitions.swift */; };
@@ -35,6 +37,8 @@
 
 /* Begin PBXFileReference section */
 		4915412019F16065004F7A01 /* JetPack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JetPack.swift; sourceTree = "<group>"; };
+		497961751A2793C7006DC59C /* UIEdgeInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
+		497961771A27942C006DC59C /* UIOffset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIOffset.swift; sourceTree = "<group>"; };
 		49B26A831A03F41700192FE8 /* NSSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSSet.swift; sourceTree = "<group>"; };
 		49CDCD7A19FA65EE00596989 /* Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		49FD7E3D19F00DE600C562FA /* JetPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JetPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +185,8 @@
 			isa = PBXGroup;
 			children = (
 				49FD7E9619F0181500C562FA /* UIBezierPath.swift */,
+				497961751A2793C7006DC59C /* UIEdgeInsets.swift */,
+				497961771A27942C006DC59C /* UIOffset.swift */,
 				49FD7E9819F0183600C562FA /* UITableView.swift */,
 				49FD7E9A19F0185B00C562FA /* UIView.swift */,
 			);
@@ -292,12 +298,14 @@
 				49FD7E8819F0177A00C562FA /* NSDate.swift in Sources */,
 				49FD7E8A19F0177A00C562FA /* String.swift in Sources */,
 				49FD7EAB19F0196400C562FA /* WeakReference.swift in Sources */,
+				497961761A2793C7006DC59C /* UIEdgeInsets.swift in Sources */,
 				49FD7E9919F0183600C562FA /* UITableView.swift in Sources */,
 				49FD7EA919F0196400C562FA /* SetType.swift in Sources */,
 				49FD7E7219F0159F00C562FA /* Logging.swift in Sources */,
 				49FD7E8E19F017AB00C562FA /* Array.swift in Sources */,
 				49FD7E7C19F0171B00C562FA /* Functional.swift in Sources */,
 				49FD7E6F19F0158600C562FA /* Definitions.swift in Sources */,
+				497961781A27942C006DC59C /* UIOffset.swift in Sources */,
 				49FD7EA819F0196400C562FA /* Set.swift in Sources */,
 				49FD7E7019F0158600C562FA /* Threading.swift in Sources */,
 				49FD7E9019F017BD00C562FA /* CGPoint.swift in Sources */,
