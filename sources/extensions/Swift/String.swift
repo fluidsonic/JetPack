@@ -8,6 +8,15 @@ public extension String {
 	}
 
 
+	public var nonEmpty: String? {
+		if isEmpty {
+			return nil
+		}
+
+		return self
+	}
+
+
 	public func stringByReplacing(#regex: NSRegularExpression, withTemplate template: String) -> String {
 		return regex.stringByReplacingMatchesInString(self, options: nil, range: NSMakeRange(0, utf16Count), withTemplate: template)
 	}
