@@ -1,18 +1,21 @@
 import CoreGraphics
 
 
-// allow integers in CGFloat math
-public func +  <T: IntegerType> (a: CGFloat, b: T) -> CGFloat { return a + b }
-public func +  <T: IntegerType> (a: T, b: CGFloat) -> CGFloat { return a + b }
-public func += <T: IntegerType> (inout a: CGFloat, b: T) { a += b }
-public func -  <T: IntegerType> (a: CGFloat, b: T) -> CGFloat { return a + b }
-public func -  <T: IntegerType> (a: T, b: CGFloat) -> CGFloat { return a + b }
-public func -= <T: IntegerType> (inout a: CGFloat, b: T) { a -= b }
-public func *  <T: IntegerType> (a: CGFloat, b: T) -> CGFloat { return a * b }
-public func *  <T: IntegerType> (a: T, b: CGFloat) -> CGFloat { return a * b }
-public func *= <T: IntegerType> (inout a: CGFloat, b: T) { a *= b }
-public func /  <T: IntegerType> (a: CGFloat, b: T) -> CGFloat { return a / b }
-public func /  <T: IntegerType> (a: T, b: CGFloat) -> CGFloat { return a / b }
-public func /= <T: IntegerType> (inout a: CGFloat, b: T) { a /= b }
-public func %  <T: IntegerType> (a: CGFloat, b: T) -> CGFloat { return a / b }
-public func %= <T: IntegerType> (inout a: CGFloat, b: T) { a /= b }
+// allow Int in CGFloat math
+// broken, see http://stackoverflow.com/questions/27173744/how-to-properly-support-int-values-in-cgfloat-math-in-swift
+/*
+public func +  (a: CGFloat, b: Int) -> CGFloat { return a + CGFloat(b) }
+public func +  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) + b }
+public func += (inout a: CGFloat, b: Int)      { a += CGFloat(b) }
+public func -  (a: CGFloat, b: Int) -> CGFloat { return a + CGFloat(b) }
+public func -  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) + b }
+public func -= (inout a: CGFloat, b: Int)      { a -= CGFloat(b) }
+public func *  (a: CGFloat, b: Int) -> CGFloat { return a * CGFloat(b) }
+public func *  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) * b }
+public func *= (inout a: CGFloat, b: Int)      { a *= CGFloat(b) }
+public func /  (a: CGFloat, b: Int) -> CGFloat { return a / CGFloat(b) }
+public func /  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) / b }
+public func /= (inout a: CGFloat, b: Int)      { a /= CGFloat(b) }
+public func %  (a: CGFloat, b: Int) -> CGFloat { return a / CGFloat(b) }
+public func %= (inout a: CGFloat, b: Int)      { a /= CGFloat(b) }
+*/
