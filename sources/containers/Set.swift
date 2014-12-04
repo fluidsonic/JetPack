@@ -1,7 +1,7 @@
 import Foundation
 
 
-public struct Set<T : Hashable>: SetType {
+public struct Set<T: Hashable>: MutableSetType {
 
 	typealias Element = T
 

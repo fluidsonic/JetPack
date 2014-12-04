@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		497961761A2793C7006DC59C /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497961751A2793C7006DC59C /* UIEdgeInsets.swift */; };
 		497961781A27942C006DC59C /* UIOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497961771A27942C006DC59C /* UIOffset.swift */; };
+		498138921A30680F00ACBC88 /* OrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498138911A30680F00ACBC88 /* OrderedSet.swift */; };
+		498138941A30683C00ACBC88 /* MutableSetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498138931A30683C00ACBC88 /* MutableSetType.swift */; };
+		498138961A307D6100ACBC88 /* NSOrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498138951A307D6100ACBC88 /* NSOrderedSet.swift */; };
 		49B26A841A03F41700192FE8 /* NSSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B26A831A03F41700192FE8 /* NSSet.swift */; };
 		49CDCD7B19FA65EE00596989 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDCD7A19FA65EE00596989 /* Window.swift */; };
 		49FD7E6F19F0158600C562FA /* Definitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD7E6D19F0158600C562FA /* Definitions.swift */; };
@@ -39,6 +42,9 @@
 		4915412019F16065004F7A01 /* JetPack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JetPack.swift; sourceTree = "<group>"; };
 		497961751A2793C7006DC59C /* UIEdgeInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
 		497961771A27942C006DC59C /* UIOffset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIOffset.swift; sourceTree = "<group>"; };
+		498138911A30680F00ACBC88 /* OrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedSet.swift; sourceTree = "<group>"; };
+		498138931A30683C00ACBC88 /* MutableSetType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSetType.swift; sourceTree = "<group>"; };
+		498138951A307D6100ACBC88 /* NSOrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSOrderedSet.swift; sourceTree = "<group>"; };
 		49B26A831A03F41700192FE8 /* NSSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSSet.swift; sourceTree = "<group>"; };
 		49CDCD7A19FA65EE00596989 /* Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		49FD7E3D19F00DE600C562FA /* JetPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JetPack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,6 +172,7 @@
 			children = (
 				49FD7E8219F0177A00C562FA /* NSCharacterSet.swift */,
 				49FD7E8319F0177A00C562FA /* NSDate.swift */,
+				498138951A307D6100ACBC88 /* NSOrderedSet.swift */,
 				49B26A831A03F41700192FE8 /* NSSet.swift */,
 			);
 			path = Foundation;
@@ -196,6 +203,8 @@
 		49FD7EA219F0196400C562FA /* containers */ = {
 			isa = PBXGroup;
 			children = (
+				498138931A30683C00ACBC88 /* MutableSetType.swift */,
+				498138911A30680F00ACBC88 /* OrderedSet.swift */,
 				49FD7EA319F0196400C562FA /* Set.swift */,
 				49FD7EA419F0196400C562FA /* SetType.swift */,
 			);
@@ -293,9 +302,11 @@
 				49FD7E8719F0177A00C562FA /* NSCharacterSet.swift in Sources */,
 				49FD7E9719F0181500C562FA /* UIBezierPath.swift in Sources */,
 				49CDCD7B19FA65EE00596989 /* Window.swift in Sources */,
+				498138961A307D6100ACBC88 /* NSOrderedSet.swift in Sources */,
 				49FD7E8C19F0178C00C562FA /* CGMath.swift in Sources */,
 				49FD7E8919F0177A00C562FA /* Dictionary.swift in Sources */,
 				49FD7E8819F0177A00C562FA /* NSDate.swift in Sources */,
+				498138921A30680F00ACBC88 /* OrderedSet.swift in Sources */,
 				49FD7E8A19F0177A00C562FA /* String.swift in Sources */,
 				49FD7EAB19F0196400C562FA /* WeakReference.swift in Sources */,
 				497961761A2793C7006DC59C /* UIEdgeInsets.swift in Sources */,
@@ -309,6 +320,7 @@
 				49FD7EA819F0196400C562FA /* Set.swift in Sources */,
 				49FD7E7019F0158600C562FA /* Threading.swift in Sources */,
 				49FD7E9019F017BD00C562FA /* CGPoint.swift in Sources */,
+				498138941A30683C00ACBC88 /* MutableSetType.swift in Sources */,
 				49FD7E9D19F0187000C562FA /* Debugging.swift in Sources */,
 				49FD7EAA19F0196400C562FA /* Observatory.swift in Sources */,
 				49FD7E9219F017D600C562FA /* CGRect.swift in Sources */,
