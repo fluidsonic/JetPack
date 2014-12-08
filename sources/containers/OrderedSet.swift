@@ -125,6 +125,11 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 	}
 
 
+	public var isEmpty: Bool {
+		return elements.isEmpty
+	}
+
+
 	public func isSubsetOf<S: SetType where S.Element == T>(set: S) -> Bool {
 		return elements.isSubsetOf(set)
 	}
@@ -160,8 +165,15 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 	}
 
 
-	public var isEmpty: Bool {
-		return elements.isEmpty
+	public mutating func move(#fromIndex: Int, toIndex: Int) {
+		precondition(fromIndex >= startIndex && fromIndex < endIndex, "fromIndex outside range \(startIndex) ..< \(endIndex)")
+		precondition(toIndex >= startIndex && toIndex < endIndex, "toIndex outside range \(startIndex) ..< \(endIndex)")
+
+		if fromIndex == toIndex {
+			return
+		}
+
+		orderedElements.insert(orderedElements.removeAtIndex(fromIndex), atIndex: toIndex)
 	}
 
 
@@ -215,6 +227,16 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 
 		return replacedElementToReturn
 	}
+
+
+	public subscript(bounds: Range<Int>) -> OrderedSet<T> {
+		var set = OrderedSet<T>()
+		for element in orderedElements[bounds] {
+			set.add(element)
+		}
+
+		return set
+	}
 }
 
 
@@ -238,7 +260,7 @@ extension OrderedSet: CollectionType {
 	}
 
 
-	public subscript (index: Int) -> T {
+	public subscript(index: Int) -> T {
 		return orderedElements[index]
 	}
 }
