@@ -120,6 +120,11 @@ public struct Set<T: Hashable>: MutableSetType {
 	}
 
 
+	public var isEmpty: Bool {
+		return elements.isEmpty
+	}
+
+
 	public func isSubsetOf<S : SetType where S.Element == T>(set: S) -> Bool {
 		for (element, _) in elements {
 			if !set.contains(element) {
@@ -158,11 +163,6 @@ public struct Set<T: Hashable>: MutableSetType {
 		copy.minus(sequence)
 
 		return copy
-	}
-
-
-	public var isEmpty: Bool {
-		return elements.isEmpty
 	}
 
 
