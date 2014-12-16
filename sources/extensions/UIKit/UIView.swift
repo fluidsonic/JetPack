@@ -15,6 +15,10 @@ public extension UIView {
 		animateWithDuration(duration, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: velocity, options: options, animations: animations, completion: completion)
 	}
 
+	public class func animateWithDuration(duration: NSTimeInterval, usingSpringWithDamping damping: CGFloat, animations: () -> Void) {
+		animateWithDuration(duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: nil, animations: animations, completion: nil)
+	}
+
 	public class func animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity velocity: CGFloat, options: UIViewAnimationOptions, animations: () -> Void) {
 		animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: options, animations: animations, completion: nil)
 	}

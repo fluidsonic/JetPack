@@ -34,7 +34,7 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 	}
 
 
-	public init<S: SequenceType where S.Generator.Element == T>(elements: S) {
+	public init<S: SequenceType where S.Generator.Element == T>(sequence: S) {
 		self.init()
 
 		union(elements)
@@ -90,7 +90,7 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 
 
 	public func filtered(includeElement: (T) -> Bool) -> OrderedSet<T> {
-		return OrderedSet(elements: elements.filtered(includeElement))
+		return OrderedSet(sequence: elements.filtered(includeElement))
 	}
 
 
@@ -243,7 +243,7 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 extension OrderedSet: ArrayLiteralConvertible {
 
 	public init(arrayLiteral elements: T...) {
-		self.init(elements: elements)
+		self.init(sequence: elements)
 	}
 }
 

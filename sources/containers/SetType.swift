@@ -12,7 +12,7 @@ public protocol SetType: ArrayLiteralConvertible, Equatable, SequenceType {
 	init()
 	init(element: Element)
 	init(elements: Element...)
-	init<S : SequenceType where S.Generator.Element == Element>(elements: S)
+	init<S : SequenceType where S.Generator.Element == Element>(sequence: S)
 	init(minimumCapacity: Int)
 
 	func contains(element: Element) -> Bool
