@@ -12,6 +12,7 @@
 		498138921A30680F00ACBC88 /* OrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498138911A30680F00ACBC88 /* OrderedSet.swift */; };
 		498138941A30683C00ACBC88 /* MutableSetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498138931A30683C00ACBC88 /* MutableSetType.swift */; };
 		498138961A307D6100ACBC88 /* NSOrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498138951A307D6100ACBC88 /* NSOrderedSet.swift */; };
+		49A1EB961A4314E50063D1D3 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A1EB951A4314E50063D1D3 /* Double.swift */; };
 		49AD05FD1A3E3E1D00E14A5E /* StrongReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AD05FC1A3E3E1D00E14A5E /* StrongReference.swift */; };
 		49B26A841A03F41700192FE8 /* NSSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B26A831A03F41700192FE8 /* NSSet.swift */; };
 		49CDCD7B19FA65EE00596989 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDCD7A19FA65EE00596989 /* Window.swift */; };
@@ -47,6 +48,7 @@
 		498138911A30680F00ACBC88 /* OrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderedSet.swift; sourceTree = "<group>"; };
 		498138931A30683C00ACBC88 /* MutableSetType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableSetType.swift; sourceTree = "<group>"; };
 		498138951A307D6100ACBC88 /* NSOrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSOrderedSet.swift; sourceTree = "<group>"; };
+		49A1EB951A4314E50063D1D3 /* Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		49AD05FC1A3E3E1D00E14A5E /* StrongReference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrongReference.swift; sourceTree = "<group>"; };
 		49B26A831A03F41700192FE8 /* NSSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSSet.swift; sourceTree = "<group>"; };
 		49CDCD7A19FA65EE00596989 /* Window.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 			children = (
 				49FD7E8D19F017AB00C562FA /* Array.swift */,
 				49FD7E8519F0177A00C562FA /* Dictionary.swift */,
+				49A1EB951A4314E50063D1D3 /* Double.swift */,
 				49FD7E8619F0177A00C562FA /* String.swift */,
 			);
 			path = Swift;
@@ -304,6 +307,7 @@
 			files = (
 				49FD7E9B19F0185B00C562FA /* UIView.swift in Sources */,
 				49FD7E9419F017EE00C562FA /* CGSize.swift in Sources */,
+				49A1EB961A4314E50063D1D3 /* Double.swift in Sources */,
 				49F44A201A39F24900AA1BDC /* View.swift in Sources */,
 				49FD7E9F19F018BB00C562FA /* CGFloat.swift in Sources */,
 				49FD7E8719F0177A00C562FA /* NSCharacterSet.swift in Sources */,

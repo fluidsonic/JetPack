@@ -1,4 +1,11 @@
 import CoreGraphics
+import Darwin
+
+
+public extension CGFloat {
+
+	public static var Pi = CGFloat(M_PI)
+}
 
 
 // allow Int in CGFloat math
