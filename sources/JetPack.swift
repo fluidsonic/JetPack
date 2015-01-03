@@ -7,6 +7,8 @@
  * Last checked with Xcode 6.1 GM 2.
  */
 
+import JetPack
+
 
 // Array.swift: compiler doesn't allow public extension on generic class
 
