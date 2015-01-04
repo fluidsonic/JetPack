@@ -31,9 +31,9 @@ public func findLast<C: CollectionType where C.Generator.Element: Equatable, C.I
 }
 
 
-public func first<S : SequenceType>(source: S, matches: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
+public func first<S : SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
 	for element in source {
-		if matches(element) {
+		if includeElement(element) {
 			return element
 		}
 	}

@@ -14,6 +14,10 @@ import JetPack
 
 extension Array {
 
+	func first(includeElement: T -> Bool) -> T? {
+		return JetPack.first(self, includeElement)
+	}
+
 	func separate(isLeftElement: T -> Bool) -> ([T], [T]) {
 		return JetPack.separate(self, isLeftElement)
 	}
