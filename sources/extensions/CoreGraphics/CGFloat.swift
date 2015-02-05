@@ -5,6 +5,11 @@ import Darwin
 public extension CGFloat {
 
 	public static var Pi = CGFloat(M_PI)
+
+
+	public var rounded: CGFloat {
+		return round(self)
+	}
 }
 
 
