@@ -30,9 +30,6 @@ extension AnyType: DebugPrintable {
 }
 
 
-extension AnyType: Equatable {}
-
-
 extension AnyType: Hashable {
 
 	public var hashValue: Int {
