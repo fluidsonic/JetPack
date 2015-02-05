@@ -3,25 +3,26 @@ import Foundation
 
 public class ObjectGraph {
 
-	private var objects = [AnyType : Any]()
-
+	private var objects = [AnyType : AnyObject]()
 
 
 	public init() {}
 
 
-	public func add<T>(object: T) {
+	public func add<T: AnyObject>(object: T) {
 		objects[AnyType(T)] = object
 	}
 
 
-	public func get<T>() -> T {
-		let typeWrapper = AnyType(T)
-		if let object = objects[typeWrapper] {
+	public func get<T: AnyObject>() -> T {
+		let typeWrapper = AnyType(T.self)
+		if let object: AnyObject = objects[typeWrapper] {
 			return object as T
 		}
 
-		preconditionFailure("Cannot resolve dependency for type \(typeWrapper).")
+		LOG("Cannot resolve graph object for type \(typeWrapper).")
+
+		preconditionFailure()
 	}
 }
 
