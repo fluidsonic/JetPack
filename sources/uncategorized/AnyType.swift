@@ -1,18 +1,17 @@
+// Swift doesn't give us the name of Any.Type yet so we have to rely on NSStringFromClass :(
+
 public struct AnyType {
 
-	private let name: String
-	private let type: Any
+	public let hashValue: Int
+	public let name: String
+	public let type: AnyClass
 
 
-	public init(_ type: Any.Type) {
-		self.name = _stdlib_getTypeName(type)
+	public init(_ type: AnyClass) {
+		self.name = NSStringFromClass(type)
 		self.type = type
-	}
 
-
-	public init(_ type: AnyObject.Type) {
-		self.name = _stdlib_getTypeName(type)
-		self.type = type
+		hashValue = name.hashValue
 	}
 
 
@@ -30,18 +29,13 @@ extension AnyType: DebugPrintable {
 }
 
 
-extension AnyType: Hashable {
-
-	public var hashValue: Int {
-		return name.hashValue
-	}
-}
+extension AnyType: Hashable {}
 
 
 extension AnyType: Printable {
 
 	public var description: String {
-		return demangledName
+		return name
 	}
 }
 
