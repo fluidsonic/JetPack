@@ -1,6 +1,26 @@
 import Foundation
 
 
+public func async(priority: AsyncPriority = .Default, block: Block) {
+	var dispatchPriority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+	switch priority {
+	case .Background:
+		dispatchPriority = DISPATCH_QUEUE_PRIORITY_BACKGROUND
+
+	case .Default:
+		break
+
+	case .High:
+		dispatchPriority = DISPATCH_QUEUE_PRIORITY_HIGH
+
+	case .Low:
+		dispatchPriority = DISPATCH_QUEUE_PRIORITY_LOW
+	}
+
+	dispatch_async(dispatch_get_global_queue(dispatchPriority, 0), block)
+}
+
+
 public func onMainThread(block: Block) {
 	dispatch_async(dispatch_get_main_queue(), block)
 }
@@ -17,6 +37,14 @@ public func timer(#delay: NSTimeInterval, callback: Block) -> NSTimer {
 }
 
 
+
+
+public enum AsyncPriority {
+	case Background
+	case Default
+	case High
+	case Low
+}
 
 
 
