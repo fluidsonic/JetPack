@@ -7,6 +7,11 @@ public extension CGFloat {
 	public static var Pi = CGFloat(M_PI)
 
 
+	public func clamped(#min: CGFloat, max: CGFloat) -> CGFloat {
+		return Swift.min(Swift.max(self, min), max)
+	}
+
+
 	public var rounded: CGFloat {
 		return round(self)
 	}
