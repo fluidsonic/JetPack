@@ -1,7 +1,12 @@
 import Foundation
 
 
-public func async(priority: AsyncPriority = .Default, block: Block) {
+public func async(block: Block) {
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+}
+
+
+public func async(priority: AsyncPriority, block: Block) {
 	var dispatchPriority = DISPATCH_QUEUE_PRIORITY_DEFAULT
 	switch priority {
 	case .Background:
