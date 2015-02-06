@@ -11,7 +11,7 @@ public extension UIView {
 		animateWithDuration(duration, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: velocity, options: options, animations: animations, completion: nil)
 	}
 
-	public class func animateWithDuration(duration: NSTimeInterval, initialSpringVelocity velocity: CGFloat, options: UIViewAnimationOptions, animations: () -> Void, completion: ((Bool) -> Void)?) {
+	public class func animateWithDuration(duration: NSTimeInterval, initialSpringVelocity velocity: CGFloat, options: UIViewAnimationOptions, animations: () -> Void, completion: Bool -> Void) {
 		animateWithDuration(duration, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: velocity, options: options, animations: animations, completion: completion)
 	}
 
@@ -23,8 +23,16 @@ public extension UIView {
 		animateWithDuration(duration, delay: delay, options: options, animations: animations, completion: nil)
 	}
 
+	public class func animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval = 0, options: UIViewAnimationOptions = nil, animations: () -> Void, completion: Bool -> Void) {
+		animateWithDuration(duration, delay: delay, options: options, animations: animations, completion: completion)
+	}
+
 	public class func animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval = 0, usingSpringWithDamping damping: CGFloat, initialSpringVelocity velocity: CGFloat = 0, options: UIViewAnimationOptions = nil, animations: () -> Void) {
 		animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: options, animations: animations, completion: nil)
+	}
+
+	public class func animateWithDuration(duration: NSTimeInterval, delay: NSTimeInterval = 0, usingSpringWithDamping damping: CGFloat, initialSpringVelocity velocity: CGFloat = 0, options: UIViewAnimationOptions = nil, animations: () -> Void, completion: Bool -> Void) {
+		animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: velocity, options: options, animations: animations, completion: completion)
 	}
 
 	public func heightThatFits() -> CGFloat {
