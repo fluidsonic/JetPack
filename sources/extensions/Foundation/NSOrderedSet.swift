@@ -17,7 +17,7 @@ public extension NSOrderedSet {
 		let generator = NSFastGenerator(reverseObjectEnumerator())
 
 		return SequenceOf(GeneratorOf() {
-			return generator.next() as T?
+			return generator.next() as! T?
 		})
 	}
 
@@ -26,7 +26,7 @@ public extension NSOrderedSet {
 		let generator = generate()
 
 		return SequenceOf(GeneratorOf() {
-			return generator.next() as T?
+			return generator.next() as! T?
 		})
 	}
 }

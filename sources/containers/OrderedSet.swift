@@ -1,7 +1,7 @@
 import Foundation
 
 
-public struct OrderedSet<T: Hashable>: MutableSetType {
+public struct OrderedSet<T: Hashable>: CollectionType {
 
 	typealias Element = T
 
@@ -48,11 +48,13 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 
 
 	public mutating func add(element: T) -> Bool {
-		if !elements.add(element) {
+		if elements.contains(element) {
 			return false
 		}
 
+		elements.insert(element)
 		orderedElements.append(element)
+
 		return true
 	}
 
@@ -68,7 +70,13 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 
 
 	public func contains(matches: (T) -> Bool) -> Bool {
-		return elements.contains(matches)
+		for element in orderedElements {
+			if matches(element) {
+				return true
+			}
+		}
+
+		return false
 	}
 
 
@@ -90,7 +98,14 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 
 
 	public func filtered(includeElement: (T) -> Bool) -> OrderedSet<T> {
-		return OrderedSet(sequence: elements.filtered(includeElement))
+		var filteredElements = OrderedSet<T>()
+		for element in orderedElements {
+			if includeElement(element) {
+				filteredElements.add(element)
+			}
+		}
+
+		return filteredElements
 	}
 
 
@@ -115,17 +130,17 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 	}
 
 
-	public mutating func intersect<S : SetType where S.Element == T>(set: S) {
+	public mutating func intersect(set: OrderedSet<T>) {
 		filter { set.contains($0) }
 	}
 
 
-	public func intersected<S : SetType where S.Element == T>(set: S) -> OrderedSet<T> {
+	public func intersected(set: OrderedSet<T>) -> OrderedSet<T> {
 		return filtered { set.contains($0) }
 	}
 
 
-	public func intersects<S : SetType where S.Element == T>(set: S) -> Bool {
+	public func intersects(set: OrderedSet<T>) -> Bool {
 		return contains { set.contains($0) }
 	}
 
@@ -135,7 +150,7 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 	}
 
 
-	public func isSubsetOf<S: SetType where S.Element == T>(set: S) -> Bool {
+	public func isSubsetOf(set: OrderedSet<T>) -> Bool {
 		return elements.isSubsetOf(set)
 	}
 
@@ -156,7 +171,11 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 
 
 	public func member(element: T) -> T? {
-		return elements.member(element)
+		if let index = elements.indexOf(element) {
+			return elements[index]
+		}
+
+		return nil
 	}
 
 
@@ -229,7 +248,8 @@ public struct OrderedSet<T: Hashable>: MutableSetType {
 	public mutating func replace(element: T) -> T? {
 		var replacedElementToReturn: T?
 		if let index = indexOf(element) {
-			if let replacedElement = elements.replace(element) {
+			if let replacedElement = elements.remove(element) {
+				elements.insert(element)
 				orderedElements[index] = element
 				replacedElementToReturn = replacedElement
 			}

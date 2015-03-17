@@ -7,7 +7,7 @@ import Foundation
 #endif
 
 
-public func LOG(message: (@autoclosure () -> String), function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
+public func LOG(@autoclosure message:() -> String, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
 	if !LOGenabled {
 		return
 	}
@@ -18,7 +18,7 @@ public func LOG(message: (@autoclosure () -> String), function: StaticString = _
 
 
 // temporary workaround for lack of #warning instruction
-public func WARN(message: (@autoclosure () -> String), function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
+public func WARN(@autoclosure message:() -> String, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UWord = __LINE__) {
 	if !LOGenabled {
 		return
 	}

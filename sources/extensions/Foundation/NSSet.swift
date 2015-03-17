@@ -12,7 +12,7 @@ public extension NSSet {
 		let generator = generate()
 
 		return SequenceOf(GeneratorOf() {
-			return generator.next() as T?
+			return generator.next() as! T?
 		})
 	}
 }

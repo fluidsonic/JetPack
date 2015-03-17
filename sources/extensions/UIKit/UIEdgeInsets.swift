@@ -4,11 +4,6 @@ import UIKit
 public extension UIEdgeInsets {
 
 	public static let zeroInsets = UIEdgeInsets()
-
-
-	public init() {
-		self.init(top: 0, left: 0, bottom: 0, right: 0)
-	}
 }
 
 

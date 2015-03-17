@@ -18,7 +18,7 @@ public extension String {
 
 
 	public func stringByReplacing(#regex: NSRegularExpression, withTemplate template: String) -> String {
-		return regex.stringByReplacingMatchesInString(self, options: nil, range: NSMakeRange(0, utf16Count), withTemplate: template)
+		return regex.stringByReplacingMatchesInString(self, options: nil, range: NSMakeRange(0, count(utf16)), withTemplate: template)
 	}
 
 
@@ -51,7 +51,7 @@ public extension String {
 			return ""
 		}
 
-		let currentLength = countElements(self)
+		let currentLength = count(self)
 		if currentLength <= length {
 			return self
 		}
