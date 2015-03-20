@@ -11,8 +11,8 @@ public struct Pressure: Measurement {
 	}
 
 
-	public init(millibar: Double) {
-		rawValue = millibar
+	public init(millibars: Double) {
+		rawValue = millibars
 	}
 
 
@@ -21,7 +21,7 @@ public struct Pressure: Measurement {
 	}
 
 
-	public var millibar: Double {
+	public var millibars: Double {
 		return rawValue
 	}
 }
