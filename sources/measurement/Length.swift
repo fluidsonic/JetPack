@@ -26,8 +26,8 @@ public struct Length: Measurement {
 	}
 
 
-	public init(inch: Double) {
-		rawValue = inch * metersPerInch
+	public init(inches: Double) {
+		rawValue = inches * metersPerInch
 	}
 
 
@@ -56,7 +56,7 @@ public struct Length: Measurement {
 	}
 
 
-	public var inch: Double {
+	public var inches: Double {
 		return meters * inchPerMeter
 	}
 
