@@ -1,11 +1,13 @@
-private let metersPerFeet      = 0.3048
-private let metersPerInch      = 0.0254
-private let metersPerKilometer = 1000.0
-private let metersPerMile      = 1609.344
-private let feetPerMeter       = 1.0 / metersPerFeet
-private let inchPerMeter       = 1.0 / metersPerInch
-private let kilometersPerMeter = 1.0 / metersPerKilometer
-private let milesPerMeter      = 1.0 / metersPerMile
+private let metersPerCentimeter = 0.01
+private let metersPerFeet       = 0.3048
+private let metersPerInch       = 0.0254
+private let metersPerKilometer  = 1000.0
+private let metersPerMile       = 1609.344
+private let centimetersPerMeter = 1.0 / metersPerCentimeter
+private let feetPerMeter        = 1.0 / metersPerFeet
+private let inchPerMeter        = 1.0 / metersPerInch
+private let kilometersPerMeter  = 1.0 / metersPerKilometer
+private let milesPerMeter       = 1.0 / metersPerMile
 
 
 public struct Length: Measurement {
@@ -18,6 +20,11 @@ public struct Length: Measurement {
 
 	public init(_ length: Length) {
 		rawValue = length.rawValue
+	}
+
+
+	public init(centimeters: Double) {
+		rawValue = centimeters * metersPerCentimeter
 	}
 
 
@@ -51,6 +58,11 @@ public struct Length: Measurement {
 	}
 
 
+	public var centimeters: Double {
+		return meters * centimetersPerMeter
+	}
+
+
 	public var feet: Double {
 		return meters * feetPerMeter
 	}
@@ -73,6 +85,18 @@ public struct Length: Measurement {
 
 	public var miles: Double {
 		return meters * milesPerMeter
+	}
+
+
+	public func valueInUnit(unit: LengthUnit) -> Double {
+		switch unit {
+		case .Centimeters: return centimeters
+		case .Feet:        return feet
+		case .Inches:      return inches
+		case .Kilometers:  return kilometers
+		case .Meters:      return meters
+		case .Miles:       return miles
+		}
 	}
 }
 
@@ -103,6 +127,7 @@ extension Length: Printable {
 
 
 public enum LengthUnit: Unit {
+	case Centimeters
 	case Feet
 	case Inches
 	case Kilometers
@@ -115,6 +140,9 @@ extension LengthUnit {
 
 	public var abbreviation: String {
 		switch self {
+		case .Centimeters:
+			return "cm"
+
 		case .Feet:
 			return "ft"
 
@@ -135,6 +163,9 @@ extension LengthUnit {
 
 	public var pluralName: String {
 		switch self {
+		case .Centimeters:
+			return "Centimeters"
+
 		case .Feet:
 			return "Feet"
 
@@ -155,6 +186,9 @@ extension LengthUnit {
 
 	public var singularName: String {
 		switch self {
+		case .Centimeters:
+			return "Centimeter"
+
 		case .Feet:
 			return "Foot"
 
@@ -175,6 +209,9 @@ extension LengthUnit {
 
 	public var symbol: String? {
 		switch self {
+		case .Centimeters:
+			return nil
+
 		case .Feet:
 			return "′"
 

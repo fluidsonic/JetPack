@@ -24,6 +24,13 @@ public struct Time: Measurement {
 	public var seconds: Double {
 		return rawValue
 	}
+
+
+	public func valueInUnit(unit: TimeUnit) -> Double {
+		switch unit {
+		case .Seconds: return seconds
+		}
+	}
 }
 
 

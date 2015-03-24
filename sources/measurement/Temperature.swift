@@ -34,6 +34,14 @@ public struct Temperature: Measurement {
 	public var degreesFahrenheit: Double {
 		return (1.8 * degreesCelsius) + 32
 	}
+
+
+	public func valueInUnit(unit: TemperatureUnit) -> Double {
+		switch unit {
+		case .DegreesCelsius:    return degreesCelsius
+		case .DegreesFahrenheit: return degreesFahrenheit
+		}
+	}
 }
 
 

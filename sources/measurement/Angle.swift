@@ -38,6 +38,14 @@ public struct Angle: Measurement {
 	public var radians: Double {
 		return degrees * radiansPerDegree
 	}
+
+
+	public func valueInUnit(unit: AngleUnit) -> Double {
+		switch unit {
+		case .Degrees: return degrees
+		case .Radians: return radians
+		}
+	}
 }
 
 

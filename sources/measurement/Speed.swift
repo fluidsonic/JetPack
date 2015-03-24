@@ -50,6 +50,15 @@ public struct Speed: Measurement {
 	public var milesPerHour: Double {
 		return kilometersPerHour * mphPerKmh
 	}
+
+
+	public func valueInUnit(unit: SpeedUnit) -> Double {
+		switch unit {
+		case .KilometersPerHour: return kilometersPerHour
+		case .Knots:             return knots
+		case .MilesPerHour:      return milesPerHour
+		}
+	}
 }
 
 

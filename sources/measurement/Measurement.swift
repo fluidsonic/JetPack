@@ -8,6 +8,8 @@ public protocol Measurement: Comparable, DebugPrintable, Hashable, Printable {
 	static var name: String { get }
 	static var rawUnit: UnitType { get }
 	var rawValue: Double { get mutating set }
+
+	func valueInUnit(unit: UnitType) -> Double
 }
 
 
