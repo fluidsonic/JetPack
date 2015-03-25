@@ -1,4 +1,4 @@
-protocol Unit: DebugPrintable, Printable {
+public protocol Unit: DebugPrintable, Printable {
 
 	var abbreviation: String { get }
 	var pluralName: String { get }
