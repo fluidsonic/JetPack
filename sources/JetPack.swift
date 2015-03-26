@@ -18,6 +18,16 @@ extension Array {
 		return JetPack.first(self, includeElement)
 	}
 
+
+	var randomElement: T? {
+		if isEmpty {
+			return nil
+		}
+
+		return self[Int(arc4random_uniform(UInt32(count)))]
+	}
+
+
 	func separate(isLeftElement: T -> Bool) -> ([T], [T]) {
 		return JetPack.separate(self, isLeftElement)
 	} 
