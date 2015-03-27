@@ -7,6 +7,10 @@ public extension CGRect {
 		self.init(x: 0, y: 0, width: size.width, height: size.height)
 	}
 
+	public init(left: CGFloat, top: CGFloat, width: CGFloat, height: CGFloat) {
+		self.init(x: left, y: top, width: width, height: height)
+	}
+
 	public init(width: CGFloat, height: CGFloat) {
 		self.init(x: 0, y: 0, width: width, height: height)
 	}
