@@ -13,4 +13,9 @@ public extension UIImage {
 			return false
 		}
 	}
+
+
+	public static func templateNamed(name: String) -> UIImage? {
+		return self.init(named: name)?.imageWithRenderingMode(.AlwaysTemplate)
+	}
 }
