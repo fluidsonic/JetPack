@@ -15,8 +15,8 @@ public struct Angle: Measurement {
 	}
 
 
-	public init(degree: Double) {
-		rawValue = degree
+	public init(degrees: Double) {
+		rawValue = degrees
 	}
 
 
