@@ -15,6 +15,26 @@ public enum CompassDirection {
 	case WNW
 	case NW
 	case NNW
+
+
+	public static let all: [CompassDirection] = [
+		.North,
+		.NNE,
+		.NE,
+		.ENE,
+		.East,
+		.ESE,
+		.SE,
+		.SSE,
+		.South,
+		.SSW,
+		.SW,
+		.WSW,
+		.West,
+		.WNW,
+		.NW,
+		.NNW,
+	]
 }
 
 
