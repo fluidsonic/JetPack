@@ -30,7 +30,43 @@ public extension NSDate {
 	}
 
 
-	public func with(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil, timeZone: NSTimeZone? = nil) -> NSDate? {
+	public func minus(years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
+		return plus(years: years.map(-), months: months.map(-), days: days.map(-), hours: hours.map(-), minutes: minutes.map(-), seconds: seconds.map(-))
+	}
+
+
+	public func plus(years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
+		let calendar = NSCalendar.currentCalendar()
+		if let timeZone = timeZone {
+			calendar.timeZone = timeZone
+		}
+
+		let components = NSDateComponents()
+
+		if let years = years {
+			components.year = years
+		}
+		if let months = months {
+			components.month = months
+		}
+		if let days = days {
+			components.day = days
+		}
+		if let hours = hours {
+			components.hour = hours
+		}
+		if let minutes = minutes {
+			components.minute = minutes
+		}
+		if let seconds = seconds {
+			components.second = seconds
+		}
+
+		return calendar.dateByAddingComponents(components, toDate: self, options: nil)
+	}
+
+
+	public func with(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
 		let calendar = NSCalendar.currentCalendar()
 		if let timeZone = timeZone {
 			calendar.timeZone = timeZone
