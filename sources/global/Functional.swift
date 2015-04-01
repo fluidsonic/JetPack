@@ -9,6 +9,13 @@ public func any<S : SequenceType>(source: S, includeElement: (S.Generator.Elemen
 }
 
 
+internal func arc4random<T: IntegerLiteralConvertible>(type: T.Type) -> T {
+	var random: T = 0
+	arc4random_buf(&random, sizeof(T))
+	return random
+}
+
+
 public func findIdentical<C: CollectionType where C.Generator.Element: AnyObject>(collection: C, element: C.Generator.Element) -> C.Index? {
 	for index in collection.startIndex ..< collection.endIndex {
 		if collection[index] === element {
@@ -41,73 +48,6 @@ public func first<S : SequenceType>(source: S, includeElement: (S.Generator.Elem
 	return nil
 }
 
-
-public func max <T: Comparable>(x: T?, y: T?) -> T? {
-	if let x = x, y = y {
-		return Swift.max(x, y)
-	}
-	else if let x = x {
-		return x
-	}
-	else {
-		return y
-	}
-}
-
-
-public func max <T: Comparable>(x: T, y: T?) -> T? {
-	if let y = y {
-		return Swift.max(x, y)
-	}
-	else {
-		return x
-	}
-}
-
-
-public func max <T: Comparable>(x: T?, y: T) -> T? {
-	if let x = x {
-		return Swift.max(x, y)
-	}
-	else {
-		return y
-	}
-}
-
-
-public func min <T: Comparable>(x: T?, y: T?) -> T? {
-	if let x = x, y = y {
-		return Swift.min(x, y)
-	}
-	else if let x = x {
-		return x
-	}
-	else {
-		return y
-	}
-}
-
-
-public func min <T: Comparable>(x: T, y: T?) -> T? {
-	if let y = y {
-		return Swift.min(x, y)
-	}
-	else {
-		return x
-	}
-}
-
-
-public func min <T: Comparable>(x: T?, y: T) -> T? {
-	if let x = x {
-		return Swift.min(x, y)
-	}
-	else {
-		return y
-	}
-}
-
-
 public func not<T>(source: T -> Bool) -> T -> Bool {
 	return { !source($0) }
 }
@@ -115,6 +55,46 @@ public func not<T>(source: T -> Bool) -> T -> Bool {
 
 public func not<T>(source: Bool) -> Bool {
 	return !source
+}
+
+
+public func optionalMax <T: Comparable>(elements: T? ...) -> T? {
+	var maximumElement: T?
+
+	for element in elements {
+		if let element = element {
+			if let existingMaximumElement = maximumElement {
+				if element > existingMaximumElement {
+					maximumElement = element
+				}
+			}
+			else {
+				maximumElement = element
+			}
+		}
+	}
+
+	return maximumElement
+}
+
+
+public func optionalMin <T: Comparable>(elements: T? ...) -> T? {
+	var minimumElement: T?
+
+	for element in elements {
+		if let element = element {
+			if let existingMinimumElement = minimumElement {
+				if element < existingMinimumElement {
+					minimumElement = element
+				}
+			}
+			else {
+				minimumElement = element
+			}
+		}
+	}
+
+	return minimumElement
 }
 
 
