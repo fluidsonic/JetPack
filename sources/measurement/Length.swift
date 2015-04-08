@@ -1,11 +1,11 @@
 private let metersPerCentimeter = 0.01
-private let metersPerFeet       = 0.3048
+private let metersPerFoot       = 0.3048
 private let metersPerInch       = 0.0254
 private let metersPerKilometer  = 1000.0
 private let metersPerMile       = 1609.344
 private let centimetersPerMeter = 1.0 / metersPerCentimeter
-private let feetPerMeter        = 1.0 / metersPerFeet
-private let inchPerMeter        = 1.0 / metersPerInch
+private let feetPerMeter        = 1.0 / metersPerFoot
+private let inchesPerMeter      = 1.0 / metersPerInch
 private let kilometersPerMeter  = 1.0 / metersPerKilometer
 private let milesPerMeter       = 1.0 / metersPerMile
 
@@ -23,13 +23,25 @@ public struct Length: Measurement {
 	}
 
 
+	public init(_ value: Double, unit: LengthUnit) {
+		switch unit {
+		case .Centimeters: rawValue = value * metersPerCentimeter
+		case .Feet:        rawValue = value * metersPerFoot
+		case .Inches:      rawValue = value * metersPerInch
+		case .Kilometers:  rawValue = value * metersPerKilometer
+		case .Meters:      rawValue = value
+		case .Miles:       rawValue = value * metersPerMile
+		}
+	}
+
+
 	public init(centimeters: Double) {
 		rawValue = centimeters * metersPerCentimeter
 	}
 
 
 	public init(feet: Double) {
-		rawValue = feet * metersPerFeet
+		rawValue = feet * metersPerFoot
 	}
 
 
@@ -69,7 +81,7 @@ public struct Length: Measurement {
 
 
 	public var inches: Double {
-		return meters * inchPerMeter
+		return meters * inchesPerMeter
 	}
 
 

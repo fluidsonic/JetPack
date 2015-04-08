@@ -4,6 +4,7 @@ public protocol Measurement: Comparable, DebugPrintable, Hashable, Printable {
 
 
 	init(rawValue: Double)
+	init(_ value: Double, unit: UnitType)
 
 	static var name: String { get }
 	static var rawUnit: UnitType { get }

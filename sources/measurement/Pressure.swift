@@ -18,6 +18,14 @@ public struct Pressure: Measurement {
 	}
 
 
+	public init(_ value: Double, unit: PressureUnit) {
+		switch unit {
+		case .InchesOfMercury: rawValue = value * millibarsPerInchOfMercury
+		case .Millibars:       rawValue = value
+		}
+	}
+
+
 	public init(inchesOfMercury: Double) {
 		rawValue = inchesOfMercury * millibarsPerInchOfMercury
 	}

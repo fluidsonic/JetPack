@@ -17,6 +17,15 @@ public struct Speed: Measurement {
 	}
 
 
+	public init(_ value: Double, unit: SpeedUnit) {
+		switch unit {
+		case .KilometersPerHour: rawValue = value
+		case .Knots:             rawValue = value * kmhPerKnot
+		case .MilesPerHour:      rawValue = value * kmhPerMph
+		}
+	}
+
+
 	public init(kilometersPerHour: Double) {
 		rawValue = kilometersPerHour
 	}

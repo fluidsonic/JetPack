@@ -11,6 +11,14 @@ public struct Temperature: Measurement {
 	}
 
 
+	public init(_ value: Double, unit: TemperatureUnit) {
+		switch unit {
+		case .DegreesCelsius:    rawValue = value
+		case .DegreesFahrenheit: rawValue = (5.0 / 9.0) * (value - 32.0)
+		}
+	}
+
+
 	public init(degreesCelsius: Double) {
 		rawValue = degreesCelsius
 	}

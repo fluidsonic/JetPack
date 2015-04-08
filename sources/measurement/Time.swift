@@ -11,6 +11,13 @@ public struct Time: Measurement {
 	}
 
 
+	public init(_ value: Double, unit: TimeUnit) {
+		switch unit {
+		case .Seconds: rawValue = value
+		}
+	}
+
+
 	public init(seconds: Double) {
 		rawValue = seconds
 	}

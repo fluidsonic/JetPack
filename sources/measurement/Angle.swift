@@ -15,13 +15,21 @@ public struct Angle: Measurement {
 	}
 
 
+	public init(_ value: Double, unit: AngleUnit) {
+		switch unit {
+		case .Degrees: rawValue = value
+		case .Radians: rawValue = value * degreesPerRadian
+		}
+	}
+
+
 	public init(degrees: Double) {
 		rawValue = degrees
 	}
 
 
-	public init(radian: Double) {
-		rawValue = radian * degreesPerRadian
+	public init(radians: Double) {
+		rawValue = radians * degreesPerRadian
 	}
 
 
