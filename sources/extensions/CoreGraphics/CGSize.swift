@@ -7,6 +7,6 @@ public extension CGSize {
 
 
 	public var center: CGPoint {
-		return CGPoint(x: width / 2, y: width / 2)
+		return CGPoint(x: width / 2, y: height / 2)
 	}
 }
