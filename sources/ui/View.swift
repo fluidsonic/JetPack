@@ -3,6 +3,9 @@ import UIKit
 
 public class View: UIView {
 
+	public var userInteractionLimitedToSubviews = false
+
+
 	public init() {
 		super.init(frame: .zeroRect)
 	}
@@ -92,11 +95,23 @@ public class View: UIView {
 		animateWithDuration(duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
 
+
 	public class func animate(#duration: NSTimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: NSTimeInterval, changes: () -> Void) {
 		animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
 
+
 	public class func animate(#duration: NSTimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: NSTimeInterval, changes: () -> Void, completion: Bool -> Void) {
 		animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
+	}
+
+
+	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+		let view = super.hitTest(point, withEvent: event)
+		if userInteractionLimitedToSubviews && view === self {
+			return nil
+		}
+
+		return view
 	}
 }
