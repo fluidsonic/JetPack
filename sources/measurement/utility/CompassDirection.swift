@@ -1,4 +1,73 @@
-public enum CompassDirection {
+public enum CompassDirection8 {
+	case North
+	case NE
+	case East
+	case SE
+	case South
+	case SW
+	case West
+	case NW
+
+
+	public static let all: [CompassDirection8] = [
+		.North,
+		.NE,
+		.East,
+		.SE,
+		.South,
+		.SW,
+		.West,
+		.NW,
+	]
+}
+
+
+extension CompassDirection8 {
+
+	public var mediumName: String {
+		switch self {
+		case North: return "North"
+		case NE:    return "NE"
+		case East:  return "East"
+		case SE:    return "SE"
+		case South: return "South"
+		case SW:    return "SW"
+		case West:  return "West"
+		case NW:    return "NW"
+		}
+	}
+
+
+	public var shortName: String {
+		switch self {
+		case North: return "N"
+		case NE:    return "NE"
+		case East:  return "E"
+		case SE:    return "SE"
+		case South: return "S"
+		case SW:    return "SW"
+		case West:  return "W"
+		case NW:    return "NW"
+		}
+	}
+
+
+	public var to16: CompassDirection16 {
+		switch self {
+		case North: return .North
+		case NE:    return .NE
+		case East:  return .East
+		case SE:    return .SE
+		case South: return .South
+		case SW:    return .SW
+		case West:  return .West
+		case NW:    return .NW
+		}
+	}
+}
+
+
+public enum CompassDirection16 {
 	case North
 	case NNE
 	case NE
@@ -17,7 +86,7 @@ public enum CompassDirection {
 	case NNW
 
 
-	public static let all: [CompassDirection] = [
+	public static let all: [CompassDirection16] = [
 		.North,
 		.NNE,
 		.NE,
@@ -38,7 +107,7 @@ public enum CompassDirection {
 }
 
 
-extension CompassDirection {
+extension CompassDirection16 {
 
 	public var mediumName: String {
 		switch self {
@@ -88,14 +157,37 @@ extension CompassDirection {
 
 public extension Angle {
 
-	public var compassDirection: CompassDirection {
+	public var compassDirection8: CompassDirection8 {
 		var normalizedDegrees = degrees % 360  // -360 ..< 360
 		if normalizedDegrees < 0 {
 			normalizedDegrees += 360  // 0 ..< 360
 		}
 
 		// half sector before, half sector after needle point
-		let sector = Int(round(normalizedDegrees / 16) - 0.5) // 0 ..< 16
+		let sector = Int(round(8 * normalizedDegrees / 360) - 0.5) // 0 ..< 8
+
+		switch sector {
+		case 0:  return .North
+		case 1:  return .NE
+		case 2:  return .East
+		case 3:  return .SE
+		case 4:  return .South
+		case 5:  return .SW
+		case 6:  return .West
+		case 7:  return .NW
+		default: return .North
+		}
+	}
+
+
+	public var compassDirection16: CompassDirection16 {
+		var normalizedDegrees = degrees % 360  // -360 ..< 360
+		if normalizedDegrees < 0 {
+			normalizedDegrees += 360  // 0 ..< 360
+		}
+
+		// half sector before, half sector after needle point
+		let sector = Int(round(16 * normalizedDegrees / 360) - 0.5) // 0 ..< 16
 
 		switch sector {
 		case 0:  return .North
