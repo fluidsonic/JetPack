@@ -206,18 +206,11 @@ public struct OrderedSet<T: Hashable>: CollectionType {
 	}
 
 
-	public mutating func union<S: SequenceType where S.Generator.Element == T>(sequence: S) {
-		for element in SequenceOf<T>(sequence) {
-			add(element)
-		}
-	}
+	public mutating func removeAtIndex(index: Int) -> T {
+		let element = orderedElements[index]
+		orderedElements.removeAtIndex(index)
 
-
-	public func unioned<S: SequenceType where S.Generator.Element == T>(sequence: S) -> OrderedSet<T> {
-		var copy = self
-		copy.union(sequence)
-
-		return copy
+		return elements.remove(element)!
 	}
 
 
@@ -256,6 +249,21 @@ public struct OrderedSet<T: Hashable>: CollectionType {
 		}
 
 		return replacedElementToReturn
+	}
+
+
+	public mutating func union<S: SequenceType where S.Generator.Element == T>(sequence: S) {
+		for element in SequenceOf<T>(sequence) {
+			add(element)
+		}
+	}
+
+
+	public func unioned<S: SequenceType where S.Generator.Element == T>(sequence: S) -> OrderedSet<T> {
+		var copy = self
+		copy.union(sequence)
+
+		return copy
 	}
 
 
@@ -300,6 +308,22 @@ extension OrderedSet: DebugPrintable {
 
 	public var debugDescription: String {
 		return description
+	}
+}
+
+
+extension OrderedSet: Equatable {}
+
+
+extension OrderedSet: Hashable {
+
+	public var hashValue: Int {
+		var hashValue = 1
+		for element in orderedElements {
+			hashValue = (hashValue &* 31) &+ element.hashValue
+		}
+
+		return hashValue
 	}
 }
 
