@@ -13,6 +13,7 @@ public extension NSOrderedSet {
 	}
 
 
+	@availability(*, unavailable, message="Broken in Xcode 6.3.1 due to bug in Swift's Whole Module Optimization.")
 	public func reversedSequenceOf<T>(type: T.Type) -> SequenceOf<T> {
 		let generator = NSFastGenerator(reverseObjectEnumerator())
 
@@ -22,6 +23,7 @@ public extension NSOrderedSet {
 	}
 
 
+	@availability(*, unavailable, message="Broken in Xcode 6.3.1 due to bug in Swift's Whole Module Optimization.")
 	public func sequenceOf<T>(type: T.Type) -> SequenceOf<T> {
 		let generator = generate()
 
