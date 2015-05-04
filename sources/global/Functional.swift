@@ -58,6 +58,24 @@ public func not<T>(source: Bool) -> Bool {
 }
 
 
+// short version until `optionalMax` works correctly
+public func optionalMax2 <T: Comparable>(a: T?, b: T?) -> T? {
+	if let a = a {
+		if let b = b {
+			return max(a, b)
+		}
+
+		return a
+	}
+	else if let b = b {
+		return b
+	}
+
+	return nil
+}
+
+
+@availability(*, unavailable, message="Broken in Xcode 6.3.1 due to bug in Swift optimizer (-O).")
 public func optionalMax <T: Comparable>(elements: T? ...) -> T? {
 	var maximumElement: T?
 
@@ -78,6 +96,24 @@ public func optionalMax <T: Comparable>(elements: T? ...) -> T? {
 }
 
 
+// short version until `optionalMin` works correctly
+public func optionalMin2 <T: Comparable>(a: T?, b: T?) -> T? {
+	if let a = a {
+		if let b = b {
+			return min(a, b)
+		}
+
+		return a
+	}
+	else if let b = b {
+		return b
+	}
+
+	return nil
+}
+
+
+@availability(*, unavailable, message="Broken in Xcode 6.3.1 due to bug in Swift optimizer (-O).")
 public func optionalMin <T: Comparable>(elements: T? ...) -> T? {
 	var minimumElement: T?
 
