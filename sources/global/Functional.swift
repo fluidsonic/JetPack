@@ -169,3 +169,18 @@ public func separate<E, S : SequenceType where S.Generator.Element == E>(source:
 
 	return (left, right)
 }
+
+
+public func synchronized(object: AnyObject, @noescape closure: () -> ()) {
+	objc_sync_enter(object)
+	closure()
+	objc_sync_exit(object)
+}
+
+
+public func synchronized<T>(object: AnyObject, @noescape closure: () -> T) -> T {
+	objc_sync_enter(object)
+	let result = closure()
+	objc_sync_exit(object)
+	return result
+}
