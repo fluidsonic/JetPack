@@ -1,3 +1,6 @@
+// TODO:
+
+
 public class ObjectGraph {
 
 	private var objects = [ObjectIdentifier : AnyObject]()
@@ -6,25 +9,35 @@ public class ObjectGraph {
 	public init() {}
 
 
-	public func add<T: AnyObject>(object: T) {
-		objects[ObjectIdentifier(T.Type)] = object
+	// You can only add AnyObject or else we'd have a big mess with (ImplicitlyUnwrapped)Optional which also conform to Any!
+	public final func add<T: AnyObject>(object: T) {
+		add(object, forType: T.self)
 	}
 
 
-	public func get<T: AnyObject>() -> T {
-		let id = ObjectIdentifier(T.Type)
+	// You can only add AnyObject or else we'd have a big mess with (ImplicitlyUnwrapped)Optional which also conform to Any!
+	public final func add<T: AnyObject>(object: T, forType type: T.Type) {
+		let id = ObjectIdentifier(type as Any.Type)
+		objects[id] = object
+	}
+
+
+	// You can only get AnyObject with implict type or else we'd have a big mess with (ImplicitlyUnwrapped)Optional which also conform to Any!
+	public final func get<T: AnyObject>() -> T {
+		return get(T.self)
+	}
+
+
+	// Getter must use Any although AnyObject would be more precise or else the compiler will crash when a class conforming protocol type is passed.
+	public final func get<T: Any>(type: T.Type) -> T {
+		let id = ObjectIdentifier(type)
 		if let object = objects[id] as! T? {
 			return object
 		}
 
-		LOG("Cannot resolve graph object for type \(T.self).")
+		LOG("Cannot resolve graph object for type \(type).")
 
 		preconditionFailure()
-	}
-
-
-	public func get<T: AnyObject>(type: T.Type) -> T {
-		return get()
 	}
 }
 
