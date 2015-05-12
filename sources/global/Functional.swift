@@ -184,3 +184,9 @@ public func synchronized<T>(object: AnyObject, @noescape closure: () -> T) -> T 
 	objc_sync_exit(object)
 	return result
 }
+
+
+// Don't use Any.Type as this will not work correctly and is also messy when optionals are involved.
+public func ~=(a: AnyClass, b: AnyClass) -> Bool {
+	return a === b
+}
