@@ -44,11 +44,13 @@ public class EventBus {
 
 			return {
 				dispatch_once(&unsubscribeToken) {
-					if let subscriptions = self.subscriptionsByScope[scope] as! Subscriptions<T>? {
-						removeFirstIdentical(&subscriptions.list, subscription)
+					synchronized(self.lock) {
+						if let subscriptions = self.subscriptionsByScope[scope] as! Subscriptions<T>? {
+							removeFirstIdentical(&subscriptions.list, subscription)
 
-						if subscriptions.list.isEmpty {
-							self.subscriptionsByScope[scope] = nil
+							if subscriptions.list.isEmpty {
+								self.subscriptionsByScope[scope] = nil
+							}
 						}
 					}
 				}
