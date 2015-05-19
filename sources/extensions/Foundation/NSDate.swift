@@ -3,8 +3,10 @@ import Foundation
 
 public extension NSDate {
 
-	public func isInSameDayAs(otherDate: NSDate) -> Bool {
+	public func isInSameDayAs(otherDate: NSDate, timeZone: NSTimeZone) -> Bool {
 		let calendar = NSCalendar.currentCalendar()
+		calendar.timeZone = timeZone
+		
 		let components = calendar.components(.CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear | .CalendarUnitEra, fromDate: self)
 		let otherComponents = calendar.components(.CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear | .CalendarUnitEra, fromDate: otherDate)
 
@@ -15,15 +17,17 @@ public extension NSDate {
 	}
 
 
-	public var isInToday: Bool {
-		return isInSameDayAs(NSDate())
+	public func isInToday(#timeZone: NSTimeZone) -> Bool {
+		return isInSameDayAs(NSDate(), timeZone: timeZone)
 	}
 
 
-	public var isInTomorrow: Bool {
+	public func isInTomorrow(#timeZone: NSTimeZone) -> Bool {
 		let calendar = NSCalendar.currentCalendar()
+		calendar.timeZone = timeZone
+
 		if let tomorrow = calendar.dateByAddingUnit(.CalendarUnitDay, value: 1, toDate: NSDate(), options: nil) {
-			return isInSameDayAs(tomorrow)
+			return isInSameDayAs(tomorrow, timeZone: timeZone)
 		}
 
 		return false
