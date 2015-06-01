@@ -4,6 +4,11 @@ import UIKit
 
 public extension NSMutableAttributedString {
 
+	public func appendString(string: String) {
+		appendString(string, attributes: [:])
+	}
+
+
 	public func appendString(string: String, attribute: String, value: AnyObject) {
 		let location = length
 
