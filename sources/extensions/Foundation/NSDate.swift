@@ -23,10 +23,7 @@ public extension NSDate {
 
 
 	public func isInTomorrow(#timeZone: NSTimeZone) -> Bool {
-		let calendar = NSCalendar.currentCalendar()
-		calendar.timeZone = timeZone
-
-		if let tomorrow = calendar.dateByAddingUnit(.CalendarUnitDay, value: 1, toDate: NSDate(), options: nil) {
+		if let tomorrow = NSDate().plus(days: 1, inTimeZone: timeZone) {
 			return isInSameDayAs(tomorrow, timeZone: timeZone)
 		}
 
