@@ -16,6 +16,18 @@ internal func arc4random<T: IntegerLiteralConvertible>(type: T.Type) -> T {
 }
 
 
+public func count<C: CollectionType>(collection: C, includeElement: (C.Generator.Element) -> Bool) -> Int {
+	var count = 0
+	for element in collection {
+		if includeElement(element) {
+			++count
+		}
+	}
+
+	return count
+}
+
+
 public func findIdentical<C: CollectionType where C.Generator.Element: AnyObject>(collection: C, element: C.Generator.Element) -> C.Index? {
 	for index in collection.startIndex ..< collection.endIndex {
 		if collection[index] === element {
@@ -38,7 +50,7 @@ public func findLast<C: CollectionType where C.Generator.Element: Equatable, C.I
 }
 
 
-public func first<S : SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
+public func first<S: SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
 	for element in source {
 		if includeElement(element) {
 			return element
