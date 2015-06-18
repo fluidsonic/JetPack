@@ -6,12 +6,9 @@ public struct Temperature: Measurement {
 	public var rawValue: Double
 
 
-	public init(_ temperature: Temperature) {
-		rawValue = temperature.rawValue
-	}
-
-
 	public init(_ value: Double, unit: TemperatureUnit) {
+		precondition(!value.isNaN, "Value must not be NaN.")
+
 		switch unit {
 		case .DegreesCelsius:    rawValue = value
 		case .DegreesFahrenheit: rawValue = (5.0 / 9.0) * (value - 32.0)
@@ -20,12 +17,12 @@ public struct Temperature: Measurement {
 
 
 	public init(degreesCelsius: Double) {
-		rawValue = degreesCelsius
+		self.init(degreesCelsius, unit: .DegreesCelsius)
 	}
 
 
 	public init(degreesFahrenheit: Double) {
-		rawValue = (5.0 / 9.0) * (degreesFahrenheit - 32.0)
+		self.init(degreesFahrenheit, unit: .DegreesFahrenheit)
 	}
 
 

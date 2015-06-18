@@ -13,12 +13,9 @@ public struct Pressure: Measurement {
 	public var rawValue: Double
 
 
-	public init(_ pressure: Pressure) {
-		rawValue = pressure.rawValue
-	}
-
-
 	public init(_ value: Double, unit: PressureUnit) {
+		precondition(!value.isNaN, "Value must not be NaN.")
+		
 		switch unit {
 		case .InchesOfMercury: rawValue = value * millibarsPerInchOfMercury
 		case .Millibars:       rawValue = value
@@ -27,12 +24,12 @@ public struct Pressure: Measurement {
 
 
 	public init(inchesOfMercury: Double) {
-		rawValue = inchesOfMercury * millibarsPerInchOfMercury
+		self.init(inchesOfMercury, unit: .InchesOfMercury)
 	}
 
 
 	public init(millibars: Double) {
-		rawValue = millibars
+		self.init(millibars, unit: .Millibars)
 	}
 
 

@@ -10,12 +10,9 @@ public struct Angle: Measurement {
 	public var rawValue: Double
 
 
-	public init(_ angle: Angle) {
-		rawValue = angle.rawValue
-	}
-
-
 	public init(_ value: Double, unit: AngleUnit) {
+		precondition(!value.isNaN, "Value must not be NaN.")
+
 		switch unit {
 		case .Degrees: rawValue = value
 		case .Radians: rawValue = value * degreesPerRadian
@@ -24,12 +21,12 @@ public struct Angle: Measurement {
 
 
 	public init(degrees: Double) {
-		rawValue = degrees
+		self.init(degrees, unit: .Degrees)
 	}
 
 
 	public init(radians: Double) {
-		rawValue = radians * degreesPerRadian
+		self.init(radians, unit: .Radians)
 	}
 
 

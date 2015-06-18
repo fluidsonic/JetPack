@@ -12,12 +12,9 @@ public struct Speed: Measurement {
 	public var rawValue: Double
 
 
-	public init(_ speed: Speed) {
-		rawValue = speed.rawValue
-	}
-
-
 	public init(_ value: Double, unit: SpeedUnit) {
+		precondition(!value.isNaN, "Value must not be NaN.")
+		
 		switch unit {
 		case .KilometersPerHour: rawValue = value
 		case .Knots:             rawValue = value * kmhPerKnot
@@ -27,17 +24,17 @@ public struct Speed: Measurement {
 
 
 	public init(kilometersPerHour: Double) {
-		rawValue = kilometersPerHour
+		self.init(kilometersPerHour, unit: .KilometersPerHour)
 	}
 
 
 	public init(knots: Double) {
-		rawValue = knots * kmhPerKnot
+		self.init(knots, unit: .Knots)
 	}
 
 
 	public init(milesPerHour: Double) {
-		rawValue = milesPerHour * kmhPerMph
+		self.init(milesPerHour, unit: .MilesPerHour)
 	}
 
 

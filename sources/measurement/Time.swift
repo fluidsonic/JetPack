@@ -6,12 +6,9 @@ public struct Time: Measurement {
 	public var rawValue: Double
 
 
-	public init(_ time: Time) {
-		rawValue = time.rawValue
-	}
-
-
 	public init(_ value: Double, unit: TimeUnit) {
+		precondition(!value.isNaN, "Value must not be NaN.")
+		
 		switch unit {
 		case .Seconds: rawValue = value
 		}
@@ -19,7 +16,7 @@ public struct Time: Measurement {
 
 
 	public init(seconds: Double) {
-		rawValue = seconds
+		self.init(seconds, unit: .Seconds)
 	}
 
 

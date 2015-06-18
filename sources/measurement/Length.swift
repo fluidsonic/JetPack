@@ -18,12 +18,9 @@ public struct Length: Measurement {
 	public var rawValue: Double
 
 
-	public init(_ length: Length) {
-		rawValue = length.rawValue
-	}
-
-
 	public init(_ value: Double, unit: LengthUnit) {
+		precondition(!value.isNaN, "Value must not be NaN.")
+
 		switch unit {
 		case .Centimeters: rawValue = value * metersPerCentimeter
 		case .Feet:        rawValue = value * metersPerFoot
@@ -36,32 +33,31 @@ public struct Length: Measurement {
 
 
 	public init(centimeters: Double) {
-		rawValue = centimeters * metersPerCentimeter
+		self.init(centimeters, unit: .Centimeters)
 	}
 
 
 	public init(feet: Double) {
-		rawValue = feet * metersPerFoot
-	}
+		self.init(feet, unit: .Feet)	}
 
 
 	public init(inches: Double) {
-		rawValue = inches * metersPerInch
+		self.init(inches, unit: .Inches)
 	}
 
 
 	public init(kilometers: Double) {
-		rawValue = kilometers * metersPerKilometer
+		self.init(kilometers, unit: .Kilometers)
 	}
 
 
 	public init(meters: Double) {
-		rawValue = meters
+		self.init(meters, unit: .Meters)
 	}
 
 
 	public init(miles: Double) {
-		rawValue = miles * metersPerMile
+		self.init(miles, unit: .Miles)
 	}
 
 
