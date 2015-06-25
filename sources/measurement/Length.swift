@@ -38,7 +38,8 @@ public struct Length: Measurement {
 
 
 	public init(feet: Double) {
-		self.init(feet, unit: .Feet)	}
+		self.init(feet, unit: .Feet)
+	}
 
 
 	public init(inches: Double) {
