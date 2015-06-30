@@ -65,7 +65,7 @@ public func not<T>(source: T -> Bool) -> T -> Bool {
 }
 
 
-public func not<T>(source: Bool) -> Bool {
+public func not(source: Bool) -> Bool {
 	return !source
 }
 
