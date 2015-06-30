@@ -5,7 +5,7 @@ public enum UnitSystem {
 	case SI
 
 
-	public func select<T>(#si: T, american: T, british: T) -> T {
+	public func select<T>(si si: T, american: T, british: T) -> T {
 		switch self {
 		case .American: return american
 		case .British:  return british

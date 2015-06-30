@@ -7,8 +7,8 @@ public extension NSDate {
 		let calendar = NSCalendar.currentCalendar()
 		calendar.timeZone = timeZone
 		
-		let components = calendar.components(.CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear | .CalendarUnitEra, fromDate: self)
-		let otherComponents = calendar.components(.CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear | .CalendarUnitEra, fromDate: otherDate)
+		let components = calendar.components([.Day, .Month, .Year, .Era], fromDate: self)
+		let otherComponents = calendar.components([.Day, .Month, .Year, .Era], fromDate: otherDate)
 
 		return (components.day == otherComponents.day
 			&& components.month == otherComponents.month
@@ -17,12 +17,12 @@ public extension NSDate {
 	}
 
 
-	public func isInToday(#timeZone: NSTimeZone) -> Bool {
+	public func isInToday(timeZone timeZone: NSTimeZone) -> Bool {
 		return isInSameDayAs(NSDate(), timeZone: timeZone)
 	}
 
 
-	public func isInTomorrow(#timeZone: NSTimeZone) -> Bool {
+	public func isInTomorrow(timeZone timeZone: NSTimeZone) -> Bool {
 		if let tomorrow = NSDate().plus(days: 1, inTimeZone: timeZone) {
 			return isInSameDayAs(tomorrow, timeZone: timeZone)
 		}
@@ -31,12 +31,12 @@ public extension NSDate {
 	}
 
 
-	public func minus(years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
+	public func minus(years years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
 		return plus(years: years.map(-), months: months.map(-), days: days.map(-), hours: hours.map(-), minutes: minutes.map(-), seconds: seconds.map(-))
 	}
 
 
-	public func plus(years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
+	public func plus(years years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
 		let calendar = NSCalendar.currentCalendar()
 		if let timeZone = timeZone {
 			calendar.timeZone = timeZone
@@ -63,7 +63,7 @@ public extension NSDate {
 			components.second = seconds
 		}
 
-		return calendar.dateByAddingComponents(components, toDate: self, options: nil)
+		return calendar.dateByAddingComponents(components, toDate: self, options: [])
 	}
 
 

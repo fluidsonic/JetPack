@@ -1,7 +1,7 @@
 import Foundation
 
 
-public struct OrderedSet<T: Hashable>: CollectionType {
+public struct OrderedSet<T: Hashable> {
 
 	typealias Element = T
 
@@ -180,7 +180,7 @@ public struct OrderedSet<T: Hashable>: CollectionType {
 
 
 	public mutating func minus<S: SequenceType where S.Generator.Element == T>(sequence: S) {
-		for element in SequenceOf<T>(sequence) {
+		for element in sequence {
 			remove(element)
 		}
 	}
@@ -194,7 +194,7 @@ public struct OrderedSet<T: Hashable>: CollectionType {
 	}
 
 
-	public mutating func move(#fromIndex: Int, toIndex: Int) {
+	public mutating func move(fromIndex fromIndex: Int, toIndex: Int) {
 		precondition(fromIndex >= startIndex && fromIndex < endIndex, "fromIndex outside range \(startIndex) ..< \(endIndex)")
 		precondition(toIndex >= startIndex && toIndex < endIndex, "toIndex outside range \(startIndex) ..< \(endIndex)")
 
@@ -232,7 +232,7 @@ public struct OrderedSet<T: Hashable>: CollectionType {
 	}
 
 
-	public mutating func removeAll(#keepCapacity: Bool) {
+	public mutating func removeAll(keepCapacity keepCapacity: Bool) {
 		elements.removeAll(keepCapacity: keepCapacity)
 		orderedElements.removeAll(keepCapacity: keepCapacity)
 	}
@@ -253,7 +253,7 @@ public struct OrderedSet<T: Hashable>: CollectionType {
 
 
 	public mutating func union<S: SequenceType where S.Generator.Element == T>(sequence: S) {
-		for element in SequenceOf<T>(sequence) {
+		for element in sequence {
 			add(element)
 		}
 	}
@@ -304,7 +304,7 @@ extension OrderedSet: CollectionType {
 }
 
 
-extension OrderedSet: DebugPrintable {
+extension OrderedSet: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return description
@@ -312,23 +312,7 @@ extension OrderedSet: DebugPrintable {
 }
 
 
-extension OrderedSet: Equatable {}
-
-
-extension OrderedSet: Hashable {
-
-	public var hashValue: Int {
-		var hashValue = 1
-		for element in orderedElements {
-			hashValue = (hashValue &* 31) &+ element.hashValue
-		}
-
-		return hashValue
-	}
-}
-
-
-extension OrderedSet: Printable {
+extension OrderedSet: CustomStringConvertible {
 
 	public var description: String {
 		var description = "OrderedSet["
@@ -348,6 +332,22 @@ extension OrderedSet: Printable {
 		description += "]"
 
 		return description
+	}
+}
+
+
+extension OrderedSet: Equatable {}
+
+
+extension OrderedSet: Hashable {
+
+	public var hashValue: Int {
+		var hashValue = 1
+		for element in orderedElements {
+			hashValue = (hashValue &* 31) &+ element.hashValue
+		}
+
+		return hashValue
 	}
 }
 

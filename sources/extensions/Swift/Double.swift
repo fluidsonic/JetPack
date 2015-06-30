@@ -1,6 +1,6 @@
 public extension Double {
 
-	public func clamped(#min: Double, max: Double) -> Double {
+	public func clamped(min min: Double, max: Double) -> Double {
 		return Swift.min(Swift.max(self, min), max)
 	}
 

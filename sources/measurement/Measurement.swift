@@ -1,4 +1,4 @@
-public protocol Measurement: Comparable, DebugPrintable, Hashable, Printable {
+public protocol Measurement: Comparable, CustomDebugStringConvertible, Hashable, CustomStringConvertible {
 
 	typealias UnitType
 

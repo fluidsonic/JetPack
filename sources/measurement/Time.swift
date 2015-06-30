@@ -38,10 +38,18 @@ public struct Time: Measurement {
 }
 
 
-extension Time: DebugPrintable {
+extension Time: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "\(rawValue.description) \(Time.rawUnit.debugDescription)"
+	}
+}
+
+
+extension Time: CustomStringConvertible {
+
+	public var description: String {
+		return "\(rawValue.description) \(Time.rawUnit.abbreviation)"
 	}
 }
 
@@ -50,14 +58,6 @@ extension Time: Hashable {
 
 	public var hashValue: Int {
 		return rawValue.hashValue
-	}
-}
-
-
-extension Time: Printable {
-
-	public var description: String {
-		return "\(rawValue.description) \(Time.rawUnit.abbreviation)"
 	}
 }
 
@@ -103,7 +103,7 @@ extension TimeUnit {
 }
 
 
-extension TimeUnit: DebugPrintable {
+extension TimeUnit: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "TimeUnit(\(pluralName))"
@@ -111,7 +111,7 @@ extension TimeUnit: DebugPrintable {
 }
 
 
-extension TimeUnit: Printable {
+extension TimeUnit: CustomStringConvertible {
 
 	public var description: String {
 		return pluralName

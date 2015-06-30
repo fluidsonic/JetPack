@@ -4,8 +4,10 @@ import UIKit
 public extension UIImage {
 
 	public convenience init?(placeholderOfSize size: CGSize) {
-		let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue))
-		let cgimage = CGBitmapContextCreateImage(context)
+		let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGImageAlphaInfo.PremultipliedLast.rawValue)
+		guard let cgimage = CGBitmapContextCreateImage(context) else {
+			return nil
+		}
 
 		self.init(CGImage: cgimage, scale: 1, orientation: .Up)
 	}

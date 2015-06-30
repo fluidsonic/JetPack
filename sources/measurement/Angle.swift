@@ -54,10 +54,18 @@ public struct Angle: Measurement {
 }
 
 
-extension Angle: DebugPrintable {
+extension Angle: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "\(rawValue.description) \(Angle.rawUnit.debugDescription)"
+	}
+}
+
+
+extension Angle: CustomStringConvertible {
+
+	public var description: String {
+		return "\(rawValue.description) \(Angle.rawUnit.abbreviation)"
 	}
 }
 
@@ -66,14 +74,6 @@ extension Angle: Hashable {
 
 	public var hashValue: Int {
 		return rawValue.hashValue
-	}
-}
-
-
-extension Angle: Printable {
-
-	public var description: String {
-		return "\(rawValue.description) \(Angle.rawUnit.abbreviation)"
 	}
 }
 
@@ -132,7 +132,7 @@ extension AngleUnit {
 }
 
 
-extension AngleUnit: DebugPrintable {
+extension AngleUnit: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "AngleUnit(\(pluralName))"
@@ -140,7 +140,7 @@ extension AngleUnit: DebugPrintable {
 }
 
 
-extension AngleUnit: Printable {
+extension AngleUnit: CustomStringConvertible {
 
 	public var description: String {
 		return pluralName

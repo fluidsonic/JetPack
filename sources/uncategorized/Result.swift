@@ -49,7 +49,7 @@ public enum Result<T> {
 }
 
 
-extension Result: DebugPrintable {
+extension Result: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return description
@@ -57,7 +57,7 @@ extension Result: DebugPrintable {
 }
 
 
-extension Result: Printable {
+extension Result: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
@@ -82,7 +82,7 @@ public final class ResultValue<T> {
 }
 
 
-extension ResultValue: DebugPrintable {
+extension ResultValue: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return description
@@ -90,9 +90,9 @@ extension ResultValue: DebugPrintable {
 }
 
 
-extension ResultValue: Printable {
+extension ResultValue: CustomStringConvertible {
 
 	public var description: String {
-		return toString(value)
+		return String(value)
 	}
 }

@@ -12,10 +12,10 @@ public extension NSProgress {
 		}
 		set {
 			if let fractionCompletedHandler = newValue {
-				objc_setAssociatedObject(self, &fractionCompletedHandlerKey, Observer(progress: self, fractionCompletedHandler: fractionCompletedHandler), objc_AssociationPolicy(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+				objc_setAssociatedObject(self, &fractionCompletedHandlerKey, Observer(progress: self, fractionCompletedHandler: fractionCompletedHandler), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 			}
 			else {
-				objc_setAssociatedObject(self, &fractionCompletedHandlerKey, nil, objc_AssociationPolicy(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+				objc_setAssociatedObject(self, &fractionCompletedHandlerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 			}
 		}
 	}
@@ -35,11 +35,11 @@ private class Observer: NSObject {
 
 		super.init()
 
-		progress.addObserver(self, forKeyPath: "fractionCompleted", options: nil, context: nil)
+		progress.addObserver(self, forKeyPath: "fractionCompleted", options: [], context: nil)
 	}
 
 
-	private override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [NSObject : AnyObject]?, context: UnsafeMutablePointer<Void>) {
 		fractionCompletedHandler(progress.fractionCompleted)
 	}
 }

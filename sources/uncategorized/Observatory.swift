@@ -16,7 +16,7 @@ public class Observatory<Event> {
 	/// Subscribes to events from this observatory and returns a closure which can be called to unsubscribe.
 	///
 	/// Getting 'expression resolves to an unused function' error when calling this method? You have to store the method's return value somewhere, even if temporary!
-	public func enter(#observer: Observer) -> ObservatoryExit {
+	public func enter(observer observer: Observer) -> ObservatoryExit {
 		var subscription: Subscription?
 
 		var exitToken: dispatch_once_t = 0
@@ -25,7 +25,7 @@ public class Observatory<Event> {
 
 			dispatch_once(&exitToken) {
 				if let observatory = self {
-					removeFirstIdentical(&observatory.subscriptions, subscription!)
+					removeFirstIdentical(&observatory.subscriptions, element: subscription!)
 					subscription = nil
 				}
 
@@ -45,7 +45,7 @@ public class Observatory<Event> {
 	public init() {}
 
 
-	public func notify(#event: Event) {
+	public func notify(event event: Event) {
 		let subscriptions = self.subscriptions
 		for subscription in subscriptions {
 			subscription.notify(event: event)
@@ -74,7 +74,7 @@ private class ObservatorySubscription<Event> {
 	}
 
 
-	func notify(#event: Event) {
+	func notify(event event: Event) {
 		observer(event, exit)
 	}
 }

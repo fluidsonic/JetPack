@@ -68,10 +68,18 @@ public struct Speed: Measurement {
 }
 
 
-extension Speed: DebugPrintable {
+extension Speed: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "\(rawValue.description) \(Speed.rawUnit.debugDescription)"
+	}
+}
+
+
+extension Speed: CustomStringConvertible {
+
+	public var description: String {
+		return "\(rawValue.description) \(Speed.rawUnit.abbreviation)"
 	}
 }
 
@@ -80,14 +88,6 @@ extension Speed: Hashable {
 
 	public var hashValue: Int {
 		return rawValue.hashValue
-	}
-}
-
-
-extension Speed: Printable {
-
-	public var description: String {
-		return "\(rawValue.description) \(Speed.rawUnit.abbreviation)"
 	}
 }
 
@@ -159,7 +159,7 @@ extension SpeedUnit {
 }
 
 
-extension SpeedUnit: DebugPrintable {
+extension SpeedUnit: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "SpeedUnit(\(pluralName))"
@@ -167,7 +167,7 @@ extension SpeedUnit: DebugPrintable {
 }
 
 
-extension SpeedUnit: Printable {
+extension SpeedUnit: CustomStringConvertible {
 
 	public var description: String {
 		return pluralName

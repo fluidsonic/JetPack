@@ -40,7 +40,7 @@ public func findIdentical<C: CollectionType where C.Generator.Element: AnyObject
 
 
 public func findLast<C: CollectionType where C.Generator.Element: Equatable, C.Index: BidirectionalIndexType>(collection: C, element: C.Generator.Element) -> C.Index? {
-	for index in reverse(collection.startIndex ..< collection.endIndex) {
+	for index in (collection.startIndex ..< collection.endIndex).reverse() {
 		if collection[index] == element {
 			return index
 		}
@@ -65,30 +65,13 @@ public func not<T>(source: T -> Bool) -> T -> Bool {
 }
 
 
-public func not<T>(source: Bool) -> Bool {
+public func not(source: Bool) -> Bool {
 	return !source
 }
 
 
-// short version until `optionalMax` works correctly
-public func optionalMax2 <T: Comparable>(a: T?, b: T?) -> T? {
-	if let a = a {
-		if let b = b {
-			return max(a, b)
-		}
 
-		return a
-	}
-	else if let b = b {
-		return b
-	}
-
-	return nil
-}
-
-
-@availability(*, unavailable, message="Broken in Xcode 6.3.1 due to bug in Swift optimizer (-O).")
-public func optionalMax <T: Comparable>(elements: T? ...) -> T? {
+public func optionalMax<T: Comparable>(elements: T? ...) -> T? {
 	var maximumElement: T?
 
 	for element in elements {
@@ -108,25 +91,7 @@ public func optionalMax <T: Comparable>(elements: T? ...) -> T? {
 }
 
 
-// short version until `optionalMin` works correctly
-public func optionalMin2 <T: Comparable>(a: T?, b: T?) -> T? {
-	if let a = a {
-		if let b = b {
-			return min(a, b)
-		}
-
-		return a
-	}
-	else if let b = b {
-		return b
-	}
-
-	return nil
-}
-
-
-@availability(*, unavailable, message="Broken in Xcode 6.3.1 due to bug in Swift optimizer (-O).")
-public func optionalMin <T: Comparable>(elements: T? ...) -> T? {
+public func optionalMin<T: Comparable>(elements: T? ...) -> T? {
 	var minimumElement: T?
 
 	for element in elements {
@@ -147,7 +112,7 @@ public func optionalMin <T: Comparable>(elements: T? ...) -> T? {
 
 
 public func removeFirst<C : RangeReplaceableCollectionType where C.Generator.Element : Equatable>(inout collection: C, element: C.Generator.Element) -> C.Index? {
-	let index = find(collection, element)
+	let index = collection.indexOf(element)
 	if let index = index {
 		collection.removeAtIndex(index)
 	}
@@ -157,7 +122,7 @@ public func removeFirst<C : RangeReplaceableCollectionType where C.Generator.Ele
 
 
 public func removeFirstIdentical<C : RangeReplaceableCollectionType where C.Generator.Element : AnyObject>(inout collection: C, element: C.Generator.Element) -> C.Index? {
-	let index = findIdentical(collection, element)
+	let index = findIdentical(collection, element: element)
 	if let index = index {
 		collection.removeAtIndex(index)
 	}

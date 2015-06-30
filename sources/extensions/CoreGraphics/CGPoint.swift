@@ -19,17 +19,17 @@ public extension CGPoint {
 	}
 
 
-	public func pointByOffsetting(#dx: CGFloat, dy: CGFloat) -> CGPoint {
+	public func pointByOffsetting(dx dx: CGFloat, dy: CGFloat) -> CGPoint {
 		return CGPoint(x: x + dx, y: dy)
 	}
 
 
-	public func pointByOffsetting(#dx: CGFloat) -> CGPoint {
+	public func pointByOffsetting(dx dx: CGFloat) -> CGPoint {
 		return CGPoint(x: x + dx, y: y)
 	}
 
 
-	public func pointByOffsetting(#dy: CGFloat) -> CGPoint {
+	public func pointByOffsetting(dy dy: CGFloat) -> CGPoint {
 		return CGPoint(x: x, y: y + dy)
 	}
 

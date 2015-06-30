@@ -12,7 +12,7 @@ public extension CGFloat {
 	}
 
 
-	public func clamped(#min: CGFloat, max: CGFloat) -> CGFloat {
+	public func clamped(min min: CGFloat, max: CGFloat) -> CGFloat {
 		return Swift.min(Swift.max(self, min), max)
 	}
 

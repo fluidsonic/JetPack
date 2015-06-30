@@ -3,7 +3,7 @@ import UIKit
 
 public extension UIBezierPath {
 
-	public func addRoundedCorner(#direction: RoundedCornerDirection, radius: CGFloat) {
+	public func addRoundedCorner(direction direction: RoundedCornerDirection, radius: CGFloat) {
 		if radius <= 0 {
 			return
 		}
@@ -67,7 +67,7 @@ public extension UIBezierPath {
 	}
 
 
-	private func centerForRoundedCorner(#direction: RoundedCornerDirection, radius: CGFloat) -> CGPoint {
+	private func centerForRoundedCorner(direction direction: RoundedCornerDirection, radius: CGFloat) -> CGPoint {
 		switch direction {
 		case .LeftDown, .RightDown:
 			return currentPoint.pointByOffsetting(dy: radius)
@@ -84,7 +84,7 @@ public extension UIBezierPath {
 	}
 
 
-	private class func endAngleForRoundedCorner(#direction: RoundedCornerDirection) -> CGFloat {
+	private class func endAngleForRoundedCorner(direction direction: RoundedCornerDirection) -> CGFloat {
 		switch direction {
 		case .DownLeft, .DownRight:
 			return CGMath.radiansBottom
@@ -101,7 +101,7 @@ public extension UIBezierPath {
 	}
 
 
-	private class func roundedCornerIsClockwise(#direction: RoundedCornerDirection) -> Bool {
+	private class func roundedCornerIsClockwise(direction direction: RoundedCornerDirection) -> Bool {
 		switch direction {
 		case .UpRight, .RightDown, .DownLeft, .LeftUp:
 			return true
@@ -112,7 +112,7 @@ public extension UIBezierPath {
 	}
 
 
-	private class func startAngleForRoundedCorner(#direction: RoundedCornerDirection) -> CGFloat {
+	private class func startAngleForRoundedCorner(direction direction: RoundedCornerDirection) -> CGFloat {
 		switch direction {
 		case .DownLeft, .UpLeft:
 			return CGMath.radiansRight

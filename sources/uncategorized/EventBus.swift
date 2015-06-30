@@ -46,7 +46,7 @@ public class EventBus {
 				dispatch_once(&unsubscribeToken) {
 					synchronized(self.lock) {
 						if let subscriptions = self.subscriptionsByScope[scope] as! Subscriptions<T>? {
-							removeFirstIdentical(&subscriptions.list, subscription)
+							removeFirstIdentical(&subscriptions.list, element: subscription)
 
 							if subscriptions.list.isEmpty {
 								self.subscriptionsByScope[scope] = nil

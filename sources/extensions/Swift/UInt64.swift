@@ -1,6 +1,6 @@
 public extension UInt64 {
 
-	public static func random(lower: UInt64 = min, upper: UInt64 = max) -> UInt64 {
+	public static func random(lower lower: UInt64 = min, upper: UInt64 = max) -> UInt64 {
 		var m: UInt64
 		let u = upper - lower
 		var r = arc4random(UInt64)
@@ -20,7 +20,7 @@ public extension UInt64 {
 	}
 
 
-	public static func random(min: UInt64 = 0, max: UInt64) -> UInt64 {
+	public static func random(min min: UInt64 = 0, max: UInt64) -> UInt64 {
 		return random(lower: min, upper: max + 1)
 	}
 

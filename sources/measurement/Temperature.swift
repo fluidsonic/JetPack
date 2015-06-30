@@ -50,10 +50,18 @@ public struct Temperature: Measurement {
 }
 
 
-extension Temperature: DebugPrintable {
+extension Temperature: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "\(rawValue.description) \(Temperature.rawUnit.debugDescription)"
+	}
+}
+
+
+extension Temperature: CustomStringConvertible {
+
+	public var description: String {
+		return "\(rawValue.description) \(Temperature.rawUnit.abbreviation)"
 	}
 }
 
@@ -62,14 +70,6 @@ extension Temperature: Hashable {
 
 	public var hashValue: Int {
 		return rawValue.hashValue
-	}
-}
-
-
-extension Temperature: Printable {
-
-	public var description: String {
-		return "\(rawValue.description) \(Temperature.rawUnit.abbreviation)"
 	}
 }
 
@@ -128,7 +128,7 @@ extension TemperatureUnit {
 }
 
 
-extension TemperatureUnit: DebugPrintable {
+extension TemperatureUnit: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "TemperatureUnit(\(pluralName))"
@@ -136,7 +136,7 @@ extension TemperatureUnit: DebugPrintable {
 }
 
 
-extension TemperatureUnit: Printable {
+extension TemperatureUnit: CustomStringConvertible {
 
 	public var description: String {
 		return pluralName

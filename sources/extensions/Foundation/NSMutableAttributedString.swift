@@ -30,7 +30,7 @@ public extension NSMutableAttributedString {
 	}
 
 
-	public func appendString(string: String, attributes: [NSObject : AnyObject]) {
+	public func appendString(string: String, attributes: [String : AnyObject]) {
 		let location = length
 
 		replaceCharactersInRange(NSRange(location: location, length: 0), withString: string)

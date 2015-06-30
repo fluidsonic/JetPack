@@ -14,7 +14,7 @@ public extension UIView {
 
 
 	public func removeAllSubviews() {
-		for subview in reverse(subviews) {
+		for subview in subviews.reverse() {
 			subview.removeFromSuperview()
 		}
 	}

@@ -17,18 +17,19 @@ public extension String {
 	}
 
 
-	public func stringByReplacing(#regex: NSRegularExpression, withTemplate template: String) -> String {
-		return regex.stringByReplacingMatchesInString(self, options: nil, range: NSMakeRange(0, count(utf16)), withTemplate: template)
+	public func stringByReplacing(regex regex: NSRegularExpression, withTemplate template: String) -> String {
+		return regex.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, utf16.count), withTemplate: template)
 	}
 
 
-	public func stringByReplacing(#regexPattern: String, withTemplate template: String) -> String {
-		var error: NSError?
-		if let regex = NSRegularExpression(pattern: regexPattern, options: NSRegularExpressionOptions.DotMatchesLineSeparators, error: &error) {
+	public func stringByReplacing(regexPattern regexPattern: String, withTemplate template: String) -> String {
+		do {
+			let regex = try NSRegularExpression(pattern: regexPattern, options: NSRegularExpressionOptions.DotMatchesLineSeparators)
 			return stringByReplacing(regex: regex, withTemplate: template)
 		}
-
-		fatalError("Invalid regular expression pattern.")
+		catch let error {
+			fatalError("Invalid regular expression pattern: \(error)")
+		}
 	}
 
 
@@ -51,7 +52,7 @@ public extension String {
 			return ""
 		}
 
-		let currentLength = count(self)
+		let currentLength = characters.count
 		if currentLength <= length {
 			return self
 		}

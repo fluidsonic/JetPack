@@ -37,7 +37,7 @@ public func onMainThread(afterDelay delay: NSTimeInterval, block: Block) {
 }
 
 
-public func timer(#delay: NSTimeInterval, repeats: Bool = false, callback: Block) -> NSTimer {
+public func timer(delay delay: NSTimeInterval, repeats: Bool = false, callback: Block) -> NSTimer {
 	return NSTimer.scheduledTimerWithTimeInterval(delay, target: blockTimerHandler, selector: "handle:", userInfo: StrongReference(callback), repeats: repeats)
 }
 

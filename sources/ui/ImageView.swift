@@ -67,7 +67,7 @@ public class ImageView: View {
 				imageFilterContext = context
 			}
 
-			let inputImage = CIImage(CGImage: image.CGImage)
+			let inputImage = CIImage(CGImage: image.CGImage!)
 
 			var filterImage = inputImage
 			for filter in imageFilters {
@@ -75,7 +75,7 @@ public class ImageView: View {
 				filterImage = filter.outputImage
 			}
 
-			let outputImage = context.createCGImage(filterImage, fromRect: inputImage.extent())
+			let outputImage = context.createCGImage(filterImage, fromRect: inputImage.extent)
 			return UIImage(CGImage: outputImage)
 		}
 

@@ -57,10 +57,18 @@ public struct Pressure: Measurement {
 }
 
 
-extension Pressure: DebugPrintable {
+extension Pressure: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "\(rawValue.description) \(Pressure.rawUnit.debugDescription)"
+	}
+}
+
+
+extension Pressure: CustomStringConvertible {
+
+	public var description: String {
+		return "\(rawValue.description) \(Pressure.rawUnit.abbreviation)"
 	}
 }
 
@@ -69,14 +77,6 @@ extension Pressure: Hashable {
 
 	public var hashValue: Int {
 		return rawValue.hashValue
-	}
-}
-
-
-extension Pressure: Printable {
-
-	public var description: String {
-		return "\(rawValue.description) \(Pressure.rawUnit.abbreviation)"
 	}
 }
 
@@ -123,7 +123,7 @@ extension PressureUnit {
 }
 
 
-extension PressureUnit: DebugPrintable {
+extension PressureUnit: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "PressureUnit(\(pluralName))"
@@ -131,7 +131,7 @@ extension PressureUnit: DebugPrintable {
 }
 
 
-extension PressureUnit: Printable {
+extension PressureUnit: CustomStringConvertible {
 
 	public var description: String {
 		return pluralName

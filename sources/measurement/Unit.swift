@@ -1,4 +1,4 @@
-public protocol Unit: DebugPrintable, Printable {
+public protocol Unit: CustomDebugStringConvertible, CustomStringConvertible {
 
 	var abbreviation: String { get }
 	var pluralName: String { get }

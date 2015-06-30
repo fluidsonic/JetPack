@@ -10,8 +10,8 @@ public extension NSRange {
 
 	public init(range: Range<String.Index>?, inString string: String) {
 		if let range = range {
-			let location = NSRange.locationForIndex(string.startIndex, inString: string)
-			let endLocation = NSRange.locationForIndex(string.endIndex, inString: string)
+			let location = NSRange.locationForIndex(range.startIndex, inString: string)
+			let endLocation = NSRange.locationForIndex(range.endIndex, inString: string)
 
 			self.init(location: location, length: distance(location, endLocation))
 		}

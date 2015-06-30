@@ -17,9 +17,9 @@ public struct OperatingSystem {
 		}
 		else {
 			let versionComponents = UIDevice.currentDevice().systemVersion.componentsSeparatedByString(".")
-			let majorVersion = versionComponents[0].toInt()!
-			let minorVersion = (versionComponents.count >= 2 ? versionComponents[1].toInt()! : 0)
-			let patchVersion = (versionComponents.count >= 3 ? versionComponents[2].toInt()! : 0)
+			let majorVersion = Int(versionComponents[0])!
+			let minorVersion = (versionComponents.count >= 2 ? Int(versionComponents[1])! : 0)
+			let patchVersion = (versionComponents.count >= 3 ? Int(versionComponents[2])! : 0)
 
 			version = Version(major: majorVersion, minor: minorVersion, patch: patchVersion)
 		}

@@ -33,7 +33,7 @@ public extension Version {
 extension Version: Comparable {}
 
 
-extension Version: DebugPrintable {
+extension Version: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "Version(\(description))"
@@ -41,7 +41,7 @@ extension Version: DebugPrintable {
 }
 
 
-extension Version: Printable {
+extension Version: CustomStringConvertible {
 
 	public var description: String {
 		if patch > 0 {

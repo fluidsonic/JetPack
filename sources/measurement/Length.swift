@@ -110,10 +110,18 @@ public struct Length: Measurement {
 }
 
 
-extension Length: DebugPrintable {
+extension Length: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "\(rawValue.description) \(Length.rawUnit.debugDescription)"
+	}
+}
+
+
+extension Length: CustomStringConvertible {
+
+	public var description: String {
+		return "\(rawValue.description) \(Length.rawUnit.abbreviation)"
 	}
 }
 
@@ -122,14 +130,6 @@ extension Length: Hashable {
 
 	public var hashValue: Int {
 		return rawValue.hashValue
-	}
-}
-
-
-extension Length: Printable {
-
-	public var description: String {
-		return "\(rawValue.description) \(Length.rawUnit.abbreviation)"
 	}
 }
 
@@ -240,7 +240,7 @@ extension LengthUnit {
 }
 
 
-extension LengthUnit: DebugPrintable {
+extension LengthUnit: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "LengthUnit(\(pluralName))"
@@ -248,7 +248,7 @@ extension LengthUnit: DebugPrintable {
 }
 
 
-extension LengthUnit: Printable {
+extension LengthUnit: CustomStringConvertible {
 
 	public var description: String {
 		return pluralName

@@ -13,7 +13,7 @@ public class ActionBus {
 			let actionId = ObjectIdentifier(A.Type)
 			let handler = ActionHandler(run: run)
 
-			if let previousHandler = handlersByActionId.updateValue(handler, forKey: actionId) {
+			guard handlersByActionId.updateValue(handler, forKey: actionId) == nil else {
 				preconditionFailure("Cannot provide multiple handlers for action `\(A.self)!")
 			}
 
