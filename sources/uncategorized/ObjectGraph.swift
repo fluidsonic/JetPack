@@ -1,6 +1,3 @@
-// TODO:
-
-
 public class ObjectGraph {
 
 	private var objects = [ObjectIdentifier : AnyObject]()
@@ -18,6 +15,12 @@ public class ObjectGraph {
 	// You can only add AnyObject or else we'd have a big mess with (ImplicitlyUnwrapped)Optional which also conform to Any!
 	public final func add<T: AnyObject>(object: T, forType type: T.Type) {
 		let id = ObjectIdentifier(type as Any.Type)
+		objects[id] = object
+	}
+
+
+	// temporary workaround until .add(someClassObjcet, SomeProtocol.self) no longer crashes (last tested in Xcode 7 Beta 2)
+	public final func add(object: AnyObject, forUncheckedProtocolId id: ObjectIdentifier) {
 		objects[id] = object
 	}
 

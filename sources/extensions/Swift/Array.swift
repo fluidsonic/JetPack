@@ -1,5 +1,3 @@
-// make public once the compiler allows it
-
 // until we no longer need MODULE.conflictedName (MODULE can vary depending on how you use this framework)
 
 private func _first<S : SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
@@ -11,14 +9,14 @@ private func _separate<E, S : SequenceType where S.Generator.Element == E>(sourc
 }
 
 
-extension Array {
+public extension Array {
 
-	func first(includeElement: T -> Bool) -> T? {
+	public func first(includeElement: T -> Bool) -> T? {
 		return _first(self, includeElement: includeElement)
 	}
 
 
-	var randomElement: T? {
+	public var randomElement: T? {
 		if isEmpty {
 			return nil
 		}
@@ -27,7 +25,7 @@ extension Array {
 	}
 
 
-	func separate(isLeftElement: T -> Bool) -> ([T], [T]) {
+	public func separate(isLeftElement: T -> Bool) -> ([T], [T]) {
 		return _separate(self, isLeftElement: isLeftElement)
 	}
 }

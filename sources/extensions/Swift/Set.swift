@@ -1,13 +1,13 @@
-extension Set {
+public extension Set {
 
-	init(element: T) {
+	public init(element: T) {
 		self.init()
 
 		insert(element)
 	}
 
 
-	mutating func filter(includeElement: (T) -> Bool) {
+	public mutating func filterInPlace(includeElement: (T) -> Bool) {
 		var excludes = [T]()
 		for element in self {
 			if !includeElement(element) {
@@ -15,11 +15,12 @@ extension Set {
 			}
 		}
 
-		self.subtractInPlace(excludes)
+		subtractInPlace(excludes)
 	}
 
 
-	func filtered(includeElement: (T) -> Bool) -> Set<T> {
+	@warn_unused_result(mutable_variant="filterInPlace()")
+	public func filterAsSet(includeElement: (T) -> Bool) -> Set<T> {
 		var newSet = Set<T>()
 		for element in self {
 			if includeElement(element) {
@@ -28,15 +29,5 @@ extension Set {
 		}
 
 		return newSet
-	}
-
-
-	func mapped<U: Hashable>(transform: (T) -> U) -> Set<U> {
-		var mappedSet = Set<U>()
-		for element in self {
-			mappedSet.insert(transform(element))
-		}
-
-		return mappedSet
 	}
 }
