@@ -3,7 +3,7 @@ import Foundation
 
 public struct OrderedSet<T: Hashable> {
 
-	typealias Element = T
+	public typealias Element = T
 
 	private var elements: Set<T>
 	private var orderedElements = [T]()
@@ -354,7 +354,7 @@ extension OrderedSet: Hashable {
 
 extension OrderedSet: SequenceType {
 
-	typealias Generator = IndexingGenerator<[T]>
+	public typealias Generator = IndexingGenerator<[T]>
 
 
 	public func generate() -> Generator {
