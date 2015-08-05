@@ -11,12 +11,12 @@ private func _separate<E, S : SequenceType where S.Generator.Element == E>(sourc
 
 public extension Array {
 
-	public func first(includeElement: T -> Bool) -> T? {
+	public func first(includeElement: Element -> Bool) -> Element? {
 		return _first(self, includeElement: includeElement)
 	}
 
 
-	public var randomElement: T? {
+	public var randomElement: Element? {
 		if isEmpty {
 			return nil
 		}
@@ -25,7 +25,7 @@ public extension Array {
 	}
 
 
-	public func separate(isLeftElement: T -> Bool) -> ([T], [T]) {
+	public func separate(isLeftElement: Element -> Bool) -> ([Element], [Element]) {
 		return _separate(self, isLeftElement: isLeftElement)
 	}
 }

@@ -39,7 +39,7 @@ private class Observer: NSObject {
 	}
 
 
-	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [NSObject : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
 		fractionCompletedHandler(progress.fractionCompleted)
 	}
 }
