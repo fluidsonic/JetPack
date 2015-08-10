@@ -72,7 +72,9 @@ public class ImageView: View {
 			var filterImage = inputImage
 			for filter in imageFilters {
 				filter.setValue(filterImage, forKey: "inputImage")
-				filterImage = filter.outputImage
+				if let outputImage = filter.outputImage {
+					filterImage = outputImage
+				}
 			}
 
 			let outputImage = context.createCGImage(filterImage, fromRect: inputImage.extent)
