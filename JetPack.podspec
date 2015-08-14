@@ -10,6 +10,8 @@ Pod::Spec.new do |s|
 	s.source   = { :git => "https://github.com/fluidsonic/JetPack.git" }
 	s.summary  = "A Swiss Army knife for iOS development with Swift in a very early stage."
 
-	s.source_files  = "sources/**/*.swift"
-	s.exclude_files = "sources/JetPack.swift"
+	s.source_files    = "sources/**/*.swift"
+	s.exclude_files   = "sources/JetPack.swift"
+	s.frameworks      = "CoreGraphics", "Foundation", "UIKit"
+	s.weak_frameworks = "AssetsLibrary", "Photos"
 end
