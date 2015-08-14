@@ -16,23 +16,23 @@ public extension CGRect {
 	}
 
 	public var bottom: CGFloat {
-		get { return origin.y + size.height }
-		mutating set { origin.y = newValue - size.height }
+		get { return origin.top + size.height }
+		mutating set { origin.top = newValue - size.height }
 	}
 
 	public var bottomLeft: CGPoint {
-		get { return CGPoint(x: left, y: bottom) }
-		mutating set { left = newValue.x; bottom = newValue.y }
+		get { return CGPoint(left: left, top: bottom) }
+		mutating set { left = newValue.left; bottom = newValue.top }
 	}
 
 	public var bottomRight: CGPoint {
-		get { return CGPoint(x: right, y: bottom) }
-		mutating set { right = newValue.x; bottom = newValue.y }
+		get { return CGPoint(left: right, top: bottom) }
+		mutating set { right = newValue.left; bottom = newValue.top }
 	}
 
 	public var center: CGPoint {
-		get { return CGPoint(x: left + (width / 2), y: top + (height / 2)) }
-		mutating set { left = newValue.x - (width / 2); top = newValue.y - (height / 2) }
+		get { return CGPoint(left: left + (width / 2), top: top + (height / 2)) }
+		mutating set { left = newValue.left - (width / 2); top = newValue.top - (height / 2) }
 	}
 
 	var height: CGFloat {  // make public once the ambigous call problem is solved
@@ -40,19 +40,24 @@ public extension CGRect {
 		mutating set { size.height = newValue }
 	}
 
+	public var horizontalCenter: CGFloat {
+		get { return CGFloat(left + (width / 2)) }
+		mutating set { left = newValue - (width / 2) }
+	}
+
 	public var left: CGFloat {
-		get { return origin.x }
-		mutating set { origin.x = newValue }
+		get { return origin.left }
+		mutating set { origin.left = newValue }
 	}
 
 	public var right: CGFloat {
-		get { return origin.x + size.width }
-		mutating set { origin.x = newValue - size.width }
+		get { return origin.left + size.width }
+		mutating set { origin.left = newValue - size.width }
 	}
 
 	public var top: CGFloat {
-		get { return origin.y }
-		mutating set { origin.y = newValue }
+		get { return origin.top }
+		mutating set { origin.top = newValue }
 	}
 
 	public var topLeft: CGPoint {
@@ -61,8 +66,13 @@ public extension CGRect {
 	}
 
 	public var topRight: CGPoint {
-		get { return CGPoint(x: right, y: top) }
-		mutating set { right = newValue.x; top = newValue.y }
+		get { return CGPoint(left: right, top: top) }
+		mutating set { right = newValue.left; top = newValue.top }
+	}
+
+	public var verticalCenter: CGFloat {
+		get { return CGFloat(top + (height / 2)) }
+		mutating set { top = newValue - (height / 2) }
 	}
 
 	var width: CGFloat {  // make public once the ambigous call problem is solved
