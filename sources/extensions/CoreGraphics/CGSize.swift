@@ -24,4 +24,9 @@ public extension CGSize {
 	public func sizeConstrainedToSize(constrain: CGSize) -> CGSize {
 		return CGSize(width: min(width, constrain.width), height: min(height, constrain.height))
 	}
+
+
+	public func sizeScaledBy(scale: CGFloat) -> CGSize {
+		return CGSize(width: width * scale, height: height * scale)
+	}
 }
