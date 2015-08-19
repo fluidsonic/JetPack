@@ -73,6 +73,13 @@ extension Dictionary {
 
 		return mappedDictionary
 	}
+
+
+	mutating func updateValues(fromDictionary: [Key : Value]) {
+		for (key, value) in fromDictionary {
+			updateValue(value, forKey: key)
+		}
+	}
 }
 
 
