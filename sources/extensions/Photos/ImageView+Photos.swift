@@ -31,8 +31,10 @@ public extension ImageView {
 			options.synchronous = false
 			options.version = .Current
 
+			var cancelled = false
+
 			let requestId = manager.requestImageForAsset(asset, targetSize: targetSize, contentMode: contentMode, options: options) { image, result in
-				if let cancelled = result?[PHImageCancelledKey] as? Bool where cancelled {
+				if cancelled {
 					return
 				}
 
@@ -40,7 +42,10 @@ public extension ImageView {
 			}
 
 			return {
-				manager.cancelImageRequest(requestId)
+				if !cancelled {
+					cancelled = true
+					manager.cancelImageRequest(requestId)
+				}
 			}
 		}
 	}

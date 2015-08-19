@@ -21,6 +21,11 @@ public /* non-final */ class ImageView: View {
 	}
 
 
+	deinit {
+		sourceCancellation?()
+	}
+
+
 	public required init(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -133,7 +138,7 @@ public /* non-final */ class ImageView: View {
 			sourceCancellation = nil
 
 			if let source = source {
-				let sourceCancellation = source.retrieveImageForImageView(self) { [weak self] image in
+				sourceCancellation = source.retrieveImageForImageView(self) { [weak self] image in
 					precondition(NSThread.isMainThread(), "ImageView.Source completion closure must be called on the main thread.")
 
 					if let imageView = self {
@@ -152,10 +157,6 @@ public /* non-final */ class ImageView: View {
 						imageView.image = image
 						imageView.isSettingImageFromSource = false
 					}
-				}
-
-				if !sourceImageRetrievalCompleted {
-					self.sourceCancellation = sourceCancellation
 				}
 			}
 			else if !isSettingSourceFromImage {
