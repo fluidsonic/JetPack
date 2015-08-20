@@ -50,8 +50,12 @@ public /* non-final */ class ImageView: View {
 
 			if !drawFrame.isEmpty {
 				if image.renderingMode == .AlwaysTemplate {
+					let viewSize = bounds.size
+					
 					let context = UIGraphicsGetCurrentContext()
 					CGContextSaveGState(context)
+					CGContextScaleCTM(context, 1, -1)
+					CGContextTranslateCTM(context, 0, -viewSize.height)
 					CGContextClipToMask(context, drawFrame, image.CGImage)
 					tintColor.setFill()
 					CGContextFillRect(context, drawFrame)
@@ -247,7 +251,7 @@ public /* non-final */ class ImageView: View {
 		if !padding.isEmpty {
 			opaque = false
 		}
-		else if !(image?.hasAlphaChannel ?? true) {
+		else if (image?.hasAlphaChannel ?? true) {
 			opaque = false
 		}
 
