@@ -31,6 +31,21 @@ public extension String {
 			fatalError("Invalid regular expression pattern: \(error)")
 		}
 	}
+	
+	
+	public func firstMatchForRegexPattern(regexPattern: String) -> [String] {
+		do {
+			let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+			guard let match = regex.firstMatchInString(self, options: [], range: NSMakeRange(0, utf16.count)) else {
+				return []
+			}
+			
+			return (0 ..< match.numberOfRanges).map { self[match.rangeAtIndex($0).rangeInString(self)!] }
+		}
+		catch let error {
+			fatalError("Invalid regular expression pattern: \(error)")
+		}
+	}
 
 
 	public func substringByMatchingPattern(pattern: String) -> String? {
@@ -57,7 +72,7 @@ public extension String {
 			return self
 		}
 
-		return self[startIndex ..< advance(startIndex, length - 1)] + "…"
+		return self[startIndex ..< startIndex.advancedBy(length - 1)] + "…"
 	}
 
 

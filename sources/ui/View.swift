@@ -7,7 +7,7 @@ public class View: UIView {
 
 
 	public init() {
-		super.init(frame: .zeroRect)
+		super.init(frame: .zero)
 	}
 
 
