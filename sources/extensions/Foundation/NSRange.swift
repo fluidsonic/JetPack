@@ -13,7 +13,7 @@ public extension NSRange {
 			let location = NSRange.locationForIndex(range.startIndex, inString: string)
 			let endLocation = NSRange.locationForIndex(range.endIndex, inString: string)
 
-			self.init(location: location, length: distance(location, endLocation))
+			self.init(location: location, length: location.distanceTo(endLocation))
 		}
 		else {
 			self.init(location: NSNotFound, length: 0)
@@ -31,13 +31,13 @@ public extension NSRange {
 			return nil
 		}
 
-		return advance(string.utf16.startIndex, location, string.utf16.endIndex).samePositionIn(string)
+		return string.utf16.startIndex.advancedBy(location, limit:string.utf16.endIndex).samePositionIn(string)
 	}
 
 
 	private static func locationForIndex(index: String.Index?, inString string: String) -> Int {
 		if let index = index {
-			return distance(string.utf16.startIndex, index.samePositionIn(string.utf16))
+			return string.utf16.startIndex.distanceTo(index.samePositionIn(string.utf16))
 		}
 
 		return NSNotFound

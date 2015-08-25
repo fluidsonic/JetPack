@@ -1,6 +1,6 @@
 public class ImageView: View {
 
-	private var drawFrame = CGRect.zeroRect
+	private var drawFrame = CGRect.zero
 	private var imageFilterContext: CIContext?
 
 
@@ -113,12 +113,12 @@ public class ImageView: View {
 			return CGSize(width: min(size.width, image.size.width), height: min(size.height, image.size.height))
 		}
 
-		return .zeroSize
+		return .zero
 	}
 
 
 	private func updateDrawFrame() {
-		drawFrame = .zeroRect
+		drawFrame = .zero
 
 		if let image = image {
 			let imageSize = image.size

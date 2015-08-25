@@ -72,7 +72,7 @@ public extension String {
 			return self
 		}
 
-		return self[startIndex ..< advance(startIndex, length - 1)] + "…"
+		return self[startIndex ..< startIndex.advancedBy(length - 1)] + "…"
 	}
 
 
