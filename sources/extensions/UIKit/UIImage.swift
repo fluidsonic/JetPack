@@ -3,6 +3,22 @@ import UIKit
 
 public extension UIImage {
 
+	public static func fromColor(color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
+		let frame = CGRect(size: size.sizeScaledBy(scale))
+
+		UIGraphicsBeginImageContextWithOptions(frame.size, false, scale)
+
+		let context = UIGraphicsGetCurrentContext()
+		CGContextSetFillColorWithColor(context, color.CGColor)
+		CGContextFillRect(context, frame)
+
+		let image = UIGraphicsGetImageFromCurrentImageContext()
+		UIGraphicsEndImageContext()
+
+		return image
+	}
+
+
 	public convenience init?(placeholderOfSize size: CGSize) {
 		let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue))
 		let cgimage = CGBitmapContextCreateImage(context)
