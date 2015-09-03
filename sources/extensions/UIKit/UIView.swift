@@ -20,6 +20,38 @@ public extension UIView {
 	}
 
 
+	@objc(_roundScaled_CGFloat:)
+	public func roundScaled(value: CGFloat) -> CGFloat {
+		let scale = contentScaleFactor
+
+		return round(value * scale) / scale
+	}
+
+
+	@objc(_roundScaled_CGSize:)
+	public func roundScaled(value: CGSize) -> CGSize {
+		let scale = contentScaleFactor
+
+		return CGSize(
+			width:  round(value.width * scale) / scale,
+			height: round(value.height * scale) / scale
+		)
+	}
+
+
+	@objc(_roundScaled_CGRect:)
+	public func roundScaled(value: CGRect) -> CGRect {
+		let scale = contentScaleFactor
+
+		return CGRect(
+			left:   round(value.left * scale) / scale,
+			top:    round(value.top * scale) / scale,
+			width:  round(value.width * scale) / scale,
+			height: round(value.height * scale) / scale
+		)
+	}
+
+
 	public func sizeThatFits() -> CGSize {
 		return sizeThatFits(CGSize.maxSize)
 	}

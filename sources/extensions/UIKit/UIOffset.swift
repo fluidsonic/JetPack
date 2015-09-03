@@ -3,5 +3,5 @@ import UIKit
 
 public extension UIOffset {
 
-	public static let zeroOffset = UIOffsetZero
+	public static let zero = UIOffset()
 }
