@@ -34,7 +34,7 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public init<S: SequenceType where S.Generator.Element == T>(sequence: S) {
+	public init<S: SequenceType where S.Generator.Element == T>(_ sequence: S) {
 		self.init()
 
 		union(sequence)
@@ -281,7 +281,7 @@ public struct OrderedSet<T: Hashable> {
 extension OrderedSet: ArrayLiteralConvertible {
 
 	public init(arrayLiteral elements: T...) {
-		self.init(sequence: elements)
+		self.init(elements)
 	}
 }
 
