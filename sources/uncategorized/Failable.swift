@@ -1,9 +1,6 @@
-import Foundation
-
-
-public enum Result<T> {
+public enum Failable<Result> {
 	case Failure(ErrorType)
-	case Success(T)
+	case Success(Result)
 
 
 	public var error: ErrorType? {
@@ -14,10 +11,11 @@ public enum Result<T> {
 	}
 
 
-	public func get() throws -> T {
+	@warn_unused_result
+	public func get() throws -> Result {
 		switch self {
 		case let .Failure(error): throw error
-		case let .Success(value): return value
+		case let .Success(result): return result
 		}
 	}
 
@@ -38,16 +36,16 @@ public enum Result<T> {
 	}
 
 
-	public var value: T? {
+	public var result: Result? {
 		switch self {
-		case .Failure:            return nil
-		case let .Success(value): return value
+		case .Failure:             return nil
+		case let .Success(result): return result
 		}
 	}
 }
 
 
-extension Result: CustomDebugStringConvertible {
+extension Failable: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return description
@@ -55,12 +53,12 @@ extension Result: CustomDebugStringConvertible {
 }
 
 
-extension Result: CustomStringConvertible {
+extension Failable: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case let .Failure(error): return "Failure(\(error))"
-		case let .Success(value): return "Success(\(value))"
+		case let .Failure(error):  return "Failure(\(error))"
+		case let .Success(result): return "Success(\(result))"
 		}
 	}
 }
