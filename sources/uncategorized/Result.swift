@@ -2,11 +2,11 @@ import Foundation
 
 
 public enum Result<T> {
-	case Failure(NSError)
-	case Success(ResultValue<T>)
+	case Failure(ErrorType)
+	case Success(T)
 
 
-	public var error: NSError? {
+	public var error: ErrorType? {
 		switch self {
 		case let .Failure(error): return error
 		case .Success:            return nil
@@ -14,8 +14,11 @@ public enum Result<T> {
 	}
 
 
-	public static func failure(error: NSError) -> Result {
-		return .Failure(error)
+	public func get() throws -> T {
+		switch self {
+		case let .Failure(error): throw error
+		case let .Success(value): return value
+		}
 	}
 
 
@@ -35,15 +38,10 @@ public enum Result<T> {
 	}
 
 
-	public static func success(value: T) -> Result {
-		return .Success(ResultValue(value))
-	}
-
-
 	public var value: T? {
 		switch self {
 		case .Failure:            return nil
-		case let .Success(value): return value.value
+		case let .Success(value): return value
 		}
 	}
 }
@@ -64,35 +62,5 @@ extension Result: CustomStringConvertible {
 		case let .Failure(error): return "Failure(\(error))"
 		case let .Success(value): return "Success(\(value))"
 		}
-	}
-}
-
-
-
-// Workaround for Swift limitation which does not support dynamically sized enum<T>.
-
-public final class ResultValue<T> {
-
-	private let value: T
-
-
-	private init(_ value: T) {
-		self.value = value
-	}
-}
-
-
-extension ResultValue: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return description
-	}
-}
-
-
-extension ResultValue: CustomStringConvertible {
-
-	public var description: String {
-		return String(value)
 	}
 }
