@@ -22,13 +22,6 @@ public struct TypeInstanceDictionary {
 	}
 	
 
-	/*
-	public final func add(object: AnyObject, forUncheckedProtocolId id: ObjectIdentifier) {
-		objects[id] = object
-	}
-*/
-
-
 	// Be very careful to not call this method with an Optional or an ImplicitlyUnwrappedOptional type. Use `as` in this case to expect the returned instance to be a non-optional.
 	public func get<T>() -> T {
 		return get(T.self)
