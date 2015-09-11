@@ -111,16 +111,6 @@ public func optionalMin<T: Comparable>(elements: T? ...) -> T? {
 }
 
 
-public func removeFirst<C : RangeReplaceableCollectionType where C.Generator.Element : Equatable>(inout collection: C, element: C.Generator.Element) -> C.Index? {
-	let index = collection.indexOf(element)
-	if let index = index {
-		collection.removeAtIndex(index)
-	}
-
-	return index
-}
-
-
 public func removeFirstIdentical<C : RangeReplaceableCollectionType where C.Generator.Element : AnyObject>(inout collection: C, element: C.Generator.Element) -> C.Index? {
 	let index = findIdentical(collection, element: element)
 	if let index = index {
