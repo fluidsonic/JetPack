@@ -16,7 +16,7 @@ public extension CollectionType {
 public extension CollectionType where Self.Generator.Element: Equatable {
 
 	@warn_unused_result
-	public func indexOf(element: Generator.Element) -> Index? {
+	public func lastIndexOf(element: Generator.Element) -> Index? {
 		for index in (startIndex ..< endIndex).reverse() {
 			if self[index] == element {
 				return index
