@@ -39,17 +39,6 @@ public func findIdentical<C: CollectionType where C.Generator.Element: AnyObject
 }
 
 
-public func findLast<C: CollectionType where C.Generator.Element: Equatable, C.Index: BidirectionalIndexType>(collection: C, element: C.Generator.Element) -> C.Index? {
-	for index in (collection.startIndex ..< collection.endIndex).reverse() {
-		if collection[index] == element {
-			return index
-		}
-	}
-
-	return nil
-}
-
-
 public func first<S: SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
 	for element in source {
 		if includeElement(element) {
