@@ -1,7 +1,5 @@
-#if !FALLBACK
-	import Foundation
-	import UIKit
-#endif
+import Foundation
+import UIKit
 
 public let operatingSystem = OperatingSystem()
 
