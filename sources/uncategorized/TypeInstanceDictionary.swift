@@ -8,7 +8,7 @@ public struct TypeInstanceDictionary {
 
 	// Be very careful to not call this method with an Optional or an ImplicitlyUnwrappedOptional type. Use `as` in this case to convert the instance type to a non-optional first.
 	public mutating func assign<T>(instance: T) {
-		assign(instance, forType: T.self)
+		assign(instance, toType: T.self)
 	}
 	
 
