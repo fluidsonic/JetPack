@@ -1,3 +1,4 @@
+@IBDesignable
 public /* non-final */ class ImageView: View {
 
 	public typealias Source = _ImageViewSource
@@ -69,6 +70,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
+	@IBInspectable
 	public var image: UIImage? {
 		didSet {
 			precondition(!isSettingImage, "Cannot recursively set ImageView's 'image'.")
@@ -94,6 +96,12 @@ public /* non-final */ class ImageView: View {
 	}
 
 
+	public override func intrinsicContentSize() -> CGSize {
+		return sizeThatFits()
+	}
+
+
+	@IBInspectable
 	public var padding = UIEdgeInsets() {
 		didSet {
 			if padding == oldValue {
@@ -111,17 +119,14 @@ public /* non-final */ class ImageView: View {
 	public var preferredSize: CGSize?
 
 
-	public override func sizeThatFits(maximumSize: CGSize) -> CGSize {
-		if let size = preferredSize {
-			return size.sizeConstrainedToSize(maximumSize)
+	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+		if let preferredSize = preferredSize {
+			return preferredSize
 		}
-
 
 		if let image = image {
 			let imageSize = image.size
-			let size = CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom)
-
-			return size.sizeConstrainedToSize(maximumSize)
+			return CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom)
 		}
 
 		return .zero
@@ -179,7 +184,7 @@ public /* non-final */ class ImageView: View {
 
 		let contentMode = self.contentMode
 		let imageSize: CGSize
-		let availableFrame = padding.insetRect(CGRect(size: bounds.size))
+		let availableFrame = CGRect(size: bounds.size).insetBy(padding)
 
 		if let image = image {
 			imageSize = image.size

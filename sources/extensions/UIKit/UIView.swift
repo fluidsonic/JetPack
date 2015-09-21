@@ -1,15 +1,14 @@
-import UIKit
-
-
 public extension UIView {
 
-	public func heightThatFits() -> CGFloat {
-		return sizeThatFits(CGSize.maxSize).height
+	@warn_unused_result
+	public final func heightThatFits() -> CGFloat {
+		return sizeThatFitsSize(.max).height
 	}
 
 
-	public func heightThatFitsWidth(width: CGFloat) -> CGFloat {
-		return sizeThatFits(CGSize(width: width, height: CGFloat.max)).height
+	@warn_unused_result
+	public final func heightThatFitsWidth(maximumWidth: CGFloat) -> CGFloat {
+		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .max)).height
 	}
 
 
@@ -20,16 +19,30 @@ public extension UIView {
 	}
 
 
-	@objc(_roundScaled_CGFloat:)
-	public func roundScaled(value: CGFloat) -> CGFloat {
+	@nonobjc
+	@warn_unused_result
+	public final func roundScaled(value: CGFloat) -> CGFloat {
 		let scale = contentScaleFactor
 
 		return round(value * scale) / scale
 	}
 
 
-	@objc(_roundScaled_CGSize:)
-	public func roundScaled(value: CGSize) -> CGSize {
+	@nonobjc
+	@warn_unused_result
+	public final func roundScaled(value: CGPoint) -> CGPoint {
+		let scale = contentScaleFactor
+
+		return CGPoint(
+			left: round(value.left * scale) / scale,
+			top:  round(value.top * scale) / scale
+		)
+	}
+
+
+	@nonobjc
+	@warn_unused_result
+	public final func roundScaled(value: CGSize) -> CGSize {
 		let scale = contentScaleFactor
 
 		return CGSize(
@@ -39,8 +52,9 @@ public extension UIView {
 	}
 
 
-	@objc(_roundScaled_CGRect:)
-	public func roundScaled(value: CGRect) -> CGRect {
+	@nonobjc
+	@warn_unused_result
+	public final func roundScaled(value: CGRect) -> CGRect {
 		let scale = contentScaleFactor
 
 		return CGRect(
@@ -52,27 +66,49 @@ public extension UIView {
 	}
 
 
-	public func sizeThatFits() -> CGSize {
-		return sizeThatFits(CGSize.maxSize)
-	}
-
-	
-	public func sizeThatFitsHeight(height: CGFloat) -> CGSize {
-		return sizeThatFits(CGSize(width: CGFloat.max, height: height))
+	@warn_unused_result
+	public final func sizeThatFits() -> CGSize {
+		return sizeThatFitsSize(.max)
 	}
 
 
-	public func sizeThatFitsWidth(width: CGFloat) -> CGSize {
-		return sizeThatFits(CGSize(width: width, height: CGFloat.max))
+	@warn_unused_result
+	public final func sizeThatFitsHeight(maximumHeight: CGFloat, allowsTruncation: Bool = false) -> CGSize {
+		return sizeThatFitsSize(CGSize(width: .max, height: maximumHeight), allowsTruncation: allowsTruncation)
 	}
 
 
-	public func widthThatFits() -> CGFloat {
-		return sizeThatFits(CGSize.maxSize).width
+	@warn_unused_result
+	public final func sizeThatFitsWidth(maximumWidth: CGFloat, allowsTruncation: Bool = false) -> CGSize {
+		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .max), allowsTruncation: allowsTruncation)
 	}
 
 
-	public func widthThatFitsHeight(height: CGFloat) -> CGFloat {
-		return sizeThatFits(CGSize(width: CGFloat.max, height: height)).width
+	@warn_unused_result
+	public func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+		return sizeThatFitsSize(maximumSize, allowsTruncation: false)
+	}
+
+
+	@warn_unused_result
+	public func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
+		var fittingSize = sizeThatFits(maximumSize)
+		if allowsTruncation {
+			fittingSize = fittingSize.constrainTo(maximumSize)
+		}
+
+		return fittingSize
+	}
+
+
+	@warn_unused_result
+	public final func widthThatFits() -> CGFloat {
+		return sizeThatFitsSize(.max).width
+	}
+
+
+	@warn_unused_result
+	public final func widthThatFitsHeight(maximumHeight: CGFloat) -> CGFloat {
+		return sizeThatFitsSize(CGSize(width: .max, height: maximumHeight)).width
 	}
 }

@@ -2,6 +2,7 @@ public protocol Failure: CustomDebugStringConvertible, CustomStringConvertible, 
 
 	var cause: Failure? { get }
 	var developerMessage: String { get }
+	var isPermanent: Bool { get }
 	var userMessage: String { get }
 }
 
@@ -53,6 +54,35 @@ public extension Failure {
 	public var developerMessage: String {
 		return userMessage
 	}
+
+
+	@available(*, unavailable, renamed="cause")
+	public var failureCause: Failure? {
+		return cause
+	}
+
+
+	@available(*, unavailable, renamed="developerMessage")
+	public var failureDeveloperMessage: String {
+		return developerMessage
+	}
+
+
+	@available(*, unavailable, renamed="isPermanent")
+	public var failureIsPermanent: Bool {
+		return isPermanent
+	}
+
+
+	@available(*, unavailable, renamed="userMessage")
+	public var failureUserMessage: String {
+		return userMessage
+	}
+
+
+	public var isPermanent: Bool {
+		return true
+	}
 }
 
 
@@ -68,7 +98,7 @@ public extension ErrorType {
 			return failure
 		}
 
-		if let error = self as? NSObject as? NSError { // force Swift to use the original NSError instance instead of synthesizing one which would drop the userInfo dictionary
+		if let error = originalNSError {
 			return FailureForNSError(error: error, defaultUserMessage: defaultUserMessage)
 		}
 		else {
@@ -84,6 +114,11 @@ public extension ErrorType {
 
 	public var failureDeveloperMessage: String {
 		return asFailure().developerMessage
+	}
+
+
+	public var failureIsPermanent: Bool {
+		return asFailure().isPermanent
 	}
 
 
@@ -131,7 +166,7 @@ private struct FailureForErrorType: Failure {
 
 
 
-private struct FailureForNSError: Failure {
+private class FailureForNSError: NSError, Failure {
 
 	private let defaultUserMessage: String
 	private let error: NSError
@@ -140,6 +175,13 @@ private struct FailureForNSError: Failure {
 	private init(error: NSError, defaultUserMessage: String) {
 		self.defaultUserMessage = defaultUserMessage
 		self.error = error
+
+		super.init(domain: error.domain, code: error.code, userInfo: error.userInfo)
+	}
+
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
 	}
 
 
@@ -149,7 +191,7 @@ private struct FailureForNSError: Failure {
 	}
 
 
-	private var debugDescription: String {
+	private override var debugDescription: String {
 		let error = self.error as NSError
 
 		var debugDescription = ""

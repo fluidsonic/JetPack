@@ -27,6 +27,7 @@ public extension UIColor {
 	}
 
 
+	@warn_unused_result
 	public static func random(alpha: CGFloat = 1) -> Self {
 		return self.init(
 			red:   CGFloat(arc4random_uniform(255)) / 255,

@@ -15,49 +15,49 @@ public extension UIBezierPath {
 
 		switch direction {
 		case .DownLeft:
-			center = currentPoint.pointByOffsetting(dx: -radius)
+			center = currentPoint.offsetBy(dx: -radius)
 			clockwise = true
 			endAngle = CGMath.radiansBottom
 			startAngle = CGMath.radiansRight
 
 		case .DownRight:
-			center = currentPoint.pointByOffsetting(dx: radius)
+			center = currentPoint.offsetBy(dx: radius)
 			clockwise = false
 			endAngle = CGMath.radiansBottom
 			startAngle = CGMath.radiansLeft
 
 		case .LeftDown:
-			center = currentPoint.pointByOffsetting(dy: radius)
+			center = currentPoint.offsetBy(dy: radius)
 			clockwise = false
 			endAngle = CGMath.radiansLeft
 			startAngle = CGMath.radiansTop
 
 		case .LeftUp:
-			center = currentPoint.pointByOffsetting(dy: -radius)
+			center = currentPoint.offsetBy(dy: -radius)
 			clockwise = true
 			endAngle = CGMath.radiansLeft
 			startAngle = CGMath.radiansBottom
 
 		case .RightDown:
-			center = currentPoint.pointByOffsetting(dy: radius)
+			center = currentPoint.offsetBy(dy: radius)
 			clockwise = true
 			endAngle = CGMath.radiansRight
 			startAngle = CGMath.radiansTop
 
 		case .RightUp:
-			center = currentPoint.pointByOffsetting(dy: -radius)
+			center = currentPoint.offsetBy(dy: -radius)
 			clockwise = false
 			endAngle = CGMath.radiansRight
 			startAngle = CGMath.radiansBottom
 
 		case .UpLeft:
-			center = currentPoint.pointByOffsetting(dx: -radius)
+			center = currentPoint.offsetBy(dx: -radius)
 			clockwise = false
 			endAngle = CGMath.radiansTop
 			startAngle = CGMath.radiansRight
 
 		case .UpRight:
-			center = currentPoint.pointByOffsetting(dx: radius)
+			center = currentPoint.offsetBy(dx: radius)
 			clockwise = true
 			endAngle = CGMath.radiansTop
 			startAngle = CGMath.radiansLeft
@@ -70,16 +70,16 @@ public extension UIBezierPath {
 	private func centerForRoundedCorner(direction direction: RoundedCornerDirection, radius: CGFloat) -> CGPoint {
 		switch direction {
 		case .LeftDown, .RightDown:
-			return currentPoint.pointByOffsetting(dy: radius)
+			return currentPoint.offsetBy(dy: radius)
 
 		case .LeftUp, .RightUp:
-			return currentPoint.pointByOffsetting(dy: -radius)
+			return currentPoint.offsetBy(dy: -radius)
 
 		case .DownLeft, .UpLeft:
-			return currentPoint.pointByOffsetting(dx: -radius)
+			return currentPoint.offsetBy(dx: -radius)
 
 		case .DownRight, .UpRight:
-			return currentPoint.pointByOffsetting(dx: radius)
+			return currentPoint.offsetBy(dx: radius)
 		}
 	}
 

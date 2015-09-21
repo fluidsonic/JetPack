@@ -4,40 +4,21 @@ import Darwin
 
 public extension CGFloat {
 
-	public static var Pi = CGFloat(M_PI)
+	public static let Pi = CGFloat(M_PI)
 
 
-	public var abs: CGFloat {
+	public var absolute: CGFloat {
 		return CGFloat.abs(self)
 	}
 
 
-	public func clamped(min min: CGFloat, max: CGFloat) -> CGFloat {
+	@warn_unused_result
+	public func clamp(min min: CGFloat, max: CGFloat) -> CGFloat {
 		return Swift.min(Swift.max(self, min), max)
 	}
 
 
-	public var rounded: CGFloat {
-		return round(self)
+	public var round: CGFloat {
+		return CoreGraphics.round(self)
 	}
 }
-
-
-// allow Int in CGFloat math
-// broken, see http://stackoverflow.com/questions/27173744/how-to-properly-support-int-values-in-cgfloat-math-in-swift
-/*
-public func +  (a: CGFloat, b: Int) -> CGFloat { return a + CGFloat(b) }
-public func +  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) + b }
-public func += (inout a: CGFloat, b: Int)      { a += CGFloat(b) }
-public func -  (a: CGFloat, b: Int) -> CGFloat { return a + CGFloat(b) }
-public func -  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) + b }
-public func -= (inout a: CGFloat, b: Int)      { a -= CGFloat(b) }
-public func *  (a: CGFloat, b: Int) -> CGFloat { return a * CGFloat(b) }
-public func *  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) * b }
-public func *= (inout a: CGFloat, b: Int)      { a *= CGFloat(b) }
-public func /  (a: CGFloat, b: Int) -> CGFloat { return a / CGFloat(b) }
-public func /  (a: Int, b: CGFloat) -> CGFloat { return CGFloat(a) / b }
-public func /= (inout a: CGFloat, b: Int)      { a /= CGFloat(b) }
-public func %  (a: CGFloat, b: Int) -> CGFloat { return a / CGFloat(b) }
-public func %= (inout a: CGFloat, b: Int)      { a /= CGFloat(b) }
-*/

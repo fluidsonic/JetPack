@@ -1,7 +1,5 @@
-import UIKit
-
-
-public class Window: UIWindow {
+@IBDesignable
+public /* non-final */ class Window: UIWindow {
 
 	public override var rootViewController: UIViewController? {
 		get { return super.rootViewController }
