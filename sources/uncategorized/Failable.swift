@@ -1,12 +1,12 @@
 public enum Failable<Result> {
-	case Failure(ErrorType)
-	case Success(Result)
+	case Failed(ErrorType)
+	case Succeeded(Result)
 
 
 	public var error: ErrorType? {
 		switch self {
-		case let .Failure(error): return error
-		case .Success:            return nil
+		case let .Failed(error): return error
+		case .Succeeded:         return nil
 		}
 	}
 
@@ -14,32 +14,32 @@ public enum Failable<Result> {
 	@warn_unused_result
 	public func get() throws -> Result {
 		switch self {
-		case let .Failure(error): throw error
-		case let .Success(result): return result
+		case let .Failed(error):     throw error
+		case let .Succeeded(result): return result
 		}
 	}
 
 
 	public var isFailure: Bool {
 		switch self {
-		case .Failure: return true
-		case .Success: return false
+		case .Failed:    return true
+		case .Succeeded: return false
 		}
 	}
 
 
 	public var isSuccess: Bool {
 		switch self {
-		case .Failure: return false
-		case .Success: return true
+		case .Failed:    return false
+		case .Succeeded: return true
 		}
 	}
 
 
 	public var result: Result? {
 		switch self {
-		case .Failure:             return nil
-		case let .Success(result): return result
+		case .Failed:                return nil
+		case let .Succeeded(result): return result
 		}
 	}
 }
@@ -48,7 +48,10 @@ public enum Failable<Result> {
 extension Failable: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
-		return description
+		switch self {
+		case let .Failed(error):     return "Failed(\(String(reflecting: error)))"
+		case let .Succeeded(result): return "Succeeded(\(String(reflecting: result)))"
+		}
 	}
 }
 
@@ -57,8 +60,8 @@ extension Failable: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case let .Failure(error):  return "Failure(\(error))"
-		case let .Success(result): return "Success(\(result))"
+		case let .Failed(error):     return "Failed(\(error))"
+		case let .Succeeded(result): return "Succeeded(\(result))"
 		}
 	}
 }
