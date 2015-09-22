@@ -219,7 +219,7 @@ public /* non-final */ class ImageView: View {
 
 				case .Center, .Redraw:
 					drawFrame.left += (availableFrame.width - drawFrame.width) / 2
-					drawFrame.top += (availableFrame.width - drawFrame.width) / 2
+					drawFrame.top += (availableFrame.height - drawFrame.height) / 2
 
 				case .Top:
 					drawFrame.left += (availableFrame.width - drawFrame.width) / 2
@@ -229,10 +229,10 @@ public /* non-final */ class ImageView: View {
 					drawFrame.bottom = availableFrame.bottom
 
 				case .Left:
-					drawFrame.top += (availableFrame.width - drawFrame.width) / 2
+					drawFrame.top += (availableFrame.height - drawFrame.height) / 2
 
 				case .Right:
-					drawFrame.top += (availableFrame.width - drawFrame.width) / 2
+					drawFrame.top += (availableFrame.height - drawFrame.height) / 2
 					drawFrame.right = availableFrame.right
 
 				case .TopLeft:
