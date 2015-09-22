@@ -120,6 +120,13 @@ public class View: UIView {
 			super.backgroundColor = newValue
 		}
 	}
+
+
+	@IBInspectable
+	public var cornerRadius: CGFloat {
+		get { return layer.cornerRadius }
+		set { layer.cornerRadius = newValue }
+	}
 	
 	
 	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {

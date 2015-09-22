@@ -17,7 +17,20 @@ public extension UIEdgeInsets {
 			top:    rect.top + top,
 			width:  rect.width - left - right,
 			height: rect.height - top - bottom
-		).standardized
+			).standardized
+	}
+
+
+	public func insetSize(size: CGSize) -> CGSize {
+		return CGSize(
+			width:  size.width - left - right,
+			height: size.height - top - bottom
+		)
+	}
+
+
+	public var inverse: UIEdgeInsets {
+		return .init(top: -top, left: -left, bottom: -bottom, right: -right)
 	}
 
 
