@@ -22,13 +22,22 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	deinit {
-		sourceCancellation?()
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
 	}
 
 
-	public required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+	#if TARGET_INTERFACE_BUILDER
+		public required convenience init(frame: CGRect) {
+			self.init()
+
+			self.frame = frame
+		}
+	#endif
+
+
+	deinit {
+		sourceCancellation?()
 	}
 
 

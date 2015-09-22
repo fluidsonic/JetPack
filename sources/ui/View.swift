@@ -26,7 +26,16 @@ public /* non-final */ class View: UIView {
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
-	
+
+
+	#if TARGET_INTERFACE_BUILDER
+		public required convenience init(frame: CGRect) {
+			self.init()
+
+			self.frame = frame
+		}
+	#endif
+
 	
 	public class func animate(duration duration: NSTimeInterval, changes: () -> Void) {
 		animateWithDuration(duration, delay: 0, options: [], animations: changes, completion: nil)

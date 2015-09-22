@@ -23,6 +23,15 @@ public class Button: View {
 	}
 
 
+	#if TARGET_INTERFACE_BUILDER
+		public required convenience init(frame: CGRect) {
+			self.init()
+
+			self.frame = frame
+		}
+	#endif
+
+
 	public final var activityIndicator: UIActivityIndicatorView {
 		get {
 			return _activityIndicator ?? {

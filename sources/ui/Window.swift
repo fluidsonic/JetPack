@@ -1,6 +1,25 @@
 @IBDesignable
 public /* non-final */ class Window: UIWindow {
 
+	public init() {
+		super.init(frame: .zero)
+	}
+
+
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+
+
+	#if TARGET_INTERFACE_BUILDER
+		public required convenience init(frame: CGRect) {
+			self.init()
+
+			self.frame = frame
+		}
+	#endif
+
+
 	public override var rootViewController: UIViewController? {
 		get { return super.rootViewController }
 		set {

@@ -18,6 +18,15 @@ public class Label: UILabel {
 	}
 
 
+	#if TARGET_INTERFACE_BUILDER
+		public required convenience init(frame: CGRect) {
+			self.init()
+
+			self.frame = frame
+		}
+	#endif
+
+
 	public override func drawTextInRect(rect: CGRect) {
 		super.drawTextInRect(rect.insetBy(padding))
 	}
