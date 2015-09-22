@@ -29,7 +29,7 @@ public /* non-final */ class View: UIView {
 
 
 	#if TARGET_INTERFACE_BUILDER
-		public required convenience init(frame: CGRect) {
+		public required override convenience init(frame: CGRect) {
 			self.init()
 
 			self.frame = frame
