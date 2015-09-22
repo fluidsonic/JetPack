@@ -1,12 +1,12 @@
 import Foundation
 
 
-public func async(block: Block) {
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+public func async(closure: Closure) {
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), closure)
 }
 
 
-public func async(priority: AsyncPriority, block: Block) {
+public func async(priority: AsyncPriority, closure: Closure) {
 	var dispatchPriority = DISPATCH_QUEUE_PRIORITY_DEFAULT
 	switch priority {
 	case .Background:
@@ -22,22 +22,22 @@ public func async(priority: AsyncPriority, block: Block) {
 		dispatchPriority = DISPATCH_QUEUE_PRIORITY_LOW
 	}
 
-	dispatch_async(dispatch_get_global_queue(dispatchPriority, 0), block)
+	dispatch_async(dispatch_get_global_queue(dispatchPriority, 0), closure)
 }
 
 
-public func onMainThread(block: Block) {
-	dispatch_async(dispatch_get_main_queue(), block)
+public func onMainThread(closure: Closure) {
+	dispatch_async(dispatch_get_main_queue(), closure)
 }
 
 
-public func onMainThread(afterDelay delay: NSTimeInterval, block: Block) {
+public func onMainThread(afterDelay delay: NSTimeInterval, closure: Closure) {
 	let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
-	dispatch_after(time, dispatch_get_main_queue(), block)
+	dispatch_after(time, dispatch_get_main_queue(), closure)
 }
 
 
-public func timer(delay delay: NSTimeInterval, repeats: Bool = false, callback: Block) -> NSTimer {
+public func timer(delay delay: NSTimeInterval, repeats: Bool = false, callback: Closure) -> NSTimer {
 	return NSTimer.scheduledTimerWithTimeInterval(delay, target: blockTimerHandler, selector: "handle:", userInfo: StrongReference(callback), repeats: repeats)
 }
 
@@ -59,7 +59,7 @@ private class BlockTimerHandler: NSObject {
 
 	@objc
 	func handle(timer: NSTimer) {
-		let handlerReference = timer.userInfo as! StrongReference<Block>
+		let handlerReference = timer.userInfo as! StrongReference<Closure>
 		handlerReference.target?()
 	}
 }

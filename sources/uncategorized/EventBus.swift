@@ -4,7 +4,6 @@ public class EventBus {
 	private var subscriptionsByScope = [ObjectIdentifier : AnySubscriptions]()
 
 
-
 	public init() {}
 
 
@@ -26,7 +25,7 @@ public class EventBus {
 	}
 
 
-	public func subscribe<T>(callback: (T) -> Void) -> Block {
+	public func subscribe<T>(callback: (T) -> Void) -> Closure {
 		return synchronized(lock) {
 			let scope = ObjectIdentifier(T.Type)
 			let subscription = Subscription(callback: callback)
@@ -64,7 +63,7 @@ public class EventBus {
 
 		private let eventBus: EventBus
 		private let lock = EmptyObject()
-		private var unsubscribes = [Block]()
+		private var unsubscribes = [Closure]()
 
 
 		private init(eventBus: EventBus) {

@@ -49,6 +49,16 @@ public func first<S: SequenceType>(source: S, includeElement: (S.Generator.Eleme
 	return nil
 }
 
+
+public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Result) -> Parameters -> Result {
+	func cast<From,To>(instance: From) -> To {
+		return instance as! To
+	}
+
+	return cast(closure)
+}
+
+
 public func not<T>(source: T -> Bool) -> T -> Bool {
 	return { !source($0) }
 }

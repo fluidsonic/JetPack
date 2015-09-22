@@ -3,7 +3,24 @@ public class Button: View {
 
 	private var _activityIndicator: UIActivityIndicatorView?
 	private var _imageView: ImageView?
-	private var _textLabel: UILabel?
+	private var _textLabel: Label?
+
+	private var defaultAlpha = CGFloat(1)
+	private var defaultBackgroundColor: UIColor?
+	private var defaultBorderColor: UIColor?
+
+	public var tapped: Closure?
+	public var touchTolerance = CGFloat(75)
+
+
+	public override init() {
+		super.init()
+	}
+
+
+	public required init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
 
 
 	public final var activityIndicator: UIActivityIndicatorView {
@@ -20,6 +37,21 @@ public class Button: View {
 	}
 
 
+	public override var alpha: CGFloat {
+		get { return defaultAlpha }
+		set {
+			let newAlpha = newValue.clamp(min: 0, max: 1)
+			guard newAlpha != defaultAlpha else {
+				return
+			}
+
+			defaultAlpha = newAlpha
+
+			updateAlpha()
+		}
+	}
+
+
 	@IBInspectable
 	public var arrangement = Arrangement.ImageLeft {
 		didSet {
@@ -28,6 +60,60 @@ public class Button: View {
 			}
 
 			setNeedsLayout()
+		}
+	}
+
+
+	public override var backgroundColor: UIColor? {
+		get { return defaultBackgroundColor }
+		set {
+			guard newValue != defaultBackgroundColor else {
+				return
+			}
+
+			defaultBackgroundColor = newValue
+
+			updateBackgroundColor()
+		}
+	}
+
+
+	@IBInspectable
+	public var backgroundTintColorAlpha: CGFloat = 0 {
+		didSet {
+			backgroundTintColorAlpha = backgroundTintColorAlpha.clamp(min: 0, max: 1)
+			guard backgroundTintColorAlpha != oldValue else {
+				return
+			}
+
+			updateBackgroundColor()
+		}
+	}
+
+
+	public override var borderColor: UIColor? {
+		get { return defaultBorderColor }
+		set {
+			guard newValue != defaultBorderColor else {
+				return
+			}
+
+			defaultBorderColor = newValue
+
+			updateBorderColor()
+		}
+	}
+
+
+	@IBInspectable
+	public var borderTintColorAlpha: CGFloat = 0 {
+		didSet {
+			borderTintColorAlpha = borderTintColorAlpha.clamp(min: 0, max: 1)
+			guard borderTintColorAlpha != oldValue else {
+				return
+			}
+
+			updateBorderColor()
 		}
 	}
 
@@ -41,9 +127,80 @@ public class Button: View {
 	}
 
 
-	public var highlightedAlpha = CGFloat(0.5) {
+	@IBInspectable
+	public var disabledAlpha = CGFloat(1) {
 		didSet {
+			guard disabledAlpha != oldValue else {
+				return
+			}
 
+			updateAlpha()
+		}
+	}
+
+
+	@IBInspectable
+	public var enabled: Bool = true {
+		didSet {
+			userInteractionEnabled = enabled
+
+			guard enabled != oldValue else {
+				return
+			}
+
+			updateAlpha()
+		}
+	}
+
+
+	public var highlighted = false {
+		didSet {
+			guard highlighted != oldValue else {
+				return
+			}
+
+			if highlightedAlpha != defaultAlpha || highlightedBackgroundColor != defaultBackgroundColor || highlightedBorderColor != defaultBorderColor {
+				Animation(duration: highlighted ? 0 : 0.3).run {
+					updateAlpha()
+					updateBackgroundColor()
+				}
+			}
+		}
+	}
+
+
+	@IBInspectable
+	public var highlightedAlpha: CGFloat = 0.5 {
+		didSet {
+			guard highlightedAlpha != oldValue else {
+				return
+			}
+
+			updateAlpha()
+		}
+	}
+
+
+	@IBInspectable
+	public var highlightedBackgroundColor: UIColor? {
+		didSet {
+			guard highlightedBackgroundColor != oldValue else {
+				return
+			}
+
+			updateBackgroundColor()
+		}
+	}
+
+
+	@IBInspectable
+	public var highlightedBorderColor: UIColor? {
+		didSet {
+			guard highlightedBorderColor != oldValue else {
+				return
+			}
+
+			updateBorderColor()
 		}
 	}
 
@@ -107,7 +264,7 @@ public class Button: View {
 		// lazy initialization
 		let activityIndicator: UIActivityIndicatorView? = wantsActivityIndicator ? self.activityIndicator : nil
 		let imageView: ImageView? = wantsImage ? self.imageView : nil
-		let textLabel: UILabel? = wantsText ? self.textLabel : nil
+		let textLabel: Label? = wantsText ? self.textLabel : nil
 
 		var remainingSize = size
 
@@ -370,9 +527,9 @@ public class Button: View {
 		}
 
 		return Layout(
-			activityIndicatorFrame: wantsActivityIndicator ? activityIndicatorFrame : nil,
-			imageViewFrame:         wantsImage ? imageViewFrame : nil,
-			textLabelFrame:         wantsText ? textLabelFrame : nil
+			activityIndicatorFrame: wantsActivityIndicator ? ceilScaled(activityIndicatorFrame) : nil,
+			imageViewFrame:         wantsImage ? ceilScaled(imageViewFrame) : nil,
+			textLabelFrame:         wantsText ? ceilScaled(textLabelFrame) : nil
 		)
 	}
 
@@ -438,9 +595,6 @@ public class Button: View {
 			return .zero
 		}
 
-		var height = CGFloat(0)
-		var width = CGFloat(0)
-
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
 		let wantsImage = (_imageView?.image != nil || _imageView?.source != nil)
 		let wantsText = !(_textLabel?.text?.isEmpty ?? true)
@@ -448,8 +602,9 @@ public class Button: View {
 		// lazy initialization
 		let activityIndicator: UIActivityIndicatorView? = wantsActivityIndicator ? self.activityIndicator : nil
 		let imageView: ImageView? = wantsImage ? self.imageView : nil
-		let textLabel: UILabel? = wantsText ? self.textLabel : nil
+		let textLabel: Label? = wantsText ? self.textLabel : nil
 
+		var fittingSize = CGSize()
 		var remainingSize = maximumSize
 
 		switch arrangement {
@@ -457,58 +612,57 @@ public class Button: View {
 			if let imageView = imageView {
 				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
 
-				height += imageViewSize.height
-				width = max(width, imageViewSize.width)
+				fittingSize.height += imageViewSize.height
+				fittingSize.width = max(fittingSize.width, imageViewSize.width)
 				remainingSize.height -= imageViewSize.height
 			}
 			else if let activityIndicator = activityIndicator {
 				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
 
-				height += activityIndicatorSize.height
-				width = max(width, activityIndicatorSize.width)
+				fittingSize.height += activityIndicatorSize.height
+				fittingSize.width = max(fittingSize.width, activityIndicatorSize.width)
 				remainingSize.height -= activityIndicatorSize.height
 			}
 
 			if let textLabel = textLabel {
 				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
 
-				height += textLabelSize.height
-				width = max(width, textLabelSize.width)
+				fittingSize.height += textLabelSize.height
+				fittingSize.width = max(fittingSize.width, textLabelSize.width)
 			}
 
 		case .ImageLeft, .ImageRight: // horizontal
 			if let imageView = imageView {
 				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
 
-				width += imageViewSize.width
-				height = max(height, imageViewSize.height)
+				fittingSize.width += imageViewSize.width
+				fittingSize.height = max(fittingSize.height, imageViewSize.height)
 				remainingSize.width -= imageViewSize.width
 			}
 			else if let activityIndicator = activityIndicator {
 				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
 
-				width += activityIndicatorSize.width
-				height = max(height, activityIndicatorSize.height)
+				fittingSize.width += activityIndicatorSize.width
+				fittingSize.height = max(fittingSize.height, activityIndicatorSize.height)
 				remainingSize.width -= activityIndicatorSize.width
 			}
 
 			if let textLabel = textLabel {
 				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
 
-				width += textLabelSize.width
-				height = max(height, textLabelSize.height)
+				fittingSize.width += textLabelSize.width
+				fittingSize.height = max(fittingSize.height, textLabelSize.height)
 			}
 		}
 		
-		return CGSize(width: width, height: height)
+		return ceilScaled(fittingSize)
 	}
 
 
-
-	public final var textLabel: UILabel {
+	public final var textLabel: Label {
 		get {
 			return _textLabel ?? {
-				let child = UILabel()
+				let child = Label()
 				child.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
 
 				_textLabel = child
@@ -528,6 +682,101 @@ public class Button: View {
 
 			setNeedsLayout()
 		}
+	}
+
+
+	public override func tintColorDidChange() {
+		super.tintColorDidChange()
+
+		updateBackgroundColor()
+		updateBorderColor()
+	}
+
+
+	public func touchIsAcceptableForTap(touch: UITouch, event: UIEvent?) -> Bool {
+		return pointInside(touch.locationInView(self), withEvent: event, additionalHitZone: additionalHitZone.increaseBy(UIEdgeInsets(all: touchTolerance)))
+	}
+
+
+	public override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		if let touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+			highlighted = true
+		}
+		else {
+			highlighted = false
+		}
+	}
+
+
+	public override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+		highlighted = false
+	}
+
+
+	public override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		highlighted = false
+
+		if let tapped = tapped, touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+			tapped()
+		}
+	}
+
+
+	public override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+		if let touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+			highlighted = true
+		}
+		else {
+			highlighted = false
+		}
+	}
+	
+
+	private func updateAlpha() {
+		let alpha: CGFloat
+		if !enabled {
+			alpha = disabledAlpha
+		}
+		else if highlighted {
+			alpha = highlightedAlpha
+		}
+		else {
+			alpha = defaultAlpha
+		}
+
+		super.alpha = alpha
+	}
+
+
+	private func updateBackgroundColor() {
+		let backgroundColor: UIColor?
+		if highlighted, let highlightedBackgroundColor = highlightedBackgroundColor {
+			backgroundColor = highlightedBackgroundColor
+		}
+		else if backgroundTintColorAlpha > 0 {
+			backgroundColor = tintColor.colorWithAlphaComponent(backgroundTintColorAlpha)
+		}
+		else {
+			backgroundColor = defaultBackgroundColor
+		}
+
+		super.backgroundColor = backgroundColor
+	}
+
+
+	private func updateBorderColor() {
+		let borderColor: UIColor?
+		if highlighted, let highlightedBorderColor = highlightedBorderColor {
+			borderColor = highlightedBorderColor
+		}
+		else if borderTintColorAlpha > 0 {
+			borderColor = tintColor.colorWithAlphaComponent(borderTintColorAlpha)
+		}
+		else {
+			borderColor = defaultBorderColor
+		}
+
+		super.borderColor = borderColor
 	}
 
 

@@ -1,8 +1,16 @@
 @IBDesignable
 public /* non-final */ class View: UIView {
+
+	private static let _dummyView = View()
+
+	@IBInspectable
+	public var additionalHitZone: UIEdgeInsets = .zero // TODO don't use UIEdgeInsets becase actually we outset
 	
 	@IBInspectable
 	public var backgroundColorLocked: Bool = false
+
+	@IBInspectable
+	public var hitZoneFollowsCornerRadius: Bool = true
 	
 	@IBInspectable
 	public var userInteractionLimitedToSubviews: Bool = false
@@ -10,6 +18,8 @@ public /* non-final */ class View: UIView {
 	
 	public init() {
 		super.init(frame: .zero)
+
+		clipsToBounds = true
 	}
 	
 	
@@ -118,6 +128,37 @@ public /* non-final */ class View: UIView {
 			super.backgroundColor = newValue
 		}
 	}
+
+
+	@IBInspectable
+	public var borderColor: UIColor? {
+		get {
+			guard let borderColor = layer.borderColor else {
+				return nil
+			}
+
+			return UIColor(CGColor: borderColor)
+		}
+		set {
+			layer.borderColor = newValue?.CGColor
+		}
+	}
+
+
+	@IBInspectable
+	public var cornerRadius: CGFloat {
+		get { return layer.cornerRadius }
+		set { layer.cornerRadius = newValue }
+	}
+
+
+	public static var currentAnimation: CAAnimation? {
+		let dummy = _dummyView
+		let action = dummy.layer.actionForKey("backgroundColor")
+		action?.runActionForKey("backgroundColor", object: dummy.layer, arguments: nil)
+
+		return action as? CAAnimation
+	}
 	
 	
 	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
@@ -133,6 +174,34 @@ public /* non-final */ class View: UIView {
 	// Documentation does not state what the default value is so we define one for View subclasses.
 	public override func intrinsicContentSize() -> CGSize {
 		return CGSize(width: UIViewNoIntrinsicMetric, height: UIViewNoIntrinsicMetric)
+	}
+
+
+	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
+	}
+
+
+	public func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+		let originalHitZone = bounds
+		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
+
+		let hitZoneCornerRadius: CGFloat
+		if hitZoneFollowsCornerRadius {
+			if cornerRadius > 0 {
+				let halfOriginalHitZoneSize = (originalHitZone.width + originalHitZone.height) / 4  // middle between half height and half width
+				let halfExtendedHitZoneSize = (extendedHitZone.width + extendedHitZone.height) / 4  // middle between half extended height and half extended width
+				hitZoneCornerRadius = halfExtendedHitZoneSize * (cornerRadius / halfOriginalHitZoneSize)
+			}
+			else {
+				hitZoneCornerRadius = 0
+			}
+		}
+		else {
+			hitZoneCornerRadius = cornerRadius
+		}
+
+		return extendedHitZone.containsPoint(point, atCornerRadius: hitZoneCornerRadius)
 	}
 
 

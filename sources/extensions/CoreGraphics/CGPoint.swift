@@ -8,6 +8,19 @@ public extension CGPoint {
 	}
 
 
+	@warn_unused_result
+	public func displacementTo(point: CGPoint) -> CGPoint {
+		return CGPoint(x: point.x - x, y: point.y - y)
+	}
+
+
+	@warn_unused_result
+	public func distanceTo(point: CGPoint) -> CGFloat {
+		let displacement = displacementTo(point)
+		return sqrt((displacement.x * displacement.x) + (displacement.y * displacement.y))
+	}
+
+
 	public var left: CGFloat {
 		get { return x }
 		set { x = newValue }
