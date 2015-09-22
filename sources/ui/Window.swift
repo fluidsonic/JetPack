@@ -12,7 +12,13 @@ public /* non-final */ class Window: UIWindow {
 
 
 	#if TARGET_INTERFACE_BUILDER
-		public required convenience init(frame: CGRect) {
+		public required override convenience init(frame: CGRect) {
+			self.init()
+
+			self.frame = frame
+		}
+	#else
+		public override convenience init(frame: CGRect) {
 			self.init()
 
 			self.frame = frame
