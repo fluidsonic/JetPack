@@ -3,6 +3,21 @@ import UIKit
 
 public extension UIBezierPath {
 
+	public convenience init(animatableRoundedRect: CGRect, cornerRadius: CGFloat) {
+		self.init()
+
+		moveToPoint(CGPoint(left: animatableRoundedRect.left + cornerRadius, top: animatableRoundedRect.top))
+		addLineToPoint(CGPoint(left: animatableRoundedRect.right - cornerRadius, top: animatableRoundedRect.top))
+		addRoundedCorner(direction: .RightDown, radius: cornerRadius)
+		addLineToPoint(CGPoint(left: animatableRoundedRect.right, top: animatableRoundedRect.bottom - cornerRadius))
+		addRoundedCorner(direction: .DownLeft, radius: cornerRadius)
+		addLineToPoint(CGPoint(left: animatableRoundedRect.left + cornerRadius, top: animatableRoundedRect.bottom))
+		addRoundedCorner(direction: .LeftUp, radius: cornerRadius)
+		addLineToPoint(CGPoint(left: animatableRoundedRect.left, top: animatableRoundedRect.top + cornerRadius))
+		addRoundedCorner(direction: .UpRight, radius: cornerRadius)
+	}
+
+
 	public func addRoundedCorner(direction direction: RoundedCornerDirection, radius: CGFloat) {
 		if radius <= 0 {
 			return
@@ -98,6 +113,16 @@ public extension UIBezierPath {
 		case .UpLeft, .UpRight:
 			return CGMath.radiansTop
 		}
+	}
+
+
+	@warn_unused_result
+	public func invertedBezierPathInRect(rect: CGRect) -> UIBezierPath {
+		let path = UIBezierPath(rect: rect)
+		path.usesEvenOddFillRule = true
+		path.appendPath(self)
+
+		return path
 	}
 
 

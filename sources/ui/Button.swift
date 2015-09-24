@@ -673,6 +673,7 @@ public class Button: View {
 			return _textLabel ?? {
 				let child = Label()
 				child.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+				child.textTintColorAlpha = 1
 
 				_textLabel = child
 

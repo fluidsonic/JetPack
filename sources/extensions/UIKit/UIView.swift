@@ -85,10 +85,10 @@ public extension UIView {
 		let scale = contentScaleFactor
 
 		return CGRect(
-			left:   round(value.left * scale) / scale,
-			top:    round(value.top * scale) / scale,
-			width:  round(value.width * scale) / scale,
-			height: round(value.height * scale) / scale
+			left:   floor(value.left * scale) / scale,
+			top:    floor(value.top * scale) / scale,
+			width:  ceil(value.width * scale) / scale,
+			height: ceil(value.height * scale) / scale
 		)
 	}
 

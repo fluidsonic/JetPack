@@ -36,6 +36,24 @@ public /* non-final */ class View: UIView {
 		}
 	#endif
 
+
+	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
+		switch event {
+		case "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
+			if let animation = super.actionForLayer(layer, forKey: "opacity") as? CABasicAnimation {
+				animation.fromValue = layer.valueForKey(event)
+				animation.keyPath = event
+
+				return animation
+			}
+
+			fallthrough
+
+		default:
+			return super.actionForLayer(layer, forKey: event)
+		}
+	}
+
 	
 	public class func animate(duration duration: NSTimeInterval, changes: () -> Void) {
 		animateWithDuration(duration, delay: 0, options: [], animations: changes, completion: nil)
@@ -211,6 +229,60 @@ public /* non-final */ class View: UIView {
 		}
 
 		return extendedHitZone.containsPoint(point, atCornerRadius: hitZoneCornerRadius)
+	}
+
+
+	@IBInspectable
+	public var shadowColor: UIColor? {
+		get {
+			guard let layerShadowColor = layer.shadowColor else {
+				return nil
+			}
+
+			return UIColor(CGColor: layerShadowColor)
+		}
+		set {
+			layer.shadowColor = newValue?.CGColor
+		}
+	}
+
+
+	@IBInspectable
+	public var shadowOffset: UIOffset {
+		get {
+			let layerShadowOffset = layer.shadowOffset
+			return UIOffset(horizontal: layerShadowOffset.width, vertical: layerShadowOffset.height)
+		}
+		set {
+			layer.shadowOffset = CGSize(width: newValue.horizontal, height: newValue.vertical)
+		}
+	}
+
+
+	@IBInspectable
+	public var shadowOpacity: CGFloat {
+		get { return CGFloat(layer.shadowOpacity) }
+		set { layer.shadowOpacity = Float(newValue) }
+	}
+
+
+	@IBInspectable
+	public var shadowPath: UIBezierPath? {
+		get {
+			guard let layerShadowPath = layer.shadowPath else {
+				return nil
+			}
+
+			return UIBezierPath(CGPath: layerShadowPath)
+		}
+		set { layer.shadowPath = newValue?.CGPath }
+	}
+
+
+	@IBInspectable
+	public var shadowRadius: CGFloat {
+		get { return layer.shadowRadius }
+		set { layer.shadowRadius = newValue }
 	}
 
 
