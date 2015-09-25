@@ -28,17 +28,6 @@ public func count<C: CollectionType>(collection: C, includeElement: (C.Generator
 }
 
 
-public func findIdentical<C: CollectionType where C.Generator.Element: AnyObject>(collection: C, element: C.Generator.Element) -> C.Index? {
-	for index in collection.startIndex ..< collection.endIndex {
-		if collection[index] === element {
-			return index
-		}
-	}
-
-	return nil
-}
-
-
 public func first<S: SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
 	for element in source {
 		if includeElement(element) {
@@ -107,16 +96,6 @@ public func optionalMin<T: Comparable>(elements: T? ...) -> T? {
 	}
 
 	return minimumElement
-}
-
-
-public func removeFirstIdentical<C : RangeReplaceableCollectionType where C.Generator.Element : AnyObject>(inout collection: C, element: C.Generator.Element) -> C.Index? {
-	let index = findIdentical(collection, element: element)
-	if let index = index {
-		collection.removeAtIndex(index)
-	}
-
-	return index
 }
 
 

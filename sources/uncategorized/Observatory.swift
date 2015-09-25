@@ -25,7 +25,7 @@ public class Observatory<Event> {
 
 			dispatch_once(&exitToken) {
 				if let observatory = self {
-					removeFirstIdentical(&observatory.subscriptions, element: subscription!)
+					observatory.subscriptions.removeFirstIdentical(subscription!)
 					subscription = nil
 				}
 

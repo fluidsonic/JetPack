@@ -10,6 +10,19 @@ public extension RangeReplaceableCollectionType {
 }
 
 
+public extension RangeReplaceableCollectionType where Self.Generator.Element: AnyObject {
+
+	public mutating func removeFirstIdentical(element: Generator.Element) -> Index? {
+		guard let index = indexOfIdentical(element) else {
+			return nil
+		}
+
+		removeAtIndex(index)
+		return index
+	}
+}
+
+
 public extension RangeReplaceableCollectionType where Self.Generator.Element: Equatable {
 
 	public mutating func removeFirst(element: Generator.Element) -> (Index, Generator.Element)? {

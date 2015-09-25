@@ -13,7 +13,7 @@ public class EventBus {
 
 			if let subscriptions = subscriptionsByScope[scope] as! Subscriptions<T>? {
 				for subscription in subscriptions.list {
-					subscription.callback(object)
+					subscription.callback?(object)
 				}
 			}
 		}
@@ -44,8 +44,10 @@ public class EventBus {
 			return {
 				dispatch_once(&unsubscribeToken) {
 					synchronized(self.lock) {
+						subscription.callback = nil
+
 						if let subscriptions = self.subscriptionsByScope[scope] as! Subscriptions<T>? {
-							removeFirstIdentical(&subscriptions.list, element: subscription)
+							subscriptions.list.removeFirstIdentical(subscription)
 
 							if subscriptions.list.isEmpty {
 								self.subscriptionsByScope[scope] = nil
@@ -99,10 +101,10 @@ public class EventBus {
 
 private class Subscription<T> {
 
-	private let callback: (T) -> Void
+	private var callback: (T -> Void)?
 
 
-	private init(callback: (T) -> Void) {
+	private init(callback: T -> Void) {
 		self.callback = callback
 	}
 }
@@ -114,5 +116,4 @@ private protocol AnySubscriptions {}
 private class Subscriptions<T>: AnySubscriptions {
 
 	private var list = [Subscription<T>]()
-
 }
