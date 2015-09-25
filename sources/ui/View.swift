@@ -39,7 +39,7 @@ public /* non-final */ class View: UIView {
 
 	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
 		switch event {
-		case "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
+		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
 			if let animation = super.actionForLayer(layer, forKey: "opacity") as? CABasicAnimation {
 				animation.fromValue = layer.valueForKey(event)
 				animation.keyPath = event
@@ -206,10 +206,10 @@ public /* non-final */ class View: UIView {
 			}
 		}
 
-		guard hitView !== self || !userInteractionLimitedToSubviews else {
-			return nil
+		if hitView == nil && !userInteractionLimitedToSubviews {
+			hitView = self
 		}
-		
+
 		return hitView
 	}
 
@@ -312,21 +312,10 @@ public /* non-final */ class View: UIView {
 
 
 	// Override `sizeThatFitsSize(_:)` instead!
-	@warn_unused_result
-	public final override func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
-		var fittingSize = sizeThatFitsSize(maximumSize)
-		if allowsTruncation {
-			fittingSize = fittingSize.constrainTo(maximumSize)
-		}
-
-		return fittingSize
-	}
-
-
-	// Override `sizeThatFitsSize(_:)` instead!
+	@available(*, unavailable, renamed="sizeThatFitsSize")
 	@warn_unused_result
 	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
-		return sizeThatFitsSize(maximumSize, allowsTruncation: false)
+		return sizeThatFitsSize(maximumSize)
 	}
 
 

@@ -85,6 +85,10 @@ public /* non-final */ class ImageView: View {
 			precondition(!isSettingImage, "Cannot recursively set ImageView's 'image'.")
 			precondition(!isSettingSource || isSettingImageFromSource, "Cannot recursively set ImageView's 'image' and 'source'.")
 
+			defer {
+				isSettingImage = false
+			}
+
 			isSettingImage = true
 
 			if image == oldValue {
@@ -100,7 +104,6 @@ public /* non-final */ class ImageView: View {
 			updateOpaque()
 			setNeedsDisplay()
 
-			isSettingImage = false
 		}
 	}
 
@@ -147,6 +150,10 @@ public /* non-final */ class ImageView: View {
 			precondition(!isSettingSource, "Cannot recursively set ImageView's 'source'.")
 			precondition(!isSettingSource || isSettingSourceFromImage, "Cannot recursively set ImageView's 'source' and 'image'.")
 
+			defer {
+				isSettingSource = false
+			}
+
 			isSettingSource = true
 
 			let protectionCount = ++sourceCallbackProtectionCount
@@ -182,8 +189,6 @@ public /* non-final */ class ImageView: View {
 				image = nil
 				isSettingImageFromSource = false
 			}
-
-			isSettingSource = false
 		}
 	}
 

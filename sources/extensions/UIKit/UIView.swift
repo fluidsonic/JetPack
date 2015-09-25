@@ -118,13 +118,13 @@ public extension UIView {
 
 	@warn_unused_result
 	public func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
-		return sizeThatFitsSize(maximumSize, allowsTruncation: false)
+		return sizeThatFits(maximumSize)
 	}
 
 
 	@warn_unused_result
-	public func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
-		var fittingSize = sizeThatFits(maximumSize)
+	public final func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
+		var fittingSize = sizeThatFitsSize(maximumSize)
 		if allowsTruncation {
 			fittingSize = fittingSize.constrainTo(maximumSize)
 		}
