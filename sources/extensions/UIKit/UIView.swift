@@ -39,6 +39,11 @@ public extension UIView {
 	}
 
 
+	public var participatesInHitTesting: Bool {
+		return (!hidden && userInteractionEnabled && alpha >= 0.01)
+	}
+
+
 	public func removeAllSubviews() {
 		for subview in subviews.reverse() {
 			subview.removeFromSuperview()

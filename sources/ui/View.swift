@@ -187,28 +187,47 @@ public /* non-final */ class View: UIView {
 		return action as? CAAnimation
 	}
 	
-	
+
+	// reference implementation
+	@warn_unused_result
 	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-		let view = super.hitTest(point, withEvent: event)
-		if userInteractionLimitedToSubviews && view === self {
+		guard participatesInHitTesting else {
+			return nil
+		}
+		guard pointInside(point, withEvent: event) else {
+			return nil
+		}
+
+		var hitView: UIView?
+		for subview in subviews.reverse() {
+			hitView = subview.hitTest(convertPoint(point, toView: subview), withEvent: event)
+			if hitView != nil {
+				break
+			}
+		}
+
+		guard hitView !== self || !userInteractionLimitedToSubviews else {
 			return nil
 		}
 		
-		return view
+		return hitView
 	}
 
 
 	// Documentation does not state what the default value is so we define one for View subclasses.
+	@warn_unused_result
 	public override func intrinsicContentSize() -> CGSize {
 		return CGSize(width: UIViewNoIntrinsicMetric, height: UIViewNoIntrinsicMetric)
 	}
 
 
+	@warn_unused_result
 	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
 	}
 
 
+	@warn_unused_result
 	public func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
 		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
@@ -286,12 +305,14 @@ public /* non-final */ class View: UIView {
 	}
 
 
+	@warn_unused_result
 	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
 		return bounds.size
 	}
 
 
 	// Override `sizeThatFitsSize(_:)` instead!
+	@warn_unused_result
 	public final override func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
 		var fittingSize = sizeThatFitsSize(maximumSize)
 		if allowsTruncation {
@@ -303,6 +324,7 @@ public /* non-final */ class View: UIView {
 
 
 	// Override `sizeThatFitsSize(_:)` instead!
+	@warn_unused_result
 	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
 		return sizeThatFitsSize(maximumSize, allowsTruncation: false)
 	}
