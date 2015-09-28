@@ -8,6 +8,7 @@ public /* non-final */ class ImageView: View {
 	private var isSettingImageFromSource = false
 	private var isSettingSource = false
 	private var isSettingSourceFromImage = false
+	private var lastDrawnTintColor: UIColor?
 	private var sourceCallbackProtectionCount = 0
 	private var sourceCancellation: (Void -> Void)?
 	private var sourceImageRetrievalCompleted = false
@@ -70,9 +71,13 @@ public /* non-final */ class ImageView: View {
 					tintColor.setFill()
 					CGContextFillRect(context, drawFrame)
 					CGContextRestoreGState(context)
+
+					lastDrawnTintColor = tintColor
 				}
 				else {
 					image.drawInRect(drawFrame)
+
+					lastDrawnTintColor = nil
 				}
 			}
 		}
@@ -189,6 +194,15 @@ public /* non-final */ class ImageView: View {
 				image = nil
 				isSettingImageFromSource = false
 			}
+		}
+	}
+
+
+	public override func tintColorDidChange() {
+		super.tintColorDidChange()
+
+		if tintColor != lastDrawnTintColor {
+			setNeedsDisplay()
 		}
 	}
 
