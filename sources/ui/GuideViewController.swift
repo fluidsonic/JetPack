@@ -215,7 +215,7 @@ private final class BackgroundView: View {
 
 
 	#if TARGET_INTERFACE_BUILDER
-		public required convenience init(frame: CGRect) {
+		public override convenience init(frame: CGRect) {
 			self.init()
 
 			self.frame = frame
@@ -275,7 +275,7 @@ private final class ContentView: View {
 
 
 	#if TARGET_INTERFACE_BUILDER
-		public required convenience init(frame: CGRect) {
+		public override convenience init(frame: CGRect) {
 			self.init()
 
 			self.frame = frame
