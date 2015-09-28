@@ -1,4 +1,4 @@
-public /* non-final */ class GuideViewController: UIViewController {
+public /* non-final */ class GuideViewController: ViewController {
 
 	private lazy var backgroundView = BackgroundView()
 	private lazy var contentView = ContentView()
@@ -8,8 +8,8 @@ public /* non-final */ class GuideViewController: UIViewController {
 	private var showInitialGuide: Closure?
 
 
-	public init() {
-		super.init(nibName: nil, bundle: nil)
+	public override init() {
+		super.init()
 
 		modalPresentationCapturesStatusBarAppearance = true
 		modalPresentationStyle = .OverFullScreen
