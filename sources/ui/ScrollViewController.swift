@@ -124,6 +124,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 			for viewController in viewControllers where viewController.parentViewController !== self {
 				addChildViewController(viewController)
+				viewController.didMoveToParentViewController(self)
 			}
 
 			if isViewLoaded() {
@@ -252,12 +253,16 @@ private final class Cell: UICollectionViewCell {
 				return
 			}
 
-			if let oldValue = oldValue where oldValue.isViewLoaded() && oldValue.view.superview === contentView {
-				oldValue.view.removeFromSuperview()
+			if let viewController = oldValue where viewController.isViewLoaded() && viewController.view.superview === contentView {
+				viewController.beginAppearanceTransition(false, animated: false)
+				viewController.view.removeFromSuperview()
+				viewController.endAppearanceTransition()
 			}
 
 			if let viewController = viewController {
+				viewController.beginAppearanceTransition(true, animated: false)
 				contentView.addSubview(viewController.view)
+				viewController.endAppearanceTransition()
 			}
 		}
 	}
