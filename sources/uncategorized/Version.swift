@@ -1,6 +1,4 @@
-#if !FALLBACK
-	import Foundation
-#endif
+import Foundation
 
 
 public struct Version {
