@@ -17,7 +17,6 @@ public /* non-final */ class ImageView: View {
 	public override init() {
 		super.init()
 
-		contentMode = .ScaleAspectFill
 		opaque = false
 		userInteractionEnabled = false
 	}
@@ -42,13 +41,21 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public override var contentMode: UIViewContentMode {
+	@available(*, unavailable, message="Use .gravity and .scaleMode instead.")
+	public final override var contentMode: UIViewContentMode {
+		get { return super.contentMode }
+		set { super.contentMode = newValue }
+	}
+
+
+	@IBInspectable
+	public var gravity: Gravity = .Center {
 		didSet {
-			if contentMode == oldValue {
+			guard gravity != oldValue else {
 				return
 			}
 
-			if image != nil {
+			if image != nil && scaling != .FitIgnoringAspectRatio {
 				setNeedsDisplay()
 			}
 		}
@@ -62,11 +69,12 @@ public /* non-final */ class ImageView: View {
 			if !drawFrame.isEmpty {
 				if image.renderingMode == .AlwaysTemplate {
 					let viewSize = bounds.size
-					
+					let transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -viewSize.height)
+					let drawFrame = self.drawFrame.transform(transform)
+
 					let context = UIGraphicsGetCurrentContext()
 					CGContextSaveGState(context)
-					CGContextScaleCTM(context, 1, -1)
-					CGContextTranslateCTM(context, 0, -viewSize.height)
+					CGContextConcatCTM(context, transform)
 					CGContextClipToMask(context, drawFrame, image.CGImage)
 					tintColor.setFill()
 					CGContextFillRect(context, drawFrame)
@@ -134,6 +142,20 @@ public /* non-final */ class ImageView: View {
 
 
 	public var preferredSize: CGSize?
+
+
+	@IBInspectable
+	public var scaling: Scaling = .FitInside {
+		didSet {
+			guard scaling != oldValue else {
+				return
+			}
+
+			if image != nil {
+				setNeedsDisplay()
+			}
+		}
+	}
 
 
 	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
@@ -210,7 +232,8 @@ public /* non-final */ class ImageView: View {
 	private func updateDrawFrame() {
 		var drawFrame = CGRect()
 
-		let contentMode = self.contentMode
+		let gravity = self.gravity
+		let scaling = self.scaling
 		let imageSize: CGSize
 		let availableFrame = CGRect(size: bounds.size).insetBy(padding)
 
@@ -218,54 +241,57 @@ public /* non-final */ class ImageView: View {
 			imageSize = image.size
 
 			if !imageSize.isEmpty && !availableFrame.isEmpty {
-				drawFrame.top = availableFrame.top
-				drawFrame.left = availableFrame.left
-				drawFrame.size = imageSize
+				switch scaling {
+				case .FitIgnoringAspectRatio:
+					drawFrame.size = availableFrame.size
 
-				switch contentMode {
-				case .ScaleToFill:
-					drawFrame = availableFrame
-
-				case .ScaleAspectFill, .ScaleAspectFit:
+				case .FitInside, .FitOutside:
 					let horizontalScale = availableFrame.width / imageSize.width
 					let verticalScale = availableFrame.height / imageSize.height
-					let scale = (contentMode == .ScaleAspectFill ? max : min)(horizontalScale, verticalScale)
+					let scale = (scaling == .FitInside ? min : max)(horizontalScale, verticalScale)
 
-					drawFrame.width = imageSize.width * scale
-					drawFrame.height = imageSize.height * scale
+					drawFrame.size = imageSize.scaleBy(scale)
 
-					fallthrough
+				case .FitHorizontally:
+					drawFrame.width = availableFrame.width
+					drawFrame.height = imageSize.height * (drawFrame.width / imageSize.width)
 
-				case .Center, .Redraw:
-					drawFrame.left += (availableFrame.width - drawFrame.width) / 2
-					drawFrame.top += (availableFrame.height - drawFrame.height) / 2
+				case .FitHorizontallyIgnoringAspectRatio:
+					drawFrame.width = availableFrame.width
+					drawFrame.height = imageSize.height
 
-				case .Top:
-					drawFrame.left += (availableFrame.width - drawFrame.width) / 2
+				case .FitVertically:
+					drawFrame.height = availableFrame.height
+					drawFrame.width = imageSize.width * (drawFrame.height / imageSize.height)
 
-				case .Bottom:
-					drawFrame.left += (availableFrame.width - drawFrame.width) / 2
-					drawFrame.bottom = availableFrame.bottom
+				case .FitVerticallyIgnoringAspectRatio:
+					drawFrame.height = availableFrame.height
+					drawFrame.width = imageSize.width
 
+				case .None:
+					drawFrame.size = imageSize
+				}
+
+				switch gravity.horizontal {
 				case .Left:
-					drawFrame.top += (availableFrame.height - drawFrame.height) / 2
+					drawFrame.left = availableFrame.left
+
+				case .Center:
+					drawFrame.horizontalCenter = availableFrame.horizontalCenter
 
 				case .Right:
-					drawFrame.top += (availableFrame.height - drawFrame.height) / 2
 					drawFrame.right = availableFrame.right
+				}
 
-				case .TopLeft:
-					break
+				switch gravity.vertical {
+				case .Top:
+					drawFrame.top = availableFrame.top
 
-				case .TopRight:
-					drawFrame.right = availableFrame.right
+				case .Center:
+					drawFrame.verticalCenter = availableFrame.verticalCenter
 
-				case .BottomLeft:
+				case .Bottom:
 					drawFrame.bottom = availableFrame.bottom
-
-				case .BottomRight:
-					drawFrame.bottom = availableFrame.bottom
-					drawFrame.right = availableFrame.right
 				}
 
 				drawFrame = roundScaled(drawFrame)
@@ -308,6 +334,101 @@ public /* non-final */ class ImageView: View {
 
 			return {}
 		}
+	}
+
+
+
+	public enum Gravity {
+		case BottomCenter
+		case BottomLeft
+		case BottomRight
+		case Center
+		case CenterLeft
+		case CenterRight
+		case TopCenter
+		case TopLeft
+		case TopRight
+
+
+		public init(horizontal: Horizontal, vertical: Vertical) {
+			switch vertical {
+			case .Bottom:
+				switch horizontal {
+					case .Left:   self = .BottomLeft
+					case .Center: self = .BottomCenter
+					case .Right:  self = .BottomRight
+				}
+
+			case .Center:
+				switch horizontal {
+					case .Left:   self = .CenterLeft
+					case .Center: self = .Center
+					case .Right:  self = .CenterRight
+				}
+
+			case .Top:
+				switch horizontal {
+				case .Left:   self = .TopLeft
+				case .Center: self = .TopCenter
+				case .Right:  self = .TopRight
+				}
+			}
+		}
+
+
+		public var horizontal: Horizontal {
+			switch self {
+			case .BottomLeft, .CenterLeft, .TopLeft:
+				return .Left
+
+			case .BottomCenter, .Center, .TopCenter:
+				return .Center
+
+			case .BottomRight, .CenterRight, .TopRight:
+				return .Right
+			}
+		}
+
+
+		public var vertical: Vertical {
+			switch self {
+			case .BottomCenter, .BottomLeft, .BottomRight:
+				return .Bottom
+
+			case .Center, .CenterLeft, .CenterRight:
+				return .Center
+
+			case .TopCenter, .TopLeft, .TopRight:
+				return .Top
+			}
+		}
+
+
+
+		public enum Horizontal {
+			case Center
+			case Left
+			case Right
+		}
+
+
+		public enum Vertical {
+			case Bottom
+			case Center
+			case Top
+		}
+	}
+
+
+	public enum Scaling {
+		case FitIgnoringAspectRatio
+		case FitInside
+		case FitHorizontally
+		case FitHorizontallyIgnoringAspectRatio
+		case FitOutside
+		case FitVertically
+		case FitVerticallyIgnoringAspectRatio
+		case None
 	}
 }
 
