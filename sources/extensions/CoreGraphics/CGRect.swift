@@ -150,6 +150,17 @@ public extension CGRect {
 	}
 
 
+	@warn_unused_result(mutable_variant="transformInPlace")
+	public func transform(transform: CGAffineTransform) -> CGRect {
+		return CGRectApplyAffineTransform(self, transform)
+	}
+
+
+	public mutating func transformInPlace(transform: CGAffineTransform) {
+		self = self.transform(transform)
+	}
+
+
 	public var verticalCenter: CGFloat {
 		get { return CGFloat(top + (height / 2)) }
 		mutating set { top = newValue - (height / 2) }
