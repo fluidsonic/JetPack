@@ -1,7 +1,9 @@
 public /* non-final */ class ScrollViewController: ViewController {
 
-	private lazy var collectionView: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
+	private var appearState = AppearState.DidDisappear
+	private lazy var collectionView: UICollectionView = CollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
 	private lazy var collectionViewLayout = UICollectionViewFlowLayout()
+	private var isAnimatingScrollView = false
 	private var isSettingPrimaryViewControllerInternally = false
 
 
@@ -72,6 +74,47 @@ public /* non-final */ class ScrollViewController: ViewController {
 		child.registerClass(Cell.self, forCellWithReuseIdentifier: "Cell")
 
 		view.addSubview(child)
+	}
+
+
+	public override func shouldAutomaticallyForwardAppearanceMethods() -> Bool {
+		return false
+	}
+
+
+	private func updateAppearStateForAllCellsAnimated(animated: Bool) {
+		for cell in collectionView.visibleCells() {
+			guard let cell = cell as? Cell else {
+				continue
+			}
+
+			updateAppearStateForCell(cell, animated: animated)
+		}
+	}
+
+
+	private func updateAppearStateForCell(cell: Cell, animated: Bool) {
+		var cellAppearState = appearState
+		if appearState == .DidAppear && (isAnimatingScrollView || collectionView.tracking || collectionView.decelerating) {
+			cellAppearState = .WillAppear
+		}
+
+		switch cellAppearState {
+		case .DidDisappear, .DidAppear:
+			break
+
+		case .WillAppear:
+			if cell.appearState == .DidAppear {
+				cellAppearState = .DidAppear
+			}
+
+		case .WillDisappear:
+			if cell.appearState == .DidDisappear {
+				cellAppearState = .DidDisappear
+			}
+		}
+
+		cell.updateAppearState(cellAppearState, animated: animated)
 	}
 
 
@@ -167,6 +210,38 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 		setupCollectionView()
 	}
+
+
+	public override func viewDidAppear(animated: Bool) {
+		super.viewDidAppear(animated)
+
+		appearState = .DidAppear
+		updateAppearStateForAllCellsAnimated(animated)
+	}
+
+
+	public override func viewDidDisappear(animated: Bool) {
+		super.viewDidDisappear(animated)
+
+		appearState = .DidDisappear
+		updateAppearStateForAllCellsAnimated(animated)
+	}
+
+
+	public override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+
+		appearState = .WillAppear
+		updateAppearStateForAllCellsAnimated(animated)
+	}
+
+
+	public override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		appearState = .WillDisappear
+		updateAppearStateForAllCellsAnimated(animated)
+	}
 }
 
 
@@ -176,12 +251,7 @@ extension ScrollViewController: UICollectionViewDataSource {
 	public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 		precondition(collectionView === self.collectionView)
 
-		let viewController = viewControllers[indexPath.item]
-
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! Cell
-		cell.viewController = viewController
-
-		return cell
+		return collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! Cell
 	}
 
 
@@ -202,11 +272,38 @@ extension ScrollViewController: UICollectionViewDataSource {
 
 extension ScrollViewController: UICollectionViewDelegate {
 
+	public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+		guard collectionView === self.collectionView else {
+			return
+		}
+		guard let cell = cell as? Cell else {
+			return
+		}
+
+		cell.updateAppearState(.DidDisappear, animated: false)
+		cell.viewController = nil
+	}
+
+
+	public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+		guard collectionView === self.collectionView else {
+			return
+		}
+		guard let cell = cell as? Cell else {
+			return
+		}
+
+		cell.viewController = viewControllers[indexPath.item]
+		updateAppearStateForCell(cell, animated: true)
+	}
+
+
 	public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
 		guard scrollView === collectionView else {
 			return
 		}
 
+		updateAppearStateForAllCellsAnimated(true)
 		updatePrimaryViewController()
 	}
 
@@ -216,7 +313,24 @@ extension ScrollViewController: UICollectionViewDelegate {
 			return
 		}
 
+		isAnimatingScrollView = false
+
+		updateAppearStateForAllCellsAnimated(true)
 		updatePrimaryViewController()
+	}
+
+
+	public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+		guard scrollView === collectionView else {
+			return
+		}
+
+		isAnimatingScrollView = false
+
+		if !decelerate {
+			updateAppearStateForAllCellsAnimated(true)
+			updatePrimaryViewController()
+		}
 	}
 	
 
@@ -229,11 +343,32 @@ extension ScrollViewController: UICollectionViewDelegate {
 			updatePrimaryViewController()
 		}
 	}
+
+
+	public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+		guard scrollView === collectionView else {
+			return
+		}
+
+		isAnimatingScrollView = false
+	}
+
+
+	public func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+		guard scrollView === collectionView else {
+			return
+		}
+
+		isAnimatingScrollView = false
+	}
 }
 
 
 
 private final class Cell: UICollectionViewCell {
+
+	private var appearState = AppearState.DidDisappear
+
 
 	private override func layoutSubviews() {
 		super.layoutSubviews()
@@ -247,23 +382,103 @@ private final class Cell: UICollectionViewCell {
 	}
 
 
-	private var viewController: UIViewController? {
-		didSet {
-			guard viewController !== oldValue else {
-				return
-			}
+	private func updateAppearState(appearState: AppearState, animated: Bool) {
+		let oldAppearState = self.appearState
+		guard appearState != oldAppearState else {
+			return
+		}
 
-			if let viewController = oldValue where viewController.isViewLoaded() && viewController.view.superview === contentView {
-				viewController.beginAppearanceTransition(false, animated: false)
+		self.appearState = appearState
+
+		guard let viewController = self.viewController else {
+			return
+		}
+
+		switch appearState {
+		case .DidDisappear:
+			switch oldAppearState {
+			case .DidDisappear:
+				break
+
+			case .WillAppear, .DidAppear:
+				viewController.beginAppearanceTransition(false, animated: animated)
+				fallthrough
+
+			case .WillDisappear:
 				viewController.view.removeFromSuperview()
 				viewController.endAppearanceTransition()
 			}
 
-			if let viewController = viewController {
-				viewController.beginAppearanceTransition(true, animated: false)
+		case .WillAppear:
+			switch oldAppearState {
+			case .DidAppear, .WillAppear:
+				break
+
+			case .WillDisappear, .DidDisappear:
+				viewController.beginAppearanceTransition(true, animated: animated)
+
 				contentView.addSubview(viewController.view)
+				setNeedsLayout()
+				layoutIfNeeded()
+			}
+
+		case .WillDisappear:
+			switch oldAppearState {
+			case .DidDisappear, .WillDisappear:
+				break
+
+			case .WillAppear, .DidAppear:
+				viewController.beginAppearanceTransition(false, animated: animated)
+			}
+
+		case .DidAppear:
+			switch oldAppearState {
+			case .DidAppear:
+				break
+
+			case .DidDisappear, .WillDisappear:
+				viewController.beginAppearanceTransition(true, animated: animated)
+
+				contentView.addSubview(viewController.view)
+				setNeedsLayout()
+				layoutIfNeeded()
+				
+				fallthrough
+
+			case .WillAppear:
 				viewController.endAppearanceTransition()
 			}
 		}
 	}
+
+
+	private var viewController: UIViewController? {
+		didSet {
+			precondition((viewController != nil) != (oldValue != nil))
+		}
+	}
+}
+
+
+
+private class CollectionView: UICollectionView {
+
+	private override func setContentOffset(contentOffset: CGPoint, animated: Bool) {
+		let willBeginAnimation = animated && contentOffset != self.contentOffset
+
+		super.setContentOffset(contentOffset, animated: animated)
+
+		if willBeginAnimation, let viewController = delegate as? ScrollViewController {
+			viewController.isAnimatingScrollView = true
+		}
+	}
+}
+
+
+
+private enum AppearState {
+	case DidDisappear
+	case WillAppear
+	case DidAppear
+	case WillDisappear
 }
