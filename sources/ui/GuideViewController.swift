@@ -215,7 +215,7 @@ private final class BackgroundView: View {
 
 
 	#if TARGET_INTERFACE_BUILDER
-		private override convenience init(frame: CGRect) {
+		private convenience init(frame: CGRect) {
 			self.init()
 
 			self.frame = frame

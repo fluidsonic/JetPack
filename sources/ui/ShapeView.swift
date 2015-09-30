@@ -12,7 +12,7 @@ public /* non-final */ class ShapeView: View {
 
 
 	#if TARGET_INTERFACE_BUILDER
-		public override convenience init(frame: CGRect) {
+		public convenience init(frame: CGRect) {
 			self.init()
 
 			self.frame = frame

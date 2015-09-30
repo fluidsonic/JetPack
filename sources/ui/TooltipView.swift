@@ -21,11 +21,11 @@ public /* non-final */ class TooltipView: View {
 
 
 	#if TARGET_INTERFACE_BUILDER
-	public override convenience init(frame: CGRect) {
-		self.init()
+		public convenience init(frame: CGRect) {
+			self.init()
 
-		self.frame = frame
-	}
+			self.frame = frame
+		}
 	#endif
 
 
