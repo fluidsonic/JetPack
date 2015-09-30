@@ -62,7 +62,7 @@ public class Button: View {
 
 
 	@IBInspectable
-	public var arrangement = Arrangement.ImageLeft {
+	public var arrangement: Arrangement = .ImageLeft {
 		didSet {
 			guard arrangement != oldValue else {
 				return
@@ -137,7 +137,7 @@ public class Button: View {
 
 
 	@IBInspectable
-	public var disabledAlpha = CGFloat(1) {
+	public var disabledAlpha: CGFloat = 1 {
 		didSet {
 			guard disabledAlpha != oldValue else {
 				return
@@ -215,7 +215,7 @@ public class Button: View {
 
 
 	@IBInspectable
-	public var horizontalAlignment = HorizontalAlignment.Center {
+	public var horizontalAlignment: HorizontalAlignment = .Center {
 		didSet {
 			guard horizontalAlignment != oldValue else {
 				return
@@ -227,7 +227,7 @@ public class Button: View {
 
 
 	@IBInspectable
-	public var imageOffset = UIOffset() {
+	public var imageOffset: UIOffset = .zero  {
 		didSet {
 			guard imageOffset != oldValue else {
 				return
@@ -684,7 +684,7 @@ public class Button: View {
 
 
 	@IBInspectable
-	public var textOffset = UIOffset() {
+	public var textOffset: UIOffset = .zero {
 		didSet {
 			guard textOffset != oldValue else {
 				return
@@ -791,7 +791,7 @@ public class Button: View {
 
 
 	@IBInspectable
-	public var verticalAlignment = VerticalAlignment.Center {
+	public var verticalAlignment: VerticalAlignment = .Center {
 		didSet {
 			guard verticalAlignment != oldValue else {
 				return
