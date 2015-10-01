@@ -3,6 +3,7 @@ import Foundation
 
 public extension NSCalendarUnit {
 
+	@nonobjc
 	public static let All: NSCalendarUnit = [
 		.Era,
 		.Year,

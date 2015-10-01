@@ -4,11 +4,13 @@ import UIKit
 
 public extension NSMutableAttributedString {
 
+	@nonobjc
 	public func appendString(string: String) {
 		appendString(string, attributes: [:])
 	}
 
 
+	@nonobjc
 	public func appendString(string: String, attribute: String, value: AnyObject) {
 		let location = length
 
@@ -17,11 +19,13 @@ public extension NSMutableAttributedString {
 	}
 
 
+	@nonobjc
 	public func appendString(string: String, color: UIColor) {
 		appendString(string, attribute: NSForegroundColorAttributeName, value: color)
 	}
 
 
+	@nonobjc
 	public func appendString(string: String, color: UIColor, font: UIFont) {
 		appendString(string, attributes: [
 			NSFontAttributeName:            font,
@@ -30,6 +34,7 @@ public extension NSMutableAttributedString {
 	}
 
 
+	@nonobjc
 	public func appendString(string: String, attributes: [String : AnyObject]) {
 		let location = length
 

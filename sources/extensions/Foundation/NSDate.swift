@@ -3,6 +3,8 @@ import Foundation
 
 public extension NSDate {
 
+	@available(*, deprecated=0, message="Use NSCalendar.isDate(_:inSameDayAsDate:)")
+	@nonobjc
 	public func isInSameDayAs(otherDate: NSDate, timeZone: NSTimeZone) -> Bool {
 		let calendar = NSCalendar.currentCalendar()
 		calendar.timeZone = timeZone
@@ -17,11 +19,15 @@ public extension NSDate {
 	}
 
 
+	@available(*, deprecated=0, message="Use NSCalendar.isDateInToday(_:)")
+	@nonobjc
 	public func isInToday(timeZone timeZone: NSTimeZone) -> Bool {
 		return isInSameDayAs(NSDate(), timeZone: timeZone)
 	}
 
 
+	@available(*, deprecated=0, message="Use NSCalendar.isDateInTomorrow(_:)")
+	@nonobjc
 	public func isInTomorrow(timeZone timeZone: NSTimeZone) -> Bool {
 		if let tomorrow = NSDate().plus(days: 1, inTimeZone: timeZone) {
 			return isInSameDayAs(tomorrow, timeZone: timeZone)
@@ -31,11 +37,15 @@ public extension NSDate {
 	}
 
 
+	@available(*, deprecated=0, message="Use NSCalendar.dateBySubtractingSeconds(seconds:minutes:hours:days:months:years:fromDate:)")
+	@nonobjc
 	public func minus(years years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
 		return plus(years: years.map(-), months: months.map(-), days: days.map(-), hours: hours.map(-), minutes: minutes.map(-), seconds: seconds.map(-))
 	}
 
 
+	@available(*, deprecated=0, message="Use NSCalendar.dateBySeconds(seconds:minutes:hours:days:months:years:toDate:)")
+	@nonobjc
 	public func plus(years years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
 		let calendar = NSCalendar.currentCalendar()
 		if let timeZone = timeZone {
@@ -67,6 +77,8 @@ public extension NSDate {
 	}
 
 
+	@available(*, deprecated=0, message="Use NSCalendar.dateBySettingHour(_:minute:second:ofDate:options:)")
+	@nonobjc
 	public func with(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
 		let calendar = NSCalendar.currentCalendar()
 		if let timeZone = timeZone {

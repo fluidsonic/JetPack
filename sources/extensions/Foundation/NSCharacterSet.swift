@@ -3,31 +3,34 @@ import Foundation
 
 public extension NSCharacterSet {
 
-	public class func URLPathComponentAllowedCharacterSet() -> NSCharacterSet {
-		struct Static {
-			static let value: NSCharacterSet = {
-				let set = NSMutableCharacterSet()
-				set.formUnionWithCharacterSet(NSCharacterSet.URLPathAllowedCharacterSet())  // TODO use 'self' instead of NSCharacterSet once it no longer crashes the compiler - or private globals once the symbols no longer collide across files
-				set.removeCharactersInString("/")
+	@nonobjc
+	private static let _URLPathComponentAllowedCharacterSet: NSCharacterSet = {
+		let characterSet = NSMutableCharacterSet()
+		characterSet.formUnionWithCharacterSet(NSCharacterSet.URLPathAllowedCharacterSet())
+		characterSet.removeCharactersInString("/")
 
-				return set
-				}()
-		}
+		return characterSet.copy() as! NSCharacterSet
+	}()
 
-		return Static.value
+
+	@nonobjc
+	private static let _URLQueryParameterAllowedCharacterSet: NSCharacterSet = {
+		let characterSet = NSMutableCharacterSet()
+		characterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
+		characterSet.removeCharactersInString("+&=")
+
+		return characterSet.copy() as! NSCharacterSet
+	}()
+
+
+	@nonobjc
+	public static func URLPathComponentAllowedCharacterSet() -> NSCharacterSet {
+		return _URLPathComponentAllowedCharacterSet
 	}
 
-	public class func URLQueryParameterAllowedCharacterSet() -> NSCharacterSet {
-		struct Static {
-			static let value: NSCharacterSet = {
-				let set = NSMutableCharacterSet()
-				set.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())  // TODO use 'self' instead of NSCharacterSet once it no longer crashes the compiler - or private globals once the symbols no longer collide across files
-				set.removeCharactersInString("+&=")
 
-				return set
-				}()
-		}
-
-		return Static.value
+	@nonobjc
+	public static func URLQueryParameterAllowedCharacterSet() -> NSCharacterSet {
+		return _URLQueryParameterAllowedCharacterSet
 	}
 }

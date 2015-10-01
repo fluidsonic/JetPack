@@ -1,14 +1,19 @@
 import Foundation
 import ObjectiveC
 
-var fractionCompletedHandlerKey: UInt8 = 0
+private var fractionCompletedHandlerKey: UInt8 = 0
 
 
 public extension NSProgress {
 
+	@nonobjc
 	public var fractionCompletedHandler: (Double -> Void)? {
 		get {
-			return objc_getAssociatedObject(self, &fractionCompletedHandlerKey) as! (Double -> Void)?
+			guard let observer = objc_getAssociatedObject(self, &fractionCompletedHandlerKey) as! Observer? else {
+				return nil
+			}
+
+			return observer.fractionCompletedHandler
 		}
 		set {
 			if let fractionCompletedHandler = newValue {
@@ -26,7 +31,7 @@ public extension NSProgress {
 private class Observer: NSObject {
 
 	private let fractionCompletedHandler: Double -> Void
-	private unowned var progress: NSProgress
+	private weak var progress: NSProgress?
 
 
 	private init(progress: NSProgress, fractionCompletedHandler: Double -> Void) {
@@ -39,7 +44,16 @@ private class Observer: NSObject {
 	}
 
 
+	deinit {
+		progress?.removeObserver(self, forKeyPath: "fractionCompleted")
+	}
+
+
 	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+		guard let progress = progress else {
+			return
+		}
+
 		fractionCompletedHandler(progress.fractionCompleted)
 	}
 }

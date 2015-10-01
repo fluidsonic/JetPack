@@ -3,11 +3,13 @@ import Foundation
 
 public extension NSRange {
 
+	@nonobjc
 	public init(forString string: String) {
 		self.init(range: string.startIndex ..< string.endIndex, inString: string)
 	}
 
 
+	@nonobjc
 	public init(range: Range<String.Index>?, inString string: String) {
 		if let range = range {
 			let location = NSRange.locationForIndex(range.startIndex, inString: string)
