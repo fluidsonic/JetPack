@@ -10,9 +10,9 @@ public extension ImageView {
 
 	public struct PHAssetSource: Source {
 
-		var asset: PHAsset
-		var contentMode: PHImageContentMode
-		var targetSize: CGSize
+		public var asset: PHAsset
+		public var contentMode: PHImageContentMode
+		public var targetSize: CGSize
 
 
 		public init(asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode) {

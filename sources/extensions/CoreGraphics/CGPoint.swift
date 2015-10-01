@@ -28,12 +28,6 @@ public extension CGPoint {
 
 
 	@warn_unused_result(mutable_variant="offsetInPlace")
-	public func offsetBy(offset: CGPoint) -> CGPoint {
-		return CGPoint(x: x + offset.x, y: y + offset.y)
-	}
-
-
-	@warn_unused_result(mutable_variant="offsetInPlace")
 	public func offsetBy(dx dx: CGFloat, dy: CGFloat) -> CGPoint {
 		return CGPoint(x: x + dx, y: y + dy)
 	}
@@ -41,18 +35,19 @@ public extension CGPoint {
 
 	@warn_unused_result
 	public func offsetBy(dx dx: CGFloat) -> CGPoint {
-		return CGPoint(x: x + dx, y: y)
+		return offsetBy(dx: dx, dy: 0)
 	}
 
 
 	@warn_unused_result
 	public func offsetBy(dy dy: CGFloat) -> CGPoint {
-		return CGPoint(x: x, y: y + dy)
+		return offsetBy(dx: 0, dy: dy)
 	}
 
 
-	public mutating func offsetInPlace(offset: CGPoint) {
-		self = offsetBy(offset)
+	@warn_unused_result(mutable_variant="offsetInPlace")
+	public func offsetBy(offset: CGPoint) -> CGPoint {
+		return offsetBy(dx: offset.x, dy: offset.y)
 	}
 
 
@@ -61,8 +56,34 @@ public extension CGPoint {
 	}
 
 
+	public mutating func offsetInPlace(dx dx: CGFloat) {
+		self = offsetBy(dx: dx)
+	}
+
+
+	public mutating func offsetInPlace(dy dy: CGFloat) {
+		self = offsetBy(dy: dy)
+	}
+
+
+	public mutating func offsetInPlace(offset: CGPoint) {
+		self = offsetBy(offset)
+	}
+
+
 	public var top: CGFloat {
 		get { return y }
 		set { y = newValue }
+	}
+
+
+	@warn_unused_result(mutable_variant="transformInPlace")
+	public func transform(transform: CGAffineTransform) -> CGPoint {
+		return CGPointApplyAffineTransform(self, transform)
+	}
+
+
+	public mutating func transformInPlace(transform: CGAffineTransform) {
+		self = self.transform(transform)
 	}
 }
