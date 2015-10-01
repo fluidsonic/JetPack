@@ -167,7 +167,7 @@ public extension CGRect {
 	}
 
 
-	internal var width: CGFloat {  // make public once the ambigous call problem is solved
+	internal var width: CGFloat {  // make public once the ambigous call problem for the getter is solved
 		get { return size.width }
 		mutating set { size.width = newValue }
 	}
