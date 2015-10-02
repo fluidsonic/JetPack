@@ -1,3 +1,6 @@
+import Foundation
+
+
 public protocol Failure: CustomDebugStringConvertible, CustomStringConvertible, ErrorType {
 
 	var cause: Failure? { get }

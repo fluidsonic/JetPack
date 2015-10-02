@@ -1,9 +1,10 @@
-public extension UInt64 {
+extension UInt64: RandomizableIntegerType {
 
-	public static func random(lower lower: UInt64 = min, upper: UInt64 = max) -> UInt64 {
+	@warn_unused_result
+	public static func random(start start: UInt64, end: UInt64) -> UInt64 {
 		var m: UInt64
-		let u = upper - lower
-		var r = arc4random(UInt64)
+		let u = end - start
+		var r: UInt64 = arc4random()
 
 		if u > UInt64(Int64.max) {
 			m = 1 + ~u
@@ -13,19 +14,9 @@ public extension UInt64 {
 		}
 
 		while r < m {
-			r = arc4random(UInt64)
+			r = arc4random()
 		}
 
-		return (r % u) + lower
-	}
-
-
-	public static func random(min min: UInt64 = 0, max: UInt64) -> UInt64 {
-		return random(lower: min, upper: max + 1)
-	}
-
-
-	public static func random(range: Range<UInt64>) -> UInt64 {
-		return random(min: range.startIndex, max: range.endIndex)
+		return (r % u) + start
 	}
 }

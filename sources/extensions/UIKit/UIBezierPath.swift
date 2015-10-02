@@ -152,17 +152,17 @@ public extension UIBezierPath {
 			return CGMath.radiansBottom
 		}
 	}
-}
 
+	
 
-// Temporarily moved outside extension due to compiler crash in Swift 1.2 (Xcode 6.3 beta 1)
-public enum RoundedCornerDirection {
-	case DownLeft
-	case DownRight
-	case LeftDown
-	case LeftUp
-	case RightDown
-	case RightUp
-	case UpLeft
-	case UpRight
+	public enum RoundedCornerDirection {
+		case DownLeft
+		case DownRight
+		case LeftDown
+		case LeftUp
+		case RightDown
+		case RightUp
+		case UpLeft
+		case UpRight
+	}
 }

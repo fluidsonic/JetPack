@@ -1,3 +1,6 @@
+import Dispatch
+
+
 public class EventBus {
 
 	private let lock = EmptyObject()

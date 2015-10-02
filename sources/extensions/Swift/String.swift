@@ -3,6 +3,7 @@ import Foundation
 
 public extension String {
 
+	@warn_unused_result
 	public func contains(string: String) -> Bool {
 		return rangeOfString(string) != nil
 	}
@@ -17,11 +18,13 @@ public extension String {
 	}
 
 
+	@warn_unused_result
 	public func stringByReplacing(regex regex: NSRegularExpression, withTemplate template: String) -> String {
 		return regex.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, utf16.count), withTemplate: template)
 	}
 
 
+	@warn_unused_result
 	public func stringByReplacing(regexPattern regexPattern: String, withTemplate template: String) -> String {
 		do {
 			let regex = try NSRegularExpression(pattern: regexPattern, options: NSRegularExpressionOptions.DotMatchesLineSeparators)
@@ -32,7 +35,8 @@ public extension String {
 		}
 	}
 	
-	
+
+	@warn_unused_result
 	public func firstMatchForRegexPattern(regexPattern: String) -> [String] {
 		do {
 			let regex = try NSRegularExpression(pattern: regexPattern, options: [])
@@ -48,6 +52,7 @@ public extension String {
 	}
 
 
+	@warn_unused_result
 	public func substringByMatchingPattern(pattern: String) -> String? {
 		if let range = rangeOfString(pattern, options: .RegularExpressionSearch) {
 			return self[range]
@@ -62,6 +67,7 @@ public extension String {
 	}
 
 
+	@warn_unused_result
 	public func trimmedToLength(length: Int) -> String {
 		if length <= 0 {
 			return ""
@@ -99,5 +105,5 @@ public extension String {
 
 // compiler cannot implicitly map between NSString and String when at least one of them is (implicitly) optional
 
-public func ==(a: String?, b: NSString?) -> Bool { return (a == (b as String?)) }
-public func ==(a: NSString?, b: String?) -> Bool { return ((a as String?) == b) }
+// public func ==(a: String?, b: NSString?) -> Bool { return (a == (b as String?)) }
+// public func ==(a: NSString?, b: String?) -> Bool { return ((a as String?) == b) }

@@ -1,3 +1,6 @@
+import UIKit
+
+
 public extension UIAlertController {
 
 	public convenience init(actionSheetWithMessage message: String) {

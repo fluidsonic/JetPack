@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 
 public extension NSMutableAttributedString {
@@ -16,21 +15,6 @@ public extension NSMutableAttributedString {
 
 		replaceCharactersInRange(NSRange(location: location, length: 0), withString: string)
 		addAttribute(attribute, value: value, range: NSRange(location: location, length: length - location))
-	}
-
-
-	@nonobjc
-	public func appendString(string: String, color: UIColor) {
-		appendString(string, attribute: NSForegroundColorAttributeName, value: color)
-	}
-
-
-	@nonobjc
-	public func appendString(string: String, color: UIColor, font: UIFont) {
-		appendString(string, attributes: [
-			NSFontAttributeName:            font,
-			NSForegroundColorAttributeName: color,
-		])
 	}
 
 

@@ -4,6 +4,7 @@ import Foundation
 public extension NSCalendar {
 
 	@nonobjc
+	@warn_unused_result
 	public func dateByAddingSeconds(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, toDate date: NSDate) -> NSDate? {
 		let components = NSDateComponents()
 
@@ -31,6 +32,7 @@ public extension NSCalendar {
 
 
 	@nonobjc
+	@warn_unused_result
 	public func dateBySubtractingSeconds(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, fromDate date: NSDate) -> NSDate? {
 		return dateByAddingSeconds(seconds.map(-), minutes: minutes.map(-), hours: hours.map(-), days: days.map(-), months: months.map(-), years: years.map(-), toDate: date)
 	}

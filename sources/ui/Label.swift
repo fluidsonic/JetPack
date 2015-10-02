@@ -1,3 +1,6 @@
+import UIKit
+
+
 @IBDesignable
 public class Label: UILabel {
 

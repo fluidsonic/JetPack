@@ -1,3 +1,6 @@
+import UIKit
+
+
 @IBDesignable
 public /* non-final */ class ImageView: View {
 
@@ -195,11 +198,11 @@ public /* non-final */ class ImageView: View {
 
 					if let imageView = self {
 						if protectionCount != imageView.sourceCallbackProtectionCount {
-							LOG("ImageView.Source called the completion closure after it was cancelled. The call will be ignored.")
+							log("ImageView.Source called the completion closure after it was cancelled. The call will be ignored.")
 							return
 						}
 						if imageView.isSettingImageFromSource {
-							LOG("ImageView.Source called the completion closure from within an 'image' property observer. The call will be ignored.")
+							log("ImageView.Source called the completion closure from within an 'image' property observer. The call will be ignored.")
 							return
 						}
 

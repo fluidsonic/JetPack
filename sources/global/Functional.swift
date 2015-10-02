@@ -1,44 +1,15 @@
-public func any<S : SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> Bool {
-	for element in source {
-		if includeElement(element) {
-			return true
-		}
-	}
-
-	return false
-}
+import ObjectiveC
 
 
-internal func arc4random<T: IntegerLiteralConvertible>(type: T.Type) -> T {
-	var random: T = 0
-	arc4random_buf(&random, sizeof(T))
+@warn_unused_result
+internal func arc4random<Element: IntegerLiteralConvertible>() -> Element {
+	var random: Element = 0
+	arc4random_buf(&random, sizeof(Element))
 	return random
 }
 
 
-public func count<C: CollectionType>(collection: C, includeElement: (C.Generator.Element) -> Bool) -> Int {
-	var count = 0
-	for element in collection {
-		if includeElement(element) {
-			++count
-		}
-	}
-
-	return count
-}
-
-
-public func first<S: SequenceType>(source: S, includeElement: (S.Generator.Element) -> Bool) -> S.Generator.Element? {
-	for element in source {
-		if includeElement(element) {
-			return element
-		}
-	}
-
-	return nil
-}
-
-
+@warn_unused_result
 public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Result) -> Parameters -> Result {
 	func cast<From,To>(instance: From) -> To {
 		return instance as! To
@@ -48,19 +19,21 @@ public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Re
 }
 
 
-public func not<T>(source: T -> Bool) -> T -> Bool {
-	return { !source($0) }
+@warn_unused_result
+public func not<Parameter>(closure: Parameter -> Bool) -> Parameter -> Bool {
+	return { !closure($0) }
 }
 
 
-public func not(source: Bool) -> Bool {
-	return !source
+@warn_unused_result
+public func not<Parameter>(closure: Parameter throws -> Bool) -> Parameter throws -> Bool {
+	return { !(try closure($0)) }
 }
 
 
-
-public func optionalMax<T: Comparable>(elements: T? ...) -> T? {
-	var maximumElement: T?
+@warn_unused_result
+public func optionalMax<Element: Comparable>(elements: Element? ...) -> Element? {
+	var maximumElement: Element?
 
 	for element in elements {
 		if let element = element {
@@ -79,8 +52,9 @@ public func optionalMax<T: Comparable>(elements: T? ...) -> T? {
 }
 
 
-public func optionalMin<T: Comparable>(elements: T? ...) -> T? {
-	var minimumElement: T?
+@warn_unused_result
+public func optionalMin<Element: Comparable>(elements: Element? ...) -> Element? {
+	var minimumElement: Element?
 
 	for element in elements {
 		if let element = element {
@@ -99,39 +73,17 @@ public func optionalMin<T: Comparable>(elements: T? ...) -> T? {
 }
 
 
-public func separate<E, S : SequenceType where S.Generator.Element == E>(source: S, isLeftElement: (E) -> Bool) -> ([E], [E]) {
-	var left = [E]()
-	var right = [E]()
+@warn_unused_result
+public func pointerOf(object: AnyObject) -> COpaquePointer {
+	return Unmanaged<AnyObject>.passUnretained(object).toOpaque()
+}
 
-	for element in source {
-		if isLeftElement(element) {
-			left.append(element)
-		}
-		else {
-			right.append(element)
-		}
+
+public func synchronized<ReturnType>(object: AnyObject, @noescape closure: Void throws -> ReturnType) rethrows -> ReturnType {
+	objc_sync_enter(object)
+	defer {
+		objc_sync_exit(object)
 	}
 
-	return (left, right)
-}
-
-
-public func synchronized(object: AnyObject, @noescape closure: () -> ()) {
-	objc_sync_enter(object)
-	closure()
-	objc_sync_exit(object)
-}
-
-
-public func synchronized<T>(object: AnyObject, @noescape closure: () -> T) -> T {
-	objc_sync_enter(object)
-	let result = closure()
-	objc_sync_exit(object)
-	return result
-}
-
-
-// Don't use Any.Type as this will not work correctly and is also messy when optionals are involved.
-public func ~=(a: AnyClass, b: AnyClass) -> Bool {
-	return a === b
+	return try closure()
 }

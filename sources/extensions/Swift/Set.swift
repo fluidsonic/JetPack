@@ -19,7 +19,7 @@ public extension Set {
 	}
 
 
-	@warn_unused_result(mutable_variant="filterInPlace()")
+	@warn_unused_result(mutable_variant="filterInPlace")
 	public func filterAsSet(includeElement: (Element) -> Bool) -> Set<Element> {
 		var newSet = Set<Element>()
 		for element in self {

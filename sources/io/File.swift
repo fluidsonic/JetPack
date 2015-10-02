@@ -1,11 +1,12 @@
 import Foundation
 
 
-public final class File {
+public struct File {
 
-	private init() {} // static class for now
+	private init() {} // static for now
 
 
+	@warn_unused_result
 	public static func createTemporary(namePrefix: String = "", nameSuffix: String = "") -> NSURL? {
 		let pathTemplate: NSString = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent("\(namePrefix)XXXXXXXXXX\(nameSuffix)")
 		

@@ -1,3 +1,6 @@
+import UIKit
+
+
 public /* non-final */ class TooltipView: View {
 
 	private let arrowSize = CGSize(width: 12, height: 8)

@@ -1,3 +1,6 @@
+import UIKit
+
+
 public /* non-final */ class GuideViewController: ViewController {
 
 	private lazy var backgroundView = BackgroundView()

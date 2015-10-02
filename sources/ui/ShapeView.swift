@@ -1,3 +1,6 @@
+import UIKit
+
+
 @IBDesignable
 public /* non-final */ class ShapeView: View {
 

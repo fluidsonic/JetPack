@@ -11,8 +11,9 @@ public extension CollectionType {
 }
 
 
-public extension CollectionType where Self.Generator.Element: AnyObject {
+public extension CollectionType where Generator.Element: AnyObject {
 
+	@warn_unused_result
 	public func indexOfIdentical(element: Generator.Element) -> Index? {
 		for index in startIndex ..< endIndex where self[index] === element {
 			return index
@@ -23,7 +24,7 @@ public extension CollectionType where Self.Generator.Element: AnyObject {
 }
 
 
-public extension CollectionType where Self.Generator.Element: Equatable {
+public extension CollectionType where Generator.Element: Equatable {
 
 	@warn_unused_result
 	public func lastIndexOf(element: Generator.Element) -> Index? {
@@ -32,5 +33,17 @@ public extension CollectionType where Self.Generator.Element: Equatable {
 		}
 
 		return nil
+	}
+}
+
+
+public extension CollectionType where Index.Distance: RandomizableIntegerType {
+
+	public var randomElement: Generator.Element? {
+		guard let index = (startIndex ..< endIndex).randomIndex else {
+			return nil
+		}
+
+		return self[index]
 	}
 }

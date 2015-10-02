@@ -23,6 +23,7 @@ public extension NSRange {
 	}
 
 
+	@warn_unused_result
 	public func endIndexInString(string: String) -> String.Index? {
 		return NSRange.indexForLocation(NSMaxRange(self), inString: string)
 	}
@@ -46,11 +47,13 @@ public extension NSRange {
 	}
 
 
+	@warn_unused_result
 	public func startIndexInString(string: String) -> String.Index? {
 		return NSRange.indexForLocation(location, inString: string)
 	}
 
 
+	@warn_unused_result
 	public func rangeInString(string: String) -> Range<String.Index>? {
 		if let startIndex = startIndexInString(string), endIndex = endIndexInString(string) {
 			return startIndex ..< endIndex

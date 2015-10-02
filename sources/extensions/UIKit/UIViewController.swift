@@ -1,3 +1,6 @@
+import UIKit
+
+
 public extension UIViewController {
 
 	public func dismissViewController(completion: Closure? = nil) {

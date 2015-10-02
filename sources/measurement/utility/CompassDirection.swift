@@ -1,3 +1,6 @@
+import Darwin
+
+
 public enum CompassDirection8 {
 	case North
 	case NE

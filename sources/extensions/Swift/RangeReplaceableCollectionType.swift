@@ -10,7 +10,7 @@ public extension RangeReplaceableCollectionType {
 }
 
 
-public extension RangeReplaceableCollectionType where Self.Generator.Element: AnyObject {
+public extension RangeReplaceableCollectionType where Generator.Element: AnyObject {
 
 	public mutating func removeFirstIdentical(element: Generator.Element) -> Index? {
 		guard let index = indexOfIdentical(element) else {
@@ -23,7 +23,7 @@ public extension RangeReplaceableCollectionType where Self.Generator.Element: An
 }
 
 
-public extension RangeReplaceableCollectionType where Self.Generator.Element: Equatable {
+public extension RangeReplaceableCollectionType where Generator.Element: Equatable {
 
 	public mutating func removeFirst(element: Generator.Element) -> (Index, Generator.Element)? {
 		guard let index = indexOf(element) else {

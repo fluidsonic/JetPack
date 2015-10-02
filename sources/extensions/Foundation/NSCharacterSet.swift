@@ -24,12 +24,14 @@ public extension NSCharacterSet {
 
 
 	@nonobjc
+	@warn_unused_result
 	public static func URLPathComponentAllowedCharacterSet() -> NSCharacterSet {
 		return _URLPathComponentAllowedCharacterSet
 	}
 
 
 	@nonobjc
+	@warn_unused_result
 	public static func URLQueryParameterAllowedCharacterSet() -> NSCharacterSet {
 		return _URLQueryParameterAllowedCharacterSet
 	}
