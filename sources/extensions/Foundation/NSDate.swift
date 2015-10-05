@@ -3,7 +3,7 @@ import Foundation
 
 public extension NSDate {
 
-	@available(*, deprecated=0, message="Use NSCalendar.isDate(_:inSameDayAsDate:)")
+	@available(*, deprecated=1, message="Use NSCalendar.isDate(_:inSameDayAsDate:)")
 	@nonobjc
 	@warn_unused_result
 	public func isInSameDayAs(otherDate: NSDate, timeZone: NSTimeZone) -> Bool {
@@ -20,7 +20,7 @@ public extension NSDate {
 	}
 
 
-	@available(*, deprecated=0, message="Use NSCalendar.isDateInToday(_:)")
+	@available(*, deprecated=1, message="Use NSCalendar.isDateInToday(_:)")
 	@nonobjc
 	@warn_unused_result
 	public func isInToday(timeZone timeZone: NSTimeZone) -> Bool {
@@ -28,7 +28,7 @@ public extension NSDate {
 	}
 
 
-	@available(*, deprecated=0, message="Use NSCalendar.isDateInTomorrow(_:)")
+	@available(*, deprecated=1, message="Use NSCalendar.isDateInTomorrow(_:)")
 	@nonobjc
 	@warn_unused_result
 	public func isInTomorrow(timeZone timeZone: NSTimeZone) -> Bool {
@@ -40,7 +40,7 @@ public extension NSDate {
 	}
 
 
-	@available(*, deprecated=0, message="Use NSCalendar.dateBySubtractingSeconds(seconds:minutes:hours:days:months:years:fromDate:)")
+	@available(*, deprecated=1, message="Use NSCalendar.dateBySubtractingSeconds(seconds:minutes:hours:days:months:years:fromDate:)")
 	@nonobjc
 	@warn_unused_result
 	public func minus(years years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
@@ -48,7 +48,7 @@ public extension NSDate {
 	}
 
 
-	@available(*, deprecated=0, message="Use NSCalendar.dateBySeconds(seconds:minutes:hours:days:months:years:toDate:)")
+	@available(*, deprecated=1, message="Use NSCalendar.dateBySeconds(seconds:minutes:hours:days:months:years:toDate:)")
 	@nonobjc
 	@warn_unused_result
 	public func plus(years years: Int? = nil, months: Int? = nil, days: Int? = nil, hours: Int? = nil, minutes: Int? = nil, seconds: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {
@@ -82,7 +82,7 @@ public extension NSDate {
 	}
 
 
-	@available(*, deprecated=0, message="Use NSCalendar.dateBySettingHour(_:minute:second:ofDate:options:)")
+	@available(*, deprecated=1, message="Use NSCalendar.dateBySettingHour(_:minute:second:ofDate:options:)")
 	@nonobjc
 	@warn_unused_result
 	public func with(year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil, inTimeZone timeZone: NSTimeZone? = nil) -> NSDate? {

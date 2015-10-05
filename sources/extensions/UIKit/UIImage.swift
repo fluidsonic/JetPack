@@ -45,7 +45,7 @@ public extension UIImage {
 	}
 
 
-	@available(*, deprecated=0, message="Define rendering mode in the asset catalog or use imageWithRenderingMode(_:)")
+	@available(*, deprecated=1, message="Define rendering mode in the asset catalog or use imageWithRenderingMode(_:)")
 	@nonobjc
 	@warn_unused_result
 	public static func templateNamed(name: String) -> UIImage? {
