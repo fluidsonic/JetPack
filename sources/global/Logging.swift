@@ -14,5 +14,5 @@ public func log(@autoclosure message: Void throws -> String, function: StaticStr
 	}
 
 	let fileName = ((file.stringValue as NSString).lastPathComponent as NSString).stringByDeletingPathExtension
-	NSLog("%@", "\(fileName): \(try message())  (/\(function.stringValue):\(line))")
+	NSLog("%@", "\(fileName): \(try message())  // \(function.stringValue):\(line)")
 }
