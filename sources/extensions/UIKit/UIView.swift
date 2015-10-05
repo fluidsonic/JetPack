@@ -53,23 +53,27 @@ public extension UIView {
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func heightThatFits() -> CGFloat {
 		return sizeThatFitsSize(.max).height
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func heightThatFitsWidth(maximumWidth: CGFloat) -> CGFloat {
 		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .max)).height
 	}
 
 
+	@nonobjc
 	public var participatesInHitTesting: Bool {
 		return (!hidden && userInteractionEnabled && alpha >= 0.01)
 	}
 
 
+	@nonobjc
 	public func removeAllSubviews() {
 		for subview in subviews.reverse() {
 			subview.removeFromSuperview()
@@ -124,30 +128,35 @@ public extension UIView {
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func sizeThatFits() -> CGSize {
 		return sizeThatFitsSize(.max)
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func sizeThatFitsHeight(maximumHeight: CGFloat, allowsTruncation: Bool = false) -> CGSize {
 		return sizeThatFitsSize(CGSize(width: .max, height: maximumHeight), allowsTruncation: allowsTruncation)
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func sizeThatFitsWidth(maximumWidth: CGFloat, allowsTruncation: Bool = false) -> CGSize {
 		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .max), allowsTruncation: allowsTruncation)
 	}
 
 
+	// @nonobjc // cannot be used due to compiler limitation: subclasses cannot override non-objc functions defined in extensions
 	@warn_unused_result
 	public func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
 		return sizeThatFits(maximumSize)
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
 		var fittingSize = sizeThatFitsSize(maximumSize)
@@ -159,12 +168,14 @@ public extension UIView {
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func widthThatFits() -> CGFloat {
 		return sizeThatFitsSize(.max).width
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public final func widthThatFitsHeight(maximumHeight: CGFloat) -> CGFloat {
 		return sizeThatFitsSize(CGSize(width: .max, height: maximumHeight)).width

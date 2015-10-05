@@ -3,11 +3,13 @@ import UIKit
 
 public extension UIColor {
 
+	@nonobjc
 	public convenience init(rgb: Int) {
 		self.init(rgb: rgb, alpha: 1)
 	}
 
 
+	@nonobjc
 	public convenience init(rgb: Int, alpha: CGFloat) {
 		let red   = CGFloat((rgb >> 16) & 0xFF) / 255
 		let green = CGFloat((rgb >> 8)  & 0xFF) / 255
@@ -17,6 +19,7 @@ public extension UIColor {
 	}
 
 
+	@nonobjc
 	public convenience init(rgba: Int) {
 		let red   = CGFloat((rgba >> 24) & 0xFF) / 255
 		let green = CGFloat((rgba >> 16) & 0xFF) / 255
@@ -27,6 +30,7 @@ public extension UIColor {
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public static func random(alpha: CGFloat = 1) -> Self {
 		return self.init(

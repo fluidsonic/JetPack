@@ -3,6 +3,7 @@ import UIKit
 
 public extension UIImage {
 
+	@nonobjc
 	public convenience init?(placeholderOfSize size: CGSize) {
 		let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGImageAlphaInfo.PremultipliedLast.rawValue)
 		guard let cgimage = CGBitmapContextCreateImage(context) else {
@@ -13,6 +14,7 @@ public extension UIImage {
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public static func fromColor(color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
 		let frame = CGRect(size: size.scaleBy(scale))
@@ -30,6 +32,7 @@ public extension UIImage {
 	}
 
 
+	@nonobjc
 	public var hasAlphaChannel: Bool {
 		let info = CGImageGetAlphaInfo(CGImage)
 		switch info {
@@ -42,6 +45,8 @@ public extension UIImage {
 	}
 
 
+	@available(*, deprecated=0, message="Define rendering mode in the asset catalog or use imageWithRenderingMode(_:)")
+	@nonobjc
 	@warn_unused_result
 	public static func templateNamed(name: String) -> UIImage? {
 		return self.init(named: name)?.imageWithRenderingMode(.AlwaysTemplate)

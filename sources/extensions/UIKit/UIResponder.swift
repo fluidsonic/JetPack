@@ -6,7 +6,7 @@ private var temporaryFirstResponder: UIResponder?
 
 public extension UIResponder {
 
-	@nonobjc // may conflict with private selector name
+	@nonobjc
 	public var firstResponder: UIResponder? {
 		defer {
 			temporaryFirstResponder = nil

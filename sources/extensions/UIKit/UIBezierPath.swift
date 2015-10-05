@@ -3,6 +3,7 @@ import UIKit
 
 public extension UIBezierPath {
 
+	@nonobjc
 	public convenience init(animatableRoundedRect: CGRect, cornerRadius: CGFloat) {
 		self.init()
 
@@ -18,6 +19,7 @@ public extension UIBezierPath {
 	}
 
 
+	@nonobjc
 	public func addRoundedCorner(direction direction: RoundedCornerDirection, radius: CGFloat) {
 		if radius <= 0 {
 			return
@@ -116,6 +118,7 @@ public extension UIBezierPath {
 	}
 
 
+	@nonobjc
 	@warn_unused_result
 	public func invertedBezierPathInRect(rect: CGRect) -> UIBezierPath {
 		let path = UIBezierPath(rect: rect)
