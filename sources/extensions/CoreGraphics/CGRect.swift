@@ -120,6 +120,17 @@ public extension CGRect {
 	}
 
 
+	@warn_unused_result
+	public func interpolateTo(destination: CGRect, fraction: CGFloat) -> CGRect {
+		return CGRect(
+			left:   left + ((destination.left - left) * fraction),
+			top:    top + ((destination.top - top) * fraction),
+			width:  width + ((destination.width - width) * fraction),
+			height: height + ((destination.height - height) * fraction)
+		)
+	}
+
+
 	public var left: CGFloat {
 		get { return origin.left }
 		mutating set { origin.left = newValue }

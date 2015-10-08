@@ -20,6 +20,7 @@ public /* non-final */ class ImageView: View {
 	public override init() {
 		super.init()
 
+		super.contentMode = .Redraw
 		opaque = false
 		userInteractionEnabled = false
 	}
