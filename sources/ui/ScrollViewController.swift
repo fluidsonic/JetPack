@@ -12,11 +12,15 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 	public override init() {
 		super.init()
+
+		automaticallyAdjustsScrollViewInsets = false
 	}
 
 
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
+
+		automaticallyAdjustsScrollViewInsets = false
 	}
 
 
