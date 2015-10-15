@@ -43,12 +43,4 @@ public extension UIImage {
 			return false
 		}
 	}
-
-
-	@available(*, deprecated=1, message="Define rendering mode in the asset catalog or use imageWithRenderingMode(_:)")
-	@nonobjc
-	@warn_unused_result
-	public static func templateNamed(name: String) -> UIImage? {
-		return self.init(named: name)?.imageWithRenderingMode(.AlwaysTemplate)
-	}
 }
