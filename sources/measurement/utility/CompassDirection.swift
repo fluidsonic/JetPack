@@ -161,13 +161,10 @@ extension CompassDirection16 {
 public extension Angle {
 
 	public var compassDirection8: CompassDirection8 {
-		var normalizedDegrees = degrees % 360  // -360 ..< 360
-		if normalizedDegrees < 0 {
-			normalizedDegrees += 360  // 0 ..< 360
+		var sector = Int(round(8 * degrees / 360)) % 8
+		if sector < 0 {
+			sector += 8
 		}
-
-		// half sector before, half sector after needle point
-		let sector = Int(round(8 * normalizedDegrees / 360) - 0.5) // 0 ..< 8
 
 		switch sector {
 		case 0:  return .North
@@ -178,19 +175,16 @@ public extension Angle {
 		case 5:  return .SW
 		case 6:  return .West
 		case 7:  return .NW
-		default: return .North
+		default: fatalError("\(self) resulted in invalid compass sector \(sector)")
 		}
 	}
 
 
 	public var compassDirection16: CompassDirection16 {
-		var normalizedDegrees = degrees % 360  // -360 ..< 360
-		if normalizedDegrees < 0 {
-			normalizedDegrees += 360  // 0 ..< 360
+		var sector = Int(round(16 * degrees / 360)) % 16
+		if sector < 0 {
+			sector += 16
 		}
-
-		// half sector before, half sector after needle point
-		let sector = Int(round(16 * normalizedDegrees / 360) - 0.5) // 0 ..< 16
 
 		switch sector {
 		case 0:  return .North
@@ -209,7 +203,7 @@ public extension Angle {
 		case 13: return .WNW
 		case 14: return .NW
 		case 15: return .NNW
-		default: return .North
+		default: fatalError("\(self) resulted in invalid compass sector \(sector)")
 		}
 	}
 }
