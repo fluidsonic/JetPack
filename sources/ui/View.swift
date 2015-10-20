@@ -174,10 +174,11 @@ public /* non-final */ class View: UIView {
 		}
 	}
 
+
 	@IBInspectable
 	public var borderWidth: CGFloat {
 		get { return layer.borderWidth }
-		set { layer.borderWidth = newValue}
+		set { layer.borderWidth = newValue }
 	}
 
 
