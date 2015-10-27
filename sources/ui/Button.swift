@@ -671,6 +671,30 @@ public class Button: View {
 	}
 
 
+	@available(*, unavailable, message="For Interface Builder only. Use textLabel.text instead.")
+	@IBInspectable
+	public final var text: String {
+		get { return _textLabel?.text ?? "" }
+		set { textLabel.text = newValue }
+	}
+
+
+	@available(*, unavailable, message="For Interface Builder only. Use textLabel.textColor instead.")
+	@IBInspectable
+	public final var textColor: UIColor? {
+		get { return _textLabel?.textColor }
+		set { textLabel.textColor = newValue }
+	}
+
+
+	@available(*, unavailable, message="For Interface Builder only. Use textLabel.textTintColorAlpha instead.")
+	@IBInspectable
+	public final var textTintColorAlpha: CGFloat {
+		get { return _textLabel?.textTintColorAlpha ?? 1 }
+		set { textLabel.textTintColorAlpha = newValue }
+	}
+
+
 	public final var textLabel: Label {
 		get {
 			return _textLabel ?? {
