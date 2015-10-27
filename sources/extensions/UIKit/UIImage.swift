@@ -15,6 +15,12 @@ public extension UIImage {
 
 
 	@nonobjc
+	public convenience init?(named name: String, inBundle bundle: NSBundle) {
+		self.init(named: name, inBundle: bundle, compatibleWithTraitCollection: nil)
+	}
+
+
+	@nonobjc
 	@warn_unused_result
 	public static func fromColor(color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
 		let frame = CGRect(size: size.scaleBy(scale))
