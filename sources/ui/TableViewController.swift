@@ -1,15 +1,20 @@
 import UIKit
 
 
-public /* non-final */ class ViewController: UIViewController {
+public /* non-final */ class TableViewController: UITableViewController {
 
-	public typealias SeguePreparation = (segue: UIStoryboardSegue) -> Void
+	public typealias SeguePreparation = ViewController.SeguePreparation
 
 	private var seguePreparation: SeguePreparation?
 
 
 	public init() {
 		super.init(nibName: nil, bundle: nil)
+	}
+
+
+	public override init(style: UITableViewStyle) {
+		super.init(style: style)
 	}
 
 
