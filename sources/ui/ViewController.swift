@@ -18,6 +18,7 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation) instead")
 	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		let preparation = seguePreparation
 		seguePreparation = nil
