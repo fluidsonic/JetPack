@@ -42,8 +42,8 @@ public extension UIResponder {
 	}
 
 
-	@objc
-	private func JetPack_determineFirstResponder() {
+	@objc(JetPack_determineFirstResponder)
+	private func determineFirstResponder() {
 		temporaryFirstResponder = self
 	}
 }
