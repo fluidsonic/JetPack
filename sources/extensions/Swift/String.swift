@@ -4,6 +4,7 @@ import Foundation
 public extension String {
 
 	@warn_unused_result
+	@available(*, deprecated=1, renamed="containsString")
 	public func contains(string: String) -> Bool {
 		return rangeOfString(string) != nil
 	}
