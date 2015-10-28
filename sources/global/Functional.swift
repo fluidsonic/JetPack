@@ -79,6 +79,21 @@ public func pointerOf(object: AnyObject) -> COpaquePointer {
 }
 
 
+internal func swizzleInType(type: NSObject.Type, fromSelector: Selector, toSelector: Selector) {
+	precondition(fromSelector != toSelector)
+
+	let fromMethod = class_getInstanceMethod(type, fromSelector)
+	let toMethod = class_getInstanceMethod(type, toSelector)
+
+	if class_addMethod(type, fromSelector, method_getImplementation(toMethod), method_getTypeEncoding(toMethod)) {
+		class_replaceMethod(type, toSelector, method_getImplementation(fromMethod), method_getTypeEncoding(fromMethod))
+	}
+	else {
+		method_exchangeImplementations(fromMethod, toMethod)
+	}
+}
+
+
 public func synchronized<ReturnType>(object: AnyObject, @noescape closure: Void throws -> ReturnType) rethrows -> ReturnType {
 	objc_sync_enter(object)
 	defer {
