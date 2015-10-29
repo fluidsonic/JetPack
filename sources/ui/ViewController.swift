@@ -18,6 +18,19 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	public func decorationInsetsDidChangeWithAnimation(animation: View.Animation?) {
+		for childViewController in childViewControllers {
+			childViewController.invalidateDecorationInsets()
+		}
+	}
+
+
+	@available(*, unavailable, message="use overload which accepts 'View.Animation?'")
+	public final override func decorationInsetsDidChangeWithAnimation(animationWrapper: View.Animation.Wrapper?) {
+		decorationInsetsDidChangeWithAnimation(animationWrapper?.animation)
+	}
+
+
 	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation) instead")
 	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		let preparation = seguePreparation

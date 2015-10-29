@@ -10,7 +10,6 @@ public extension UIViewController {
 		private static var outerDecorationInsets = UInt8()
 	}
 
-	private static var initializeToken = dispatch_once_t()
 	private static var needsUpdateDecorationInsets = false
 
 
@@ -34,9 +33,11 @@ public extension UIViewController {
 	}
 
 
-	@objc(JetPack_decorationInsetsDidChangeWithAnimationDuration:animationCurve:)
-	public func decorationInsetsDidChangeWithAnimationDuration(animationDuration: NSTimeInterval, animationCurve: UIViewAnimationOptions) {
-		// override in subclasses
+	@objc(JetPack_decorationInsetsDidChangeWithAnimation:)
+	public func decorationInsetsDidChangeWithAnimation(animationWrapper: View.Animation.Wrapper?) {
+		for childViewController in childViewControllers {
+			childViewController.invalidateDecorationInsets()
+		}
 	}
 
 
@@ -52,15 +53,6 @@ public extension UIViewController {
 	}
 
 
-	@objc
-	public override class func initialize() {
-		dispatch_once(&initializeToken) {
-			swizzleInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
-			swizzleInType(self, fromSelector: "viewWillLayoutSubviews", toSelector: "JetPack_viewWillLayoutSubviews")
-		}
-	}
-
-
 	@nonobjc
 	public private(set) var innerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.innerDecorationInsets) as? NSValue)?.UIEdgeInsetsValue() ?? .zero }
@@ -69,8 +61,8 @@ public extension UIViewController {
 
 
 	@nonobjc
-	internal func invalidateDecorationInsets() {
-		guard !decorationInsetsAreValid else {
+	public func invalidateDecorationInsets() {
+		guard decorationInsetsAreValid else {
 			return
 		}
 
@@ -131,12 +123,34 @@ public extension UIViewController {
 
 
 	@nonobjc
+	internal static func setUp() {
+		swizzleInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
+		swizzleInType(self, fromSelector: "viewWillLayoutSubviews", toSelector: "JetPack_viewWillLayoutSubviews")
+
+		subscribeToKeyboardNotifications()
+	}
+
+
+	@nonobjc
+	private static func subscribeToKeyboardNotifications() {
+		let _ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
+			self.setNeedsUpdateDecorationInsets()
+		}
+	}
+
+
+	@nonobjc
 	internal static func updateDecorationInsetsIfNecessary() {
 		guard needsUpdateDecorationInsets else {
 			return
 		}
 
 		for window in UIApplication.sharedApplication().windows {
+			guard window.dynamicType == UIWindow.self || window is Window || !NSStringFromClass(window.dynamicType).hasPrefix("UI") else {
+				// ignore system windows like the keyboard
+				continue
+			}
+
 			window.rootViewController?.updateDecorationInsetsRecursively()
 		}
 
@@ -146,7 +160,7 @@ public extension UIViewController {
 
 	@nonobjc
 	internal func updateDecorationInsetsRecursively() {
-		if window != nil && !decorationInsetsAreValid {
+		if let window = window where !decorationInsetsAreValid || parentViewController == nil {
 			let innerDecorationInsets: UIEdgeInsets
 			let outerDecorationInsets: UIEdgeInsets
 
@@ -155,15 +169,23 @@ public extension UIViewController {
 				outerDecorationInsets = parentViewController.computeOuterDecorationInsetsForChildViewController(self)
 			}
 			else {
-				innerDecorationInsets = UIEdgeInsets(top: topLayoutGuide.length, left: 0, bottom: bottomLayoutGuide.length, right: 0)
-				outerDecorationInsets = innerDecorationInsets
+				var decorationInsets = UIEdgeInsets(top: topLayoutGuide.length, left: 0, bottom: bottomLayoutGuide.length, right: 0)
+
+				let keyboardFrameInWindow = Keyboard.frameInView(window)
+				if !keyboardFrameInWindow.isNull {
+					let bottomDecorationInsetForKeyboard = max(window.bounds.height - keyboardFrameInWindow.top, 0)
+					decorationInsets.bottom = max(bottomDecorationInsetForKeyboard, decorationInsets.bottom)
+				}
+
+				innerDecorationInsets = decorationInsets
+				outerDecorationInsets = decorationInsets
 			}
 
 			if innerDecorationInsets != self.innerDecorationInsets || outerDecorationInsets != self.outerDecorationInsets {
 				self.innerDecorationInsets = innerDecorationInsets
 				self.outerDecorationInsets = outerDecorationInsets
 
-				decorationInsetsDidChangeWithAnimationDuration(0, animationCurve: .CurveLinear)
+				decorationInsetsDidChangeWithAnimation(nil)
 			}
 
 			decorationInsetsAreValid = true
@@ -174,7 +196,7 @@ public extension UIViewController {
 		}
 
 		if let presentedViewController = presentedViewController where presentedViewController !== parentViewController?.presentedViewController {
-		presentedViewController.updateDecorationInsetsRecursively()
+			presentedViewController.updateDecorationInsetsRecursively()
 		}
 	}
 
@@ -191,6 +213,7 @@ public extension UIViewController {
 
 	@objc(JetPack_viewWillLayoutSubviews)
 	private func viewWillLayoutSubviews() {
+		// TODO probably not a good location to trigger global decoration insets update
 		UIViewController.updateDecorationInsetsIfNecessary()
 
 		viewWillLayoutSubviews()

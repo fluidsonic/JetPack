@@ -289,5 +289,19 @@ public extension UIView {
 			case Linear
 			case Spring(initialVelocity: CGFloat, damping: CGFloat)
 		}
+
+
+
+		public final class Wrapper: NSObject {
+
+			public let animation: Animation
+
+
+			public init(animation: Animation) {
+				self.animation = animation
+
+				super.init()
+			}
+		}
 	}
 }
