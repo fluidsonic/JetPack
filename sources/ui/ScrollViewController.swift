@@ -33,11 +33,15 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public var currentIndex: CGFloat {
 		let collectionViewWidth = collectionView.bounds.width
 		
-		guard isViewLoaded() && collectionViewWidth > 0 else {
+		if isViewLoaded() && collectionViewWidth > 0 {
+			return collectionView.contentOffset.left / collectionView.bounds.width
+		}
+		else if let primaryViewController = primaryViewController, index = viewControllers.indexOfIdentical(primaryViewController) {
+			return CGFloat(index)
+		}
+		else {
 			return 0
 		}
-
-		return collectionView.contentOffset.left / collectionView.bounds.width
 	}
 
 
