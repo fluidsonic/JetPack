@@ -37,6 +37,7 @@ public final class Keyboard {
 	}
 
 
+	@warn_unused_result
 	public static func frameInView(view: UIView) -> CGRect {
 		guard let window = view.window ?? view as? UIWindow else {
 			return .null

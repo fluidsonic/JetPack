@@ -68,6 +68,12 @@ public extension UIView {
 
 
 	@nonobjc
+	public var needsLayout: Bool {
+		return layer.needsLayout()
+	}
+
+
+	@nonobjc
 	public var participatesInHitTesting: Bool {
 		return (!hidden && userInteractionEnabled && alpha >= 0.01)
 	}
