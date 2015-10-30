@@ -13,12 +13,12 @@
     "git": "https://github.com/fluidsonic/JetPack.git"
   },
   "summary": "A Swiss Army knife for iOS development with Swift in a very early stage.",
-  "module_map": "JetPack.modulemap",
+  "module_map": "Module/JetPack.modulemap",
   "source_files": [
-    "sources/**/*.swift",
-    "JetPack.h"
+    "Sources/**/*.swift",
+    "Module/JetPack.h"
   ],
-  "exclude_files": "sources/JetPack.swift",
+  "exclude_files": "Sources/JetPack.swift",
   "frameworks": [
     "AssetsLibrary",
     "CoreGraphics",

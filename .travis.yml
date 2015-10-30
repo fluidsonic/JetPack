@@ -1,0 +1,36 @@
+language: objective-c
+osx_image: xcode7.1
+sudo: false
+
+env:
+  global:
+  - WORKSPACE=Xcode/Project.xcworkspace
+  - SCHEME="Project"
+  - IOS_DEVICE_SDK=iphoneos9.1
+  - IOS_SIMULATOR_SDK=iphonesimulator9.1
+  matrix:
+    - SDK="$IOS_DEVICE_SDK"
+    - SDK="$IOS_SIMULATOR_SDK" DESTINATION="OS=8.1,name=iPhone 4S"     
+    - SDK="$IOS_SIMULATOR_SDK" DESTINATION="OS=8.2,name=iPhone 5"
+    - SDK="$IOS_SIMULATOR_SDK" DESTINATION="OS=8.3,name=iPhone 5S"
+    - SDK="$IOS_SIMULATOR_SDK" DESTINATION="OS=8.4,name=iPhone 6"
+    - SDK="$IOS_SIMULATOR_SDK" DESTINATION="OS=9.0,name=iPhone 6 Plus"
+    - SDK="$IOS_SIMULATOR_SDK" DESTINATION="OS=9.1,name=iPhone 6S"
+
+before_install:
+  - gem install cocoapods xcpretty --no-rdoc --no-ri --no-document --quiet
+
+script:
+  - set -o pipefail
+  - cd Xcode && pod update && cd ..
+  - if [ $SDK == $IOS_DEVICE_SDK ]; then
+      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration Debug   CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c &&
+      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c &&
+      pod lib lint --allow-warnings --quick --verbose;
+    else
+      xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug   | xcpretty -c &&
+      xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release | xcpretty -c;
+    fi
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

@@ -3,3 +3,10 @@ use_frameworks!
 link_with ['Project', 'Tests']
 
 pod 'JetPack', :path => '..'
+
+
+post_install do |installer|
+	installer.pods_project.targets.each do |target|
+		target.build_configuration_list.set_setting('ENABLE_TESTABILITY', 'YES')
+	end
+end
