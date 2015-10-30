@@ -1,0 +1,29 @@
+{
+  "name": "JetPack",
+  "version": "0.0.1",
+  "authors": {
+    "Marc Knaup": "marc@knaup.koeln"
+  },
+  "homepage": "https://github.com/fluidsonic/JetPack",
+  "license": "MIT",
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source": {
+    "git": "https://github.com/fluidsonic/JetPack.git"
+  },
+  "summary": "A Swiss Army knife for iOS development with Swift in a very early stage.",
+  "module_map": "JetPack.modulemap",
+  "source_files": [
+    "sources/**/*.swift",
+    "JetPack.h"
+  ],
+  "exclude_files": "sources/JetPack.swift",
+  "frameworks": [
+    "AssetsLibrary",
+    "CoreGraphics",
+    "Foundation",
+    "Photos",
+    "UIKit"
+  ]
+}

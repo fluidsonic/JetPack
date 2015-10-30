@@ -1,5 +1,3 @@
 .DS_Store
-*.xcworkspace
-Podfile.lock
-Pods
 xcuserdata
+/Xcode/Project.xcodeproj/project.xcworkspace
