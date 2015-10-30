@@ -43,13 +43,7 @@ public extension CGRect {
 
 
 	@warn_unused_result
-	public func containsPoint(point: CGPoint) -> Bool {
-		return containsPoint(point, atCornerRadius: 0)
-	}
-
-
-	@warn_unused_result
-	public func containsPoint(point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
+	public func contains(point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
 		if (!CGRectContainsPoint(self, point)) {
 			// full rect misses, so does any rounded rect
 			return false
@@ -105,6 +99,20 @@ public extension CGRect {
 
 		// just test distance from the matching circle to the point
 		return (circleCenter.distanceTo(point) <= cornerRadius)
+	}
+
+
+	@available(*, unavailable, renamed="contains")
+	@warn_unused_result
+	public func containsPoint(point: CGPoint) -> Bool {
+		return contains(point, atCornerRadius: 0)
+	}
+
+
+	@available(*, unavailable, renamed="contains")
+	@warn_unused_result
+	public func containsPoint(point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
+		return contains(point, atCornerRadius: cornerRadius)
 	}
 
 
