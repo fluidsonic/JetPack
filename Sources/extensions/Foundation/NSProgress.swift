@@ -1,37 +1,49 @@
 import Foundation
 import ObjectiveC
 
-private var fractionCompletedHandlerKey: UInt8 = 0
-
 
 public extension NSProgress {
+
+	private struct AssociatedKeys {
+		private static var observer = UInt8()
+	}
+
+
 
 	@nonobjc
 	public var fractionCompletedHandler: (Double -> Void)? {
 		get {
-			guard let observer = objc_getAssociatedObject(self, &fractionCompletedHandlerKey) as! Observer? else {
-				return nil
-			}
-
-			return observer.fractionCompletedHandler
+			return observer?.fractionCompletedHandler
 		}
 		set {
+			observer?.stopObserving()
+
 			if let fractionCompletedHandler = newValue {
-				objc_setAssociatedObject(self, &fractionCompletedHandlerKey, Observer(progress: self, fractionCompletedHandler: fractionCompletedHandler), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+				observer = Observer(progress: self, fractionCompletedHandler: fractionCompletedHandler)
 			}
 			else {
-				objc_setAssociatedObject(self, &fractionCompletedHandlerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+				observer = nil
 			}
+		}
+	}
+
+
+	private var observer: Observer? {
+		get {
+			return objc_getAssociatedObject(self, &AssociatedKeys.observer) as! Observer?
+		}
+		set {
+			objc_setAssociatedObject(self, &AssociatedKeys.observer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 		}
 	}
 }
 
 
 
-private class Observer: NSObject {
+private final class Observer: NSObject {
 
 	private let fractionCompletedHandler: Double -> Void
-	private weak var progress: NSProgress?
+	private unowned let progress: NSProgress
 
 
 	private init(progress: NSProgress, fractionCompletedHandler: Double -> Void) {
@@ -44,16 +56,12 @@ private class Observer: NSObject {
 	}
 
 
-	deinit {
-		progress?.removeObserver(self, forKeyPath: "fractionCompleted")
+	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+		fractionCompletedHandler(progress.fractionCompleted)
 	}
 
 
-	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-		guard let progress = progress else {
-			return
-		}
-
-		fractionCompletedHandler(progress.fractionCompleted)
+	private func stopObserving() {
+		progress.removeObserver(self, forKeyPath: "fractionCompleted")
 	}
 }
