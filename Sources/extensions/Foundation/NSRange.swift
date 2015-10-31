@@ -48,12 +48,6 @@ public extension NSRange {
 
 
 	@warn_unused_result
-	public func startIndexInString(string: String) -> String.Index? {
-		return NSRange.indexForLocation(location, inString: string)
-	}
-
-
-	@warn_unused_result
 	public func rangeInString(string: String) -> Range<String.Index>? {
 		if let startIndex = startIndexInString(string), endIndex = endIndexInString(string) {
 			return startIndex ..< endIndex
@@ -61,4 +55,18 @@ public extension NSRange {
 		
 		return nil
 	}
+
+
+	@warn_unused_result
+	public func startIndexInString(string: String) -> String.Index? {
+		return NSRange.indexForLocation(location, inString: string)
+	}
+}
+
+
+extension NSRange: Equatable {}
+
+
+public func == (a: NSRange, b: NSRange) -> Bool {
+	return NSEqualRanges(a, b)
 }
