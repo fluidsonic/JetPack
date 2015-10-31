@@ -102,20 +102,6 @@ public extension CGRect {
 	}
 
 
-	@available(*, unavailable, renamed="contains")
-	@warn_unused_result
-	public func containsPoint(point: CGPoint) -> Bool {
-		return contains(point, atCornerRadius: 0)
-	}
-
-
-	@available(*, unavailable, renamed="contains")
-	@warn_unused_result
-	public func containsPoint(point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
-		return contains(point, atCornerRadius: cornerRadius)
-	}
-
-
 	internal var height: CGFloat {  // make public once the ambigous call problem for the getter is solved
 		get { return size.height }
 		mutating set { size.height = newValue }
