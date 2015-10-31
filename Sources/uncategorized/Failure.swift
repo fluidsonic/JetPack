@@ -101,7 +101,7 @@ public extension ErrorType {
 			return failure
 		}
 
-		if let error = originalNSError {
+		if let error = self as? NSObject as? NSError { // check if this really is an NSError and prevent a synthetic one
 			return FailureForNSError(error: error, defaultUserMessage: defaultUserMessage)
 		}
 		else {
