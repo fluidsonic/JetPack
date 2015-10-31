@@ -14,6 +14,15 @@
 		4986834B1BE41ECF001DCBC7 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683471BE41ECF001DCBC7 /* CGPoint.swift */; };
 		4986834C1BE41ECF001DCBC7 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683481BE41ECF001DCBC7 /* CGRect.swift */; };
 		4986834D1BE41ECF001DCBC7 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683491BE41ECF001DCBC7 /* CGSize.swift */; };
+		49A72CB21BE5600A001FDCE8 /* NSCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CA81BE5600A001FDCE8 /* NSCalendar.swift */; };
+		49A72CB31BE5600A001FDCE8 /* NSCalendarUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CA91BE5600A001FDCE8 /* NSCalendarUnit.swift */; };
+		49A72CB41BE5600A001FDCE8 /* NSCharacterSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CAA1BE5600A001FDCE8 /* NSCharacterSet.swift */; };
+		49A72CB51BE5600A001FDCE8 /* NSDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CAB1BE5600A001FDCE8 /* NSDate.swift */; };
+		49A72CB71BE5600A001FDCE8 /* NSLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CAD1BE5600A001FDCE8 /* NSLocale.swift */; };
+		49A72CB81BE5600A001FDCE8 /* NSMutableAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CAE1BE5600A001FDCE8 /* NSMutableAttributedString.swift */; };
+		49A72CB91BE5600A001FDCE8 /* NSOrderedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CAF1BE5600A001FDCE8 /* NSOrderedSet.swift */; };
+		49A72CBA1BE5600A001FDCE8 /* NSProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CB01BE5600A001FDCE8 /* NSProgress.swift */; };
+		49A72CBB1BE5600A001FDCE8 /* NSRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CB11BE5600A001FDCE8 /* NSRange.swift */; };
 		70C0DB1B461E0A264A40EC33 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A46DC0E911F3ABCA3B5312 /* Pods.framework */; };
 		983679BB160D137C40C1A452 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A46DC0E911F3ABCA3B5312 /* Pods.framework */; };
 /* End PBXBuildFile section */
@@ -31,6 +40,15 @@
 		498683471BE41ECF001DCBC7 /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		498683481BE41ECF001DCBC7 /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		498683491BE41ECF001DCBC7 /* CGSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
+		49A72CA81BE5600A001FDCE8 /* NSCalendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCalendar.swift; sourceTree = "<group>"; };
+		49A72CA91BE5600A001FDCE8 /* NSCalendarUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCalendarUnit.swift; sourceTree = "<group>"; };
+		49A72CAA1BE5600A001FDCE8 /* NSCharacterSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCharacterSet.swift; sourceTree = "<group>"; };
+		49A72CAB1BE5600A001FDCE8 /* NSDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDate.swift; sourceTree = "<group>"; };
+		49A72CAD1BE5600A001FDCE8 /* NSLocale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLocale.swift; sourceTree = "<group>"; };
+		49A72CAE1BE5600A001FDCE8 /* NSMutableAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMutableAttributedString.swift; sourceTree = "<group>"; };
+		49A72CAF1BE5600A001FDCE8 /* NSOrderedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSOrderedSet.swift; sourceTree = "<group>"; };
+		49A72CB01BE5600A001FDCE8 /* NSProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSProgress.swift; sourceTree = "<group>"; };
+		49A72CB11BE5600A001FDCE8 /* NSRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSRange.swift; sourceTree = "<group>"; };
 		D7A46DC0E911F3ABCA3B5312 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0D7EE4AEE85078DB773D5F4 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				498683431BE418B8001DCBC7 /* CoreGraphics */,
+				49A72CA71BE5600A001FDCE8 /* Foundation */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -120,6 +139,22 @@
 				498683491BE41ECF001DCBC7 /* CGSize.swift */,
 			);
 			path = CoreGraphics;
+			sourceTree = "<group>";
+		};
+		49A72CA71BE5600A001FDCE8 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				49A72CA81BE5600A001FDCE8 /* NSCalendar.swift */,
+				49A72CA91BE5600A001FDCE8 /* NSCalendarUnit.swift */,
+				49A72CAA1BE5600A001FDCE8 /* NSCharacterSet.swift */,
+				49A72CAB1BE5600A001FDCE8 /* NSDate.swift */,
+				49A72CAD1BE5600A001FDCE8 /* NSLocale.swift */,
+				49A72CAE1BE5600A001FDCE8 /* NSMutableAttributedString.swift */,
+				49A72CAF1BE5600A001FDCE8 /* NSOrderedSet.swift */,
+				49A72CB01BE5600A001FDCE8 /* NSProgress.swift */,
+				49A72CB11BE5600A001FDCE8 /* NSRange.swift */,
+			);
+			path = Foundation;
 			sourceTree = "<group>";
 		};
 		5374874E92828FF442681C0A /* Pods */ = {
@@ -336,8 +371,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				498683451BE418B8001DCBC7 /* CGFloat.swift in Sources */,
+				49A72CB91BE5600A001FDCE8 /* NSOrderedSet.swift in Sources */,
+				49A72CB41BE5600A001FDCE8 /* NSCharacterSet.swift in Sources */,
 				4986834B1BE41ECF001DCBC7 /* CGPoint.swift in Sources */,
+				49A72CB21BE5600A001FDCE8 /* NSCalendar.swift in Sources */,
+				49A72CB71BE5600A001FDCE8 /* NSLocale.swift in Sources */,
+				49A72CB51BE5600A001FDCE8 /* NSDate.swift in Sources */,
+				49A72CBB1BE5600A001FDCE8 /* NSRange.swift in Sources */,
+				49A72CB31BE5600A001FDCE8 /* NSCalendarUnit.swift in Sources */,
 				4986834D1BE41ECF001DCBC7 /* CGSize.swift in Sources */,
+				49A72CBA1BE5600A001FDCE8 /* NSProgress.swift in Sources */,
+				49A72CB81BE5600A001FDCE8 /* NSMutableAttributedString.swift in Sources */,
 				4986834A1BE41ECF001DCBC7 /* CGMath.swift in Sources */,
 				4986834C1BE41ECF001DCBC7 /* CGRect.swift in Sources */,
 			);

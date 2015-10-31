@@ -42,7 +42,6 @@
 		6AF6A1DA92B01C05415A67DBDC0141EF /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099D3FF56E69A220AB5B7A017F8CF3CB /* Result.swift */; };
 		6EA98EE189F9CDA37D9639B7DFB0A309 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F1B0F0EF0FEF813EC3231C9B7FEEAB /* Int.swift */; };
 		73057BF696E0BD79E083628F6FA66699 /* NSLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E676F5E1EB406C87790FDD2A4A553CF /* NSLocale.swift */; };
-		751C40B77AC7B8FCB7AE1043A579C6FE /* NSError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E9F8273164836B49C7EE53F658F84 /* NSError.swift */; };
 		766254DA02AB43F37C69C4888BF2DDFA /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCBF07759C6D2899A57B44B0ADA581B /* View.swift */; };
 		76679CB0C236B57A5C80F1E5E81D1EF7 /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6085D098DC5702645B640D916E439B63 /* ShapeView.swift */; };
 		78F08FCCD174BF9CE282EE1F0152982C /* AbsoluteValuable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161636A14DD214F08427EF7259DBBC3E /* AbsoluteValuable.swift */; };
@@ -142,7 +141,6 @@
 		278ED7AEA6557CE0CF1AC6CAEAA50AA4 /* Pressure.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Pressure.swift; sourceTree = "<group>"; };
 		2B673197CD2403E1FA67C8FE46F937FD /* OrderedSet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OrderedSet.swift; sourceTree = "<group>"; };
 		2BCC458FDD5F692BBB2BFC64BB5701FC /* Pods-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-umbrella.h"; sourceTree = "<group>"; };
-		2C3E9F8273164836B49C7EE53F658F84 /* NSError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSError.swift; sourceTree = "<group>"; };
 		31920550830BC8C62FEAF3CEAE6E6D16 /* Button.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		31F1B0F0EF0FEF813EC3231C9B7FEEAB /* Int.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		33F69A311673736E0B50C6A8FFFFBAFF /* Measurement.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measurement.swift; sourceTree = "<group>"; };
@@ -438,7 +436,6 @@
 				243795A87D8525BEEC4FD096569B2155 /* NSCalendarUnit.swift */,
 				4AEE2FD742F5DF7D829B983DD411D2A7 /* NSCharacterSet.swift */,
 				86A6F065176686CB83BDA48C9B465EAE /* NSDate.swift */,
-				2C3E9F8273164836B49C7EE53F658F84 /* NSError.swift */,
 				3E676F5E1EB406C87790FDD2A4A553CF /* NSLocale.swift */,
 				B44D247887F3DD35967EAA5B2C1D37F0 /* NSMutableAttributedString.swift */,
 				BB0B0A6E6719E6DA75D1E0D060B86401 /* NSOrderedSet.swift */,
@@ -700,7 +697,6 @@
 				E409B209A2BA93B7A05F349DE4DEFBF6 /* NSCalendarUnit.swift in Sources */,
 				1F2F6058EAC4C8844024B31B1B0D4D5E /* NSCharacterSet.swift in Sources */,
 				42E19EEC1A78344090BB4F1E2BAC9B51 /* NSDate.swift in Sources */,
-				751C40B77AC7B8FCB7AE1043A579C6FE /* NSError.swift in Sources */,
 				73057BF696E0BD79E083628F6FA66699 /* NSLocale.swift in Sources */,
 				B2DBA6DA3206ECCEF26109933EE39682 /* NSMutableAttributedString+UIKit.swift in Sources */,
 				4ABA1482A5CAEE94715621FAFD704A1E /* NSMutableAttributedString.swift in Sources */,

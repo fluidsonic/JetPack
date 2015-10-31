@@ -1,5 +1,6 @@
 import XCTest
 
+import CoreGraphics
 @testable import JetPack
 
 
