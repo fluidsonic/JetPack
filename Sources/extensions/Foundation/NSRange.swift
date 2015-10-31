@@ -38,12 +38,8 @@ public extension NSRange {
 	}
 
 
-	private static func locationForIndex(index: String.Index?, inString string: String) -> Int {
-		if let index = index {
-			return string.utf16.startIndex.distanceTo(index.samePositionIn(string.utf16))
-		}
-
-		return NSNotFound
+	private static func locationForIndex(index: String.Index, inString string: String) -> Int {
+		return string.utf16.startIndex.distanceTo(index.samePositionIn(string.utf16))
 	}
 
 
