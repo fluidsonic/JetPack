@@ -2,8 +2,14 @@ extension UInt64: RandomizableIntegerType {
 
 	@warn_unused_result
 	public static func random(start start: UInt64, end: UInt64) -> UInt64 {
-		var m: UInt64
+		precondition(start <= end)
+
 		let u = end - start
+		guard u != 0 else {
+			return start
+		}
+
+		var m: UInt64
 		var r: UInt64 = arc4random()
 
 		if u > UInt64(Int64.max) {
