@@ -3,6 +3,38 @@ import Foundation
 
 public extension String {
 
+	@warn_unused_result
+	public func firstMatchForRegularExpression(regularExpression: NSRegularExpression) -> [String]? {
+		guard let match = regularExpression.firstMatchInString(self, options: [], range: NSMakeRange(0, utf16.count)) else {
+			return nil
+		}
+
+		return (0 ..< match.numberOfRanges).map { self[match.rangeAtIndex($0).rangeInString(self)!] }
+	}
+	
+
+	@warn_unused_result
+	public func firstMatchForRegularExpression(regularExpressionPattern: String) -> [String]? {
+		do {
+			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: [])
+			return firstMatchForRegularExpression(regularExpression)
+		}
+		catch let error {
+			fatalError("Invalid regular expression pattern: \(error)")
+		}
+	}
+
+
+	@warn_unused_result
+	public func firstSubstringMatchingRegularExpression(regularExpressionPattern: String) -> String? {
+		if let range = rangeOfString(regularExpressionPattern, options: .RegularExpressionSearch) {
+			return self[range]
+		}
+
+		return nil
+	}
+
+
 	public var nonEmpty: String? {
 		if isEmpty {
 			return nil
@@ -13,46 +45,20 @@ public extension String {
 
 
 	@warn_unused_result
-	public func stringByReplacing(regex regex: NSRegularExpression, withTemplate template: String) -> String {
-		return regex.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, utf16.count), withTemplate: template)
+	public func stringByReplacingRegularExpression(regularExpression: NSRegularExpression, withTemplate template: String) -> String {
+		return regularExpression.stringByReplacingMatchesInString(self, options: [], range: NSMakeRange(0, utf16.count), withTemplate: template)
 	}
 
 
 	@warn_unused_result
-	public func stringByReplacing(regexPattern regexPattern: String, withTemplate template: String) -> String {
+	public func stringByReplacingRegularExpression(regularExpressionPattern: String, withTemplate template: String) -> String {
 		do {
-			let regex = try NSRegularExpression(pattern: regexPattern, options: NSRegularExpressionOptions.DotMatchesLineSeparators)
-			return stringByReplacing(regex: regex, withTemplate: template)
+			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: NSRegularExpressionOptions.DotMatchesLineSeparators)
+			return stringByReplacingRegularExpression(regularExpression, withTemplate: template)
 		}
 		catch let error {
 			fatalError("Invalid regular expression pattern: \(error)")
 		}
-	}
-	
-
-	@warn_unused_result
-	public func firstMatchForRegexPattern(regexPattern: String) -> [String] {
-		do {
-			let regex = try NSRegularExpression(pattern: regexPattern, options: [])
-			guard let match = regex.firstMatchInString(self, options: [], range: NSMakeRange(0, utf16.count)) else {
-				return []
-			}
-			
-			return (0 ..< match.numberOfRanges).map { self[match.rangeAtIndex($0).rangeInString(self)!] }
-		}
-		catch let error {
-			fatalError("Invalid regular expression pattern: \(error)")
-		}
-	}
-
-
-	@warn_unused_result
-	public func substringByMatchingPattern(pattern: String) -> String? {
-		if let range = rangeOfString(pattern, options: .RegularExpressionSearch) {
-			return self[range]
-		}
-
-		return nil
 	}
 
 
@@ -95,9 +101,3 @@ public extension String {
 		return stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryParameterAllowedCharacterSet()) ?? "<url encoding failed>"
 	}
 }
-
-
-// compiler cannot implicitly map between NSString and String when at least one of them is (implicitly) optional
-
-// public func ==(a: String?, b: NSString?) -> Bool { return (a == (b as String?)) }
-// public func ==(a: NSString?, b: String?) -> Bool { return ((a as String?) == b) }
