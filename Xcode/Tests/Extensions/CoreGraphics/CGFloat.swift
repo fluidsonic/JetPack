@@ -8,7 +8,7 @@ class CGFloat_Tests: XCTestCase {
 
 	func testConstants() {
 		XCTAssertEqual(CGFloat.Epsilon, CGFloat(CGFloat.NativeType.Epsilon))
-		XCTAssertEqual(CGFloat.Pi, CGFloat(3.1415926535897932384626433832))
+		XCTAssertEqual(CGFloat.Pi,      CGFloat(3.1415926535897932384626433832))
 	}
 
 
