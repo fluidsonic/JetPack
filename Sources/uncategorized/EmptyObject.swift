@@ -1,1 +1,4 @@
-public final class EmptyObject {}
+public final class EmptyObject {
+
+	public init() {}
+}
