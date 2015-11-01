@@ -1,10 +1,10 @@
 public extension Dictionary {
 
 	@warn_unused_result(mutable_variant="mapInPlace")
-	public func mapAsDictionary<K: Hashable, V>(transform: (Key, Value) -> (K, V)) -> [K : V] {
+	public func mapAsDictionary<K: Hashable, V>(transform: (Key, Value) throws -> (K, V)) rethrows -> [K : V] {
 		var mappedDictionary = [K : V](minimumCapacity: count)
 		for (key, value) in self {
-			let (mappedKey, mappedValue) = transform(key, value)
+			let (mappedKey, mappedValue) = try transform(key, value)
 			mappedDictionary[mappedKey] = mappedValue
 		}
 
@@ -12,9 +12,9 @@ public extension Dictionary {
 	}
 
 
-	public mutating func mapInPlace(transform: Value -> Value) {
+	public mutating func mapInPlace(transform: Value throws -> Value) rethrows {
 		for (key, value) in self {
-			self[key] = transform(value)
+			self[key] = try transform(value)
 		}
 	}
 
