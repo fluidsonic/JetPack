@@ -31,6 +31,11 @@ public func not<Parameter>(closure: Parameter throws -> Bool) -> Parameter throw
 }
 
 
+internal func obfuscatedSelector(parts: String...) -> Selector {
+	return Selector(parts.joinWithSeparator(""))
+}
+
+
 @warn_unused_result
 public func optionalMax<Element: Comparable>(elements: Element? ...) -> Element? {
 	var maximumElement: Element?
@@ -83,14 +88,18 @@ internal func swizzleInType(type: NSObject.Type, fromSelector: Selector, toSelec
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethod(type, fromSelector)
-	let toMethod = class_getInstanceMethod(type, toSelector)
+	guard fromMethod != nil else {
+		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the former is not present in '\(type)'.")
+		return
+	}
 
-	if class_addMethod(type, fromSelector, method_getImplementation(toMethod), method_getTypeEncoding(toMethod)) {
-		class_replaceMethod(type, toSelector, method_getImplementation(fromMethod), method_getTypeEncoding(fromMethod))
+	let toMethod = class_getInstanceMethod(type, toSelector)
+	guard toMethod != nil else {
+		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the latter is not present in '\(type)'.")
+		return
 	}
-	else {
-		method_exchangeImplementations(fromMethod, toMethod)
-	}
+
+	method_exchangeImplementations(fromMethod, toMethod)
 }
 
 
