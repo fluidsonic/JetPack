@@ -100,12 +100,17 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	private func updateAppearStateForAllCellsAnimated(animated: Bool) {
-		for cell in collectionView.visibleCells() {
+		let visibleCells = collectionView.visibleCells()
+		for cell in visibleCells {
 			guard let cell = cell as? Cell else {
 				continue
 			}
 
 			updateAppearStateForCell(cell, animated: animated)
+		}
+
+		if let firstResponderCell = collectionView.firstResponderCell as? Cell where !visibleCells.containsIdentical(firstResponderCell) {
+			firstResponderCell.endEditing(true)
 		}
 	}
 
