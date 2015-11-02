@@ -59,30 +59,6 @@ public extension Failure {
 	}
 
 
-	@available(*, unavailable, renamed="cause")
-	public var failureCause: Failure? {
-		return cause
-	}
-
-
-	@available(*, unavailable, renamed="developerMessage")
-	public var failureDeveloperMessage: String {
-		return developerMessage
-	}
-
-
-	@available(*, unavailable, renamed="isPermanent")
-	public var failureIsPermanent: Bool {
-		return isPermanent
-	}
-
-
-	@available(*, unavailable, renamed="userMessage")
-	public var failureUserMessage: String {
-		return userMessage
-	}
-
-
 	public var isPermanent: Bool {
 		return true
 	}
