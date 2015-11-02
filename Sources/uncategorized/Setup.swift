@@ -11,6 +11,7 @@ public extension NSBundle {
 	public override class func initialize() {
 		dispatch_once(&onceToken) {
 			Keyboard.setUp()
+			UITextField.setUp()
 			UIViewController.setUp()
 		}
 	}
