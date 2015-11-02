@@ -29,6 +29,7 @@ public extension UIView {
 		return roundScaled(CGRect(left: value.left, top: value.top, width: value.width + offset, height: value.height + offset))
 	}
 
+
 	@nonobjc
 	@warn_unused_result
 	public final func floorScaled(value: CGFloat) -> CGFloat {
