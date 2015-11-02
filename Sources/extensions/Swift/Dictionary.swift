@@ -1,10 +1,28 @@
 public extension Dictionary {
 
+	@warn_unused_result(mutable_variant="filterInPlace")
+	public func filterAsDictionary(@noescape includeElement: (key: Key, value: Value) throws -> Bool) rethrows -> [Key : Value] {
+		var filteredDictionary = [Key : Value]()
+		for (key, value) in self where try includeElement(key: key, value: value) {
+			filteredDictionary[key] = value
+		}
+
+		return filteredDictionary
+	}
+
+
+	public mutating func filterInPlace(@noescape includeElement: (key: Key, value: Value) throws -> Bool) rethrows {
+		for (key, value) in self where !(try includeElement(key: key, value: value)) {
+			self[key] = nil
+		}
+	}
+
+
 	@warn_unused_result(mutable_variant="mapInPlace")
-	public func mapAsDictionary<K: Hashable, V>(@noescape transform: (Key, Value) throws -> (K, V)) rethrows -> [K : V] {
+	public func mapAsDictionary<K: Hashable, V>(@noescape transform: (key: Key, value: Value) throws -> (K, V)) rethrows -> [K : V] {
 		var mappedDictionary = [K : V](minimumCapacity: count)
 		for (key, value) in self {
-			let (mappedKey, mappedValue) = try transform(key, value)
+			let (mappedKey, mappedValue) = try transform(key: key, value: value)
 			mappedDictionary[mappedKey] = mappedValue
 		}
 
@@ -12,9 +30,9 @@ public extension Dictionary {
 	}
 
 
-	public mutating func mapInPlace(@noescape transform: Value throws -> Value) rethrows {
+	public mutating func mapInPlace(@noescape transform: (value: Value) throws -> Value) rethrows {
 		for (key, value) in self {
-			self[key] = try transform(value)
+			self[key] = try transform(value: value)
 		}
 	}
 

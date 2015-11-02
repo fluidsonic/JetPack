@@ -8,11 +8,55 @@ class Dictionary_Tests: XCTestCase {
 	private let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
-	func testMapAsDictionary() {
-		XCTAssertEqual([0: 0, 1: 0, 2: 2].mapAsDictionary { ($0 / 2, $1 * 2) }, [0: 0, 1: 4])
+	func testFilterAsDictionary() {
+		let dictionary = [0: 1, 1: 0, 2: 2]
+		XCTAssertEqual(dictionary.filterAsDictionary { key, value in key == 0 || value == 0 }, [0: 1, 1: 0])
+		XCTAssertEqual(dictionary.filterAsDictionary { $0.key == 0 || $0.value == 0 },         [0: 1, 1: 0])
+		XCTAssertEqual(dictionary.filterAsDictionary { $0 == 0 || $1 == 0 },                   [0: 1, 1: 0])
 
 		do {
-			let dictionary = [0: 0]
+			let _ = try dictionary.filterAsDictionary { _ in throw error }
+			XCTFail()
+		}
+		catch let error as NSError {
+			XCTAssertEqual(error, self.error)
+		}
+	}
+
+
+	func testFilterInPlace() {
+		let dictionary = [0: 1, 1: 0, 2: 2]
+
+		var mutableDictionary = dictionary
+		mutableDictionary.filterInPlace { key, value in key == 0 || value == 0 }
+		XCTAssertEqual(mutableDictionary, [0: 1, 1: 0])
+
+		mutableDictionary = dictionary
+		mutableDictionary.filterInPlace { $0.key == 0 || $0.value == 0 }
+		XCTAssertEqual(mutableDictionary, [0: 1, 1: 0])
+
+		mutableDictionary = dictionary
+		mutableDictionary.filterInPlace { $0 == 0 || $1 == 0 }
+		XCTAssertEqual(mutableDictionary, [0: 1, 1: 0])
+
+		do {
+			mutableDictionary = dictionary
+			try mutableDictionary.filterInPlace { _ in throw error }
+			XCTFail()
+		}
+		catch let error as NSError {
+			XCTAssertEqual(error, self.error)
+		}
+	}
+
+
+	func testMapAsDictionary() {
+		let dictionary = [0: 1, 1: 0, 2: 2]
+		XCTAssertEqual(dictionary.mapAsDictionary { key, value in (key / 2, value * 2) }, [0: 0, 1: 4])
+		XCTAssertEqual(dictionary.mapAsDictionary { ($0.key / 2, $0.value * 2) },         [0: 0, 1: 4])
+		XCTAssertEqual(dictionary.mapAsDictionary { ($0 / 2, $1 * 2) },                   [0: 0, 1: 4])
+
+		do {
 			let _ = try dictionary.mapAsDictionary { _ -> (Int, Int) in throw error }
 			XCTFail()
 		}
@@ -23,14 +67,12 @@ class Dictionary_Tests: XCTestCase {
 
 
 	func testMapInPlace() {
-		do {
-			var dictionary = ["a": 1, "b": 2]
-			dictionary.mapInPlace { $0 + 1 }
-			XCTAssertEqual(dictionary, ["a": 2, "b": 3])
-		}
+		var dictionary = [0: 0, 1: 0, 2: 2]
+		dictionary.mapInPlace { $0 + 1 }
+		XCTAssertEqual(dictionary, [0: 1, 1: 1, 2: 3])
 
 		do {
-			var dictionary = [0: 0]
+			dictionary = [0: 0]
 			try dictionary.mapInPlace { _ in throw error }
 			XCTFail()
 		}
