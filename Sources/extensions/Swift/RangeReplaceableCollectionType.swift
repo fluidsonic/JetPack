@@ -1,6 +1,6 @@
 public extension RangeReplaceableCollectionType {
 
-	public mutating func removeFirst(@noescape predicate: Generator.Element throws -> Bool) rethrows -> (Index, Generator.Element)? {
+	public mutating func removeFirstMatching(@noescape predicate: Generator.Element throws -> Bool) rethrows -> (Index, Generator.Element)? {
 		guard let index = try indexOf(predicate) else {
 			return nil
 		}
@@ -25,7 +25,7 @@ public extension RangeReplaceableCollectionType where Generator.Element: AnyObje
 
 public extension RangeReplaceableCollectionType where Generator.Element: Equatable {
 
-	public mutating func removeFirst(element: Generator.Element) -> (Index, Generator.Element)? {
+	public mutating func removeFirstEqual(element: Generator.Element) -> (Index, Generator.Element)? {
 		guard let index = indexOf(element) else {
 			return nil
 		}

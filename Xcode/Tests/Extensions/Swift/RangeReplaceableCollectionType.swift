@@ -8,33 +8,14 @@ class RangeReplaceableCollectionType_Tests: XCTestCase {
 	private let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
-	func testRemoveFirst() {
-		do {
-			var objects = [1, 1, 2]
-			XCTAssertEqual(objects.removeFirst(1), (0, 1))
-			XCTAssertEqual(objects, [1, 2])
+	func testRemoveFirstEqual() {
+		var objects = [1, 1, 2]
+		XCTAssertEqual(objects.removeFirstEqual(1), (0, 1))
+		XCTAssertEqual(objects, [1, 2])
 
-			objects = [1, 1, 2]
-			XCTAssertEqual(objects.removeFirst(3), nil)
-			XCTAssertEqual(objects, [1, 1, 2])
-
-			objects = [1, 1, 2]
-			XCTAssertEqual(objects.removeFirst { $0 == 1 }, (0, 1))
-			XCTAssertEqual(objects, [1, 2])
-
-			objects = [1, 1, 2]
-			XCTAssertEqual(objects.removeFirst { $0 == 3 }, nil)
-			XCTAssertEqual(objects, [1, 1, 2])
-		}
-
-		do {
-			var array = [true]
-			try array.removeFirst { _ in throw error }
-			XCTFail()
-		}
-		catch let error as NSError {
-			XCTAssertEqual(error, self.error)
-		}
+		objects = [1, 1, 2]
+		XCTAssertEqual(objects.removeFirstEqual(3), nil)
+		XCTAssertEqual(objects, [1, 1, 2])
 	}
 
 
@@ -48,5 +29,27 @@ class RangeReplaceableCollectionType_Tests: XCTestCase {
 		mutableObjects = objects
 		XCTAssertEqual(mutableObjects.removeFirstIdentical(EmptyObject()), nil)
 		XCTAssertIdentical(mutableObjects, objects)
+	}
+
+
+	func testRemoveFirstMatching() {
+		do {
+			var objects = [1, 1, 2]
+			XCTAssertEqual(objects.removeFirstMatching { $0 == 1 }, (0, 1))
+			XCTAssertEqual(objects, [1, 2])
+
+			objects = [1, 1, 2]
+			XCTAssertEqual(objects.removeFirstMatching { $0 == 3 }, nil)
+			XCTAssertEqual(objects, [1, 1, 2])
+		}
+
+		do {
+			var array = [true]
+			try array.removeFirstMatching { _ in throw error }
+			XCTFail()
+		}
+		catch let error as NSError {
+			XCTAssertEqual(error, self.error)
+		}
 	}
 }
