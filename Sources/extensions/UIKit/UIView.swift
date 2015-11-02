@@ -214,6 +214,16 @@ public extension UIView {
 		}
 
 
+		public static func run(animation: Animation?, @noescape changes: Void -> Void) {
+			if let animation = animation {
+				animation.run(changes)
+			}
+			else {
+				changes()
+			}
+		}
+
+
 		public func run(@noescape changes: Void -> Void) {
 			runWithCompletion { _ in changes() }
 		}
