@@ -62,6 +62,6 @@ private class BlockTimerHandler: NSObject {
 	@objc
 	func handle(timer: NSTimer) {
 		let handlerReference = timer.userInfo as! StrongReference<Closure>
-		handlerReference.target?()
+		handlerReference.target()
 	}
 }
