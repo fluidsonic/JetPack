@@ -62,8 +62,8 @@ public extension UIImage {
 		let scale = min(horizontalRatio, verticalRatio)
 
 		var targetSize = currentSize.scaleBy(scale)
-		targetSize.height = targetSize.height.round
-		targetSize.width = targetSize.width.round
+		targetSize.height = floor(targetSize.height)
+		targetSize.width = floor(targetSize.width)
 
 		if targetSize.height >= currentSize.height && targetSize.width >= currentSize.width {
 			return self
