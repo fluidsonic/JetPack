@@ -49,4 +49,33 @@ public extension UIImage {
 			return false
 		}
 	}
+
+
+	@nonobjc
+	public func imageConstrainedToSize(maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .High) -> UIImage {
+		let coreImage = self.CGImage
+
+		let currentSize = CGSize(width: CGImageGetWidth(coreImage), height: CGImageGetHeight(coreImage))
+
+		let horizontalRatio = maximumSize.width / currentSize.width
+		let verticalRatio = maximumSize.height / currentSize.height
+		let scale = min(horizontalRatio, verticalRatio)
+
+		var targetSize = currentSize.scaleBy(scale)
+		targetSize.height = targetSize.height.round
+		targetSize.width = targetSize.width.round
+
+		if targetSize.height >= currentSize.height && targetSize.width >= currentSize.width {
+			return self
+		}
+
+		let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(coreImage), 0, CGImageGetColorSpace(coreImage), CGImageGetBitmapInfo(coreImage).rawValue)
+		CGContextSetInterpolationQuality(context, interpolationQuality)
+		CGContextDrawImage(context, CGRect(size: targetSize), coreImage)
+
+		let newCoreImage = CGBitmapContextCreateImage(context)!
+		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
+
+		return newImage
+	}
 }
