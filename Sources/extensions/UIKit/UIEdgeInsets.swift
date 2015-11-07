@@ -46,6 +46,16 @@ public extension UIEdgeInsets {
 	}
 
 
+	public init(fromRect: CGRect, toRect: CGRect) {
+		self.init(
+			top:    toRect.top - fromRect.top,
+			left:   toRect.left - fromRect.left,
+			bottom: fromRect.bottom - toRect.bottom,
+			right:  fromRect.right - toRect.right
+		)
+	}
+
+
 	@warn_unused_result(mutable_variant="increaseInPlace")
 	public func increaseBy(insets: UIEdgeInsets) -> UIEdgeInsets {
 		return UIEdgeInsets(top: top + insets.top, left: left + insets.left, bottom: bottom + insets.bottom, right: right + insets.right)
