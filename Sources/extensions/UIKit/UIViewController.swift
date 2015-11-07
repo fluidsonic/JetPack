@@ -14,6 +14,34 @@ public extension UIViewController {
 
 
 
+	@objc(JetPack_applicationDidBecomeActive)
+	public func applicationDidBecomeActive() {
+		// override in subclasses
+	}
+
+
+	@nonobjc
+	private static func applicationDidBecomeActive(notification: NSNotification) {
+		traverseAllViewControllers() { viewController in
+			viewController.applicationDidBecomeActive()
+		}
+	}
+
+
+	@objc(JetPack_applicationWillResignActive)
+	public func applicationWillResignActive() {
+		// override in subclasses
+	}
+
+
+	@nonobjc
+	private static func applicationWillResignActive(notification: NSNotification) {
+		traverseAllViewControllers() { viewController in
+			viewController.applicationWillResignActive()
+		}
+	}
+
+
 	@objc(JetPack_computeInnerDecorationInsetsForChildViewController:)
 	@warn_unused_result
 	public func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
@@ -129,7 +157,16 @@ public extension UIViewController {
 		swizzleInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
 		swizzleInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
 
+		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
+	}
+
+
+	@nonobjc
+	private static func subscribeToApplicationActiveNotifications() {
+		let notificationCenter = NSNotificationCenter.defaultCenter()
+		notificationCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil, usingBlock: applicationDidBecomeActive)
+		notificationCenter.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil, usingBlock: applicationWillResignActive)
 	}
 
 
@@ -154,6 +191,26 @@ public extension UIViewController {
 		invalidateDecorationInsets()
 
 		swizzled_viewWillAppear(animated)
+	}
+
+
+	@nonobjc
+	private static func traverseAllViewControllers(closure: UIViewController -> Void) {
+		for window in UIApplication.sharedApplication().windows {
+			window.rootViewController?.traverseViewControllerSubtreeFromHere(closure)
+		}
+	}
+
+
+	@nonobjc
+	private func traverseViewControllerSubtreeFromHere(closure: UIViewController -> Void) {
+		closure(self)
+
+		for childViewController in childViewControllers {
+			childViewController.traverseViewControllerSubtreeFromHere(closure)
+		}
+
+		presentedViewController?.traverseViewControllerSubtreeFromHere(closure)
 	}
 
 
