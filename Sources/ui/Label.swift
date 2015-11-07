@@ -4,20 +4,20 @@ import UIKit
 @IBDesignable
 public class Label: UILabel {
 
-	private var defaultTextColor: UIColor?
+	private var originalTextColor: UIColor?
 
 
 	public init() {
 		super.init(frame: .zero)
 
-		defaultTextColor = textColor
+		textColor = super.textColor
 	}
 
 
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 
-		defaultTextColor = textColor
+		textColor = super.textColor
 	}
 
 
@@ -48,29 +48,15 @@ public class Label: UILabel {
 
 
 	public override var textColor: UIColor? {
-		get { return defaultTextColor }
+		get { return originalTextColor }
 		set {
-			guard newValue != defaultTextColor else {
+			guard newValue != originalTextColor else {
 				return
 			}
 
-			defaultTextColor = newValue
+			originalTextColor = newValue
 
-			updateTextColor()
-		}
-	}
-
-
-	@IBInspectable
-	public var textTintColorAlpha: CGFloat = 0 {
-		didSet {
-			textTintColorAlpha = textTintColorAlpha.clamp(min: 0, max: 1)
-
-			guard textTintColorAlpha != oldValue else {
-				return
-			}
-
-			updateTextColor()
+			super.textColor = newValue?.tintedWithColor(tintColor)
 		}
 	}
 
@@ -78,24 +64,13 @@ public class Label: UILabel {
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		updateTextColor()
+		if let originalTextColor = originalTextColor where originalTextColor.tintAlpha != nil {
+			super.textColor = originalTextColor.tintedWithColor(tintColor)
+		}
 	}
 
 
 	public override func textRectForBounds(bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
 		return super.textRectForBounds(bounds.insetBy(padding), limitedToNumberOfLines: numberOfLines).insetBy(padding.inverse)
-	}
-
-
-	private func updateTextColor() {
-		let textColor: UIColor?
-		if textTintColorAlpha > 0 {
-			textColor = tintColor.colorWithAlphaComponent(textTintColorAlpha)
-		}
-		else {
-			textColor = defaultTextColor
-		}
-
-		super.textColor = textColor
 	}
 }

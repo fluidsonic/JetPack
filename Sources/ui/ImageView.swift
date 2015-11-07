@@ -164,12 +164,12 @@ public /* non-final */ class ImageView: View {
 
 	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
 		if let preferredSize = preferredSize {
-			return preferredSize
+			return alignToGrid(preferredSize)
 		}
 
 		if let image = image {
 			let imageSize = image.size
-			return CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom)
+			return alignToGrid(CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom))
 		}
 
 		return .zero
@@ -298,7 +298,7 @@ public /* non-final */ class ImageView: View {
 					drawFrame.bottom = availableFrame.bottom
 				}
 
-				drawFrame = roundScaled(drawFrame)
+				drawFrame = alignToGrid(drawFrame)
 			}
 		}
 		else {

@@ -6,28 +6,42 @@ public /* non-final */ class View: UIView {
 
 	private static let _dummyView = View()
 
+	private var originalBackgroundColor: UIColor?
+	private var originalBorderColor: UIColor?
+
 	@IBInspectable
 	public var additionalHitZone: UIEdgeInsets = .zero // TODO don't use UIEdgeInsets becase actually we outset
-	
+
 	@IBInspectable
 	public var backgroundColorLocked: Bool = false
 
 	@IBInspectable
 	public var hitZoneFollowsCornerRadius: Bool = true
-	
+
 	@IBInspectable
 	public var userInteractionLimitedToSubviews: Bool = false
-	
-	
+
+
 	public init() {
 		super.init(frame: .zero)
 
 		clipsToBounds = true
+		backgroundColor = super.backgroundColor
+
+		if let layerBorderColor = layer.borderColor {
+			borderColor = UIColor(CGColor: layerBorderColor)
+		}
 	}
-	
-	
+
+
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
+
+		backgroundColor = super.backgroundColor
+
+		if let layerBorderColor = layer.borderColor {
+			borderColor = UIColor(CGColor: layerBorderColor)
+		}
 	}
 
 
@@ -146,31 +160,33 @@ public /* non-final */ class View: UIView {
 	public class func animate(duration duration: NSTimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: NSTimeInterval, changes: () -> Void, completion: Bool -> Void) {
 		animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
-	
-	
+
+
 	public override var backgroundColor: UIColor? {
-		get { return super.backgroundColor }
+		get { return originalBackgroundColor }
 		set {
-			if backgroundColorLocked {
+			guard !backgroundColorLocked && newValue != originalBackgroundColor else {
 				return
 			}
-			
-			super.backgroundColor = newValue
+
+			originalBackgroundColor = newValue
+
+			super.backgroundColor = newValue?.tintedWithColor(tintColor)
 		}
 	}
 
 
 	@IBInspectable
 	public var borderColor: UIColor? {
-		get {
-			guard let borderColor = layer.borderColor else {
-				return nil
+		get { return originalBorderColor }
+		set {
+			guard newValue != originalBorderColor else {
+				return
 			}
 
-			return UIColor(CGColor: borderColor)
-		}
-		set {
-			layer.borderColor = newValue?.CGColor
+			originalBorderColor = newValue
+
+			layer.borderColor = newValue?.tintedWithColor(tintColor).CGColor
 		}
 	}
 
@@ -334,5 +350,18 @@ public /* non-final */ class View: UIView {
 		var bounds = self.bounds
 		bounds.size = sizeThatFits()
 		self.bounds = bounds
+	}
+
+
+	public override func tintColorDidChange() {
+		super.tintColorDidChange()
+
+		if let originalBackgroundColor = originalBackgroundColor where originalBackgroundColor.tintAlpha != nil {
+			super.backgroundColor = originalBackgroundColor.tintedWithColor(tintColor)
+		}
+
+		if let originalBorderColor = originalBorderColor where originalBorderColor.tintAlpha != nil {
+			layer.borderColor = originalBorderColor.tintedWithColor(tintColor).CGColor
+		}
 	}
 }

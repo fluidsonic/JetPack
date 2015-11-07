@@ -121,17 +121,17 @@ public /* non-final */ class TooltipView: View {
 		buttonFrame.right = right
 		buttonFrame.top = innerTop + padding.top
 		buttonFrame.height = innerBottom - padding.bottom - buttonFrame.top
-		button.frame = roundScaled(buttonFrame)
+		button.frame = alignToGrid(buttonFrame)
 		button.additionalHitZone = UIEdgeInsets(top: padding.top + 20, left: separatorPadding.right + 20, bottom: padding.bottom + 20, right: padding.right + 20)
 
 		right = buttonFrame.left - separatorPadding.right
 
 		var separatorFrame = CGRect()
-		separatorFrame.width = roundScaled(1)
+		separatorFrame.width = roundToGrid(1)
 		separatorFrame.right = right
 		separatorFrame.top = innerTop + separatorPadding.top
 		separatorFrame.height = innerBottom - separatorPadding.bottom - separatorFrame.top
-		separator.frame = roundScaled(separatorFrame)
+		separator.frame = alignToGrid(separatorFrame)
 
 		right = separatorFrame.left - separatorPadding.left
 
@@ -140,7 +140,7 @@ public /* non-final */ class TooltipView: View {
 		labelFrame.top = innerTop + padding.top
 		labelFrame.width = right - labelFrame.left
 		labelFrame.height = innerBottom - padding.bottom - labelFrame.top
-		label.frame = roundScaled(labelFrame)
+		label.frame = alignToGrid(labelFrame)
 	}
 
 
@@ -234,11 +234,11 @@ public /* non-final */ class TooltipView: View {
 
 		let labelSize = label.sizeThatFitsSize(remainingSize)
 
-		let separatorWidth = roundScaled(1)
+		let separatorWidth = roundToGrid(1)
 		let arrowHeight = arrowSize.height
 
 		let fittingSize = CGSize(width: labelSize.width + separatorWidth + buttonSize.width + horizontalPadding, height: max(labelSize.height, buttonSize.height) + verticalPadding + arrowHeight)
-		return ceilScaled(fittingSize)
+		return alignToGrid(fittingSize)
 	}
 	
 	

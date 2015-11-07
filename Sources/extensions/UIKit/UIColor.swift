@@ -1,3 +1,4 @@
+import CoreImage
 import UIKit
 
 
@@ -82,5 +83,150 @@ public extension UIColor {
 		}
 
 		return components
+	}
+
+
+	@nonobjc
+	public var tintAlpha: CGFloat? {
+		guard let color = self as? ColorUsingTintColor else {
+			return nil
+		}
+
+		return color.alpha
+	}
+
+
+	@nonobjc
+	@warn_unused_result
+	public static func tintColor() -> UIColor {
+		return tintColorWithAlpha(1)
+	}
+
+
+	@nonobjc
+	@warn_unused_result
+	public static func tintColorWithAlpha(alpha: CGFloat) -> UIColor {
+		if alpha >= 1 {
+			return ColorUsingTintColor.fullAlpha
+		}
+
+		return ColorUsingTintColor(alpha: max(alpha, 0))
+	}
+
+
+	@objc(JetPack_tintedWithColor:)
+	@warn_unused_result
+	public func tintedWithColor(color: UIColor) -> UIColor {
+		return self
+	}
+}
+
+
+
+private final class ColorUsingTintColor: UIColor {
+
+	private static let fullAlpha = ColorUsingTintColor(alpha: 1)
+
+	private let alpha: CGFloat
+
+
+	private init(alpha: CGFloat) {
+		self.alpha = alpha
+
+		super.init()
+	}
+
+
+	private required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+
+	private required convenience init(colorLiteralRed red: Float, green: Float, blue: Float, alpha: Float) {
+		fatalError("init(colorLiteralRed:green:blue:alpha:) has not been implemented")
+	}
+
+
+	private override var CGColor: CGColorRef {
+		return placeholderColorForReason("CGColor").CGColor
+	}
+
+
+	private override var CIColor: CoreImage.CIColor {
+		return placeholderColorForReason("CIColor").CIColor
+	}
+
+
+	private dynamic var colorSpaceName: String { // public in Mac, probably private in iOS
+		return "tint"
+	}
+
+
+	private override func colorWithAlphaComponent(var alpha: CGFloat) -> UIColor {
+		alpha = alpha.clamp(min: 0, max: 1)
+		if alpha == self.alpha {
+			return self
+		}
+
+		return UIColor.tintColorWithAlpha(alpha)
+	}
+
+
+	private override var description: String {
+		return (alpha >= 1 ? "UIColor.tintColor()" : "UIColor.tintColorWithAlpha(\(alpha))")
+	}
+
+
+	private override func getHue(hue: UnsafeMutablePointer<CGFloat>, saturation: UnsafeMutablePointer<CGFloat>, brightness: UnsafeMutablePointer<CGFloat>, alpha: UnsafeMutablePointer<CGFloat>) -> Bool {
+		return false
+	}
+
+
+	private override func getRed(red: UnsafeMutablePointer<CGFloat>, green: UnsafeMutablePointer<CGFloat>, blue: UnsafeMutablePointer<CGFloat>, alpha: UnsafeMutablePointer<CGFloat>) -> Bool {
+		return false
+	}
+
+
+	private override func getWhite(white: UnsafeMutablePointer<CGFloat>, alpha: UnsafeMutablePointer<CGFloat>) -> Bool {
+		return false
+	}
+
+
+	private override func isEqual(object: AnyObject?) -> Bool {
+		if object === self {
+			return true
+		}
+		guard let color = object as? ColorUsingTintColor else {
+			return false
+		}
+
+		return alpha == color.alpha
+	}
+
+
+	private func placeholderColorForReason(reason: String) -> UIColor {
+		log("\(self).\(reason) was used instead of applying an actual tint color by using .tintedWithColor(_:) first")
+
+		return UIColor(red: 1, green: 0, blue: 0, alpha: alpha)
+	}
+
+
+	private override func set() {
+		placeholderColorForReason("set()").set()
+	}
+
+
+	private override func setFill() {
+		placeholderColorForReason("setFill()").setFill()
+	}
+
+
+	private override func setStroke() {
+		placeholderColorForReason("setStroke()").setStroke()
+	}
+
+
+	private override func tintedWithColor(tintColor: UIColor) -> UIColor {
+		return tintColor.colorWithAlphaComponent(alpha)
 	}
 }

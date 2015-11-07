@@ -90,19 +90,6 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var backgroundTintColorAlpha: CGFloat = 0 {
-		didSet {
-			backgroundTintColorAlpha = backgroundTintColorAlpha.clamp(min: 0, max: 1)
-			guard backgroundTintColorAlpha != oldValue else {
-				return
-			}
-
-			updateBackgroundColor()
-		}
-	}
-
-
 	public override var borderColor: UIColor? {
 		get { return defaultBorderColor }
 		set {
@@ -111,19 +98,6 @@ public class Button: View {
 			}
 
 			defaultBorderColor = newValue
-
-			updateBorderColor()
-		}
-	}
-
-
-	@IBInspectable
-	public var borderTintColorAlpha: CGFloat = 0 {
-		didSet {
-			borderTintColorAlpha = borderTintColorAlpha.clamp(min: 0, max: 1)
-			guard borderTintColorAlpha != oldValue else {
-				return
-			}
 
 			updateBorderColor()
 		}
@@ -539,9 +513,9 @@ public class Button: View {
 		}
 
 		return Layout(
-			activityIndicatorFrame: wantsActivityIndicator ? ceilScaled(activityIndicatorFrame) : nil,
-			imageViewFrame:         wantsImage ? ceilScaled(imageViewFrame) : nil,
-			textLabelFrame:         wantsText ? ceilScaled(textLabelFrame) : nil
+			activityIndicatorFrame: wantsActivityIndicator ? alignToGrid(activityIndicatorFrame) : nil,
+			imageViewFrame:         wantsImage ? alignToGrid(imageViewFrame) : nil,
+			textLabelFrame:         wantsText ? alignToGrid(textLabelFrame) : nil
 		)
 	}
 
@@ -556,8 +530,8 @@ public class Button: View {
 				activityIndicator.startAnimating()
 			}
 
-			activityIndicator.bounds = roundScaled(CGRect(size: activityIndicatorFrame.size))
-			activityIndicator.center = roundScaled(activityIndicatorFrame.center)
+			activityIndicator.bounds = CGRect(size: activityIndicatorFrame.size)
+			activityIndicator.center = activityIndicatorFrame.center
 		}
 		else {
 			_activityIndicator?.removeFromSuperview()
@@ -568,8 +542,8 @@ public class Button: View {
 				addSubview(imageView)
 			}
 
-			imageView.bounds = roundScaled(CGRect(size: imageViewFrame.size))
-			imageView.center = roundScaled(imageViewFrame.center)
+			imageView.bounds = CGRect(size: imageViewFrame.size)
+			imageView.center = imageViewFrame.center
 		}
 		else {
 			_imageView?.removeFromSuperview()
@@ -580,8 +554,8 @@ public class Button: View {
 				addSubview(textLabel)
 			}
 
-			textLabel.bounds = roundScaled(CGRect(size: textLabelFrame.size))
-			textLabel.center = roundScaled(textLabelFrame.center)
+			textLabel.bounds = CGRect(size: textLabelFrame.size)
+			textLabel.center = textLabelFrame.center
 		}
 		else {
 			_textLabel?.removeFromSuperview()
@@ -667,7 +641,7 @@ public class Button: View {
 			}
 		}
 		
-		return ceilScaled(fittingSize)
+		return alignToGrid(fittingSize)
 	}
 
 
@@ -687,20 +661,12 @@ public class Button: View {
 	}
 
 
-	@available(*, unavailable, message="For Interface Builder only. Use textLabel.textTintColorAlpha instead.")
-	@IBInspectable
-	public final var textTintColorAlpha: CGFloat {
-		get { return _textLabel?.textTintColorAlpha ?? 1 }
-		set { textLabel.textTintColorAlpha = newValue }
-	}
-
-
 	public final var textLabel: Label {
 		get {
 			return _textLabel ?? {
 				let child = Label()
 				child.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
-				child.textTintColorAlpha = 1
+				child.textColor = .tintColor()
 
 				_textLabel = child
 
@@ -790,9 +756,6 @@ public class Button: View {
 		if highlighted, let highlightedBackgroundColor = highlightedBackgroundColor {
 			backgroundColor = highlightedBackgroundColor
 		}
-		else if backgroundTintColorAlpha > 0 {
-			backgroundColor = tintColor.colorWithAlphaComponent(backgroundTintColorAlpha)
-		}
 		else {
 			backgroundColor = defaultBackgroundColor
 		}
@@ -805,9 +768,6 @@ public class Button: View {
 		let borderColor: UIColor?
 		if highlighted, let highlightedBorderColor = highlightedBorderColor {
 			borderColor = highlightedBorderColor
-		}
-		else if borderTintColorAlpha > 0 {
-			borderColor = tintColor.colorWithAlphaComponent(borderTintColorAlpha)
 		}
 		else {
 			borderColor = defaultBorderColor

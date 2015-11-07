@@ -1,56 +1,48 @@
 import UIKit
 
 
-// TODO
-// - rethink *Scaled methods
-
 public extension UIView {
 
 	@nonobjc
 	@warn_unused_result
-	public final func ceilScaled(value: CGFloat) -> CGFloat {
-		let offset = 0.5 / contentScaleFactor
-		return roundScaled(value + offset)
+	public final func alignToGrid(rect: CGRect) -> CGRect {
+		return CGRect(origin: alignToGrid(rect.origin), size: alignToGrid(rect.size))
 	}
 
 
 	@nonobjc
 	@warn_unused_result
-	public final func ceilScaled(value: CGSize) -> CGSize {
-		let offset = 0.5 / contentScaleFactor
-		return roundScaled(CGSize(width: value.width + offset, height: value.height + offset))
+	public final func alignToGrid(point: CGPoint) -> CGPoint {
+		return CGPoint(left: roundToGrid(point.left), top: roundToGrid(point.top))
 	}
 
 
 	@nonobjc
 	@warn_unused_result
-	public final func ceilScaled(value: CGRect) -> CGRect {
-		let offset = 0.5 / contentScaleFactor
-		return roundScaled(CGRect(left: value.left, top: value.top, width: value.width + offset, height: value.height + offset))
+	public final func alignToGrid(size: CGSize) -> CGSize {
+		return CGSize(width: ceilToGrid(size.width), height: ceilToGrid(size.height))
 	}
 
 
 	@nonobjc
 	@warn_unused_result
-	public final func floorScaled(value: CGFloat) -> CGFloat {
-		let offset = 0.5 / contentScaleFactor
-		return roundScaled(value - offset)
+	public final func ceilToGrid(value: CGFloat) -> CGFloat {
+		let scale = gridScaleFactor
+		return ceil(value * scale) / scale
 	}
 
 
 	@nonobjc
 	@warn_unused_result
-	public final func floorScaled(value: CGSize) -> CGSize {
-		let offset = 0.5 / contentScaleFactor
-		return roundScaled(CGSize(width: value.width - offset, height: value.height - offset))
+	public final func floorToGrid(value: CGFloat) -> CGFloat {
+		let scale = gridScaleFactor
+		return floor(value * scale) / scale
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func floorScaled(value: CGRect) -> CGRect {
-		let offset = 0.5 / contentScaleFactor
-		return roundScaled(CGRect(left: value.left, top: value.top, width: value.width - offset, height: value.height - offset))
+	public final var gridScaleFactor: CGFloat {
+		return max(contentScaleFactor, (window?.screen.scale ?? UIScreen.mainScreen().scale))
 	}
 
 
@@ -90,48 +82,9 @@ public extension UIView {
 
 	@nonobjc
 	@warn_unused_result
-	public final func roundScaled(value: CGFloat) -> CGFloat {
-		let scale = contentScaleFactor
-
+	public final func roundToGrid(value: CGFloat) -> CGFloat {
+		let scale = gridScaleFactor
 		return round(value * scale) / scale
-	}
-
-
-	@nonobjc
-	@warn_unused_result
-	public final func roundScaled(value: CGPoint) -> CGPoint {
-		let scale = contentScaleFactor
-
-		return CGPoint(
-			left: round(value.left * scale) / scale,
-			top:  round(value.top * scale) / scale
-		)
-	}
-
-
-	@nonobjc
-	@warn_unused_result
-	public final func roundScaled(value: CGSize) -> CGSize {
-		let scale = contentScaleFactor
-
-		return CGSize(
-			width:  round(value.width * scale) / scale,
-			height: round(value.height * scale) / scale
-		)
-	}
-
-
-	@nonobjc
-	@warn_unused_result
-	public final func roundScaled(value: CGRect) -> CGRect {
-		let scale = contentScaleFactor
-
-		return CGRect(
-			left:   floor(value.left * scale) / scale,
-			top:    floor(value.top * scale) / scale,
-			width:  ceil(value.width * scale) / scale,
-			height: ceil(value.height * scale) / scale
-		)
 	}
 
 
