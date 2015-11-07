@@ -4,20 +4,25 @@ import UIKit
 public extension UINavigationController {
 
 	public override func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
-		var insets = innerDecorationInsets
-		insets.bottom += childViewController.bottomLayoutGuide.length - bottomLayoutGuide.length
-		insets.top += childViewController.topLayoutGuide.length - topLayoutGuide.length
-
-		return insets
+		return addTopAndBottombarsToDecorationInsets(innerDecorationInsets)
 	}
 
 
 	public override func computeOuterDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
-		var insets = outerDecorationInsets
-		insets.bottom += childViewController.bottomLayoutGuide.length - bottomLayoutGuide.length
-		insets.top += childViewController.topLayoutGuide.length - topLayoutGuide.length
+		return addTopAndBottombarsToDecorationInsets(outerDecorationInsets)
+	}
 
-		return insets
+
+	@nonobjc
+	private func addTopAndBottombarsToDecorationInsets(var decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+		if !toolbarHidden, let toolbar = toolbar where !toolbar.opaque {
+			decorationInsets.bottom = max(view.bounds.height - toolbar.frame.top, decorationInsets.bottom)
+		}
+		if !navigationBarHidden && !navigationBar.opaque {
+			decorationInsets.top = max(navigationBar.frame.bottom, decorationInsets.bottom)
+		}
+
+		return decorationInsets
 	}
 
 
