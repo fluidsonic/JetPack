@@ -1,45 +1,85 @@
 import UIKit
 
 
-public /* non-final */ class TableViewController: UITableViewController {
+public /* non-final */ class TableViewController: ViewController {
 
-	public typealias SeguePreparation = ViewController.SeguePreparation
-
-	private var seguePreparation: SeguePreparation?
+	private let style: UITableViewStyle
 
 
-	public init() {
-		super.init(nibName: nil, bundle: nil)
-	}
+	public init(style: UITableViewStyle) {
+		self.style = style
 
-
-	public override init(style: UITableViewStyle) {
-		super.init(style: style)
+		super.init()
 	}
 
 
 	public required init?(coder: NSCoder) {
-		super.init(coder: coder)
+		fatalError("init(coder:) has not been implemented")
 	}
 
 
-	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-		let preparation = seguePreparation
-		seguePreparation = nil
+	public var automaticallyAdjustsTableViewInsets = true
 
-		prepareForSegue(segue, sender: sender, preparation: preparation)
+
+	public var clearsSelectionOnViewWillAppear = true
+
+
+	public override func decorationInsetsDidChangeWithAnimation(animation: UIView.Animation?) {
+		super.decorationInsetsDidChangeWithAnimation(animation)
+
+		if automaticallyAdjustsTableViewInsets {
+			tableView.contentInset = innerDecorationInsets
+			tableView.scrollIndicatorInsets = outerDecorationInsets
+		}
 	}
 
 
-	public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?, preparation: SeguePreparation?) {
-		preparation?(segue: segue)
+	public private(set) lazy var tableView: UITableView = {
+		let child = UITableView(frame: .zero, style: self.style)
+		child.dataSource = self
+		child.delegate = self
+
+		return child
+	}()
+
+
+	public override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		tableView.frame = CGRect(size: view.bounds.size)
 	}
 
 
-	public func performSegueWithIdentifier(identifier: String, sender: AnyObject? = nil, preparation: SeguePreparation?) {
-		seguePreparation = preparation
-		defer { seguePreparation = nil }
+	public override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
 
-		performSegueWithIdentifier(identifier, sender: sender)
+		if clearsSelectionOnViewWillAppear, let indexPaths = tableView.indexPathsForSelectedRows {
+			for indexPath in indexPaths {
+				tableView.deselectRowAtIndexPath(indexPath, animated: animated)
+			}
+		}
+	}
+
+
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+
+		view.addSubview(tableView)
 	}
 }
+
+
+extension TableViewController: UITableViewDataSource {
+
+	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		fatalError("Implement tableView(_:cellForRowAtIndexPath:)")
+	}
+
+
+	public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 0
+	}
+}
+
+
+extension TableViewController: UITableViewDelegate {}
