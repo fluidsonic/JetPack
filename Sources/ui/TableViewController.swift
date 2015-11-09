@@ -28,7 +28,20 @@ public /* non-final */ class TableViewController: ViewController {
 		super.decorationInsetsDidChangeWithAnimation(animation)
 
 		if automaticallyAdjustsTableViewInsets {
-			tableView.contentInset = innerDecorationInsets
+			let initialContentInsets = tableView.contentInset
+			let newContentInsets = innerDecorationInsets
+			if newContentInsets != initialContentInsets {
+				let initialContentOffset = tableView.contentOffset
+				tableView.contentInset = innerDecorationInsets
+
+				let newContentOffset = initialContentOffset
+					.offsetBy(dy: initialContentInsets.top - newContentInsets.top)
+					.clamp(min: tableView.minimumContentOffset, max: tableView.maximumContentOffset)
+				if newContentOffset != initialContentOffset {
+					tableView.contentOffset = newContentOffset
+				}
+			}
+
 			tableView.scrollIndicatorInsets = outerDecorationInsets
 		}
 	}
