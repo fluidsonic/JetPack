@@ -18,6 +18,14 @@ public /* non-final */ class TableViewController: ViewController {
 	}
 
 
+	deinit {
+		if isViewLoaded() {
+			tableView.dataSource = nil
+			tableView.delegate = nil
+		}
+	}
+
+
 	public var automaticallyAdjustsTableViewInsets = true
 
 
@@ -28,20 +36,7 @@ public /* non-final */ class TableViewController: ViewController {
 		super.decorationInsetsDidChangeWithAnimation(animation)
 
 		if automaticallyAdjustsTableViewInsets {
-			let initialContentInsets = tableView.contentInset
-			let newContentInsets = innerDecorationInsets
-			if newContentInsets != initialContentInsets {
-				let initialContentOffset = tableView.contentOffset
-				tableView.contentInset = innerDecorationInsets
-
-				let newContentOffset = initialContentOffset
-					.offsetBy(dy: initialContentInsets.top - newContentInsets.top)
-					.clamp(min: tableView.minimumContentOffset, max: tableView.maximumContentOffset)
-				if newContentOffset != initialContentOffset {
-					tableView.contentOffset = newContentOffset
-				}
-			}
-
+			tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
 			tableView.scrollIndicatorInsets = outerDecorationInsets
 		}
 	}
