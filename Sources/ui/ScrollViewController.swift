@@ -24,12 +24,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
-	deinit {
-		collectionView.dataSource = nil
-		collectionView.delegate = nil
-	}
-
-
 	public var currentIndex: CGFloat {
 		let collectionViewWidth = collectionView.bounds.width
 		

@@ -18,14 +18,6 @@ public /* non-final */ class TableViewController: ViewController {
 	}
 
 
-	deinit {
-		if isViewLoaded() {
-			tableView.dataSource = nil
-			tableView.delegate = nil
-		}
-	}
-
-
 	public var automaticallyAdjustsTableViewInsets = true
 
 
