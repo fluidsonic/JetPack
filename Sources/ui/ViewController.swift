@@ -23,7 +23,7 @@ public /* non-final */ class ViewController: UIViewController {
 
 	public func decorationInsetsDidChangeWithAnimation(animation: View.Animation?) {
 		for childViewController in childViewControllers {
-			childViewController.invalidateDecorationInsets()
+			childViewController.invalidateDecorationInsetsWithAnimation(animation)
 		}
 	}
 

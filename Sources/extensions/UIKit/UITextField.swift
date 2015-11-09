@@ -25,7 +25,7 @@ public extension UITextField {
 
 
 	@nonobjc
-	internal static func setUp() {
+	internal static func UITextField_setUp() {
 		// yep, private API necessary :(
 		// If the private method is removed/renamed the related feature will cease to work but we won't crash.
 		swizzleInType(self, fromSelector: obfuscatedSelector("scroll", "Text", "Field", "To", "Visible"), toSelector: "JetPack_scrollIntoSight")

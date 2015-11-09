@@ -5,6 +5,7 @@ import UIKit
 public extension UIViewController {
 
 	private struct AssociatedKeys {
+		private static var decorationInsetsAnimation = UInt8()
 		private static var decorationInsetsAreValid = UInt8()
 		private static var innerDecorationInsets = UInt8()
 		private static var outerDecorationInsets = UInt8()
@@ -57,6 +58,13 @@ public extension UIViewController {
 
 
 	@nonobjc
+	private var decorationInsetsAnimation: UIView.Animation.Wrapper? {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation) as? UIView.Animation.Wrapper }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@nonobjc
 	private var decorationInsetsAreValid: Bool {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAreValid) as? NSNumber)?.boolValue ?? false }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.decorationInsetsAreValid, newValue ? true : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -66,7 +74,7 @@ public extension UIViewController {
 	@objc(JetPack_decorationInsetsDidChangeWithAnimation:)
 	public func decorationInsetsDidChangeWithAnimation(animationWrapper: View.Animation.Wrapper?) {
 		for childViewController in childViewControllers {
-			childViewController.invalidateDecorationInsets()
+			childViewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
 		}
 	}
 
@@ -91,7 +99,17 @@ public extension UIViewController {
 
 
 	@nonobjc
-	public func invalidateDecorationInsets() {
+	public func invalidateDecorationInsetsWithAnimation(animation: UIView.Animation?) {
+		invalidateDecorationInsetsWithAnimationWrapper(animation?.wrap())
+	}
+
+
+	@nonobjc
+	private func invalidateDecorationInsetsWithAnimationWrapper(animationWrapper: UIView.Animation.Wrapper?) {
+		if decorationInsetsAnimation == nil {
+			decorationInsetsAnimation = animationWrapper
+		}
+
 		guard decorationInsetsAreValid else {
 			return
 		}
@@ -153,7 +171,7 @@ public extension UIViewController {
 
 
 	@nonobjc
-	internal static func setUp() {
+	internal static func UIViewController_setUp() {
 		swizzleInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
 		swizzleInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
 
@@ -188,7 +206,8 @@ public extension UIViewController {
 
 	@objc(JetPack_viewWillAppear:)
 	private func swizzled_viewWillAppear(animated: Bool) {
-		invalidateDecorationInsets()
+		decorationInsetsAnimation = nil
+		invalidateDecorationInsetsWithAnimation(nil)
 
 		swizzled_viewWillAppear(animated)
 	}
@@ -244,7 +263,10 @@ public extension UIViewController {
 			return
 		}
 
+		let animation = decorationInsetsAnimation
+
 		defer {
+			decorationInsetsAnimation = nil
 			decorationInsetsAreValid = true
 		}
 
@@ -275,7 +297,7 @@ public extension UIViewController {
 		self.innerDecorationInsets = innerDecorationInsets
 		self.outerDecorationInsets = outerDecorationInsets
 
-		decorationInsetsDidChangeWithAnimation(nil)
+		decorationInsetsDidChangeWithAnimation(animation)
 	}
 
 

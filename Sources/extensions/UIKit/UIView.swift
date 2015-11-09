@@ -251,6 +251,11 @@ public extension UIView {
 		}
 
 
+		public func wrap() -> Wrapper {
+			return Wrapper(animation: self)
+		}
+
+
 
 		public enum Timing {
 			case EaseIn

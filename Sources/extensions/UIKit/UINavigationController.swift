@@ -30,4 +30,29 @@ public extension UINavigationController {
 	public func pushViewController(viewController: UIViewController) {
 		pushViewController(viewController, animated: true)
 	}
+
+
+	@nonobjc
+	internal static func UINavigationController_setUp() {
+		swizzleInType(self, fromSelector: "setNavigationBarHidden:", toSelector: "JetPack_setNavigationBarHidden:")
+		swizzleInType(self, fromSelector: "setNavigationBarHidden:animated:", toSelector: "JetPack_setNavigationBarHidden:animated:")
+	}
+
+
+	@objc(JetPack_setNavigationBarHidden:)
+	private func swizzled_setNavigationBarHidden(navigationBarHidden: Bool) {
+		setNavigationBarHidden(navigationBarHidden, animated: false)
+	}
+
+
+	@objc(JetPack_setNavigationBarHidden:animated:)
+	private func swizzled_setNavigationBarHidden(navigationBarHidden: Bool, animated: Bool) {
+		guard navigationBarHidden != self.navigationBarHidden else {
+			return
+		}
+
+		swizzled_setNavigationBarHidden(navigationBarHidden, animated: animated)
+
+		topViewController?.invalidateDecorationInsetsWithAnimation(UIView.Animation(duration: NSTimeInterval(UINavigationControllerHideShowBarDuration), timing: .EaseInEaseOut))
+	}
 }

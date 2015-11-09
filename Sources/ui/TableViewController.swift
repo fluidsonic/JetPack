@@ -28,8 +28,10 @@ public /* non-final */ class TableViewController: ViewController {
 		super.decorationInsetsDidChangeWithAnimation(animation)
 
 		if automaticallyAdjustsTableViewInsets {
-			tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
-			tableView.scrollIndicatorInsets = outerDecorationInsets
+			UIView.Animation.run(animation) {
+				tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
+				tableView.scrollIndicatorInsets = outerDecorationInsets
+			}
 		}
 	}
 
