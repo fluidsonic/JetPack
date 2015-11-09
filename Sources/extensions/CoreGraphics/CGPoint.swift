@@ -9,6 +9,12 @@ public extension CGPoint {
 
 
 	@warn_unused_result
+	public func clamp(min min: CGPoint, max: CGPoint) -> CGPoint {
+		return CGPoint(x: x.clamp(min: min.x, max: max.x), y: y.clamp(min: min.y, max: max.y))
+	}
+
+
+	@warn_unused_result
 	public func displacementTo(point: CGPoint) -> CGPoint {
 		return CGPoint(x: point.x - x, y: point.y - y)
 	}

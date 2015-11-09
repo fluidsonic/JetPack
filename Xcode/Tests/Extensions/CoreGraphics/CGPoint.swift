@@ -6,6 +6,13 @@ import JetPack
 
 class CGPoint_Tests: XCTestCase {
 
+	func testClamp() {
+		XCTAssertEqual(CGPoint(x: 1, y: 2).clamp(min: CGPoint(x: 0, y: 1), max: CGPoint(x: 0, y: 1)), CGPoint(x: 0, y: 1))
+		XCTAssertEqual(CGPoint(x: 1, y: 2).clamp(min: CGPoint(x: 0, y: 1), max: CGPoint(x: 2, y: 3)), CGPoint(x: 1, y: 2))
+		XCTAssertEqual(CGPoint(x: 1, y: 2).clamp(min: CGPoint(x: 2, y: 3), max: CGPoint(x: 2, y: 3)), CGPoint(x: 2, y: 3))
+	}
+
+
 	func testDisplacement() {
 		let point = CGPoint(x: 0, y: 1)
 		XCTAssertEqual(point.displacementTo(CGPoint(x: 2, y: 3)), CGPoint(x: 2, y: 2))
