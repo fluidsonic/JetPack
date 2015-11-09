@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'C9A2C0DF6AA52332730C3332'
+               BlueprintIdentifier = '45001AB6635898CA3F72E2AD'
                BlueprintName = 'JetPack'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'JetPack.framework'>

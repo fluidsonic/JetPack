@@ -21,6 +21,7 @@
   "exclude_files": "Sources/JetPack.swift",
   "frameworks": [
     "CoreGraphics",
+    "CoreImage",
     "Foundation",
     "Photos",
     "UIKit"
