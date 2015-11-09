@@ -24,6 +24,12 @@ public extension CGRect {
 	}
 
 
+	public var bottomCenter: CGPoint {
+		get { return CGPoint(left: left + (width / 2), top: bottom) }
+		mutating set { left = newValue.left - (width / 2); bottom = newValue.top }
+	}
+
+
 	public var bottomLeft: CGPoint {
 		get { return CGPoint(left: left, top: bottom) }
 		mutating set { left = newValue.left; bottom = newValue.top }
@@ -39,6 +45,18 @@ public extension CGRect {
 	public var center: CGPoint {
 		get { return CGPoint(left: left + (width / 2), top: top + (height / 2)) }
 		mutating set { left = newValue.left - (width / 2); top = newValue.top - (height / 2) }
+	}
+
+
+	public var centerLeft: CGPoint {
+		get { return CGPoint(left: left, top: top + (height / 2)) }
+		mutating set { left = newValue.left; top = newValue.top - (height / 2) }
+	}
+
+
+	public var centerRight: CGPoint {
+		get { return CGPoint(left: right, top: top + (height / 2)) }
+		mutating set { right = newValue.left; top = newValue.top - (height / 2) }
 	}
 
 
@@ -102,6 +120,22 @@ public extension CGRect {
 	}
 
 
+	@warn_unused_result
+	public func displacementTo(point: CGPoint) -> CGPoint {
+		return CGPoint(
+			left: point.left.clamp(min: left, max: right),
+			top:  point.top.clamp(min: top, max: bottom)
+		).displacementTo(point)
+	}
+
+
+	@warn_unused_result
+	public func distanceTo(point: CGPoint) -> CGFloat {
+		let displacement = displacementTo(point)
+		return sqrt((displacement.x * displacement.x) + (displacement.y * displacement.y))
+	}
+
+
 	internal var height: CGFloat {  // make public once the ambigous call problem for the getter is solved
 		get { return size.height }
 		mutating set { size.height = newValue }
@@ -140,6 +174,12 @@ public extension CGRect {
 	public var top: CGFloat {
 		get { return origin.top }
 		mutating set { origin.top = newValue }
+	}
+
+
+	public var topCenter: CGPoint {
+		get { return CGPoint(left: left + (width / 2), top: top) }
+		mutating set { left = newValue.left - (width / 2); top = newValue.top }
 	}
 
 
