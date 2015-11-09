@@ -80,6 +80,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 		let child = collectionView
 		child.bounces = false
 		child.pagingEnabled = true
+		child.scrollsToTop = false
 		child.showsHorizontalScrollIndicator = false
 		child.showsVerticalScrollIndicator = false
 		child.registerClass(Cell.self, forCellWithReuseIdentifier: "Cell")
