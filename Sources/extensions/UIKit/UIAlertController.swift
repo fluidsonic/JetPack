@@ -28,31 +28,37 @@ public extension UIAlertController {
 
 
 	@nonobjc
-	public func addActionWithTitle(title: String, handler: Closure? = nil) {
-		addAction(UIAlertAction(title: title, style: .Default) { _ in handler?() })
+	public func addActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .Default) { _ in handler?() }
+		addAction(action)
+		return action
 	}
 
 
 	@nonobjc
-	public func addCancelAction(handler: Closure? = nil) {
-		addCancelActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("Cancel", value: "Cancel", table: nil), handler: handler)
+	public func addCancelAction(handler: Closure? = nil) -> UIAlertAction {
+		return addCancelActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("Cancel", value: "Cancel", table: nil), handler: handler)
 	}
 
 
 	@nonobjc
-	public func addCancelActionWithTitle(title: String, handler: Closure? = nil) {
-		addAction(UIAlertAction(title: title, style: .Cancel) { _ in handler?() })
+	public func addCancelActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .Cancel) { _ in handler?() }
+		addAction(action)
+		return action
 	}
 
 
 	@nonobjc
-	public func addDestructiveActionWithTitle(title: String, handler: Closure? = nil) {
-		addAction(UIAlertAction(title: title, style: .Destructive) { _ in handler?() })
+	public func addDestructiveActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .Destructive) { _ in handler?() }
+		addAction(action)
+		return action
 	}
 
 
 	@nonobjc
-	public func addOkayAction(handler: Closure? = nil) {
-		addActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("OK", value: "OK", table: nil), handler: handler)
+	public func addOkayAction(handler: Closure? = nil) -> UIAlertAction {
+		return addActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("OK", value: "OK", table: nil), handler: handler)
 	}
 }
