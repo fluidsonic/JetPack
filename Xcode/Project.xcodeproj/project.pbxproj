@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		494784941BF2286E00684AA1 /* NSURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494784931BF2286E00684AA1 /* NSURL.swift */; };
 		498683361BE405D6001DCBC7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683311BE405D6001DCBC7 /* AppDelegate.swift */; };
 		498683381BE405D6001DCBC7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498683331BE405D6001DCBC7 /* LaunchScreen.storyboard */; };
 		498683451BE418B8001DCBC7 /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683441BE418B8001DCBC7 /* CGFloat.swift */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		2D2ADB3DFE865C1E82E55688 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		494784931BF2286E00684AA1 /* NSURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURL.swift; sourceTree = "<group>"; };
 		4986830D1BE404F7001DCBC7 /* JetPack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JetPack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		498683211BE404F7001DCBC7 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		498683311BE405D6001DCBC7 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				49A72CAF1BE5600A001FDCE8 /* NSOrderedSet.swift */,
 				49A72CB01BE5600A001FDCE8 /* NSProgress.swift */,
 				49A72CB11BE5600A001FDCE8 /* NSRange.swift */,
+				494784931BF2286E00684AA1 /* NSURL.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49A72CD11BE588C2001FDCE8 /* AbsoluteValuable.swift in Sources */,
+				494784941BF2286E00684AA1 /* NSURL.swift in Sources */,
 				498683451BE418B8001DCBC7 /* CGFloat.swift in Sources */,
 				49A72CDE1BE588C2001FDCE8 /* RangeReplaceableCollectionType.swift in Sources */,
 				49A72CB91BE5600A001FDCE8 /* NSOrderedSet.swift in Sources */,
