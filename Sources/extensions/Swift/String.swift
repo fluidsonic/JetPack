@@ -62,13 +62,14 @@ public extension String {
 	}
 
 
+	@available(*, unavailable, renamed="whitespaceTrimmed")
 	public var trimmed: String {
-		return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+		return whitespaceTrimmed
 	}
 
 
 	@warn_unused_result
-	public func trimmedToLength(length: Int) -> String {
+	public func trimmedToLength(length: Int, truncationString: String = "") -> String {
 		if length <= 0 {
 			return ""
 		}
@@ -78,7 +79,20 @@ public extension String {
 			return self
 		}
 
-		return self[startIndex ..< startIndex.advancedBy(length - 1)] + "…"
+		let usableLength = length - truncationString.characters.count
+		if usableLength < 0 {
+			return truncationString.trimmedToLength(length)
+		}
+		if usableLength == 0 {
+			return truncationString
+		}
+
+		return self[startIndex ..< startIndex.advancedBy(usableLength)] + truncationString
+	}
+
+
+	public var urlEncodedHost: String {
+		return stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) ?? "<url encoding failed>"
 	}
 
 
@@ -99,5 +113,10 @@ public extension String {
 
 	public var urlEncodedQueryParameter: String {
 		return stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryParameterAllowedCharacterSet()) ?? "<url encoding failed>"
+	}
+
+
+	public var whitespaceTrimmed: String {
+		return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
 	}
 }
