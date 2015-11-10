@@ -19,7 +19,7 @@ public extension UINavigationController {
 			decorationInsets.bottom = max(view.bounds.height - toolbar.frame.top, decorationInsets.bottom)
 		}
 		if !navigationBarHidden && !navigationBar.opaque {
-			decorationInsets.top = max(navigationBar.frame.bottom, decorationInsets.bottom)
+			decorationInsets.top = max(navigationBar.frame.bottom, decorationInsets.top)
 		}
 
 		return decorationInsets
