@@ -53,6 +53,6 @@ public extension UINavigationController {
 
 		swizzled_setNavigationBarHidden(navigationBarHidden, animated: animated)
 
-		topViewController?.invalidateDecorationInsetsWithAnimation(UIView.Animation(duration: NSTimeInterval(UINavigationControllerHideShowBarDuration), timing: .EaseInEaseOut))
+		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? UIView.Animation(duration: NSTimeInterval(UINavigationControllerHideShowBarDuration), timing: .EaseInEaseOut) : nil)
 	}
 }
