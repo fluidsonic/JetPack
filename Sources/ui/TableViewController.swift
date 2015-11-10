@@ -36,6 +36,15 @@ public /* non-final */ class TableViewController: ViewController {
 	}
 
 
+	public override func setEditing(editing: Bool, animated: Bool) {
+		super.setEditing(editing, animated: animated)
+
+		if isViewLoaded() {
+			tableView.setEditing(editing, animated: animated)
+		}
+	}
+
+
 	public private(set) lazy var tableView: UITableView = {
 		let child = UITableView(frame: .zero, style: self.style)
 		child.dataSource = self
@@ -48,6 +57,7 @@ public /* non-final */ class TableViewController: ViewController {
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
+		tableView.editing = editing
 		tableView.frame = CGRect(size: view.bounds.size)
 	}
 
