@@ -353,6 +353,20 @@ public /* non-final */ class View: UIView {
 	}
 
 
+	public override var tintColor: UIColor! {
+		get { return super.tintColor }
+		set {
+			guard newValue?.tintAlpha == nil else {
+				log("Cannot set .tintColor of \(self) to \(newValue). Use `nil` instead.")
+				super.tintColor = nil
+				return
+			}
+
+			super.tintColor = newValue
+		}
+	}
+
+
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 
