@@ -4,13 +4,31 @@ import UIKit
 @IBDesignable
 public /* non-final */ class ShapeView: View {
 
+	private var originalFillColor: UIColor?
+	private var originalStrokeColor: UIColor?
+
+
 	public override init() {
 		super.init()
+
+		if let layerFillColor = shapeLayer.fillColor {
+			fillColor = UIColor(CGColor: layerFillColor)
+		}
+		if let layerStrokeColor = shapeLayer.strokeColor {
+			strokeColor = UIColor(CGColor: layerStrokeColor)
+		}
 	}
 
 
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
+
+		if let layerFillColor = shapeLayer.fillColor {
+			fillColor = UIColor(CGColor: layerFillColor)
+		}
+		if let layerStrokeColor = shapeLayer.strokeColor {
+			strokeColor = UIColor(CGColor: layerStrokeColor)
+		}
 	}
 
 
@@ -24,30 +42,34 @@ public /* non-final */ class ShapeView: View {
 
 
 	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
-		if event == "path" {
+		switch event {
+		case "fillColor", "path", "strokeColor":
 			if let animation = super.actionForLayer(layer, forKey: "opacity") as? CABasicAnimation {
 				animation.fromValue = shapeLayer.path
 				animation.keyPath = event
 
 				return animation
 			}
-		}
 
-		return super.actionForLayer(layer, forKey: event)
+			fallthrough
+
+		default:
+			return super.actionForLayer(layer, forKey: event)
+		}
 	}
 
 
 	@IBInspectable
 	public var fillColor: UIColor? {
-		get {
-			guard let layerFillColor = shapeLayer.fillColor else {
-				return nil
+		get { return originalFillColor }
+		set {
+			guard newValue != originalFillColor else {
+				return
 			}
 
-			return UIColor(CGColor: layerFillColor)
-		}
-		set {
-			shapeLayer.fillColor = newValue?.CGColor
+			originalFillColor = newValue
+
+			shapeLayer.fillColor = newValue?.tintedWithColor(tintColor).CGColor
 		}
 	}
 
@@ -120,15 +142,15 @@ public /* non-final */ class ShapeView: View {
 
 	@IBInspectable
 	public var strokeColor: UIColor? {
-		get {
-			guard let layerStrokeColor = shapeLayer.strokeColor else {
-				return nil
+		get { return originalStrokeColor }
+		set {
+			guard newValue != originalStrokeColor else {
+				return
 			}
 
-			return UIColor(CGColor: layerStrokeColor)
-		}
-		set {
-			shapeLayer.strokeColor = newValue?.CGColor
+			originalStrokeColor = newValue
+
+			shapeLayer.strokeColor = newValue?.tintedWithColor(tintColor).CGColor
 		}
 	}
 
@@ -140,6 +162,19 @@ public /* non-final */ class ShapeView: View {
 		}
 		set {
 			shapeLayer.strokeStart = newValue
+		}
+	}
+
+
+	public override func tintColorDidChange() {
+		super.tintColorDidChange()
+
+		if let originalFillColor = originalFillColor where originalFillColor.tintAlpha != nil {
+			shapeLayer.fillColor = originalFillColor.tintedWithColor(tintColor).CGColor
+		}
+
+		if let originalStrokeColor = originalStrokeColor where originalStrokeColor.tintAlpha != nil {
+			shapeLayer.strokeColor = originalStrokeColor.tintedWithColor(tintColor).CGColor
 		}
 	}
 }
