@@ -3,11 +3,14 @@ import UIKit
 
 public /* non-final */ class ScrollViewController: ViewController {
 
+	public typealias ScrollCompletion = (cancelled: Bool) -> Void
+
 	private var appearState = AppearState.DidDisappear
 	private lazy var collectionView: UICollectionView = CollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
 	private lazy var collectionViewLayout = UICollectionViewFlowLayout()
 	private var isAnimatingScrollView = false
 	private var isSettingPrimaryViewControllerInternally = false
+	private var scrollCompletion: ScrollCompletion?
 
 
 	public override init() {
@@ -54,7 +57,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
-	public func scrollToViewController(viewController: UIViewController, animated: Bool) {
+	public func scrollToViewController(viewController: UIViewController, animated: Bool = true, completion: ScrollCompletion? = nil) {
 		guard let index = viewControllers.indexOfIdentical(viewController) else {
 			fatalError("Cannot scroll to view controller \(viewController) which is not a child view controller")
 		}
@@ -66,7 +69,12 @@ public /* non-final */ class ScrollViewController: ViewController {
 		}
 
 		if isViewLoaded() {
+			let previousScrollCompletion = self.scrollCompletion
+			scrollCompletion = completion
+
 			collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0), atScrollPosition: .CenteredHorizontally, animated: animated)
+
+			previousScrollCompletion?(cancelled: true)
 		}
 	}
 
@@ -334,6 +342,12 @@ extension ScrollViewController: UICollectionViewDelegate {
 
 		updateAppearStateForAllCellsAnimated(true)
 		updatePrimaryViewController()
+
+		let scrollCompletion = self.scrollCompletion
+		self.scrollCompletion = nil
+
+		// TODO not called when scrolling was not necessary
+		scrollCompletion?(cancelled: false)
 	}
 
 
@@ -368,6 +382,11 @@ extension ScrollViewController: UICollectionViewDelegate {
 		}
 
 		isAnimatingScrollView = false
+
+		let scrollCompletion = self.scrollCompletion
+		self.scrollCompletion = nil
+
+		scrollCompletion?(cancelled: true)
 	}
 
 
