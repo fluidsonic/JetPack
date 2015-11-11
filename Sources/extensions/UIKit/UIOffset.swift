@@ -4,6 +4,27 @@ import UIKit
 public extension UIOffset {
 
 	public static let zero = UIOffset()
+
+
+	public init(horizontal: CGFloat) {
+		self.init(horizontal: horizontal, vertical: 0)
+	}
+
+
+	public init(vertical: CGFloat) {
+		self.init(horizontal: 0, vertical: vertical)
+	}
+
+
+	@warn_unused_result(mutable_variant="scaleInPlace")
+	public func scaleBy(scale: CGFloat) -> UIOffset {
+		return UIOffset(horizontal: horizontal * scale, vertical: vertical * scale)
+	}
+
+
+	public mutating func scaleInPlace(scale: CGFloat) {
+		self = scaleBy(scale)
+	}
 }
 
 
