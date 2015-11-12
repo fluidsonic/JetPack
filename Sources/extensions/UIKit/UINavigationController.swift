@@ -34,8 +34,8 @@ public extension UINavigationController {
 
 	@nonobjc
 	internal static func UINavigationController_setUp() {
-		swizzleInType(self, fromSelector: "setNavigationBarHidden:", toSelector: "JetPack_setNavigationBarHidden:")
-		swizzleInType(self, fromSelector: "setNavigationBarHidden:animated:", toSelector: "JetPack_setNavigationBarHidden:animated:")
+		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:", toSelector: "JetPack_setNavigationBarHidden:")
+		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:animated:", toSelector: "JetPack_setNavigationBarHidden:animated:")
 	}
 
 

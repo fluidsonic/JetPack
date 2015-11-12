@@ -218,12 +218,18 @@ public class Button: View {
 	public final var imageView: ImageView {
 		get {
 			return _imageView ?? {
-				let child = ImageView()
+				let child = ButtonImageView(button: self)
 				_imageView = child
 
 				return child
 			}()
 		}
+	}
+
+
+	private func imageViewDidChangeSource() {
+		setNeedsLayout()
+		invalidateIntrinsicContentSize()
 	}
 
 
@@ -645,6 +651,12 @@ public class Button: View {
 	}
 
 
+	public override func subviewDidInvalidateIntrinsicContentSize(view: UIView) {
+		setNeedsLayout()
+		invalidateIntrinsicContentSize()
+	}
+
+
 	@available(*, unavailable, message="For Interface Builder only. Use textLabel.text instead.")
 	@IBInspectable
 	public final var text: String {
@@ -664,7 +676,7 @@ public class Button: View {
 	public final var textLabel: Label {
 		get {
 			return _textLabel ?? {
-				let child = Label()
+				let child = ButtonLabel(button: self)
 				child.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
 				child.textColor = .tintColor()
 
@@ -673,6 +685,12 @@ public class Button: View {
 				return child
 			}()
 		}
+	}
+
+
+	private func textLabelDidChangeText() {
+		setNeedsLayout()
+		invalidateIntrinsicContentSize()
 	}
 
 
@@ -821,4 +839,60 @@ private struct Layout {
 	private var activityIndicatorFrame: CGRect?
 	private var imageViewFrame: CGRect?
 	private var textLabelFrame: CGRect?
+}
+
+
+
+private final class ButtonImageView: ImageView {
+
+	private weak var button: Button?
+
+
+	private init(button: Button) {
+		self.button = button
+
+		super.init()
+	}
+
+
+	private required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+
+	private override var source: Source? {
+		didSet {
+			button?.imageViewDidChangeSource()
+		}
+	}
+}
+
+
+
+private final class ButtonLabel: Label {
+
+	private weak var button: Button?
+
+
+	private init(button: Button) {
+		self.button = button
+
+		super.init()
+	}
+
+
+	private required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+
+	private override var text: String? {
+		didSet {
+			guard (text ?? "") != (oldValue ?? "") else {
+				return
+			}
+
+			button?.textLabelDidChangeText()
+		}
+	}
 }

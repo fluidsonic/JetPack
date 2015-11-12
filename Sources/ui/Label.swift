@@ -35,6 +35,15 @@ public class Label: UILabel {
 	}
 
 
+	public override func invalidateIntrinsicContentSize() {
+		super.invalidateIntrinsicContentSize()
+
+		if let superview = superview as? View {
+			superview.subviewDidInvalidateIntrinsicContentSize(self)
+		}
+	}
+
+
 	@IBInspectable
 	public var padding: UIEdgeInsets = .zero {
 		didSet {
@@ -43,6 +52,7 @@ public class Label: UILabel {
 			}
 
 			setNeedsDisplay()
+			invalidateIntrinsicContentSize()
 		}
 	}
 

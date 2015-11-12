@@ -247,6 +247,15 @@ public /* non-final */ class View: UIView {
 	}
 
 
+	public override func invalidateIntrinsicContentSize() {
+		super.invalidateIntrinsicContentSize()
+
+		if let superview = superview as? View {
+			superview.subviewDidInvalidateIntrinsicContentSize(self)
+		}
+	}
+
+
 	@warn_unused_result
 	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
@@ -345,11 +354,16 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	// Original implementation calls sizeThatFits(_:) with current size instead of maximum size which is nonsense. The parameter represents a the size limit and sizeToFit() as per documentation is not limited to any size.
+	// Original implementation calls sizeThatFits(_:) with current size instead of maximum size which is nonsense. The parameter represents the size limit and sizeToFit() as per documentation is not limited to any size.
 	public override func sizeToFit() {
 		var bounds = self.bounds
 		bounds.size = sizeThatFits()
 		self.bounds = bounds
+	}
+
+
+	public func subviewDidInvalidateIntrinsicContentSize(view: UIView) {
+		// override in subclasses
 	}
 
 

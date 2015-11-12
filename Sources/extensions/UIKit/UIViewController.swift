@@ -177,8 +177,8 @@ public extension UIViewController {
 
 	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
-		swizzleInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
+		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()

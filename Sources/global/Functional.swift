@@ -84,7 +84,37 @@ public func pointerOf(object: AnyObject) -> COpaquePointer {
 }
 
 
-internal func swizzleInType(type: NSObject.Type, fromSelector: Selector, toSelector: Selector) {
+internal func redirectMethodInType(type: NSObject.Type, fromSelector: Selector, toSelector: Selector) {
+	precondition(fromSelector != toSelector)
+
+	let fromMethod = class_getInstanceMethod(type, fromSelector)
+	guard fromMethod != nil else {
+		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the former is not present in '\(type)'.")
+		return
+	}
+
+	let toMethod = class_getInstanceMethod(type, toSelector)
+	guard toMethod != nil else {
+		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the latter is not present in '\(type)'.")
+		return
+	}
+
+	let fromTypePointer = method_getTypeEncoding(fromMethod)
+	let toTypePointer = method_getTypeEncoding(toMethod)
+	guard fromTypePointer != nil && toTypePointer != nil, let fromType = String.fromCString(fromTypePointer), toType = String.fromCString(toTypePointer) else {
+		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since their type encodings could not be accessed.")
+		return
+	}
+	guard fromType == toType else {
+		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since their type encodings don't match: '\(fromType)' -> '\(toType)'.")
+		return
+	}
+
+	method_setImplementation(fromMethod, method_getImplementation(toMethod))
+}
+
+
+internal func swizzleMethodInType(type: NSObject.Type, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethod(type, fromSelector)
@@ -96,6 +126,17 @@ internal func swizzleInType(type: NSObject.Type, fromSelector: Selector, toSelec
 	let toMethod = class_getInstanceMethod(type, toSelector)
 	guard toMethod != nil else {
 		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the latter is not present in '\(type)'.")
+		return
+	}
+
+	let fromTypePointer = method_getTypeEncoding(fromMethod)
+	let toTypePointer = method_getTypeEncoding(toMethod)
+	guard fromTypePointer != nil && toTypePointer != nil, let fromType = String.fromCString(fromTypePointer), toType = String.fromCString(toTypePointer) else {
+		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since their type encodings could not be accessed.")
+		return
+	}
+	guard fromType == toType else {
+		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since their type encodings don't match: '\(fromType)' -> '\(toType)'.")
 		return
 	}
 

@@ -27,6 +27,7 @@ public /* non-final */ class TableViewController: ViewController {
 	public override func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
 		super.decorationInsetsDidChangeWithAnimation(animation)
 
+		log("\(innerDecorationInsets)")
 		if automaticallyAdjustsTableViewInsets {
 			Animation.run(animation) {
 				tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
