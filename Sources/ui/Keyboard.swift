@@ -3,10 +3,9 @@ import UIKit
 
 public final class Keyboard {
 
-	public private(set) static var animationCurve = UIViewAnimationCurve(rawValue: 7)
-	public private(set) static var animationDuration = NSTimeInterval(0.25)
+	public private(set) static var animation = Animation(duration: 0.25, timing: .Curve(UIViewAnimationCurve(rawValue: 7)!))
 	public private(set) static var frame = CGRect()
-	public private(set) static var visible = false
+	public private(set) static var isVisible = false
 
 	public static var eventBus = EventBus()
 
@@ -47,7 +46,7 @@ public final class Keyboard {
 		var frameInWindow = window.convertRect(frame, fromWindow: nil)
 		frameInWindow.left = 0
 
-		if visible {
+		if isVisible {
 			frameInWindow.bottom = windowSize.height
 		}
 		else {
@@ -81,15 +80,16 @@ public final class Keyboard {
 			return
 		}
 
-		if let rawAnimationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int, animationCurve = UIViewAnimationCurve(rawValue: rawAnimationCurve) {
-			self.animationCurve = animationCurve
+		if let
+			rawAnimationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int, animationCurve = UIViewAnimationCurve(rawValue: rawAnimationCurve),
+			animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval
+		{
+			self.animation = Animation(duration: animationDuration, timing: .Curve(animationCurve))
 		}
-		if let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval {
-			self.animationDuration = animationDuration
-		}
+
 		if let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue {
 			frame = frameValue.CGRectValue()
-			visible = UIScreen.mainScreen().bounds.intersects(frame)
+			isVisible = UIScreen.mainScreen().bounds.intersects(frame)
 		}
 	}
 

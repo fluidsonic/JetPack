@@ -21,7 +21,7 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public func decorationInsetsDidChangeWithAnimation(animation: View.Animation?) {
+	public func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
 		for childViewController in childViewControllers {
 			childViewController.invalidateDecorationInsetsWithAnimation(animation)
 		}
@@ -29,7 +29,7 @@ public /* non-final */ class ViewController: UIViewController {
 
 
 	@available(*, unavailable, message="use overload which accepts 'View.Animation?'")
-	public final override func decorationInsetsDidChangeWithAnimation(animationWrapper: View.Animation.Wrapper?) {
+	public final override func decorationInsetsDidChangeWithAnimation(animationWrapper: Animation.Wrapper?) {
 		decorationInsetsDidChangeWithAnimation(animationWrapper?.animation)
 	}
 

@@ -49,7 +49,7 @@ public /* non-final */ class GuideViewController: ViewController {
 			view.setNeedsLayout()
 
 			if animated {
-				View.Animation(duration: 0.6).run {
+				Animation(duration: 0.6).run {
 					view.layoutIfNeeded()
 				}
 			}

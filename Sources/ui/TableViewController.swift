@@ -24,11 +24,11 @@ public /* non-final */ class TableViewController: ViewController {
 	public var clearsSelectionOnViewWillAppear = true
 
 
-	public override func decorationInsetsDidChangeWithAnimation(animation: UIView.Animation?) {
+	public override func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
 		super.decorationInsetsDidChangeWithAnimation(animation)
 
 		if automaticallyAdjustsTableViewInsets {
-			UIView.Animation.run(animation) {
+			Animation.run(animation) {
 				tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
 				tableView.scrollIndicatorInsets = outerDecorationInsets
 			}

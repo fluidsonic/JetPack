@@ -12,6 +12,7 @@ public extension UIViewController {
 	}
 
 	private static var needsUpdateWindowDecorationInsets = false
+	private static var windowDecorationInsetsAnimation: Animation?
 
 
 
@@ -58,8 +59,8 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private var decorationInsetsAnimation: UIView.Animation.Wrapper? {
-		get { return objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation) as? UIView.Animation.Wrapper }
+	private var decorationInsetsAnimation: Animation.Wrapper? {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation) as? Animation.Wrapper }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
@@ -72,7 +73,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_decorationInsetsDidChangeWithAnimation:)
-	public func decorationInsetsDidChangeWithAnimation(animationWrapper: View.Animation.Wrapper?) {
+	public func decorationInsetsDidChangeWithAnimation(animationWrapper: Animation.Wrapper?) {
 		for childViewController in childViewControllers {
 			childViewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
 		}
@@ -99,13 +100,13 @@ public extension UIViewController {
 
 
 	@nonobjc
-	public func invalidateDecorationInsetsWithAnimation(animation: UIView.Animation?) {
+	public func invalidateDecorationInsetsWithAnimation(animation: Animation?) {
 		invalidateDecorationInsetsWithAnimationWrapper(animation?.wrap())
 	}
 
 
 	@nonobjc
-	private func invalidateDecorationInsetsWithAnimationWrapper(animationWrapper: UIView.Animation.Wrapper?) {
+	private func invalidateDecorationInsetsWithAnimationWrapper(animationWrapper: Animation.Wrapper?) {
 		if decorationInsetsAnimation == nil {
 			decorationInsetsAnimation = animationWrapper
 		}
@@ -157,7 +158,11 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private static func setNeedsUpdateWindowDecorationInsets() {
+	private static func setNeedsUpdateWindowDecorationInsetsWithAnimation(animation: Animation?) {
+		if windowDecorationInsetsAnimation == nil {
+			windowDecorationInsetsAnimation = animation
+		}
+
 		guard !needsUpdateWindowDecorationInsets else {
 			return
 		}
@@ -191,7 +196,7 @@ public extension UIViewController {
 	@nonobjc
 	private static func subscribeToKeyboardNotifications() {
 		let _ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
-			self.setNeedsUpdateWindowDecorationInsets()
+			self.setNeedsUpdateWindowDecorationInsetsWithAnimation(Keyboard.animation)
 		}
 	}
 
@@ -235,6 +240,9 @@ public extension UIViewController {
 
 	@nonobjc
 	internal static func updateWindowDecorationInsetsIfNecessary() {
+		let animation = windowDecorationInsetsAnimation?.wrap()
+		windowDecorationInsetsAnimation = nil
+
 		guard needsUpdateWindowDecorationInsets else {
 			return
 		}
@@ -247,6 +255,7 @@ public extension UIViewController {
 
 			var presentedViewController = window.rootViewController
 			while let viewController = presentedViewController {
+				viewController.decorationInsetsAnimation = animation
 				viewController.updateDecorationInsetsIgnoringLayoutCheck(false)
 
 				presentedViewController = viewController.presentedViewController
