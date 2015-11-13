@@ -109,7 +109,7 @@ public extension UIView {
 	}
 
 
-	// @nonobjc // cannot be used due to compiler limitation: subclasses cannot override non-objc functions defined in extensions
+	@objc(JetPack_sizeThatFitsSize:)
 	@warn_unused_result
 	public func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
 		return sizeThatFits(maximumSize)
