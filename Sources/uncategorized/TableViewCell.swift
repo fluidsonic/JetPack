@@ -3,7 +3,7 @@ import UIKit
 
 public /* non-final */ class TableViewCell: UITableViewCell {
 
-	public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	public required override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 	}
 
