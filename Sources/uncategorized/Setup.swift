@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 
-public extension NSBundle {
+public extension UIApplication {
 
 	private static var onceToken = dispatch_once_t()
 
