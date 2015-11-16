@@ -45,6 +45,19 @@ public /* non-final */ class ImageView: View {
 	}
 
 
+	public var clipsImageToPadding = false {
+		didSet {
+			guard clipsImageToPadding != oldValue else{
+				return
+			}
+
+			if image != nil {
+				setNeedsDisplay()
+			}
+		}
+	}
+
+
 	@available(*, unavailable, message="Use .gravity and .scaleMode instead.")
 	public final override var contentMode: UIViewContentMode {
 		get { return super.contentMode }
@@ -71,18 +84,29 @@ public /* non-final */ class ImageView: View {
 			updateDrawFrame()
 
 			if !drawFrame.isEmpty {
-				if image.renderingMode == .AlwaysTemplate {
-					let viewSize = bounds.size
-					let transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -viewSize.height)
+				let bounds = self.bounds
+				let padding = self.padding
+
+				let needsClipping = clipsImageToPadding && !padding.isEmpty
+				let needsTinting = image.renderingMode == .AlwaysTemplate
+				let needsSavingState = needsClipping || needsTinting
+
+				let context = UIGraphicsGetCurrentContext()
+				if needsSavingState {
+					CGContextSaveGState(context)
+				}
+				if needsClipping {
+					CGContextClipToRect(context, bounds.insetBy(padding))
+				}
+
+				if needsTinting {
+					let transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -bounds.height)
 					let drawFrame = self.drawFrame.transform(transform)
 
-					let context = UIGraphicsGetCurrentContext()
-					CGContextSaveGState(context)
 					CGContextConcatCTM(context, transform)
 					CGContextClipToMask(context, drawFrame, image.CGImage)
 					tintColor.setFill()
 					CGContextFillRect(context, drawFrame)
-					CGContextRestoreGState(context)
 
 					lastDrawnTintColor = tintColor
 				}
@@ -90,6 +114,10 @@ public /* non-final */ class ImageView: View {
 					image.drawInRect(drawFrame)
 
 					lastDrawnTintColor = nil
+				}
+
+				if needsSavingState {
+					CGContextRestoreGState(context)
 				}
 			}
 		}
