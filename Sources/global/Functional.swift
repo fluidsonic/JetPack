@@ -12,7 +12,7 @@ internal func arc4random<Element: IntegerLiteralConvertible>() -> Element {
 @warn_unused_result
 public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Result) -> Parameters -> Result {
 	func cast<From,To>(instance: From) -> To {
-		return instance as! To
+		return (instance as Any) as! To
 	}
 
 	return cast(closure)
