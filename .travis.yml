@@ -32,10 +32,10 @@ script:
   - set -o pipefail
   - cd Xcode && pod update --no-repo-update && cd ..
   - if [ $SDK == $IOS_DEVICE_SDK ]; then
-      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration "$CONFIGURATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO && # | xcpretty -c &&
+      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration "$CONFIGURATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO &&
       pod lib lint --allow-warnings --quick --verbose;
     else
-      xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration "$CONFIGURATION"; # | xcpretty -c;
+      xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration "$CONFIGURATION";
     fi
 
 after_success:
