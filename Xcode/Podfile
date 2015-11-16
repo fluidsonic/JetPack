@@ -8,5 +8,9 @@ pod 'JetPack', :path => '..'
 post_install do |installer|
 	installer.pods_project.targets.each do |target|
 		target.build_configuration_list.set_setting('ENABLE_TESTABILITY', 'YES')
+
+		if ENV['SWIFT_OPTIMIZATION_LEVEL']
+			target.build_configuration_list.set_setting('SWIFT_OPTIMIZATION_LEVEL', ENV['SWIFT_OPTIMIZATION_LEVEL'])
+		end
 	end
 end
