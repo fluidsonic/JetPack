@@ -22,4 +22,30 @@ public extension UIScrollView {
 
 		return CGPoint(left: -contentInset.left, top: -contentInset.top)
 	}
+
+
+	@nonobjc
+	public func setContentInset(contentInset: UIEdgeInsets, maintainingVisualContentOffset maintainsVisualContentOffset: Bool) {
+		let oldContentInsets = self.contentInset
+		let newContentInsets = contentInset
+		guard newContentInsets != oldContentInsets else {
+			return
+		}
+		guard maintainsVisualContentOffset else {
+			self.contentInset = newContentInsets
+			return
+		}
+
+		let oldContentOffset = contentOffset
+		self.contentInset = newContentInsets
+
+		let newContentOffset = oldContentOffset
+			.offsetBy(dy: oldContentInsets.top - newContentInsets.top)
+			.clamp(min: minimumContentOffset, max: maximumContentOffset)
+		guard newContentOffset != oldContentOffset else {
+			return
+		}
+
+		self.contentOffset = newContentOffset
+	}
 }
