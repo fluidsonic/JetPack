@@ -84,7 +84,7 @@ public func pointerOf(object: AnyObject) -> COpaquePointer {
 }
 
 
-internal func redirectMethodInType(type: NSObject.Type, fromSelector: Selector, toSelector: Selector) {
+internal func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethod(type, fromSelector)
@@ -114,7 +114,7 @@ internal func redirectMethodInType(type: NSObject.Type, fromSelector: Selector, 
 }
 
 
-internal func swizzleMethodInType(type: NSObject.Type, fromSelector: Selector, toSelector: Selector) {
+public func swizzleMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethod(type, fromSelector)
