@@ -47,6 +47,7 @@ public /* non-final */ class TableViewController: ViewController {
 
 	public private(set) lazy var tableView: UITableView = {
 		let child = UITableView(frame: .zero, style: self.style)
+		child.estimatedRowHeight = 44
 		child.dataSource = self
 		child.delegate = self
 
