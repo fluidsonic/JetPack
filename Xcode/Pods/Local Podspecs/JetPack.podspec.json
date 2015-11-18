@@ -22,8 +22,11 @@
   "frameworks": [
     "CoreGraphics",
     "CoreImage",
+    "CoreLocation",
     "Foundation",
+    "MapKit",
     "Photos",
-    "UIKit"
+    "UIKit",
+    "WebKit"
   ]
 }
