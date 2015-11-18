@@ -15,11 +15,11 @@ class SequenceType_Tests: XCTestCase {
 	}
 
 
-	func testCount() {
-		XCTAssertEqual([1, 1, 2].count { $0 == 1 }, 2)
+	func testCountMatching() {
+		XCTAssertEqual([1, 1, 2].countMatching { $0 == 1 }, 2)
 
 		do {
-			let _ = try [true].count { _ in throw error }
+			let _ = try [true].countMatching { _ in throw error }
 			XCTFail()
 		}
 		catch let error as NSError {
@@ -28,12 +28,12 @@ class SequenceType_Tests: XCTestCase {
 	}
 
 
-	func testFirst() {
-		XCTAssertEqual([1, 1, 2].first { $0 == 1 }, 1)
-		XCTAssertEqual([1, 1, 2].first { $0 == 3 }, nil)
+	func testFirstMatching() {
+		XCTAssertEqual([1, 1, 2].firstMatching { $0 == 1 }, 1)
+		XCTAssertEqual([1, 1, 2].firstMatching { $0 == 3 }, nil)
 
 		do {
-			let _ = try [true].first { _ in throw error }
+			let _ = try [true].firstMatching { _ in throw error }
 			XCTFail()
 		}
 		catch let error as NSError {
