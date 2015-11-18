@@ -169,7 +169,7 @@ public extension UIViewController {
 
 		needsUpdateWindowDecorationInsets = true
 
-		onMainThread { // delay one cycle
+		onMainQueue { // delay one cycle
 			self.updateWindowDecorationInsetsIfNecessary()
 		}
 	}
