@@ -5,18 +5,20 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 	public typealias ScrollCompletion = (cancelled: Bool) -> Void
 
+	private lazy var childContainer = View()
+	private lazy var delegateProxy: DelegateProxy = DelegateProxy(scrollViewController: self)
+
 	private var appearState = AppearState.DidDisappear
-	private lazy var collectionView: UICollectionView = CollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
-	private lazy var collectionViewLayout = UICollectionViewFlowLayout()
+	private var ignoresScrollViewDidScroll = 0
 	private var isAnimatingScrollView = false
 	private var isSettingPrimaryViewControllerInternally = false
+	private var reusableChildView: ChildView?
 	private var scrollCompletion: ScrollCompletion?
+	private var viewControllersNotYetMovedToParentViewController = [UIViewController]()
 
 
 	public override init() {
 		super.init()
-
-		automaticallyAdjustsScrollViewInsets = false
 	}
 
 
@@ -27,11 +29,45 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
+	private func childViewForIndex(index: Int) -> ChildView? {
+		guard isViewLoaded() else {
+			return nil
+		}
+
+		for subview in childContainer.subviews {
+			guard let childView = subview as? ChildView where childView.index == index else {
+				continue
+			}
+
+			return childView
+		}
+
+		return nil
+	}
+
+
+	private func childViewForViewController(viewController: UIViewController) -> ChildView? {
+		guard isViewLoaded() else {
+			return nil
+		}
+
+		for subview in childContainer.subviews {
+			guard let childView = subview as? ChildView where childView.viewController === viewController else {
+				continue
+			}
+
+			return childView
+		}
+
+		return nil
+	}
+
+
 	public var currentIndex: CGFloat {
-		let collectionViewWidth = collectionView.bounds.width
+		let scrollViewWidth = scrollView.bounds.width
 		
-		if isViewLoaded() && collectionViewWidth > 0 {
-			return collectionView.contentOffset.left / collectionView.bounds.width
+		if isViewLoaded() && scrollViewWidth > 0 {
+			return scrollView.contentOffset.left / scrollViewWidth
 		}
 		else if let primaryViewController = primaryViewController, index = viewControllers.indexOfIdentical(primaryViewController) {
 			return CGFloat(index)
@@ -39,6 +75,39 @@ public /* non-final */ class ScrollViewController: ViewController {
 		else {
 			return 0
 		}
+	}
+
+
+	public func didScroll() {
+		// override in subclasses
+	}
+
+
+	private var isInTransition: Bool {
+		return appearState == .WillAppear || appearState == .WillDisappear || isAnimatingScrollView || scrollView.tracking || scrollView.decelerating
+	}
+
+
+	private func layoutChildContainer() {
+		let viewSize = view.bounds.size
+		let contentSize = CGSize(width: CGFloat(viewControllers.count) * viewSize.width, height: viewSize.height)
+
+		childContainer.frame = CGRect(size: contentSize)
+		scrollView.contentSize = contentSize
+	}
+
+
+	private func layoutChildView(childView: ChildView) {
+		guard childView.index >= 0 else {
+			return
+		}
+
+		let viewSize = view.bounds.size
+
+		var childViewFrame = CGRect()
+		childViewFrame.left = CGFloat(childView.index) * viewSize.width
+		childViewFrame.size = viewSize
+		childView.frame = childViewFrame
 	}
 
 
@@ -72,29 +141,26 @@ public /* non-final */ class ScrollViewController: ViewController {
 			let previousScrollCompletion = self.scrollCompletion
 			scrollCompletion = completion
 
-			collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0), atScrollPosition: .CenteredHorizontally, animated: animated)
+			scrollView.setContentOffset(CGPoint(left: CGFloat(index) * scrollView.bounds.width, top: 0), animated: true)
 
 			previousScrollCompletion?(cancelled: true)
 		}
 	}
 
 
-	private func setupCollectionView() {
-		let layout = collectionViewLayout
-		layout.minimumInteritemSpacing = 0
-		layout.minimumLineSpacing = 0
-		layout.scrollDirection = .Horizontal
-
-		let child = collectionView
+	public private(set) final lazy var scrollView: UIScrollView = {
+		let child = ScrollView()
 		child.bounces = false
+		child.canCancelContentTouches = true
+		child.delaysContentTouches = true
+		child.delegate = self.delegateProxy
 		child.pagingEnabled = true
 		child.scrollsToTop = false
 		child.showsHorizontalScrollIndicator = false
 		child.showsVerticalScrollIndicator = false
-		child.registerClass(Cell.self, forCellWithReuseIdentifier: "Cell")
 
-		view.addSubview(child)
-	}
+		return child
+	}()
 
 
 	public override func shouldAutomaticallyForwardAppearanceMethods() -> Bool {
@@ -102,44 +168,100 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
-	private func updateAppearStateForAllCellsAnimated(animated: Bool) {
-		let visibleCells = collectionView.visibleCells()
-		for cell in visibleCells {
-			guard let cell = cell as? Cell else {
+	private func updateAppearStateForAllChildrenAnimated(animated: Bool) {
+		for subview in childContainer.subviews {
+			guard let childView = subview as? ChildView else {
 				continue
 			}
 
-			updateAppearStateForCell(cell, animated: animated)
-		}
-
-		if let firstResponderCell = collectionView.firstResponderCell as? Cell where !visibleCells.containsIdentical(firstResponderCell) {
-			firstResponderCell.endEditing(true)
+			updateChildView(childView, withPreferredAppearState: appearState, animated: animated)
 		}
 	}
 
 
-	private func updateAppearStateForCell(cell: Cell, animated: Bool) {
-		var cellAppearState = appearState
-		if appearState == .DidAppear && (isAnimatingScrollView || collectionView.tracking || collectionView.decelerating) {
-			cellAppearState = .WillAppear
-		}
-
-		switch cellAppearState {
-		case .DidDisappear, .DidAppear:
-			break
-
-		case .WillAppear:
-			if cell.appearState == .DidAppear {
-				cellAppearState = .DidAppear
-			}
-
-		case .WillDisappear:
-			if cell.appearState == .DidDisappear {
-				cellAppearState = .DidDisappear
+	private func updateChildView(childView: ChildView, withPreferredAppearState preferredAppearState: AppearState, animated: Bool) {
+		var targetAppearState = min(preferredAppearState, appearState)
+		if isInTransition && targetAppearState != .DidDisappear {
+			switch childView.appearState {
+			case .DidDisappear:  targetAppearState = .WillAppear
+			case .WillAppear:    return
+			case .DidAppear:     targetAppearState = .WillDisappear
+			case .WillDisappear: return
 			}
 		}
 
-		cell.updateAppearState(cellAppearState, animated: animated)
+		childView.updateAppearState(targetAppearState, animated: animated)
+	}
+
+
+	private func updateChildrenAfterLayoutChanged(layoutChanged: Bool) {
+		let viewSize = view.bounds.size
+		let viewControllers = self.viewControllers
+		var contentOffset = scrollView.contentOffset
+
+		if layoutChanged {
+			let maximumContentOffset = scrollView.maximumContentOffset
+			if contentOffset.left > maximumContentOffset.left {
+				contentOffset.left = maximumContentOffset.left
+
+				++ignoresScrollViewDidScroll
+				scrollView.contentOffset = contentOffset
+				--ignoresScrollViewDidScroll
+			}
+		}
+
+		let visibleIndexes: Range<Int>
+
+		if viewControllers.isEmpty || viewSize.isEmpty {
+			visibleIndexes = 0 ..< 0
+		}
+		else {
+			let floatingIndex = contentOffset.left / viewSize.width
+			visibleIndexes = Int(floor(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1) ... Int(ceil(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1)
+		}
+
+		for subview in childContainer.subviews {
+			guard let childView = subview as? ChildView where !visibleIndexes.contains(childView.index) else {
+				continue
+			}
+
+			updateChildView(childView, withPreferredAppearState: .WillDisappear, animated: false)
+			childView.removeFromSuperview()
+			updateChildView(childView, withPreferredAppearState: .DidDisappear, animated: false)
+
+			childView.index = -1
+			childView.viewController = nil
+
+			reusableChildView = childView
+		}
+
+		for index in visibleIndexes {
+			if let childView = childViewForIndex(index) {
+				if layoutChanged {
+					layoutChildView(childView)
+				}
+			}
+			else {
+				let viewController = viewControllers[index]
+
+				let childView = reusableChildView ?? ChildView()
+				childView.index = index
+				childView.viewController = viewController
+
+				reusableChildView = nil
+
+				layoutChildView(childView)
+
+				updateChildView(childView, withPreferredAppearState: .WillAppear, animated: false)
+				childContainer.addSubview(childView)
+				updateChildView(childView, withPreferredAppearState: .DidAppear, animated: false)
+
+				if let index = viewControllersNotYetMovedToParentViewController.indexOfIdentical(viewController) {
+					viewControllersNotYetMovedToParentViewController.removeAtIndex(index)
+					viewController.didMoveToParentViewController(self)
+				}
+			}
+		}
 	}
 
 
@@ -152,19 +274,19 @@ public /* non-final */ class ScrollViewController: ViewController {
 		var mostVisibleWidth = CGFloat.min
 
 		let bounds = view.bounds
-		for cell in collectionView.visibleCells() {
-			guard let cell = cell as? Cell else {
+		for subview in childContainer.subviews {
+			guard let childView = subview as? ChildView else {
 				continue
 			}
 
-			let cellFrameInView = cell.convertRect(cell.bounds, toView: view)
-			let intersection = cellFrameInView.intersect(bounds)
-			guard intersection != .null else {
+			let childFrameInView = childView.convertRect(childView.bounds, toView: view)
+			let intersection = childFrameInView.intersect(bounds)
+			guard !intersection.isNull else {
 				continue
 			}
 
 			if intersection.width > mostVisibleWidth {
-				mostVisibleViewController = cell.viewController
+				mostVisibleViewController = childView.viewController
 				mostVisibleWidth = intersection.width
 			}
 		}
@@ -185,18 +307,73 @@ public /* non-final */ class ScrollViewController: ViewController {
 				return
 			}
 
-			for viewController in oldValue where viewController.parentViewController === self && !viewControllers.containsIdentical(viewController) {
-				viewController.willMoveToParentViewController(nil)
-				viewController.removeFromParentViewController()
+			++ignoresScrollViewDidScroll
+			defer { --ignoresScrollViewDidScroll }
+
+			struct KnownLocation {
+				let childView: ChildView
+				let intersectionWidth: CGFloat
+				let offset: CGFloat
 			}
 
-			for viewController in viewControllers where viewController.parentViewController !== self {
-				addChildViewController(viewController)
-				viewController.didMoveToParentViewController(self)
+			var bestKnownLocation: KnownLocation?
+
+			if isViewLoaded() && viewControllers.count > 1 {
+				let viewBounds = view.bounds
+				let contentOffset = scrollView.contentOffset
+
+				for subview in childContainer.subviews {
+					guard let childView = subview as? ChildView, viewController = childView.viewController where viewControllers.contains(viewController) else {
+						continue
+					}
+
+					let childFrameInView = childView.convertRect(childView.bounds, toView: view)
+					let intersection = childFrameInView.intersect(viewBounds)
+					guard !intersection.isNull else {
+						continue
+					}
+
+					guard intersection.width > bestKnownLocation?.intersectionWidth ?? 0 else {
+						continue
+					}
+
+					let expectedContentOffsetLeft = CGFloat(childView.index) * viewBounds.width
+					let offset = (expectedContentOffsetLeft - contentOffset.left)
+
+					bestKnownLocation = KnownLocation(childView: childView, intersectionWidth: intersection.width, offset: offset)
+				}
+			}
+
+			var removedViewControllers = [UIViewController]()
+			for viewController in oldValue where viewController.parentViewController === self && !viewControllers.containsIdentical(viewController) {
+				viewController.willMoveToParentViewController(nil)
+
+				childViewForViewController(viewController)?.index = -1
+				removedViewControllers.append(viewController)
+				viewControllersNotYetMovedToParentViewController.removeFirstIdentical(viewController)
+			}
+
+			for index in 0 ..< viewControllers.count {
+				let viewController = viewControllers[index]
+
+				if viewController.parentViewController !== self {
+					addChildViewController(viewController)
+					viewControllersNotYetMovedToParentViewController.append(viewController)
+				}
+				else {
+					childViewForViewController(viewController)?.index = index
+				}
 			}
 
 			if isViewLoaded() {
-				collectionView.reloadData()
+				layoutChildContainer()
+
+				if let bestKnownLocation = bestKnownLocation {
+					scrollView.contentOffset = CGPoint(left: (CGFloat(bestKnownLocation.childView.index) * view.bounds.width) - bestKnownLocation.offset, top: 0)
+						.clamp(min: scrollView.minimumContentOffset, max: scrollView.maximumContentOffset)
+				}
+
+				updateChildrenAfterLayoutChanged(true)
 				updatePrimaryViewController()
 			}
 			else {
@@ -207,6 +384,10 @@ public /* non-final */ class ScrollViewController: ViewController {
 					primaryViewController = viewControllers.first
 				}
 			}
+
+			for viewController in removedViewControllers {
+				viewController.removeFromParentViewController()
+			}
 		}
 	}
 
@@ -214,26 +395,22 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
+		++ignoresScrollViewDidScroll
+		defer { --ignoresScrollViewDidScroll }
+
 		let viewSize = view.bounds.size
-		collectionView.frame = CGRect(size: viewSize)
-		collectionViewLayout.itemSize = viewSize
+		scrollView.frame = CGRect(size: viewSize)
 
-		if collectionView.dataSource == nil {
-			if let primaryViewController = primaryViewController, index = viewControllers.indexOfIdentical(primaryViewController) {
-				collectionView.contentOffset = CGPoint(left: viewSize.width * CGFloat(index), top: -collectionView.contentInset.top)
-			}
-
-			collectionView.dataSource = self
-			collectionView.delegate = self
-			collectionView.reloadData()
-		}
+		layoutChildContainer()
+		updateChildrenAfterLayoutChanged(true)
 	}
 
 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
-		setupCollectionView()
+		scrollView.addSubview(childContainer)
+		view.addSubview(scrollView)
 	}
 
 
@@ -241,7 +418,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 		super.viewDidAppear(animated)
 
 		appearState = .DidAppear
-		updateAppearStateForAllCellsAnimated(animated)
+		updateAppearStateForAllChildrenAnimated(animated)
 	}
 
 
@@ -249,7 +426,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 		super.viewDidDisappear(animated)
 
 		appearState = .DidDisappear
-		updateAppearStateForAllCellsAnimated(animated)
+		updateAppearStateForAllChildrenAnimated(animated)
 	}
 
 
@@ -257,7 +434,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 		super.viewWillAppear(animated)
 
 		appearState = .WillAppear
-		updateAppearStateForAllCellsAnimated(animated)
+		updateAppearStateForAllChildrenAnimated(animated)
 	}
 
 
@@ -265,145 +442,110 @@ public /* non-final */ class ScrollViewController: ViewController {
 		super.viewWillDisappear(animated)
 
 		appearState = .WillDisappear
-		updateAppearStateForAllCellsAnimated(animated)
+		updateAppearStateForAllChildrenAnimated(animated)
 	}
 }
 
 
 
-extension ScrollViewController: UICollectionViewDataSource {
+private final class DelegateProxy: NSObject {
 
-	public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-		precondition(collectionView === self.collectionView)
-
-		return collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! Cell
-	}
+	private unowned let scrollViewController: ScrollViewController
 
 
-	public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		precondition(collectionView === self.collectionView)
-
-		return viewControllers.count
-	}
-
-
-	public func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-		precondition(collectionView === self.collectionView)
-
-		return false
+	private init(scrollViewController: ScrollViewController) {
+		self.scrollViewController = scrollViewController
 	}
 }
 
 
-extension ScrollViewController: UICollectionViewDelegate {
+extension DelegateProxy: UIScrollViewDelegate {
 
-	public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-		guard collectionView === self.collectionView else {
-			return
-		}
-		guard let cell = cell as? Cell else {
-			return
-		}
+	@objc
+	private func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+		let scrollViewController = self.scrollViewController
 
-		cell.updateAppearState(.DidDisappear, animated: false)
-		cell.viewController = nil
+		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
+		scrollViewController.updatePrimaryViewController()
 	}
 
 
-	public func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-		guard collectionView === self.collectionView else {
-			return
-		}
-		guard let cell = cell as? Cell else {
-			return
-		}
+	@objc
+	private func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+		let scrollViewController = self.scrollViewController
 
-		cell.viewController = viewControllers[indexPath.item]
-		updateAppearStateForCell(cell, animated: true)
-	}
+		scrollViewController.isAnimatingScrollView = false
 
+		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
+		scrollViewController.updatePrimaryViewController()
 
-	public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-		guard scrollView === collectionView else {
-			return
-		}
-
-		updateAppearStateForAllCellsAnimated(true)
-		updatePrimaryViewController()
-	}
-
-
-	public func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
-		guard scrollView === collectionView else {
-			return
-		}
-
-		isAnimatingScrollView = false
-
-		updateAppearStateForAllCellsAnimated(true)
-		updatePrimaryViewController()
-
-		let scrollCompletion = self.scrollCompletion
-		self.scrollCompletion = nil
+		let scrollCompletion = scrollViewController.scrollCompletion
+		scrollViewController.scrollCompletion = nil
 
 		// TODO not called when scrolling was not necessary
 		scrollCompletion?(cancelled: false)
 	}
 
 
-	public func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-		guard scrollView === collectionView else {
-			return
-		}
+	@objc
+	private func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+		let scrollViewController = self.scrollViewController
 
-		isAnimatingScrollView = false
+		scrollViewController.isAnimatingScrollView = false
 
 		if !decelerate {
-			updateAppearStateForAllCellsAnimated(true)
-			updatePrimaryViewController()
+			onMainQueue { // loop one cycle because UIScrollView did not yet update .tracking
+				scrollViewController.updateAppearStateForAllChildrenAnimated(true)
+				scrollViewController.updatePrimaryViewController()
+			}
 		}
 	}
 	
 
-	public func scrollViewDidScroll(scrollView: UIScrollView) {
-		guard scrollView === collectionView else {
+	@objc
+	private func scrollViewDidScroll(scrollView: UIScrollView) {
+		let scrollViewController = self.scrollViewController
+		guard scrollViewController.ignoresScrollViewDidScroll == 0 else {
 			return
 		}
 
+		scrollViewController.updateChildrenAfterLayoutChanged(false)
+
 		if scrollView.tracking {
-			updatePrimaryViewController()
+			scrollViewController.updatePrimaryViewController()
 		}
+
+		scrollViewController.didScroll()
 	}
 
 
-	public func scrollViewWillBeginDragging(scrollView: UIScrollView) {
-		guard scrollView === collectionView else {
-			return
-		}
+	@objc
+	private func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+		let scrollViewController = self.scrollViewController
 
-		isAnimatingScrollView = false
+		scrollViewController.isAnimatingScrollView = false
 
-		let scrollCompletion = self.scrollCompletion
-		self.scrollCompletion = nil
+		let scrollCompletion = scrollViewController.scrollCompletion
+		scrollViewController.scrollCompletion = nil
+
+		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
 
 		scrollCompletion?(cancelled: true)
 	}
 
 
-	public func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-		guard scrollView === collectionView else {
-			return
-		}
-
-		isAnimatingScrollView = false
+	@objc
+	private func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+		scrollViewController.isAnimatingScrollView = false
 	}
 }
 
 
 
-private final class Cell: UICollectionViewCell {
+private final class ChildView: View {
 
 	private var appearState = AppearState.DidDisappear
+	private var index = -1
 
 
 	private override func layoutSubviews() {
@@ -413,7 +555,7 @@ private final class Cell: UICollectionViewCell {
 			return
 		}
 
-		let viewSize = contentView.bounds.size
+		let viewSize = bounds.size
 		viewControllerView.frame = CGRect(size: viewSize)
 	}
 
@@ -453,7 +595,7 @@ private final class Cell: UICollectionViewCell {
 			case .WillDisappear, .DidDisappear:
 				viewController.beginAppearanceTransition(true, animated: animated)
 
-				contentView.addSubview(viewController.view)
+				addSubview(viewController.view)
 				setNeedsLayout()
 				layoutIfNeeded()
 			}
@@ -475,7 +617,7 @@ private final class Cell: UICollectionViewCell {
 			case .DidDisappear, .WillDisappear:
 				viewController.beginAppearanceTransition(true, animated: animated)
 
-				contentView.addSubview(viewController.view)
+				addSubview(viewController.view)
 				setNeedsLayout()
 				layoutIfNeeded()
 				
@@ -497,7 +639,7 @@ private final class Cell: UICollectionViewCell {
 
 
 
-private class CollectionView: UICollectionView {
+private class ScrollView: UIScrollView {
 
 	private override func setContentOffset(contentOffset: CGPoint, animated: Bool) {
 		let willBeginAnimation = animated && contentOffset != self.contentOffset
@@ -512,9 +654,25 @@ private class CollectionView: UICollectionView {
 
 
 
-private enum AppearState {
-	case DidDisappear
-	case WillAppear
-	case DidAppear
-	case WillDisappear
+private enum AppearState: Int {
+	case DidDisappear = 0
+	case WillDisappear = 1
+	case WillAppear = 2
+	case DidAppear = 3
+
+
+	private var isTransition: Bool {
+		switch self {
+		case .WillAppear, .WillDisappear: return true
+		case .DidAppear, .DidDisappear:   return false
+		}
+	}
+}
+
+
+extension AppearState: Comparable {}
+
+
+private func < (a: AppearState, b: AppearState) -> Bool {
+	return a.rawValue < b.rawValue
 }
