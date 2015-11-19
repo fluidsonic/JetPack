@@ -4,7 +4,7 @@ import UIKit
 public extension UITableViewCell {
 
 	@objc(JetPack_contentFrameForBounds:)
-	private final func private_contentFrameForBounds(bounds: CGRect) -> CGRect {
+	private dynamic func private_contentFrameForBounds(bounds: CGRect) -> CGRect {
 		// default implementation in case the private method was removed
 		return bounds
 	}
