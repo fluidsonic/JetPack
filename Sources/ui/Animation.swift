@@ -25,6 +25,11 @@ public struct Animation {
 	}
 
 
+	public static func ignore(@noescape changes: Closure) {
+		UIView.performWithoutAnimation(makeEscapable(changes))
+	}
+
+
 	public static func run(animation: Animation?, @noescape changes: Void -> Void) {
 		if let animation = animation {
 			animation.run(changes)
