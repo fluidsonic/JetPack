@@ -78,4 +78,16 @@ public extension UIImage {
 
 		return newImage
 	}
+
+
+	/**
+		Decompresses the underlying and potentially compressed image data (like PNG or JPEG).
+
+		You can use this to force decompression on a background thread prior to using this image on the main thread
+		so subsequent operations like rendering are faster.
+	*/
+	@nonobjc
+	public func inflate() {
+		CGDataProviderCopyData(CGImageGetDataProvider(CGImage))
+	}
 }
