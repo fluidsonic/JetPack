@@ -8,7 +8,7 @@ import UIKit
 
 public extension ImageView {
 
-	public struct PHAssetSource: Source {
+	public struct PHAssetSource: Source, Equatable {
 
 		public var asset: PHAsset
 		public var contentMode: PHImageContentMode
@@ -22,7 +22,7 @@ public extension ImageView {
 		}
 
 
-		public func retrieveImageForImageView(imageView: ImageView, completion: UIImage? -> Void) -> (Void -> Void) {
+		public func retrieveImageForImageView(imageView: ImageView, completion: UIImage? -> Void) -> CancelClosure {
 			let manager = PHImageManager.defaultManager()
 			let options = PHImageRequestOptions()
 			options.deliveryMode = .Opportunistic
@@ -49,4 +49,9 @@ public extension ImageView {
 			}
 		}
 	}
+}
+
+
+public func == (a: ImageView.PHAssetSource, b: ImageView.PHAssetSource) -> Bool {
+	return a.asset == b.asset && a.contentMode == b.contentMode && a.targetSize == b.targetSize
 }
