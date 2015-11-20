@@ -45,6 +45,24 @@ public struct Animation {
 	}
 
 
+	public static func runWithCompletion(animation: Animation?, @noescape changes: (complete: CompletionRegistration) -> Void) {
+		if let animation = animation {
+			animation.runWithCompletion(changes)
+		}
+		else {
+			var completions = [Completion]()
+
+			changes { completion in
+				completions.append(completion)
+			}
+
+			for completion in completions {
+				completion(finished: true)
+			}
+		}
+	}
+
+
 	public func runWithCompletion(@noescape changes: (complete: CompletionRegistration) -> Void) {
 		var completions = [Completion]()
 
