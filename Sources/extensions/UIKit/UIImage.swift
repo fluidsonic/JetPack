@@ -91,3 +91,22 @@ public extension UIImage {
 		CGDataProviderCopyData(CGImageGetDataProvider(CGImage))
 	}
 }
+
+
+
+public extension UIImageOrientation {
+
+	public init?(CGImageOrientation: Int) {
+		switch CGImageOrientation {
+		case 1: self = .Up
+		case 2: self = .UpMirrored
+		case 3: self = .Down
+		case 4: self = .DownMirrored
+		case 5: self = .LeftMirrored
+		case 6: self = .Right
+		case 7: self = .RightMirrored
+		case 8: self = .Left
+		default: return nil
+		}
+	}
+}
