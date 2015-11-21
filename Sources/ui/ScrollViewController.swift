@@ -596,8 +596,9 @@ private final class ChildView: View {
 				viewController.beginAppearanceTransition(true, animated: animated)
 
 				addSubview(viewController.view)
-				setNeedsLayout()
-				layoutIfNeeded()
+				if window != nil {
+					layoutIfNeeded()
+				}
 			}
 
 		case .WillDisappear:
@@ -610,6 +611,8 @@ private final class ChildView: View {
 			}
 
 		case .DidAppear:
+			assert(window != nil)
+
 			switch oldAppearState {
 			case .DidAppear:
 				break
@@ -618,12 +621,11 @@ private final class ChildView: View {
 				viewController.beginAppearanceTransition(true, animated: animated)
 
 				addSubview(viewController.view)
-				setNeedsLayout()
-				layoutIfNeeded()
-				
+
 				fallthrough
 
 			case .WillAppear:
+				layoutIfNeeded()
 				viewController.endAppearanceTransition()
 			}
 		}

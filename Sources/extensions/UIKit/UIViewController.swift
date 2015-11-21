@@ -269,6 +269,7 @@ public extension UIViewController {
 	@nonobjc
 	internal func updateDecorationInsetsIgnoringLayoutCheck(ignoresLayoutCheck: Bool) {
 		guard let window = window where (ignoresLayoutCheck || !view.needsLayout) && (parentViewController == nil || !decorationInsetsAreValid) else {
+			// TODO run the check again once the view moves to a window
 			return
 		}
 
