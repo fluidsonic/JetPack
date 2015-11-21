@@ -73,6 +73,12 @@ public extension UIView {
 
 
 	@nonobjc
+	public func pointsForPixels(pixels: CGFloat) -> CGFloat {
+		return pixels / gridScaleFactor
+	}
+
+
+	@nonobjc
 	public func removeAllSubviews() {
 		for subview in subviews.reverse() {
 			subview.removeFromSuperview()

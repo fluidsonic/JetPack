@@ -9,6 +9,36 @@ internal func arc4random<Element: IntegerLiteralConvertible>() -> Element {
 }
 
 
+internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toType: AnyClass) {
+	precondition(fromType != toType)
+
+	let fromMethod = class_getInstanceMethod(fromType, selector)
+	guard fromMethod != nil else {
+		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's not present in the former.")
+		return
+	}
+
+	let toMethod = class_getInstanceMethod(toType, selector)
+	guard toMethod == nil else {
+		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's already present in the latter.")
+		return
+	}
+
+	let typePointer = method_getTypeEncoding(fromMethod)
+	let implementation = method_getImplementation(fromMethod)
+
+	guard typePointer != nil && implementation != nil else {
+		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's implementation details could not be access.")
+		return
+	}
+
+	guard class_addMethod(toType, selector, implementation, typePointer) else {
+		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since `class_addMethod` vetoed.")
+		return
+	}
+}
+
+
 @warn_unused_result
 public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Result) -> Parameters -> Result {
 	func cast<From,To>(instance: From) -> To {
