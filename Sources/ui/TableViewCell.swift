@@ -30,14 +30,36 @@ public /* non-final */ class TableViewCell: UITableViewCell {
 	}
 
 
+	public override func invalidateIntrinsicContentSize() {
+		super.invalidateIntrinsicContentSize()
+
+		if let superview = superview as? View {
+			superview.subviewDidInvalidateIntrinsicContentSize(self)
+		}
+	}
+
+
+	public var minimumHeight = CGFloat(44) {
+		didSet {
+			guard minimumHeight != oldValue else {
+				return
+			}
+
+			invalidateIntrinsicContentSize()
+		}
+	}
+
+
 	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentSizeThatFitsSize(_:) instead.
 	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
-		return super.improvedSizeThatFitsSize(maximumSize)
+		return self.sizeThatFitsSize(maximumSize)
 	}
 
 
 	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentSizeThatFitsSize(_:) instead.
 	public final override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
-		return super.improvedSizeThatFitsSize(maximumSize)
+		var sizeThatFits = super.improvedSizeThatFitsSize(maximumSize)
+		sizeThatFits.height = max(sizeThatFits.height, minimumHeight)
+		return sizeThatFits
 	}
 }
