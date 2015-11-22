@@ -15,7 +15,8 @@ public extension NSFileManager {
 	private func asyncWithHandler <ValueType> (handler: (Result<ValueType> -> Void)?, @autoclosure(escaping) errorMessage: Void -> String, action: Void throws -> ValueType) {
 		onBackgroundQueueOfPriority(.Low) {
 			do {
-				handler?(.Success(try action()))
+				let value = try action()
+				handler?(.Success(value))
 			}
 			catch let error {
 				return self.reportError(error, withMessage: errorMessage(), toHandler: handler)
