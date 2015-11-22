@@ -4,26 +4,30 @@ import UIKit
 public extension UIBezierPath {
 
 	@nonobjc
-	public convenience init(animatableRoundedRect: CGRect, cornerRadius: CGFloat) {
-		self.init()
-
-		moveToPoint(CGPoint(left: animatableRoundedRect.left + cornerRadius, top: animatableRoundedRect.top))
-		addLineToPoint(CGPoint(left: animatableRoundedRect.right - cornerRadius, top: animatableRoundedRect.top))
-		addRoundedCorner(direction: .RightDown, radius: cornerRadius)
-		addLineToPoint(CGPoint(left: animatableRoundedRect.right, top: animatableRoundedRect.bottom - cornerRadius))
-		addRoundedCorner(direction: .DownLeft, radius: cornerRadius)
-		addLineToPoint(CGPoint(left: animatableRoundedRect.left + cornerRadius, top: animatableRoundedRect.bottom))
-		addRoundedCorner(direction: .LeftUp, radius: cornerRadius)
-		addLineToPoint(CGPoint(left: animatableRoundedRect.left, top: animatableRoundedRect.top + cornerRadius))
-		addRoundedCorner(direction: .UpRight, radius: cornerRadius)
+	public convenience init(animatableRoundedRect rect: CGRect, cornerRadius: CGFloat) {
+		self.init(animatableRoundedRect: rect, topLeftCornerRadius: cornerRadius, topRightCornerRadius: cornerRadius, bottomRightCornerRadius: cornerRadius, bottomLeftCornerRadius: cornerRadius)
 	}
 
 
 	@nonobjc
-	public func addRoundedCorner(direction direction: RoundedCornerDirection, radius: CGFloat) {
-		if radius <= 0 {
-			return
-		}
+	public convenience init(animatableRoundedRect rect: CGRect, topLeftCornerRadius: CGFloat, topRightCornerRadius: CGFloat, bottomRightCornerRadius: CGFloat, bottomLeftCornerRadius: CGFloat) {
+		self.init()
+
+		moveToPoint(CGPoint(left: rect.left + topLeftCornerRadius, top: rect.top))
+		addLineToPoint(CGPoint(left: rect.right - topRightCornerRadius, top: rect.top))
+		addRoundedCorner(direction: .RightDown, radius: topRightCornerRadius)
+		addLineToPoint(CGPoint(left: rect.right, top: rect.bottom - bottomRightCornerRadius))
+		addRoundedCorner(direction: .DownLeft, radius: bottomRightCornerRadius)
+		addLineToPoint(CGPoint(left: rect.left + bottomLeftCornerRadius, top: rect.bottom))
+		addRoundedCorner(direction: .LeftUp, radius: bottomLeftCornerRadius)
+		addLineToPoint(CGPoint(left: rect.left, top: rect.top + topLeftCornerRadius))
+		addRoundedCorner(direction: .UpRight, radius: topLeftCornerRadius)
+	}
+
+
+	@nonobjc
+	public func addRoundedCorner(direction direction: RoundedCornerDirection, var radius: CGFloat) {
+		radius = max(radius, 0)
 
 		var center: CGPoint
 		var clockwise: Bool
