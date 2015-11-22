@@ -203,15 +203,6 @@ public /* non-final */ class View: UIView {
 		get { return layer.cornerRadius }
 		set { layer.cornerRadius = newValue }
 	}
-
-
-	public static var currentAnimation: CAAnimation? {
-		let dummy = _dummyView
-		let action = dummy.layer.actionForKey("backgroundColor")
-		action?.runActionForKey("backgroundColor", object: dummy.layer, arguments: nil)
-
-		return action as? CAAnimation
-	}
 	
 
 	// reference implementation
