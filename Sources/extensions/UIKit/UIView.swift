@@ -1,5 +1,7 @@
 import UIKit
 
+private let dummyView = UIView()
+
 
 public extension UIView {
 
@@ -29,6 +31,22 @@ public extension UIView {
 	public final func ceilToGrid(value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return ceil(value * scale) / scale
+	}
+
+
+	@nonobjc
+	public static func defaultActionForLayer(layer: CALayer, forKey key: String) -> CAAction? {
+		guard key != "delegate" else {
+			return nil
+		}
+
+		let dummyLayer = dummyView.layer
+
+		let layerDelegate = layer.delegate
+		layer.delegate = dummyView
+		defer { layer.delegate = layerDelegate }
+
+		return layer.actionForKey(key)
 	}
 
 
