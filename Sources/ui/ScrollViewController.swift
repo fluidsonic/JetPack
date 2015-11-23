@@ -12,6 +12,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 	private var ignoresScrollViewDidScroll = 0
 	private var isAnimatingScrollView = false
 	private var isSettingPrimaryViewControllerInternally = false
+	private var lastLayoutedViewSize = CGSize()
 	private var reusableChildView: ChildView?
 	private var scrollCompletion: ScrollCompletion?
 	private var viewControllersNotYetMovedToParentViewController = [UIViewController]()
@@ -111,6 +112,121 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
+	private func layoutChildrenForcingLayoutUpdate(forcesLayoutUpdate: Bool) {
+		++ignoresScrollViewDidScroll
+		defer { --ignoresScrollViewDidScroll }
+
+		let viewBounds = view.bounds
+		let viewControllers = self.viewControllers
+		var contentOffset = scrollView.contentOffset
+
+		var updatesLayout = forcesLayoutUpdate
+		let previousViewSize = self.lastLayoutedViewSize
+		if viewBounds.size != previousViewSize {
+			self.lastLayoutedViewSize = viewBounds.size
+
+			updatesLayout = true
+		}
+
+		if updatesLayout {
+			var newContentOffset = contentOffset
+
+			if viewControllers.count > 1 {
+				var closestChildIndex: Int?
+				var closestChildOffset = CGFloat(0)
+				var closestDistanceToHorizontalCenter = CGFloat.max
+
+				if !previousViewSize.isEmpty {
+					let previousHorizontalCenter = contentOffset.left + (previousViewSize.width / 2)
+					for subview in childContainer.subviews {
+						guard let childView = subview as? ChildView where childView.index >= 0 else {
+							continue
+						}
+
+						let childViewFrame = childView.frame
+						let distanceToHorizontalCenter = min((previousHorizontalCenter - childViewFrame.left).absolute, (previousHorizontalCenter - childViewFrame.right).absolute)
+						guard distanceToHorizontalCenter < closestDistanceToHorizontalCenter else {
+							continue
+						}
+
+						let expectedContentOffsetLeft = CGFloat(childView.index) * previousViewSize.width
+
+						closestChildIndex = childView.index
+						closestChildOffset = (expectedContentOffsetLeft - contentOffset.left) / previousViewSize.width
+						closestDistanceToHorizontalCenter = distanceToHorizontalCenter
+					}
+				}
+
+				if let closestChildIndex = closestChildIndex {
+					newContentOffset = CGPoint(left: (CGFloat(closestChildIndex) - closestChildOffset) * viewBounds.width, top: 0)
+				}
+				else if let primaryViewController = primaryViewController, let index = viewControllers.indexOfIdentical(primaryViewController) {
+					newContentOffset = CGPoint(left: (CGFloat(index) * viewBounds.width), top: 0)
+				}
+			}
+
+			newContentOffset = newContentOffset.clamp(min: scrollView.minimumContentOffset, max: scrollView.maximumContentOffset)
+			if newContentOffset != contentOffset {
+				scrollView.contentOffset = newContentOffset
+				contentOffset = newContentOffset
+			}
+		}
+
+		let visibleIndexes: Range<Int>
+
+		if viewControllers.isEmpty || viewBounds.isEmpty {
+			visibleIndexes = 0 ..< 0
+		}
+		else {
+			let floatingIndex = contentOffset.left / viewBounds.width
+			visibleIndexes = Int(floor(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1) ... Int(ceil(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1)
+		}
+
+		for subview in childContainer.subviews {
+			guard let childView = subview as? ChildView where !visibleIndexes.contains(childView.index) else {
+				continue
+			}
+
+			updateChildView(childView, withPreferredAppearState: .WillDisappear, animated: false)
+			childView.removeFromSuperview()
+			updateChildView(childView, withPreferredAppearState: .DidDisappear, animated: false)
+
+			childView.index = -1
+			childView.viewController = nil
+
+			reusableChildView = childView
+		}
+
+		for index in visibleIndexes {
+			if let childView = childViewForIndex(index) {
+				if updatesLayout {
+					layoutChildView(childView)
+				}
+			}
+			else {
+				let viewController = viewControllers[index]
+
+				let childView = reusableChildView ?? ChildView()
+				childView.index = index
+				childView.viewController = viewController
+
+				reusableChildView = nil
+
+				layoutChildView(childView)
+
+				updateChildView(childView, withPreferredAppearState: .WillAppear, animated: false)
+				childContainer.addSubview(childView)
+				updateChildView(childView, withPreferredAppearState: .DidAppear, animated: false)
+
+				if let index = viewControllersNotYetMovedToParentViewController.indexOfIdentical(viewController) {
+					viewControllersNotYetMovedToParentViewController.removeAtIndex(index)
+					viewController.didMoveToParentViewController(self)
+				}
+			}
+		}
+	}
+
+
 	public var primaryViewController: UIViewController? {
 		didSet {
 			if isSettingPrimaryViewControllerInternally {
@@ -194,77 +310,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
-	private func updateChildrenAfterLayoutChanged(layoutChanged: Bool) {
-		let viewSize = view.bounds.size
-		let viewControllers = self.viewControllers
-		var contentOffset = scrollView.contentOffset
-
-		if layoutChanged {
-			let maximumContentOffset = scrollView.maximumContentOffset
-			if contentOffset.left > maximumContentOffset.left {
-				contentOffset.left = maximumContentOffset.left
-
-				++ignoresScrollViewDidScroll
-				scrollView.contentOffset = contentOffset
-				--ignoresScrollViewDidScroll
-			}
-		}
-
-		let visibleIndexes: Range<Int>
-
-		if viewControllers.isEmpty || viewSize.isEmpty {
-			visibleIndexes = 0 ..< 0
-		}
-		else {
-			let floatingIndex = contentOffset.left / viewSize.width
-			visibleIndexes = Int(floor(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1) ... Int(ceil(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1)
-		}
-
-		for subview in childContainer.subviews {
-			guard let childView = subview as? ChildView where !visibleIndexes.contains(childView.index) else {
-				continue
-			}
-
-			updateChildView(childView, withPreferredAppearState: .WillDisappear, animated: false)
-			childView.removeFromSuperview()
-			updateChildView(childView, withPreferredAppearState: .DidDisappear, animated: false)
-
-			childView.index = -1
-			childView.viewController = nil
-
-			reusableChildView = childView
-		}
-
-		for index in visibleIndexes {
-			if let childView = childViewForIndex(index) {
-				if layoutChanged {
-					layoutChildView(childView)
-				}
-			}
-			else {
-				let viewController = viewControllers[index]
-
-				let childView = reusableChildView ?? ChildView()
-				childView.index = index
-				childView.viewController = viewController
-
-				reusableChildView = nil
-
-				layoutChildView(childView)
-
-				updateChildView(childView, withPreferredAppearState: .WillAppear, animated: false)
-				childContainer.addSubview(childView)
-				updateChildView(childView, withPreferredAppearState: .DidAppear, animated: false)
-
-				if let index = viewControllersNotYetMovedToParentViewController.indexOfIdentical(viewController) {
-					viewControllersNotYetMovedToParentViewController.removeAtIndex(index)
-					viewController.didMoveToParentViewController(self)
-				}
-			}
-		}
-	}
-
-
 	private func updatePrimaryViewController() {
 		guard isViewLoaded() else {
 			return
@@ -310,40 +355,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 			++ignoresScrollViewDidScroll
 			defer { --ignoresScrollViewDidScroll }
 
-			struct KnownLocation {
-				let childView: ChildView
-				let intersectionWidth: CGFloat
-				let offset: CGFloat
-			}
-
-			var bestKnownLocation: KnownLocation?
-
-			if isViewLoaded() && viewControllers.count > 1 {
-				let viewBounds = view.bounds
-				let contentOffset = scrollView.contentOffset
-
-				for subview in childContainer.subviews {
-					guard let childView = subview as? ChildView, viewController = childView.viewController where viewControllers.contains(viewController) else {
-						continue
-					}
-
-					let childFrameInView = childView.convertRect(childView.bounds, toView: view)
-					let intersection = childFrameInView.intersect(viewBounds)
-					guard !intersection.isNull else {
-						continue
-					}
-
-					guard intersection.width > bestKnownLocation?.intersectionWidth ?? 0 else {
-						continue
-					}
-
-					let expectedContentOffsetLeft = CGFloat(childView.index) * viewBounds.width
-					let offset = (expectedContentOffsetLeft - contentOffset.left)
-
-					bestKnownLocation = KnownLocation(childView: childView, intersectionWidth: intersection.width, offset: offset)
-				}
-			}
-
 			var removedViewControllers = [UIViewController]()
 			for viewController in oldValue where viewController.parentViewController === self && !viewControllers.containsIdentical(viewController) {
 				viewController.willMoveToParentViewController(nil)
@@ -367,13 +378,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 			if isViewLoaded() {
 				layoutChildContainer()
-
-				if let bestKnownLocation = bestKnownLocation {
-					scrollView.contentOffset = CGPoint(left: (CGFloat(bestKnownLocation.childView.index) * view.bounds.width) - bestKnownLocation.offset, top: 0)
-						.clamp(min: scrollView.minimumContentOffset, max: scrollView.maximumContentOffset)
-				}
-
-				updateChildrenAfterLayoutChanged(true)
+				layoutChildrenForcingLayoutUpdate(true)
 				updatePrimaryViewController()
 			}
 			else {
@@ -399,10 +404,13 @@ public /* non-final */ class ScrollViewController: ViewController {
 		defer { --ignoresScrollViewDidScroll }
 
 		let viewSize = view.bounds.size
-		scrollView.frame = CGRect(size: viewSize)
 
+		let contentOffset = scrollView.contentOffset
+		scrollView.frame = CGRect(size: viewSize)
 		layoutChildContainer()
-		updateChildrenAfterLayoutChanged(true)
+		scrollView.contentOffset = contentOffset
+
+		layoutChildrenForcingLayoutUpdate(true)
 	}
 
 
@@ -509,7 +517,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 			return
 		}
 
-		scrollViewController.updateChildrenAfterLayoutChanged(false)
+		scrollViewController.layoutChildrenForcingLayoutUpdate(false)
 
 		if scrollView.tracking {
 			scrollViewController.updatePrimaryViewController()
