@@ -392,8 +392,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
-	public override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
+	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		++ignoresScrollViewDidScroll
 		defer { --ignoresScrollViewDidScroll }

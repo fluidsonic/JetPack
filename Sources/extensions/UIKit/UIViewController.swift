@@ -11,9 +11,6 @@ public extension UIViewController {
 		private static var outerDecorationInsets = UInt8()
 	}
 
-	private static var needsUpdateWindowDecorationInsets = false
-	private static var windowDecorationInsetsAnimation: Animation?
-
 
 
 	@objc(JetPack_applicationDidBecomeActive)
@@ -59,7 +56,7 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private var decorationInsetsAnimation: Animation.Wrapper? {
+	internal private(set) var decorationInsetsAnimation: Animation.Wrapper? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation) as? Animation.Wrapper }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
@@ -106,7 +103,7 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private func invalidateDecorationInsetsWithAnimationWrapper(animationWrapper: Animation.Wrapper?) {
+	internal func invalidateDecorationInsetsWithAnimationWrapper(animationWrapper: Animation.Wrapper?) {
 		if decorationInsetsAnimation == nil {
 			decorationInsetsAnimation = animationWrapper
 		}
@@ -117,8 +114,27 @@ public extension UIViewController {
 
 		decorationInsetsAreValid = false
 
-		if window != nil && !view.needsLayout {
-			updateDecorationInsetsIgnoringLayoutCheck(false)
+		if window != nil {
+			view.setNeedsLayout()
+		}
+	}
+
+
+	@nonobjc
+	private static func invalidateTopLevelDecorationInsetsWithAnimation(animation: Animation?) {
+		for window in UIApplication.sharedApplication().windows {
+			guard window.dynamicType == UIWindow.self || window is Window || !NSStringFromClass(window.dynamicType).hasPrefix("UI") else {
+				// ignore system windows like the keyboard
+				continue
+			}
+
+			let animationWrapper = animation?.wrap()
+
+			var presentedViewController = window.rootViewController
+			while let viewController = presentedViewController {
+				viewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
+				presentedViewController = viewController.presentedViewController
+			}
 		}
 	}
 
@@ -158,24 +174,6 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private static func setNeedsUpdateWindowDecorationInsetsWithAnimation(animation: Animation?) {
-		if windowDecorationInsetsAnimation == nil {
-			windowDecorationInsetsAnimation = animation
-		}
-
-		guard !needsUpdateWindowDecorationInsets else {
-			return
-		}
-
-		needsUpdateWindowDecorationInsets = true
-
-		onMainQueue { // delay one cycle
-			self.updateWindowDecorationInsetsIfNecessary()
-		}
-	}
-
-
-	@nonobjc
 	internal static func UIViewController_setUp() {
 		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
 		swizzleMethodInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
@@ -196,14 +194,14 @@ public extension UIViewController {
 	@nonobjc
 	private static func subscribeToKeyboardNotifications() {
 		let _ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
-			self.setNeedsUpdateWindowDecorationInsetsWithAnimation(Keyboard.animation)
+			self.invalidateTopLevelDecorationInsetsWithAnimation(Keyboard.animation)
 		}
 	}
 
 
 	@objc(JetPack_viewDidLayoutSubviews)
 	private func swizzled_viewDidLayoutSubviews() {
-		updateDecorationInsetsIgnoringLayoutCheck(true)
+		updateDecorationInsets()
 
 		swizzled_viewDidLayoutSubviews()
 	}
@@ -211,6 +209,7 @@ public extension UIViewController {
 
 	@objc(JetPack_viewWillAppear:)
 	private func swizzled_viewWillAppear(animated: Bool) {
+		// TODO invalidate decoration insets when moving to a window instead of when appearing
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
 
@@ -239,46 +238,12 @@ public extension UIViewController {
 
 
 	@nonobjc
-	internal static func updateWindowDecorationInsetsIfNecessary() {
-		let animation = windowDecorationInsetsAnimation?.wrap()
-		windowDecorationInsetsAnimation = nil
-
-		guard needsUpdateWindowDecorationInsets else {
-			return
-		}
-
-		for window in UIApplication.sharedApplication().windows {
-			guard window.dynamicType == UIWindow.self || window is Window || !NSStringFromClass(window.dynamicType).hasPrefix("UI") else {
-				// ignore system windows like the keyboard
-				continue
-			}
-
-			var presentedViewController = window.rootViewController
-			while let viewController = presentedViewController {
-				viewController.decorationInsetsAnimation = animation
-				viewController.updateDecorationInsetsIgnoringLayoutCheck(false)
-
-				presentedViewController = viewController.presentedViewController
-			}
-		}
-
-		needsUpdateWindowDecorationInsets = false
-	}
-
-
-	@nonobjc
-	internal func updateDecorationInsetsIgnoringLayoutCheck(ignoresLayoutCheck: Bool) {
-		guard let window = window where (ignoresLayoutCheck || !view.needsLayout) && (parentViewController == nil || !decorationInsetsAreValid) else {
-			// TODO run the check again once the view moves to a window
+	internal func updateDecorationInsets() {
+		guard let window = window where parentViewController == nil || !decorationInsetsAreValid else {
 			return
 		}
 
 		let animation = decorationInsetsAnimation
-
-		defer {
-			decorationInsetsAnimation = nil
-			decorationInsetsAreValid = true
-		}
 
 		let innerDecorationInsets: UIEdgeInsets
 		let outerDecorationInsets: UIEdgeInsets
@@ -300,14 +265,16 @@ public extension UIViewController {
 			outerDecorationInsets = decorationInsets
 		}
 
-		guard innerDecorationInsets != self.innerDecorationInsets || outerDecorationInsets != self.outerDecorationInsets else {
-			return
+		let decorationInsetsChanged = innerDecorationInsets != self.innerDecorationInsets || outerDecorationInsets != self.outerDecorationInsets
+		if decorationInsetsChanged {
+			self.innerDecorationInsets = innerDecorationInsets
+			self.outerDecorationInsets = outerDecorationInsets
+
+			decorationInsetsDidChangeWithAnimation(animation)
 		}
 
-		self.innerDecorationInsets = innerDecorationInsets
-		self.outerDecorationInsets = outerDecorationInsets
-
-		decorationInsetsDidChangeWithAnimation(animation)
+		decorationInsetsAnimation = nil
+		decorationInsetsAreValid = true
 	}
 
 

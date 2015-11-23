@@ -30,6 +30,7 @@ public struct Animation {
 	}
 
 
+	@available(*, deprecated=1, message="Use optionalAnimation.runAlways { … }")
 	public static func run(animation: Animation?, @noescape changes: Void -> Void) {
 		if let animation = animation {
 			animation.run(changes)
@@ -45,6 +46,7 @@ public struct Animation {
 	}
 
 
+	@available(*, deprecated=1, message="Use optionalAnimation.runAlwaysWithCompletion { … }")
 	public static func runWithCompletion(animation: Animation?, @noescape changes: (complete: CompletionRegistration) -> Void) {
 		if let animation = animation {
 			animation.runWithCompletion(changes)
@@ -217,6 +219,38 @@ extension Animation.Timing: CustomStringConvertible {
 		case .Linear:                               return "Timing.Linear"
 		case let .Curve(curve):                     return "Timing.Curve(\(curve))"
 		case let .Spring(initialVelocity, damping): return "Timing.Spring(initialVelocity: \(initialVelocity), damping: \(damping))"
+		}
+	}
+}
+
+
+
+extension _Optional where Wrapped == Animation {
+
+	public func runAlways(@noescape changes: Void -> Void) {
+		if let animation = map({ $0 }) {
+			animation.run(changes)
+		}
+		else {
+			changes()
+		}
+	}
+
+
+	public func runAlwaysWithCompletion(@noescape changes: (complete: Animation.CompletionRegistration) -> Void) {
+		if let animation = map({ $0 }) {
+			animation.runWithCompletion(changes)
+		}
+		else {
+			var completions = Array<Animation.Completion>()
+
+			changes { completion in
+				completions.append(completion)
+			}
+
+			for completion in completions {
+				completion(finished: true)
+			}
 		}
 	}
 }

@@ -24,18 +24,6 @@ public /* non-final */ class TableViewController: ViewController {
 	public var clearsSelectionOnViewWillAppear = true
 
 
-	public override func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
-		super.decorationInsetsDidChangeWithAnimation(animation)
-
-		if automaticallyAdjustsTableViewInsets {
-			Animation.run(animation) {
-				tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
-				tableView.scrollIndicatorInsets = outerDecorationInsets
-			}
-		}
-	}
-
-
 	public override func setEditing(editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
@@ -55,11 +43,18 @@ public /* non-final */ class TableViewController: ViewController {
 	}()
 
 
-	public override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
+	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+		super.viewDidLayoutSubviewsWithAnimation(animation)
 
-		tableView.editing = editing
-		tableView.frame = CGRect(size: view.bounds.size)
+		animation.runAlways {
+			if automaticallyAdjustsTableViewInsets {
+				tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
+				tableView.scrollIndicatorInsets = outerDecorationInsets
+			}
+
+			tableView.editing = editing
+			tableView.frame = CGRect(size: view.bounds.size)
+		}
 	}
 
 

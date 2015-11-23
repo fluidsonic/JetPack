@@ -39,24 +39,6 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public override func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
-		super.decorationInsetsDidChangeWithAnimation(animation)
-
-		Animation.run(animation) {
-			webView.scrollView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
-			webView.scrollView.scrollIndicatorInsets = outerDecorationInsets
-
-			if activityIndicator.superview != nil {
-				view.setNeedsLayout()
-
-				if animation != nil {
-					view.layoutIfNeeded()
-				}
-			}
-		}
-	}
-
-
 	public func handleEmailLink(link: NSURL) -> Bool {
 		guard opensLinksExternally else {
 			return false
@@ -115,19 +97,24 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
+	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		let viewBounds = view.bounds
 
-		if activityIndicator.superview != nil {
-			var activityIndicatorFrame = CGRect()
-			activityIndicatorFrame.size = activityIndicator.sizeThatFits()
-			activityIndicatorFrame.center = viewBounds.insetBy(innerDecorationInsets).center
-			activityIndicator.frame = view.alignToGrid(activityIndicatorFrame)
-		}
+		animation.runAlways {
+			webView.scrollView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
+			webView.scrollView.scrollIndicatorInsets = outerDecorationInsets
 
-		webView.frame = view.bounds
+			if activityIndicator.superview != nil {
+				var activityIndicatorFrame = CGRect()
+				activityIndicatorFrame.size = activityIndicator.sizeThatFits()
+				activityIndicatorFrame.center = viewBounds.insetBy(innerDecorationInsets).center
+				activityIndicator.frame = view.alignToGrid(activityIndicatorFrame)
+			}
+
+			webView.frame = view.bounds
+		}
 	}
 
 

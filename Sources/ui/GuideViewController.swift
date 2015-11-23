@@ -132,8 +132,8 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	public override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
+	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		let viewSize = view.bounds.size
 

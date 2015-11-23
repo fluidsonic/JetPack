@@ -21,6 +21,7 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	@available(*, deprecated=1, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
 		for childViewController in childViewControllers {
 			childViewController.invalidateDecorationInsetsWithAnimation(animation)
@@ -28,13 +29,15 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	@available(*, unavailable, message="use overload which accepts 'View.Animation?'")
+	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public final override func decorationInsetsDidChangeWithAnimation(animationWrapper: Animation.Wrapper?) {
-		decorationInsetsDidChangeWithAnimation(animationWrapper?.animation)
+		for childViewController in childViewControllers {
+			childViewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
+		}
 	}
 
 
-	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation) instead")
+	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation:) instead")
 	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		let preparation = seguePreparation
 		seguePreparation = nil
@@ -53,5 +56,20 @@ public /* non-final */ class ViewController: UIViewController {
 		defer { seguePreparation = nil }
 
 		performSegueWithIdentifier(identifier, sender: sender)
+	}
+
+
+	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
+	public final override func viewDidLayoutSubviews() {
+		let animation = decorationInsetsAnimation?.animation
+
+		super.viewDidLayoutSubviews()
+
+		viewDidLayoutSubviewsWithAnimation(animation)
+	}
+
+
+	public func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+		// override in subclasses
 	}
 }
