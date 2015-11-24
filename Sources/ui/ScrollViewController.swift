@@ -561,8 +561,10 @@ private final class ChildView: View {
 			return
 		}
 
-		let viewSize = bounds.size
-		viewControllerView.frame = CGRect(size: viewSize)
+		let bounds = self.bounds
+
+		viewControllerView.bounds = CGRect(size: bounds.size)
+		viewControllerView.center = bounds.center
 	}
 
 
