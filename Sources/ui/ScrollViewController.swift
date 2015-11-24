@@ -149,10 +149,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 							continue
 						}
 
-						let expectedContentOffsetLeft = CGFloat(childView.index) * previousViewSize.width
-
 						closestChildIndex = childView.index
-						closestChildOffset = (expectedContentOffsetLeft - contentOffset.left) / previousViewSize.width
+						closestChildOffset = (childViewFrame.left - contentOffset.left) / previousViewSize.width
 						closestDistanceToHorizontalCenter = distanceToHorizontalCenter
 					}
 				}
