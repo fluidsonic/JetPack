@@ -4,18 +4,22 @@ import UIKit
 @IBDesignable
 public /* non-final */ class ImageView: View {
 
+	public typealias Session = _ImageViewSession
+	public typealias SessionListener = _ImageViewSessionListener
 	public typealias Source = _ImageViewSource
 
 	private var activityIndicatorIsVisible = false
 	private var drawFrame = CGRect()
+	private var isLayouting = false
 	private var isSettingImage = false
 	private var isSettingImageFromSource = false
 	private var isSettingSource = false
 	private var isSettingSourceFromImage = false
 	private var lastDrawnTintColor: UIColor?
-	private var sourceCallbackProtectionCount = 0
-	private var sourceCancellation: CancelClosure?
+	private var lastLayoutedSize = CGSize()
 	private var sourceImageRetrievalCompleted = false
+	private var sourceSession: Session?
+	private var sourceSessionConfigurationIsValid = true
 
 
 	public override init() {
@@ -43,7 +47,7 @@ public /* non-final */ class ImageView: View {
 
 
 	deinit {
-		sourceCancellation?()
+		sourceSession?.stopRetrievingImage()
 	}
 
 
@@ -83,6 +87,8 @@ public /* non-final */ class ImageView: View {
 			if image != nil {
 				setNeedsDisplay()
 			}
+
+			invalidateConfiguration()
 		}
 	}
 
@@ -98,7 +104,56 @@ public /* non-final */ class ImageView: View {
 		super.didMoveToWindow()
 
 		if window != nil {
-			startRetrievingImageFromSource()
+			startOrUpdateSourceSession()
+		}
+	}
+
+
+	public override func drawRect(rect: CGRect) {
+		guard let image = image else {
+			return
+		}
+
+		updateDrawFrame()
+
+		guard !drawFrame.isEmpty else {
+			return
+		}
+
+		let bounds = self.bounds
+		let padding = self.padding
+
+		let needsClipping = clipsImageToPadding && !padding.isEmpty
+		let needsTinting = image.renderingMode == .AlwaysTemplate
+		let needsSavingState = needsClipping || needsTinting
+
+		let context = UIGraphicsGetCurrentContext()
+		if needsSavingState {
+			CGContextSaveGState(context)
+		}
+		if needsClipping {
+			CGContextClipToRect(context, bounds.insetBy(padding))
+		}
+
+		if needsTinting {
+			let transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -bounds.height)
+			let drawFrame = self.drawFrame.transform(transform)
+
+			CGContextConcatCTM(context, transform)
+			CGContextClipToMask(context, drawFrame, image.CGImage)
+			tintColor.setFill()
+			CGContextFillRect(context, drawFrame)
+
+			lastDrawnTintColor = tintColor
+		}
+		else {
+			image.drawInRect(drawFrame)
+
+			lastDrawnTintColor = nil
+		}
+
+		if needsSavingState {
+			CGContextRestoreGState(context)
 		}
 	}
 
@@ -113,51 +168,8 @@ public /* non-final */ class ImageView: View {
 			if image != nil && scaling != .FitIgnoringAspectRatio {
 				setNeedsDisplay()
 			}
-		}
-	}
 
-
-	public override func drawRect(rect: CGRect) {
-		if let image = image {
-			updateDrawFrame()
-
-			if !drawFrame.isEmpty {
-				let bounds = self.bounds
-				let padding = self.padding
-
-				let needsClipping = clipsImageToPadding && !padding.isEmpty
-				let needsTinting = image.renderingMode == .AlwaysTemplate
-				let needsSavingState = needsClipping || needsTinting
-
-				let context = UIGraphicsGetCurrentContext()
-				if needsSavingState {
-					CGContextSaveGState(context)
-				}
-				if needsClipping {
-					CGContextClipToRect(context, bounds.insetBy(padding))
-				}
-
-				if needsTinting {
-					let transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -bounds.height)
-					let drawFrame = self.drawFrame.transform(transform)
-
-					CGContextConcatCTM(context, transform)
-					CGContextClipToMask(context, drawFrame, image.CGImage)
-					tintColor.setFill()
-					CGContextFillRect(context, drawFrame)
-
-					lastDrawnTintColor = tintColor
-				}
-				else {
-					image.drawInRect(drawFrame)
-
-					lastDrawnTintColor = nil
-				}
-
-				if needsSavingState {
-					CGContextRestoreGState(context)
-				}
-			}
+			invalidateConfiguration()
 		}
 	}
 
@@ -200,12 +212,43 @@ public /* non-final */ class ImageView: View {
 	}
 
 
+	private func invalidateConfiguration() {
+		guard sourceSessionConfigurationIsValid else {
+			return
+		}
+
+		sourceSessionConfigurationIsValid = false
+		setNeedsLayout()
+	}
+
+
 	public override func layoutSubviews() {
+		isLayouting = true
+		defer { isLayouting = false }
+
 		super.layoutSubviews()
+
+		let bounds = self.bounds
+		if bounds.size != lastLayoutedSize {
+			lastLayoutedSize = bounds.size
+			sourceSessionConfigurationIsValid = false
+		}
 
 		if let activityIndicator = _activityIndicator {
 			activityIndicator.center = bounds.insetBy(padding).center
 		}
+
+		startOrUpdateSourceSession()
+	}
+
+
+	public var optimalImageSize: CGSize {
+		let size = bounds.size.insetBy(padding).scaleBy(gridScaleFactor)
+		guard size.width > 0 && size.height > 0 else {
+			return .zero
+		}
+
+		return size
 	}
 
 
@@ -216,14 +259,14 @@ public /* non-final */ class ImageView: View {
 				return
 			}
 
-			if _activityIndicator != nil {
-				setNeedsLayout()
-			}
+			setNeedsLayout()
+
 			if image != nil {
 				updateOpaque()
 				setNeedsDisplay()
 			}
 
+			invalidateConfiguration()
 			invalidateIntrinsicContentSize()
 		}
 	}
@@ -235,6 +278,7 @@ public /* non-final */ class ImageView: View {
 				return
 			}
 
+			invalidateConfiguration()
 			invalidateIntrinsicContentSize()
 		}
 	}
@@ -250,6 +294,8 @@ public /* non-final */ class ImageView: View {
 			if image != nil {
 				setNeedsDisplay()
 			}
+
+			invalidateConfiguration()
 		}
 	}
 
@@ -270,12 +316,12 @@ public /* non-final */ class ImageView: View {
 			return alignToGrid(preferredSize)
 		}
 
-		if let image = image {
-			let imageSize = image.size
-			return alignToGrid(CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom))
+		guard let image = image else {
+			return .zero
 		}
 
-		return .zero
+		let imageSize = image.size
+		return alignToGrid(CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom))
 	}
 
 
@@ -286,8 +332,8 @@ public /* non-final */ class ImageView: View {
 
 			if let source = source, oldSource = oldValue where source.equals(oldSource) {
 				if sourceImageRetrievalCompleted && image == nil {
-					stopRetrievingImageFromSource()
-					startRetrievingImageFromSource()
+					stopSourceSession()
+					startOrUpdateSourceSession()
 
 					updateActivityIndicatorAnimated(true)
 				}
@@ -303,7 +349,7 @@ public /* non-final */ class ImageView: View {
 				isSettingSource = false
 			}
 
-			stopRetrievingImageFromSource()
+			stopSourceSession()
 
 			if !isSettingSourceFromImage {
 				isSettingImageFromSource = true
@@ -312,7 +358,8 @@ public /* non-final */ class ImageView: View {
 			}
 
 			if source != nil {
-				startRetrievingImageFromSource()
+				sourceSessionConfigurationIsValid = false
+				startOrUpdateSourceSession()
 			}
 
 			updateActivityIndicatorAnimated(true)
@@ -320,55 +367,74 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private func startRetrievingImageFromSource() {
-		guard sourceCancellation == nil && window != nil, let source = source else {
+	private func startOrUpdateSourceSession() {
+		guard !sourceSessionConfigurationIsValid && window != nil && (isLayouting || !needsLayout), let source = source else {
 			return
 		}
 
-		let protectionCount = ++sourceCallbackProtectionCount
-
-		sourceCancellation = source.retrieveImageForImageView(self) { [weak self] image in
-			precondition(NSThread.isMainThread(), "ImageView.Source completion closure must be called on the main thread.")
-
-			guard let imageView = self else {
-				return
-			}
-
-			if protectionCount != imageView.sourceCallbackProtectionCount {
-				log("ImageView.Source called the completion closure after it was cancelled. The call will be ignored.")
-				return
-			}
-			if imageView.isSettingImageFromSource {
-				log("ImageView.Source called the completion closure from within an 'image' property observer. The call will be ignored.")
-				return
-			}
-
-			imageView.sourceImageRetrievalCompleted = true
-
-			imageView.isSettingImageFromSource = true
-			imageView.image = image
-			imageView.isSettingImageFromSource = false
-
-			imageView.updateActivityIndicatorAnimated(true)
+		let optimalImageSize = self.optimalImageSize
+		guard !optimalImageSize.isEmpty else {
+			return
 		}
 
-		if sourceCancellation == nil {
-			fatalError("Although CancelClosure is an implicit optional this is just temporary workaround and must never be nil. ImageView source '\(source)' did return nil.")
+		sourceSessionConfigurationIsValid = true
+
+		if let sourceSession = sourceSession {
+			sourceSession.imageViewDidChangeConfiguration(self)
+		}
+		else {
+			if let sourceSession = source.createSession() {
+				let listener = ClosureSessionListener { [weak self] image in
+					precondition(NSThread.isMainThread(), "ImageView.SessionListener.sessionDidRetrieveImage(_:) must be called on the main thread.")
+
+					guard let imageView = self else {
+						return
+					}
+
+					if sourceSession !== imageView.sourceSession {
+						log("ImageView.SessionListener.sessionDidRetrieveImage(_:) was called after session was stopped. The call will be ignored.")
+						return
+					}
+					if imageView.isSettingImageFromSource {
+						log("ImageView.SessionListener.sessionDidRetrieveImage(_:) was called from within an 'image' property observer. The call will be ignored.")
+						return
+					}
+
+					imageView.sourceImageRetrievalCompleted = true
+
+					imageView.isSettingImageFromSource = true
+					imageView.image = image
+					imageView.isSettingImageFromSource = false
+
+					imageView.updateActivityIndicatorAnimated(true)
+				}
+
+				self.sourceSession = sourceSession
+
+				sourceSession.startRetrievingImageForImageView(self, listener: listener)
+			}
+			else if let image = source.staticImage {
+				sourceImageRetrievalCompleted = true
+
+				isSettingImageFromSource = true
+				self.image = image
+				isSettingImageFromSource = false
+
+				updateActivityIndicatorAnimated(true)
+			}
 		}
 	}
 
 
-	private func stopRetrievingImageFromSource() {
-		guard let sourceCancellation = sourceCancellation else {
+	private func stopSourceSession() {
+		guard let sourceSession = sourceSession else {
 			return
 		}
 
 		sourceImageRetrievalCompleted = false
+		self.sourceSession = nil
 
-		++sourceCallbackProtectionCount
-
-		sourceCancellation()
-		self.sourceCancellation = nil
+		sourceSession.stopRetrievingImage()
 	}
 
 
@@ -418,78 +484,78 @@ public /* non-final */ class ImageView: View {
 
 
 	private func updateDrawFrame() {
+		guard let image = image else {
+			self.drawFrame = .zero
+			return
+		}
+
+		let imageSize = image.size
+		let availableFrame = CGRect(size: bounds.size).insetBy(padding)
+
+		guard !imageSize.isEmpty && availableFrame.width > 0 && availableFrame.height > 0 else {
+			self.drawFrame = .zero
+			return
+		}
+
 		var drawFrame = CGRect()
 
 		let gravity = self.gravity
 		let scaling = self.scaling
-		let imageSize: CGSize
-		let availableFrame = CGRect(size: bounds.size).insetBy(padding)
 
-		if let image = image {
-			imageSize = image.size
+		switch scaling {
+		case .FitIgnoringAspectRatio:
+			drawFrame.size = availableFrame.size
 
-			if !imageSize.isEmpty && !availableFrame.isEmpty {
-				switch scaling {
-				case .FitIgnoringAspectRatio:
-					drawFrame.size = availableFrame.size
+		case .FitInside, .FitOutside:
+			let horizontalScale = availableFrame.width / imageSize.width
+			let verticalScale = availableFrame.height / imageSize.height
+			let scale = (scaling == .FitInside ? min : max)(horizontalScale, verticalScale)
 
-				case .FitInside, .FitOutside:
-					let horizontalScale = availableFrame.width / imageSize.width
-					let verticalScale = availableFrame.height / imageSize.height
-					let scale = (scaling == .FitInside ? min : max)(horizontalScale, verticalScale)
+			drawFrame.size = imageSize.scaleBy(scale)
 
-					drawFrame.size = imageSize.scaleBy(scale)
+		case .FitHorizontally:
+			drawFrame.width = availableFrame.width
+			drawFrame.height = imageSize.height * (drawFrame.width / imageSize.width)
 
-				case .FitHorizontally:
-					drawFrame.width = availableFrame.width
-					drawFrame.height = imageSize.height * (drawFrame.width / imageSize.width)
+		case .FitHorizontallyIgnoringAspectRatio:
+			drawFrame.width = availableFrame.width
+			drawFrame.height = imageSize.height
 
-				case .FitHorizontallyIgnoringAspectRatio:
-					drawFrame.width = availableFrame.width
-					drawFrame.height = imageSize.height
+		case .FitVertically:
+			drawFrame.height = availableFrame.height
+			drawFrame.width = imageSize.width * (drawFrame.height / imageSize.height)
 
-				case .FitVertically:
-					drawFrame.height = availableFrame.height
-					drawFrame.width = imageSize.width * (drawFrame.height / imageSize.height)
+		case .FitVerticallyIgnoringAspectRatio:
+			drawFrame.height = availableFrame.height
+			drawFrame.width = imageSize.width
 
-				case .FitVerticallyIgnoringAspectRatio:
-					drawFrame.height = availableFrame.height
-					drawFrame.width = imageSize.width
-
-				case .None:
-					drawFrame.size = imageSize
-				}
-
-				switch gravity.horizontal {
-				case .Left:
-					drawFrame.left = availableFrame.left
-
-				case .Center:
-					drawFrame.horizontalCenter = availableFrame.horizontalCenter
-
-				case .Right:
-					drawFrame.right = availableFrame.right
-				}
-
-				switch gravity.vertical {
-				case .Top:
-					drawFrame.top = availableFrame.top
-
-				case .Center:
-					drawFrame.verticalCenter = availableFrame.verticalCenter
-
-				case .Bottom:
-					drawFrame.bottom = availableFrame.bottom
-				}
-
-				drawFrame = alignToGrid(drawFrame)
-			}
-		}
-		else {
-			imageSize = .zero
+		case .None:
+			drawFrame.size = imageSize
 		}
 
-		self.drawFrame = drawFrame
+		switch gravity.horizontal {
+		case .Left:
+			drawFrame.left = availableFrame.left
+
+		case .Center:
+			drawFrame.horizontalCenter = availableFrame.horizontalCenter
+
+		case .Right:
+			drawFrame.right = availableFrame.right
+		}
+
+		switch gravity.vertical {
+		case .Top:
+			drawFrame.top = availableFrame.top
+
+		case .Center:
+			drawFrame.verticalCenter = availableFrame.verticalCenter
+
+		case .Bottom:
+			drawFrame.bottom = availableFrame.bottom
+		}
+
+		self.drawFrame = alignToGrid(drawFrame)
 	}
 
 
@@ -590,10 +656,10 @@ public /* non-final */ class ImageView: View {
 
 
 	public enum Scaling {
-		case FitIgnoringAspectRatio
-		case FitInside
 		case FitHorizontally
 		case FitHorizontallyIgnoringAspectRatio
+		case FitIgnoringAspectRatio
+		case FitInside
 		case FitOutside
 		case FitVertically
 		case FitVerticallyIgnoringAspectRatio
@@ -602,10 +668,27 @@ public /* non-final */ class ImageView: View {
 }
 
 
+public protocol _ImageViewSession: class {
+
+	func imageViewDidChangeConfiguration  (imageView: ImageView)
+	func startRetrievingImageForImageView (imageView: ImageView, listener: ImageView.SessionListener)
+	func stopRetrievingImage              ()
+}
+
+
+public protocol _ImageViewSessionListener {
+
+	func sessionDidFailToRetrieveImageWithFailure (failure: Failure)
+	func sessionDidRetrieveImage                  (image: UIImage)
+}
+
+
 public protocol _ImageViewSource {
 
-	func equals                    (source: ImageView.Source) -> Bool
-	func retrieveImageForImageView (imageView: ImageView, completion: UIImage? -> Void) -> CancelClosure
+	var staticImage: UIImage? { get }
+
+	func createSession () -> ImageView.Session?
+	func equals        (source: ImageView.Source) -> Bool
 }
 
 
@@ -622,232 +705,22 @@ extension _ImageViewSource where Self: Equatable {
 
 
 
-public extension ImageView {
+private struct ClosureSessionListener: ImageView.SessionListener {
 
-	public struct StaticSource: Source, Equatable {
-
-		public var image: UIImage
+	private let didRetrieveImage: UIImage -> Void
 
 
-		public init(image: UIImage) {
-			self.image = image
-		}
-
-
-		public func retrieveImageForImageView(imageView: ImageView, completion: UIImage? -> Void) -> CancelClosure {
-			completion(image)
-
-			return {}
-		}
-	}
-}
-
-
-public func == (a: ImageView.StaticSource, b: ImageView.StaticSource) -> Bool {
-	return a.image == b.image
-}
-
-
-
-public extension ImageView {
-
-	public final class UrlSource: Source, Equatable {
-
-		private let downloader: ImageDownloader
-
-		public let isTemplate: Bool
-		public let url: NSURL
-
-
-		public init(url: NSURL, isTemplate: Bool = false) {
-			self.isTemplate = isTemplate
-			self.url = url
-
-			downloader = ImageDownloader.forUrl(url)
-		}
-
-
-		public func retrieveImageForImageView(imageView: ImageView, completion: UIImage? -> Void) -> CancelClosure {
-			return downloader.download { (var image) in
-				if self.isTemplate {
-					image = image.imageWithRenderingMode(.AlwaysTemplate)
-				}
-
-				completion(image)
-			}
-		}
-	}
-}
-
-
-public func == (a: ImageView.UrlSource, b: ImageView.UrlSource) -> Bool {
-	return a.url == b.url && a.isTemplate == b.isTemplate
-}
-
-
-
-private final class ImageCache {
-
-	private let cache = NSCache()
-
-
-	private init() {}
-
-
-	private func costForImage(image: UIImage) -> Int {
-		// TODO does CGImageGetHeight() include the scale?
-		return CGImageGetBytesPerRow(image.CGImage) * CGImageGetHeight(image.CGImage)
+	private init(didRetrieveImage: UIImage -> Void) {
+		self.didRetrieveImage = didRetrieveImage
 	}
 
 
-	private func imageForKey(key: AnyObject) -> UIImage? {
-		return cache.objectForKey(key) as? UIImage
+	private func sessionDidFailToRetrieveImageWithFailure(failure: Failure) {
+		// TODO support this case
 	}
 
 
-	private func setImage(image: UIImage, forKey key: AnyObject) {
-		cache.setObject(image, forKey: key, cost: costForImage(image))
-	}
-
-
-	private static let sharedInstance = ImageCache()
-}
-
-
-
-private final class ImageDownloader {
-
-	private typealias Completion = UIImage -> Void
-
-	private static var downloaders = [NSURL : ImageDownloader]()
-
-	private var completions = [Int : Completion]()
-	private var image: UIImage?
-	private var nextId = 0
-	private var task: NSURLSessionDataTask?
-	private let url: NSURL
-
-
-	private init(url: NSURL) {
-		self.url = url
-	}
-
-
-	private func cancelCompletionWithId(id: Int) {
-		completions[id] = nil
-
-		if completions.isEmpty {
-			onMainQueue { // wait one cycle. maybe someone cancelled just to retry immediately
-				if self.completions.isEmpty {
-					self.cancelDownload()
-				}
-			}
-		}
-	}
-
-
-	private func cancelDownload() {
-		precondition(completions.isEmpty)
-
-		task?.cancel()
-		task = nil
-	}
-
-
-	private func download(completion: Completion) -> CancelClosure {
-		if let image = image {
-			completion(image)
-			return {}
-		}
-
-		if let image = ImageCache.sharedInstance.imageForKey(url) {
-			self.image = image
-
-			runAllCompletions()
-			cancelDownload()
-
-			completion(image)
-			return {}
-		}
-
-		let id = nextId++
-		completions[nextId] = completion
-
-		startDownload()
-
-		return {
-			self.cancelCompletionWithId(id)
-		}
-	}
-
-
-	private static func forUrl(url: NSURL) -> ImageDownloader {
-		if let downloader = downloaders[url] {
-			return downloader
-		}
-
-		let downloader = ImageDownloader(url: url)
-		downloaders[url] = downloader
-
-		return downloader
-	}
-
-
-	private func runAllCompletions() {
-		guard let image = image else {
-			fatalError("Cannot run completions unless an image was successfully loaded")
-		}
-
-		// careful: a completion might get removed while we're calling another one so don't copy the dictionary
-		while let (id, completion) = self.completions.first {
-			self.completions.removeValueForKey(id)
-			completion(image)
-		}
-
-		ImageDownloader.downloaders[url] = nil
-	}
-
-
-	private func startDownload() {
-		precondition(image == nil)
-		precondition(!completions.isEmpty)
-
-		guard self.task == nil else {
-			return
-		}
-
-		let url = self.url
-		let task = NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
-			guard let data = data, image = UIImage(data: data) else {
-				onMainQueue {
-					self.task = nil
-				}
-
-				var failureReason: String
-				if let error = error {
-					failureReason = "\(error)"
-				}
-				else {
-					failureReason = "server returned invalid response or image could not be parsed"
-				}
-
-				log("Cannot load image '\(url)': \(failureReason)")
-
-				// TODO retry, handle 4xx, etc.
-				return
-			}
-
-			image.inflate() // TODO doesn't UIImage(data:) already inflate the image?
-
-			onMainQueue {
-				self.task = nil
-				self.image = image
-
-				self.runAllCompletions()
-			}
-		}
-
-		self.task = task
-		task.resume()
+	private func sessionDidRetrieveImage(image: UIImage) {
+		didRetrieveImage(image)
 	}
 }
