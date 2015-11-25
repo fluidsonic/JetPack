@@ -11,7 +11,21 @@ public struct Time: Measurement {
 		
 		switch unit {
 		case .Seconds: rawValue = value
+		case .Minutes: rawValue = value * 60
+		case .Hours:   rawValue = value * 60 * 60
 		}
+	}
+
+
+	public init(hours: Double, minutes: Double = 0, seconds: Double = 0) {
+		self.init(hours, unit: .Hours)
+		self += Time(minutes: seconds, seconds: seconds)
+	}
+
+
+	public init(minutes: Double, seconds: Double = 0) {
+		self.init(minutes, unit: .Minutes)
+		self += Time(seconds: seconds)
 	}
 
 
@@ -25,6 +39,16 @@ public struct Time: Measurement {
 	}
 
 
+	public var hours: Double {
+		return minutes / 60
+	}
+
+
+	public var minutes: Double {
+		return rawValue / 60
+	}
+
+
 	public var seconds: Double {
 		return rawValue
 	}
@@ -33,6 +57,8 @@ public struct Time: Measurement {
 	public func valueInUnit(unit: TimeUnit) -> Double {
 		switch unit {
 		case .Seconds: return seconds
+		case .Minutes: return minutes
+		case .Hours:   return hours
 		}
 	}
 }
@@ -65,6 +91,8 @@ extension Time: Hashable {
 
 public enum TimeUnit: Unit {
 	case Seconds
+	case Minutes
+	case Hours
 }
 
 
@@ -72,32 +100,36 @@ extension TimeUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Seconds:
-			return "s"
+		case .Hours:   return "h"
+		case .Minutes: return "m"
+		case .Seconds: return "s"
 		}
 	}
 
 
 	public var pluralName: String {
 		switch self {
-		case .Seconds:
-			return "Second"
+		case .Hours:   return "Hours"
+		case .Minutes: return "Minutes"
+		case .Seconds: return "Seconds"
 		}
 	}
 
 
 	public var singularName: String {
 		switch self {
-		case .Seconds:
-			return "Seconds"
+		case .Hours:   return "Hour"
+		case .Minutes: return "Minute"
+		case .Seconds: return "Second"
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .Seconds:
-			return nil
+		case .Hours:   return nil
+		case .Minutes: return nil
+		case .Seconds: return nil
 		}
 	}
 }
