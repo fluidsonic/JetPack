@@ -97,7 +97,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func filtered(includeElement: (T) -> Bool) -> OrderedSet<T> {
+	@warn_unused_result
+	public func filterAsOrderedSet(@noescape includeElement: (T) -> Bool) -> OrderedSet<T> {
 		var filteredElements = OrderedSet<T>()
 		for element in orderedElements {
 			if includeElement(element) {
@@ -136,7 +137,7 @@ public struct OrderedSet<T: Hashable> {
 
 
 	public func intersected(set: OrderedSet<T>) -> OrderedSet<T> {
-		return filtered { set.contains($0) }
+		return filterAsOrderedSet { set.contains($0) }
 	}
 
 
@@ -160,7 +161,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func mapped<U: Hashable>(transform: (T) -> U) -> OrderedSet<U> {
+	@warn_unused_result
+	public func mapAsOrderedSet<U: Hashable>(@noescape transform: (T) -> U) -> OrderedSet<U> {
 		var newSet = OrderedSet<U>(minimumCapacity: count)
 		for element in orderedElements {
 			newSet.add(transform(element))
