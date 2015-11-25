@@ -100,6 +100,11 @@ private final class PHAssetSourceSession: ImageView.Session {
 				return
 			}
 
+			let imageSize = image.size.scaleBy(image.scale)
+
+			self.lastRequestedSize.width = max(self.lastRequestedSize.width, imageSize.width)
+			self.lastRequestedSize.height = max(self.lastRequestedSize.height, imageSize.height)
+
 			self.listener?.sessionDidRetrieveImage(image)
 		}
 	}
