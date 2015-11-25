@@ -85,28 +85,24 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func filter(includeElement: (T) -> Bool) {
-		var excludes = [T]()
-		for element in elements {
-			if !includeElement(element) {
-				excludes.append(element)
-			}
-		}
-
-		minus(excludes)
-	}
-
-
 	@warn_unused_result
-	public func filterAsOrderedSet(@noescape includeElement: (T) -> Bool) -> OrderedSet<T> {
+	public func filterAsOrderedSet(@noescape includeElement: T throws -> Bool) rethrows -> OrderedSet<T> {
 		var filteredElements = OrderedSet<T>()
-		for element in orderedElements {
-			if includeElement(element) {
-				filteredElements.add(element)
-			}
+		for element in orderedElements where try includeElement(element) {
+			filteredElements.add(element)
 		}
 
 		return filteredElements
+	}
+
+
+	public mutating func filterInPlace(@noescape includeElement: T throws -> Bool) rethrows {
+		var excludes = [T]()
+		for element in elements where !(try includeElement(element)) {
+			excludes.append(element)
+		}
+
+		minus(excludes)
 	}
 
 
@@ -132,7 +128,7 @@ public struct OrderedSet<T: Hashable> {
 
 
 	public mutating func intersect(set: OrderedSet<T>) {
-		filter { set.contains($0) }
+		filterInPlace { set.contains($0) }
 	}
 
 
@@ -162,10 +158,10 @@ public struct OrderedSet<T: Hashable> {
 
 
 	@warn_unused_result
-	public func mapAsOrderedSet<U: Hashable>(@noescape transform: (T) -> U) -> OrderedSet<U> {
+	public func mapAsOrderedSet<U: Hashable>(@noescape transform: T throws -> U) rethrows -> OrderedSet<U> {
 		var newSet = OrderedSet<U>(minimumCapacity: count)
 		for element in orderedElements {
-			newSet.add(transform(element))
+			newSet.add(try transform(element))
 		}
 
 		return newSet
