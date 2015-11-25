@@ -195,6 +195,7 @@ public /* non-final */ class ImageView: View {
 				isSettingSourceFromImage = false
 			}
 
+			updateScales()
 			updateOpaque()
 			setNeedsDisplay()
 
@@ -569,6 +570,13 @@ public /* non-final */ class ImageView: View {
 		}
 
 		self.opaque = opaque
+	}
+
+
+	private func updateScales() {
+		let scale = image?.scale ?? 1
+		contentScaleFactor = scale
+		layer.rasterizationScale = scale
 	}
 
 
