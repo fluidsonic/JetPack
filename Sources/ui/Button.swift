@@ -529,24 +529,22 @@ public class Button: View {
 	public override func layoutSubviews() {
 		let layout = layoutForSize(bounds.size)
 
-		if let activityIndicatorFrame = layout.activityIndicatorFrame {
-			if activityIndicator.superview != self {
-				addSubview(activityIndicator)
-
-				activityIndicator.startAnimating()
-			}
-
-			activityIndicator.bounds = CGRect(size: activityIndicatorFrame.size)
-			activityIndicator.center = activityIndicatorFrame.center
+		var subviewIndex = subviews.count
+		if let imageView = _imageView, index = subviews.indexOfIdentical(imageView) {
+			subviewIndex = min(subviewIndex, index)
 		}
-		else {
-			_activityIndicator?.removeFromSuperview()
+		if let textLabel = _textLabel, index = subviews.indexOfIdentical(textLabel) {
+			subviewIndex = min(subviewIndex, index)
+		}
+		if let activityIndicator = _activityIndicator, index = subviews.indexOfIdentical(activityIndicator) {
+			subviewIndex = min(subviewIndex, index)
 		}
 
 		if let imageViewFrame = layout.imageViewFrame {
-			if imageView.superview != self {
-				addSubview(imageView)
+			if imageView.superview == nil {
+				insertSubview(imageView, atIndex: subviewIndex)
 			}
+			++subviewIndex
 
 			imageView.bounds = CGRect(size: imageViewFrame.size)
 			imageView.center = imageViewFrame.center
@@ -556,15 +554,30 @@ public class Button: View {
 		}
 
 		if let textLabelFrame = layout.textLabelFrame {
-			if textLabel.superview != self {
-				addSubview(textLabel)
+			if textLabel.superview == nil {
+				insertSubview(textLabel, atIndex: subviewIndex)
 			}
+			++subviewIndex
 
 			textLabel.bounds = CGRect(size: textLabelFrame.size)
 			textLabel.center = textLabelFrame.center
 		}
 		else {
 			_textLabel?.removeFromSuperview()
+		}
+
+		if let activityIndicatorFrame = layout.activityIndicatorFrame {
+			if activityIndicator.superview == nil {
+				insertSubview(activityIndicator, atIndex: subviewIndex)
+
+				activityIndicator.startAnimating()
+			}
+
+			activityIndicator.bounds = CGRect(size: activityIndicatorFrame.size)
+			activityIndicator.center = activityIndicatorFrame.center
+		}
+		else {
+			_activityIndicator?.removeFromSuperview()
 		}
 
 		super.layoutSubviews()
