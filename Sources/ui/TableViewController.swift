@@ -80,7 +80,7 @@ public /* non-final */ class TableViewController: ViewController {
 extension TableViewController: UITableViewDataSource {
 
 	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		fatalError("Implement tableView(_:cellForRowAtIndexPath:)")
+		fatalError("override tableView(_:cellForRowAtIndexPath:) without calling super")
 	}
 
 
