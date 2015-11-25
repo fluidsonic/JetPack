@@ -8,7 +8,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	private lazy var childContainer = View()
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(scrollViewController: self)
 
-	private var appearState = AppearState.DidDisappear
 	private var ignoresScrollViewDidScroll = 0
 	private var isAnimatingScrollView = false
 	private var isSettingPrimaryViewControllerInternally = false
@@ -423,7 +422,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewDidAppear(animated: Bool) {
 		super.viewDidAppear(animated)
 
-		appearState = .DidAppear
 		updateAppearStateForAllChildrenAnimated(animated)
 	}
 
@@ -431,7 +429,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewDidDisappear(animated: Bool) {
 		super.viewDidDisappear(animated)
 
-		appearState = .DidDisappear
 		updateAppearStateForAllChildrenAnimated(animated)
 	}
 
@@ -439,7 +436,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 
-		appearState = .WillAppear
 		updateAppearStateForAllChildrenAnimated(animated)
 	}
 
@@ -447,7 +443,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewWillDisappear(animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		appearState = .WillDisappear
 		updateAppearStateForAllChildrenAnimated(animated)
 	}
 }
@@ -550,7 +545,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 
 private final class ChildView: View {
 
-	private var appearState = AppearState.DidDisappear
+	private var appearState = ViewController.AppearState.DidDisappear
 	private var index = -1
 
 
@@ -568,7 +563,7 @@ private final class ChildView: View {
 	}
 
 
-	private func updateAppearState(appearState: AppearState, animated: Bool) {
+	private func updateAppearState(appearState: ViewController.AppearState, animated: Bool) {
 		let oldAppearState = self.appearState
 		guard appearState != oldAppearState else {
 			return
@@ -664,25 +659,30 @@ private class ScrollView: UIScrollView {
 
 
 
-private enum AppearState: Int {
-	case DidDisappear = 0
-	case WillDisappear = 1
-	case WillAppear = 2
-	case DidAppear = 3
+private func min(a: ViewController.AppearState, _ b: ViewController.AppearState) -> ViewController.AppearState {
+	switch a {
+	case .DidAppear:
+		return b
 
+	case .WillAppear:
+		switch b {
+		case .DidAppear:
+			return a
 
-	private var isTransition: Bool {
-		switch self {
-		case .WillAppear, .WillDisappear: return true
-		case .DidAppear, .DidDisappear:   return false
+		default:
+			return b
 		}
+
+	case .WillDisappear:
+		switch b {
+		case .DidAppear, .WillAppear:
+			return a
+
+		default:
+			return b
+		}
+
+	case .DidDisappear:
+		return a
 	}
-}
-
-
-extension AppearState: Comparable {}
-
-
-private func < (a: AppearState, b: AppearState) -> Bool {
-	return a.rawValue < b.rawValue
 }
