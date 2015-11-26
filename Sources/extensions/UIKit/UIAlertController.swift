@@ -16,6 +16,12 @@ public extension UIAlertController {
 
 
 	@nonobjc
+	public convenience init(actionSheetWithTitle title: String, message: String) {
+		self.init(title: title.nonEmpty, message: message.nonEmpty, preferredStyle: .ActionSheet)
+	}
+
+
+	@nonobjc
 	public convenience init(alertWithMessage message: String) {
 		self.init(title: nil, message: message.nonEmpty, preferredStyle: .Alert)
 	}
