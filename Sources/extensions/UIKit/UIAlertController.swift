@@ -59,6 +59,27 @@ public extension UIAlertController {
 
 	@nonobjc
 	public func addOkayAction(handler: Closure? = nil) -> UIAlertAction {
-		return addActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("OK", value: "OK", table: nil), handler: handler)
+		let action = addActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("OK", value: "OK", table: nil), handler: handler)
+
+		if #available(iOS 9.0, *) {
+			if preferredAction == nil {
+				preferredAction = action
+			}
+		}
+
+		return action
+	}
+
+
+	@nonobjc
+	public func addPreferredActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .Default) { _ in handler?() }
+		addAction(action)
+
+		if #available(iOS 9.0, *) {
+			preferredAction = action
+		}
+
+		return action
 	}
 }
