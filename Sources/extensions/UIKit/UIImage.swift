@@ -23,7 +23,7 @@ public extension UIImage {
 	@nonobjc
 	@warn_unused_result
 	public static func fromColor(color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
-		let frame = CGRect(size: size.scaleBy(scale))
+		let frame = CGRect(size: size)
 
 		UIGraphicsBeginImageContextWithOptions(frame.size, false, scale)
 
