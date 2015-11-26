@@ -4,10 +4,10 @@ sudo: false
 
 env:
   global:
-  - WORKSPACE=Xcode/Project.xcworkspace
-  - SCHEME="Project"
-  - IOS_DEVICE_SDK=iphoneos9.1
-  - IOS_SIMULATOR_SDK=iphonesimulator9.1
+    - WORKSPACE=Xcode/Project.xcworkspace
+    - SCHEME="Project"
+    - IOS_DEVICE_SDK=iphoneos9.1
+    - IOS_SIMULATOR_SDK=iphonesimulator9.1
   matrix:
     - SDK="$IOS_DEVICE_SDK"    CONFIGURATION="Debug"
     - SDK="$IOS_DEVICE_SDK"    CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-O"
@@ -40,3 +40,7 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  slack:
+    secure: fo0NASGn8R6YWTxWF0SgzbBaKkE4FrI48DO/NToPtUy7uUIyIN3yxEhyHo8zyLqFOx4ThYKPEhNHIz4NY4daF/WDLJXk2j2VB6OUCNNxmDfHbUeA//Av/ftZLt18Kc5XooGoh2oY45ma/r2fAyfIN0YDF5Mm132O52QVkn5QCig=
