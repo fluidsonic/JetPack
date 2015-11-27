@@ -4,29 +4,19 @@ import UIKit
 @IBDesignable
 public /* non-final */ class Window: UIWindow {
 
-	public init() {
-		super.init(frame: .zero)
+	public convenience init() {
+		self.init(frame: .zero)
+	}
+
+
+	public override init(frame: CGRect) {
+		super.init(frame: frame)
 	}
 
 
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
-
-
-	#if TARGET_INTERFACE_BUILDER
-		public override convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#else
-		public override convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
 
 
 	public override var rootViewController: UIViewController? {
