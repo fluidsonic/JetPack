@@ -402,40 +402,45 @@ public extension UIViewController {
 	}
 
 
-
-	public enum AppearState {
-		case DidDisappear
-		case WillAppear
-		case DidAppear
-		case WillDisappear
+	public typealias AppearState = _UIViewControllerAppearState
+}
 
 
-		private init(id: Int) {
-			switch id {
-			case 0: self = .DidDisappear
-			case 1: self = .WillAppear
-			case 2: self = .DidAppear
-			case 3: self = .WillDisappear
-			default: fatalError()
-			}
+
+// Temporarily moved out of UIViewController extension due to compiler bug.
+// See https://travis-ci.org/fluidsonic/JetPack/jobs/93695509
+public enum _UIViewControllerAppearState {
+	case DidDisappear
+	case WillAppear
+	case DidAppear
+	case WillDisappear
+
+
+	private init(id: Int) {
+		switch id {
+		case 0: self = .DidDisappear
+		case 1: self = .WillAppear
+		case 2: self = .DidAppear
+		case 3: self = .WillDisappear
+		default: fatalError()
 		}
+	}
 
 
-		private var id: Int {
-			switch self {
-			case .DidDisappear:  return 0
-			case .WillAppear:    return 1
-			case .DidAppear:     return 2
-			case .WillDisappear: return 3
-			}
+	private var id: Int {
+		switch self {
+		case .DidDisappear:  return 0
+		case .WillAppear:    return 1
+		case .DidAppear:     return 2
+		case .WillDisappear: return 3
 		}
+	}
 
 
-		public var isTransition: Bool {
-			switch self {
-			case .WillAppear, .WillDisappear: return true
-			case .DidAppear, .DidDisappear:   return false
-			}
+	public var isTransition: Bool {
+		switch self {
+		case .WillAppear, .WillDisappear: return true
+		case .DidAppear, .DidDisappear:   return false
 		}
 	}
 }
