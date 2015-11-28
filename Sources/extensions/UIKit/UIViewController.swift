@@ -6,6 +6,7 @@ public extension UIViewController {
 
 	private struct AssociatedKeys {
 		private static var appearState = UInt8()
+		private static var presentingViewControllerForCurrentCoverageCallbacks = UInt8()
 		private static var decorationInsetsAnimation = UInt8()
 		private static var decorationInsetsAreValid = UInt8()
 		private static var innerDecorationInsets = UInt8()
@@ -16,7 +17,7 @@ public extension UIViewController {
 	@nonobjc
 	public private(set) var appearState: AppearState {
 		get { return AppearState(id: objc_getAssociatedObject(self, &AssociatedKeys.appearState) as? Int ?? 0) }
-		set { objc_setAssociatedObject(self, &AssociatedKeys.appearState, appearState.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.appearState, newValue.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
@@ -181,6 +182,13 @@ public extension UIViewController {
 
 
 	@nonobjc
+	private var presentingViewControllerForCurrentCoverageCallbacks: UIViewController? {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.presentingViewControllerForCurrentCoverageCallbacks) as? UIViewController }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.presentingViewControllerForCurrentCoverageCallbacks, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@nonobjc
 	internal static func UIViewController_setUp() {
 		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
 		swizzleMethodInType(self, fromSelector: "viewDidAppear:",        toSelector: "JetPack_viewDidAppear:")
@@ -213,6 +221,16 @@ public extension UIViewController {
 	private func swizzled_viewDidAppear(animated: Bool) {
 		self.appearState = .DidAppear
 
+		if isBeingPresented() && parentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
+			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
+				guard viewController.appearState == .DidAppear else {
+					return
+				}
+
+				viewController.viewWasCoveredByViewController(self, animated: animated)
+			}
+		}
+
 		swizzled_viewDidAppear(animated)
 	}
 
@@ -220,6 +238,18 @@ public extension UIViewController {
 	@objc(JetPack_viewDidDisappear:)
 	private func swizzled_viewDidDisappear(animated: Bool) {
 		self.appearState = .DidDisappear
+
+		if isBeingDismissed() && parentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
+			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
+				guard viewController.appearState == .DidAppear else {
+					return
+				}
+
+				viewController.viewWasUncoveredByViewController(self, animated: animated)
+			}
+		}
+
+		presentingViewControllerForCurrentCoverageCallbacks = nil
 
 		swizzled_viewDidDisappear(animated)
 	}
@@ -237,6 +267,18 @@ public extension UIViewController {
 	private func swizzled_viewWillAppear(animated: Bool) {
 		self.appearState = .WillAppear
 
+		if isBeingPresented() && parentViewController == nil, let presentingViewController = self.presentingViewController, presentationController = presentationController where !presentationController.shouldRemovePresentersView() {
+			presentingViewControllerForCurrentCoverageCallbacks = presentingViewController
+
+			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
+				guard viewController.appearState == .DidAppear else {
+					return
+				}
+
+				viewController.viewWillBeCoveredByViewController(self, animated: animated)
+			}
+		}
+
 		// TODO invalidate decoration insets when moving to a window instead of when appearing
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
@@ -249,6 +291,16 @@ public extension UIViewController {
 	private func swizzled_viewWillDisappear(animated: Bool) {
 		self.appearState = .WillDisappear
 
+		if isBeingDismissed() && parentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
+			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
+				guard viewController.appearState == .DidAppear else {
+					return
+				}
+
+				viewController.viewWillBeUncoveredByViewController(self, animated: animated)
+			}
+		}
+
 		swizzled_viewWillDisappear(animated)
 	}
 
@@ -256,20 +308,22 @@ public extension UIViewController {
 	@nonobjc
 	private static func traverseAllViewControllers(closure: UIViewController -> Void) {
 		for window in UIApplication.sharedApplication().windows {
-			window.rootViewController?.traverseViewControllerSubtreeFromHere(closure)
+			window.rootViewController?.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(true, closure: closure)
 		}
 	}
 
 
 	@nonobjc
-	private func traverseViewControllerSubtreeFromHere(closure: UIViewController -> Void) {
+	private func traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(includesPresentedViewControllers: Bool, closure: UIViewController -> Void) {
 		closure(self)
 
 		for childViewController in childViewControllers {
-			childViewController.traverseViewControllerSubtreeFromHere(closure)
+			childViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(includesPresentedViewControllers, closure: closure)
 		}
 
-		presentedViewController?.traverseViewControllerSubtreeFromHere(closure)
+		if includesPresentedViewControllers {
+			presentedViewController?.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(true, closure: closure)
+		}
 	}
 
 
@@ -311,6 +365,30 @@ public extension UIViewController {
 
 		decorationInsetsAnimation = nil
 		decorationInsetsAreValid = true
+	}
+
+
+	@objc(JetPack_viewWasCoveredByViewController:animated:)
+	public func viewWasCoveredByViewController(viewController: UIViewController, animated: Bool) {
+		// override in subclasses
+	}
+
+
+	@objc(JetPack_viewWasUncoveredByViewController:animated:)
+	public func viewWasUncoveredByViewController(viewController: UIViewController, animated: Bool) {
+		// override in subclasses
+	}
+
+
+	@objc(JetPack_viewWillBeCoveredByViewController:animated:)
+	public func viewWillBeCoveredByViewController(viewController: UIViewController, animated: Bool) {
+		// override in subclasses
+	}
+
+
+	@objc(JetPack_viewWillBeUncoveredByViewController:animated:)
+	public func viewWillBeUncoveredByViewController(viewController: UIViewController, animated: Bool) {
+		// override in subclasses
 	}
 
 
