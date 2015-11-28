@@ -7,8 +7,6 @@ public /* non-final */ class ViewController: UIViewController {
 
 	private var seguePreparation: SeguePreparation?
 
-	public private(set) final var appearState = AppearState.DidDisappear
-
 
 	public init() {
 		super.init(nibName: nil, bundle: nil)
@@ -61,20 +59,6 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public override func viewDidAppear(animated: Bool) {
-		appearState = .DidAppear
-
-		super.viewDidAppear(animated)
-	}
-
-
-	public override func viewDidDisappear(animated: Bool) {
-		appearState = .DidDisappear
-
-		super.viewDidDisappear(animated)
-	}
-
-
 	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public final override func viewDidLayoutSubviews() {
 		let animation = decorationInsetsAnimation?.animation
@@ -87,36 +71,5 @@ public /* non-final */ class ViewController: UIViewController {
 
 	public func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
 		// override in subclasses
-	}
-
-
-	public override func viewWillAppear(animated: Bool) {
-		appearState = .WillAppear
-
-		super.viewWillAppear(animated)
-	}
-
-
-	public override func viewWillDisappear(animated: Bool) {
-		appearState = .WillDisappear
-
-		super.viewWillDisappear(animated)
-	}
-
-
-
-	public enum AppearState {
-		case DidDisappear
-		case WillAppear
-		case DidAppear
-		case WillDisappear
-
-
-		private var isTransition: Bool {
-			switch self {
-			case .WillAppear, .WillDisappear: return true
-			case .DidAppear, .DidDisappear:   return false
-			}
-		}
 	}
 }

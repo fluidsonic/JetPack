@@ -5,12 +5,19 @@ import UIKit
 public extension UIViewController {
 
 	private struct AssociatedKeys {
+		private static var appearState = UInt8()
 		private static var decorationInsetsAnimation = UInt8()
 		private static var decorationInsetsAreValid = UInt8()
 		private static var innerDecorationInsets = UInt8()
 		private static var outerDecorationInsets = UInt8()
 	}
 
+
+	@nonobjc
+	public private(set) var appearState: AppearState {
+		get { return AppearState(id: objc_getAssociatedObject(self, &AssociatedKeys.appearState) as? Int ?? 0) }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.appearState, appearState.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
 
 
 	@objc(JetPack_applicationDidBecomeActive)
@@ -176,7 +183,10 @@ public extension UIViewController {
 	@nonobjc
 	internal static func UIViewController_setUp() {
 		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "viewWillAppear:", toSelector: "JetPack_viewWillAppear:")
+		swizzleMethodInType(self, fromSelector: "viewDidAppear:",        toSelector: "JetPack_viewDidAppear:")
+		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",     toSelector: "JetPack_viewDidDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillAppear:",       toSelector: "JetPack_viewWillAppear:")
+		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",    toSelector: "JetPack_viewWillDisappear:")
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
@@ -199,6 +209,22 @@ public extension UIViewController {
 	}
 
 
+	@objc(JetPack_viewDidAppear:)
+	private func swizzled_viewDidAppear(animated: Bool) {
+		self.appearState = .DidAppear
+
+		swizzled_viewDidAppear(animated)
+	}
+
+
+	@objc(JetPack_viewDidDisappear:)
+	private func swizzled_viewDidDisappear(animated: Bool) {
+		self.appearState = .DidDisappear
+
+		swizzled_viewDidDisappear(animated)
+	}
+
+
 	@objc(JetPack_viewDidLayoutSubviews)
 	private func swizzled_viewDidLayoutSubviews() {
 		updateDecorationInsets()
@@ -209,11 +235,21 @@ public extension UIViewController {
 
 	@objc(JetPack_viewWillAppear:)
 	private func swizzled_viewWillAppear(animated: Bool) {
+		self.appearState = .WillAppear
+
 		// TODO invalidate decoration insets when moving to a window instead of when appearing
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
 
 		swizzled_viewWillAppear(animated)
+	}
+
+
+	@objc(JetPack_viewWillDisappear:)
+	private func swizzled_viewWillDisappear(animated: Bool) {
+		self.appearState = .WillDisappear
+
+		swizzled_viewWillDisappear(animated)
 	}
 
 
@@ -285,5 +321,43 @@ public extension UIViewController {
 		}
 
 		return view.window
+	}
+
+
+
+	public enum AppearState {
+		case DidDisappear
+		case WillAppear
+		case DidAppear
+		case WillDisappear
+
+
+		private init(id: Int) {
+			switch id {
+			case 0: self = .DidDisappear
+			case 1: self = .WillAppear
+			case 2: self = .DidAppear
+			case 3: self = .WillDisappear
+			default: fatalError()
+			}
+		}
+
+
+		private var id: Int {
+			switch self {
+			case .DidDisappear:  return 0
+			case .WillAppear:    return 1
+			case .DidAppear:     return 2
+			case .WillDisappear: return 3
+			}
+		}
+
+
+		public var isTransition: Bool {
+			switch self {
+			case .WillAppear, .WillDisappear: return true
+			case .DidAppear, .DidDisappear:   return false
+			}
+		}
 	}
 }
