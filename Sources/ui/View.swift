@@ -238,15 +238,6 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	public override func invalidateIntrinsicContentSize() {
-		super.invalidateIntrinsicContentSize()
-
-		if let superview = superview as? View {
-			superview.subviewDidInvalidateIntrinsicContentSize(self)
-		}
-	}
-
-
 	@warn_unused_result
 	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
@@ -350,11 +341,6 @@ public /* non-final */ class View: UIView {
 		var bounds = self.bounds
 		bounds.size = sizeThatFits()
 		self.bounds = bounds
-	}
-
-
-	public func subviewDidInvalidateIntrinsicContentSize(view: UIView) {
-		// override in subclasses
 	}
 
 

@@ -30,15 +30,6 @@ public /* non-final */ class TableViewCell: UITableViewCell {
 	}
 
 
-	public override func invalidateIntrinsicContentSize() {
-		super.invalidateIntrinsicContentSize()
-
-		if let superview = superview as? View {
-			superview.subviewDidInvalidateIntrinsicContentSize(self)
-		}
-	}
-
-
 	public var minimumHeight = CGFloat(44) {
 		didSet {
 			guard minimumHeight != oldValue else {

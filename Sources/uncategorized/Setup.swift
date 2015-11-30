@@ -13,10 +13,13 @@ public extension UIApplication {
 	public override class func initialize() {
 		dispatch_once(&onceToken) {
 			Keyboard.setUp()
-			UITableViewCell.UITableViewCell_setUp()
-			UITextField.UITextField_setUp()
+
 			UIViewController.UIViewController_setUp()
 			UINavigationController.UINavigationController_setUp()
+
+			UIView.UIView_setUp()
+			UITableViewCell.UITableViewCell_setUp()
+			UITextField.UITextField_setUp()
 		}
 	}
 }

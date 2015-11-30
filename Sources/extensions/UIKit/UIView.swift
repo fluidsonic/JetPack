@@ -152,6 +152,28 @@ public extension UIView {
 	}
 
 
+	@objc(JetPack_subviewDidInvalidateIntrinsicContentSize:)
+	public func subviewDidInvalidateIntrinsicContentSize(view: UIView) {
+		// override in subclasses
+	}
+
+
+	@objc(JetPack_invalidateIntrinsicContentSize)
+	private func swizzled_invalidateIntrinsicContentSize() {
+		swizzled_invalidateIntrinsicContentSize()
+
+		if let superview = superview {
+			superview.subviewDidInvalidateIntrinsicContentSize(self)
+		}
+	}
+
+
+	@nonobjc
+	internal static func UIView_setUp() {
+		swizzleMethodInType(self, fromSelector: "invalidateIntrinsicContentSize", toSelector: "JetPack_invalidateIntrinsicContentSize")
+	}
+
+
 	@nonobjc
 	@warn_unused_result
 	public final func widthThatFits() -> CGFloat {
