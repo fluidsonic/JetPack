@@ -262,7 +262,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	public private(set) final lazy var scrollView: UIScrollView = {
-		let child = ScrollView()
+		let child = SpecialScrollView()
 		child.bounces = false
 		child.canCancelContentTouches = true
 		child.delaysContentTouches = true
@@ -644,7 +644,7 @@ private final class ChildView: View {
 
 
 
-private class ScrollView: UIScrollView {
+private class SpecialScrollView: ScrollView {
 
 	private override func setContentOffset(contentOffset: CGPoint, animated: Bool) {
 		let willBeginAnimation = animated && contentOffset != self.contentOffset
