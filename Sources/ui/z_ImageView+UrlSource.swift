@@ -8,13 +8,19 @@ public extension ImageView {
 
 	public struct UrlSource: ImageView.Source, Equatable {
 
-		public let isTemplate: Bool
-		public let url: NSURL
+		public var considersOptimalImageSize = true
+		public var isTemplate: Bool
+		public var url: NSURL
 
 
 		public init(url: NSURL, isTemplate: Bool = false) {
 			self.isTemplate = isTemplate
 			self.url = url
+		}
+
+
+		public static func cachedImageForUrl(url: NSURL) -> UIImage? {
+			return ImageCache.sharedInstance.imageForKey(url)
 		}
 
 
@@ -63,7 +69,7 @@ private final class UrlSourceSession: ImageView.Session {
 			listener.sessionDidRetrieveImage(image)
 		}
 
-		if source.url.fileURL {
+		if source.url.fileURL && source.considersOptimalImageSize {
 			let optimalImageSize = imageView.optimalImageSize
 			stopLoading = ImageFileLoader.forUrl(source.url, size: max(optimalImageSize.width, optimalImageSize.height)).load(completion)
 		}
