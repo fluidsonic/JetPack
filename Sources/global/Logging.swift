@@ -8,11 +8,13 @@ import Foundation
 #endif
 
 
-public func log(@autoclosure message: Void throws -> String, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UInt = __LINE__) rethrows {
+public func log(@autoclosure messageClosure: Void throws -> String, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UInt = __LINE__) rethrows {
 	if !logEnabled {
 		return
 	}
 
-	let fileName = ((file.stringValue as NSString).lastPathComponent as NSString).stringByDeletingPathExtension
-	NSLog("%@", "\(fileName): \(try message())  // \(function.stringValue):\(line)")
+	let message = try messageClosure()
+	let fileName = (file.stringValue as NSString).lastPathComponent
+
+	NSLog("%@", "\(message) \t\t\t// \(fileName):\(line) in \(function.stringValue)")
 }
