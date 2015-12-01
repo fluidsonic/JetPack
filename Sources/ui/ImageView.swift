@@ -207,9 +207,7 @@ public /* non-final */ class ImageView: View {
 			precondition(!isSettingSource || isSettingImageFromSource, "Cannot recursively set ImageView's 'image' and 'source'.")
 
 			isSettingImage = true
-			defer {
-				isSettingImage = false
-			}
+			defer { isSettingImage = false }
 
 			if image == oldValue {
 				return
@@ -265,13 +263,13 @@ public /* non-final */ class ImageView: View {
 			activityIndicator.center = bounds.insetBy(padding).center
 		}
 
-		startOrUpdateSourceSession()
-
 		if needsUpdateContents {
 			needsUpdateContents = false
 
 			updateContents()
 		}
+
+		startOrUpdateSourceSession()
 	}
 
 
