@@ -17,7 +17,10 @@ public extension UIViewController {
 	@nonobjc
 	public private(set) var appearState: AppearState {
 		get { return AppearState(id: objc_getAssociatedObject(self, &AssociatedKeys.appearState) as? Int ?? 0) }
-		set { objc_setAssociatedObject(self, &AssociatedKeys.appearState, newValue.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+		set {
+			checkTransitionFromAppearState(self.appearState, toAppearState: newValue)
+			objc_setAssociatedObject(self, &AssociatedKeys.appearState, newValue.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+		}
 	}
 
 
@@ -45,6 +48,67 @@ public extension UIViewController {
 	private static func applicationWillResignActive(notification: NSNotification) {
 		traverseAllViewControllers() { viewController in
 			viewController.applicationWillResignActive()
+		}
+	}
+
+
+	private func checkTransitionFromAppearState(fromAppearState: AppearState, toAppearState: AppearState) {
+		func lifecycleMethodNameForAppearState(appearState: AppearState) -> String {
+			switch appearState {
+			case .DidAppear:     return "viewDidAppear()"
+			case .DidDisappear:  return "viewDidDisappear()"
+			case .WillAppear:    return "viewWillAppear()"
+			case .WillDisappear: return "viewWillDisappear()"
+			}
+		}
+
+		func nameForParentViewController() -> String {
+			guard let parentViewController = parentViewController else {
+				return "the parent view controller"
+			}
+
+			return "\(parentViewController.dynamicType)"
+		}
+
+		if fromAppearState == toAppearState {
+			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
+			let typeName: String = "\(self.dynamicType)"
+
+			print(
+				"\nVIEW CONTROLLER LIFECYCLE BROKEN!\n\n"
+				+ "\(typeName) (indirectly) called super.\(toMethodName) multiple times.\n\n"
+				+ "Possible causes:\n"
+				+ "\t- \(typeName) or one of its superclasses called super.\(toMethodName) multiple times\n"
+				+ "\t- it was called manually (it should never be called manually)\n"
+				+ "\t- the controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
+			)
+
+			return
+		}
+
+		let expectedFromAppearStates: Set<AppearState>
+		switch toAppearState {
+		case .DidAppear:     expectedFromAppearStates = [.WillAppear]
+		case .DidDisappear:  expectedFromAppearStates = [.WillDisappear]
+		case .WillAppear:    expectedFromAppearStates = [.WillDisappear, .DidDisappear]
+		case .WillDisappear: expectedFromAppearStates = [.WillAppear, .DidAppear]
+		}
+
+		if !expectedFromAppearStates.contains(fromAppearState) {
+			let expectedFromMethodNames: String = expectedFromAppearStates.map({ lifecycleMethodNameForAppearState($0) }).joinWithSeparator(" or ")
+			let expectedFromSuperCalls: String = "super." + expectedFromAppearStates.map({ lifecycleMethodNameForAppearState($0) }).joinWithSeparator("/")
+			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
+			let typeName: String = "\(self.dynamicType)"
+
+			print(
+				"\nVIEW CONTROLLER LIFECYCLE BROKEN!\n\n"
+				+ "\(typeName) (indirctly) called super.\(toMethodName) unexpectedly while the view controller is in \(fromAppearState) state.\n"
+				+ "This method must only be called after \(expectedFromMethodNames).\n\n"
+				+ "Possible causes:\n"
+				+ "\t- \(typeName) or one of its superclasses forgot to call \(expectedFromSuperCalls) earlier (or called the wrong one)\n"
+				+ "\t- it was called manually (it should never be called manually)\n"
+				+ "\t- the controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
+			)
 		}
 	}
 
@@ -475,6 +539,19 @@ public enum _UIViewControllerAppearState {
 		switch self {
 		case .WillAppear, .WillDisappear: return true
 		case .DidAppear, .DidDisappear:   return false
+		}
+	}
+}
+
+
+extension UIViewController.AppearState: CustomStringConvertible {
+
+	public var description: String {
+		switch self {
+		case .DidAppear:     return "DidAppear"
+		case .DidDisappear:  return "DidDisappear"
+		case .WillAppear:    return "WillAppear"
+		case .WillDisappear: return "WillDisappear"
 		}
 	}
 }
