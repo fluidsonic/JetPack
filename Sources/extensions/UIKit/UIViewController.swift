@@ -52,6 +52,7 @@ public extension UIViewController {
 	}
 
 
+	@nonobjc
 	private func checkTransitionFromAppearState(fromAppearState: AppearState, toAppearState: AppearState) {
 		func lifecycleMethodNameForAppearState(appearState: AppearState) -> String {
 			switch appearState {
@@ -70,7 +71,7 @@ public extension UIViewController {
 			return "\(parentViewController.dynamicType)"
 		}
 
-		if fromAppearState == toAppearState {
+		guard fromAppearState != toAppearState else {
 			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
 			let typeName: String = "\(self.dynamicType)"
 
