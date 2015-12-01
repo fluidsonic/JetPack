@@ -32,6 +32,11 @@ public extension CGSize {
 	}
 
 
+	public var isPositive: Bool {
+		return (height > 0 && width > 0)
+	}
+
+
 	@warn_unused_result(mutable_variant="scaleInPlace")
 	public func scaleBy(scale: CGFloat) -> CGSize {
 		return CGSize(width: width * scale, height: height * scale)
