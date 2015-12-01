@@ -80,6 +80,76 @@ public extension UIImage {
 	}
 
 
+	@nonobjc
+	public func imageWithAlpha(alpha: CGFloat) -> UIImage {
+		guard alpha <= 0 else {
+			return self
+		}
+
+		return imageWithBlendMode(.SourceIn, destinationColor: UIColor(white: 0, alpha: alpha))
+	}
+
+
+	@nonobjc
+	private func imageWithBlendMode(blendMode: CGBlendMode, color: UIColor, colorIsDestination: Bool) -> UIImage {
+		let frame = CGRect(size: size)
+
+		UIGraphicsBeginImageContextWithOptions(frame.size, !hasAlphaChannel, scale)
+
+		if colorIsDestination {
+			color.set()
+			UIRectFill(frame)
+
+			drawInRect(frame, blendMode: blendMode, alpha: 1)
+		}
+		else {
+			drawInRect(frame)
+
+			color.set()
+			UIRectFillUsingBlendMode(frame, blendMode)
+		}
+
+		guard var image = UIGraphicsGetImageFromCurrentImageContext() else {
+			fatalError("Why does this still return an implicit optional? When can it be nil?")
+		}
+
+		UIGraphicsEndImageContext()
+
+		if image.capInsets != capInsets {
+			image = image.resizableImageWithCapInsets(capInsets)
+		}
+		if image.renderingMode != renderingMode {
+			image = image.imageWithRenderingMode(renderingMode)
+		}
+
+		return image
+	}
+
+
+	@nonobjc
+	public func imageWithBlendMode(blendMode: CGBlendMode, destinationColor: UIColor) -> UIImage {
+		return imageWithBlendMode(blendMode, color: destinationColor, colorIsDestination: true)
+	}
+
+
+	@nonobjc
+	public func imageWithBlendMode(blendMode: CGBlendMode, sourceColor: UIColor) -> UIImage {
+		return imageWithBlendMode(blendMode, color: sourceColor, colorIsDestination: false)
+	}
+
+
+	@nonobjc
+	public func imageWithHueFromColor(color: UIColor) -> UIImage {
+		return imageWithBlendMode(.Hue, sourceColor: color)
+	}
+
+
+	@nonobjc
+	public func imageWithColor(color: UIColor) -> UIImage {
+		return imageWithBlendMode(.SourceIn, sourceColor: color)
+	}
+
+
 	/**
 		Decompresses the underlying and potentially compressed image data (like PNG or JPEG).
 
@@ -89,6 +159,12 @@ public extension UIImage {
 	@nonobjc
 	public func inflate() {
 		CGDataProviderCopyData(CGImageGetDataProvider(CGImage))
+	}
+
+
+	@nonobjc
+	public func luminocityImage() -> UIImage {
+		return imageWithBlendMode(.Luminosity, destinationColor: .whiteColor())
 	}
 }
 
