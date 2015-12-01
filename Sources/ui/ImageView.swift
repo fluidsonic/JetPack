@@ -9,26 +9,26 @@ public /* non-final */ class ImageView: View {
 	public typealias Source = _ImageViewSource
 
 	private var activityIndicatorIsVisible = false
+	private var imageLayer = Layer()
 	private var isLayouting = false
 	private var isSettingImage = false
 	private var isSettingImageFromSource = false
 	private var isSettingSource = false
 	private var isSettingSourceFromImage = false
-	private var lastDrawnTintColor: UIColor?
+	private var lastAppliedTintColor: UIColor?
 	private var lastLayoutedSize = CGSize()
-	private var needsUpdateContents = false
 	private var sourceImageRetrievalCompleted = false
 	private var sourceSession: Session?
 	private var sourceSessionConfigurationIsValid = true
+	private var tintedImage: UIImage?
 
 
 	public override init() {
 		super.init()
 
-		super.contentMode = .TopLeft
-
-		opaque = false
 		userInteractionEnabled = false
+
+		layer.addSublayer(imageLayer)
 	}
 
 
@@ -78,97 +78,115 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var clipsImageToPadding = false {
-		didSet {
-			guard clipsImageToPadding != oldValue else {
-				return
-			}
-
-			if image != nil && !padding.isEmpty {
-				setNeedsUpdateContents()
-			}
-
-			invalidateConfiguration()
-		}
-	}
-
-
-	private func computeDrawFrame() -> CGRect {
+	private func computeImageLayerFrame() -> CGRect {
 		guard let image = image else {
 			return .zero
 		}
 
 		let imageSize = image.size
-		let availableFrame = CGRect(size: bounds.size).insetBy(padding)
+		let maximumImageLayerFrame = CGRect(size: bounds.size).insetBy(padding)
 
-		guard !imageSize.isEmpty && availableFrame.width > 0 && availableFrame.height > 0 else {
+		guard imageSize.isPositive && maximumImageLayerFrame.size.isPositive else {
 			return .zero
 		}
-
-		var drawFrame = CGRect()
 
 		let gravity = self.gravity
 		let scaling = self.scaling
 
+		var imageLayerFrame = CGRect()
+
 		switch scaling {
 		case .FitIgnoringAspectRatio:
-			drawFrame.size = availableFrame.size
+			imageLayerFrame.size = maximumImageLayerFrame.size
 
 		case .FitInside, .FitOutside:
-			let horizontalScale = availableFrame.width / imageSize.width
-			let verticalScale = availableFrame.height / imageSize.height
+			let horizontalScale = maximumImageLayerFrame.width / imageSize.width
+			let verticalScale = maximumImageLayerFrame.height / imageSize.height
 			let scale = (scaling == .FitInside ? min : max)(horizontalScale, verticalScale)
 
-			drawFrame.size = imageSize.scaleBy(scale)
+			imageLayerFrame.size = imageSize.scaleBy(scale)
 
 		case .FitHorizontally:
-			drawFrame.width = availableFrame.width
-			drawFrame.height = imageSize.height * (drawFrame.width / imageSize.width)
+			imageLayerFrame.width = maximumImageLayerFrame.width
+			imageLayerFrame.height = imageSize.height * (imageLayerFrame.width / imageSize.width)
 
 		case .FitHorizontallyIgnoringAspectRatio:
-			drawFrame.width = availableFrame.width
-			drawFrame.height = imageSize.height
+			imageLayerFrame.width = maximumImageLayerFrame.width
+			imageLayerFrame.height = imageSize.height
 
 		case .FitVertically:
-			drawFrame.height = availableFrame.height
-			drawFrame.width = imageSize.width * (drawFrame.height / imageSize.height)
+			imageLayerFrame.height = maximumImageLayerFrame.height
+			imageLayerFrame.width = imageSize.width * (imageLayerFrame.height / imageSize.height)
 
 		case .FitVerticallyIgnoringAspectRatio:
-			drawFrame.height = availableFrame.height
-			drawFrame.width = imageSize.width
+			imageLayerFrame.height = maximumImageLayerFrame.height
+			imageLayerFrame.width = imageSize.width
 
 		case .None:
-			drawFrame.size = imageSize
+			imageLayerFrame.size = imageSize
 		}
 
 		switch gravity.horizontal {
 		case .Left:
-			drawFrame.left = availableFrame.left
+			imageLayerFrame.left = maximumImageLayerFrame.left
 
 		case .Center:
-			drawFrame.horizontalCenter = availableFrame.horizontalCenter
+			imageLayerFrame.horizontalCenter = maximumImageLayerFrame.horizontalCenter
 
 		case .Right:
-			drawFrame.right = availableFrame.right
+			imageLayerFrame.right = maximumImageLayerFrame.right
 		}
 
 		switch gravity.vertical {
 		case .Top:
-			drawFrame.top = availableFrame.top
+			imageLayerFrame.top = maximumImageLayerFrame.top
 
 		case .Center:
-			drawFrame.verticalCenter = availableFrame.verticalCenter
+			imageLayerFrame.verticalCenter = maximumImageLayerFrame.verticalCenter
 
 		case .Bottom:
-			drawFrame.bottom = availableFrame.bottom
+			imageLayerFrame.bottom = maximumImageLayerFrame.bottom
 		}
-		
-		drawFrame = alignToGrid(drawFrame)
-		return drawFrame
+
+		switch image.imageOrientation {
+		case .Left, .LeftMirrored, .Right, .RightMirrored:
+			let center = imageLayerFrame.center
+			swap(&imageLayerFrame.width, &imageLayerFrame.height)
+			imageLayerFrame.center = center
+
+		case .Down, .DownMirrored, .Up, .UpMirrored:
+			break
+		}
+
+		imageLayerFrame = alignToGrid(imageLayerFrame)
+
+		return imageLayerFrame
 	}
 
 
-	@available(*, unavailable, message="Use .gravity and .scaleMode instead.")
+	private func computeImageLayerTransform() -> CGAffineTransform {
+		guard let image = image else {
+			return CGAffineTransformIdentity
+		}
+
+		// TODO support mirrored variants
+		let transform: CGAffineTransform
+		switch image.imageOrientation {
+		case .Down:          transform = CGAffineTransformMakeRotation(.Pi)
+		case .DownMirrored:  transform = CGAffineTransformMakeRotation(.Pi)
+		case .Left:          transform = CGAffineTransformMakeRotation(-.Pi / 2)
+		case .LeftMirrored:  transform = CGAffineTransformMakeRotation(-.Pi / 2)
+		case .Right:         transform = CGAffineTransformMakeRotation(.Pi / 2)
+		case .RightMirrored: transform = CGAffineTransformMakeRotation(.Pi / 2)
+		case .Up:            transform = CGAffineTransformIdentity
+		case .UpMirrored:    transform = CGAffineTransformIdentity
+		}
+
+		return transform
+	}
+
+
+	@available(*, unavailable, message="Use .gravity and .scaling instead.")
 	public final override var contentMode: UIViewContentMode {
 		get { return super.contentMode }
 		set { super.contentMode = newValue }
@@ -179,7 +197,7 @@ public /* non-final */ class ImageView: View {
 		super.didMoveToWindow()
 
 		if window != nil {
-			startOrUpdateSourceSession()
+			setNeedsLayout()
 		}
 	}
 
@@ -191,9 +209,7 @@ public /* non-final */ class ImageView: View {
 				return
 			}
 
-			if image != nil && scaling != .FitIgnoringAspectRatio {
-				setNeedsUpdateContents()
-			}
+			setNeedsLayout()
 
 			invalidateConfiguration()
 		}
@@ -219,7 +235,9 @@ public /* non-final */ class ImageView: View {
 				isSettingSourceFromImage = false
 			}
 
-			setNeedsUpdateContents()
+			lastAppliedTintColor = nil
+
+			setNeedsLayout()
 
 			if (image?.size ?? .zero) != (oldValue?.size ?? .zero) {
 				invalidateIntrinsicContentSize()
@@ -254,8 +272,6 @@ public /* non-final */ class ImageView: View {
 		let bounds = self.bounds
 		if bounds.size != lastLayoutedSize {
 			lastLayoutedSize = bounds.size
-			needsUpdateContents = true
-
 			sourceSessionConfigurationIsValid = false
 		}
 
@@ -263,10 +279,28 @@ public /* non-final */ class ImageView: View {
 			activityIndicator.center = bounds.insetBy(padding).center
 		}
 
-		if needsUpdateContents {
-			needsUpdateContents = false
+		let imageLayerFrame = computeImageLayerFrame()
+		imageLayer.bounds = CGRect(size: imageLayerFrame.size)
+		imageLayer.position = imageLayerFrame.center
 
-			updateContents()
+		if let image = image where image.renderingMode == .AlwaysTemplate {
+			if tintColor != lastAppliedTintColor {
+				lastAppliedTintColor = tintColor
+
+				tintedImage = image.imageWithColor(tintColor)
+			}
+		}
+		else {
+			tintedImage = nil
+		}
+
+		if let contentImage = tintedImage ?? image {
+			imageLayer.contents = contentImage.CGImage
+			imageLayer.transform = CATransform3DMakeAffineTransform(computeImageLayerTransform())
+		}
+		else {
+			imageLayer.contents = nil
+			imageLayer.transform = CATransform3DIdentity
 		}
 
 		startOrUpdateSourceSession()
@@ -290,9 +324,7 @@ public /* non-final */ class ImageView: View {
 				return
 			}
 
-			if image != nil {
-				setNeedsUpdateContents()
-			}
+			setNeedsLayout()
 
 			invalidateConfiguration()
 			invalidateIntrinsicContentSize()
@@ -312,16 +344,6 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private func setNeedsUpdateContents() {
-		guard !needsUpdateContents else {
-			return
-		}
-
-		needsUpdateContents = true
-		setNeedsLayout()
-	}
-
-
 	@IBInspectable
 	public var scaling: Scaling = .FitInside {
 		didSet {
@@ -329,9 +351,7 @@ public /* non-final */ class ImageView: View {
 				return
 			}
 
-			if image != nil {
-				setNeedsUpdateContents()
-			}
+			setNeedsLayout()
 
 			invalidateConfiguration()
 		}
@@ -479,9 +499,7 @@ public /* non-final */ class ImageView: View {
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		if tintColor != lastDrawnTintColor && image?.renderingMode == .AlwaysTemplate {
-			setNeedsUpdateContents()
-		}
+		setNeedsLayout()
 	}
 
 
@@ -518,54 +536,6 @@ public /* non-final */ class ImageView: View {
 				}
 			}
 		}
-	}
-
-
-	private func updateContents() {
-		let drawFrame = computeDrawFrame()
-
-		guard !drawFrame.isEmpty, let image = image else {
-			layer.contents = nil
-			return
-		}
-
-		let bounds = self.bounds
-		let padding = self.padding
-		let scale = gridScaleFactor
-
-		let isOpaque = !image.hasAlphaChannel && drawFrame.contains(bounds)
-		let needsClipping = clipsImageToPadding && !padding.isEmpty
-		let needsTinting = image.renderingMode == .AlwaysTemplate
-
-		UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, scale)
-
-		let context = UIGraphicsGetCurrentContext()
-		if needsClipping {
-			CGContextClipToRect(context, bounds.insetBy(padding))
-		}
-
-		if needsTinting {
-			let transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(1, -1), 0, -bounds.height)
-			let drawFrame = drawFrame.transform(transform)
-
-			CGContextConcatCTM(context, transform)
-			CGContextClipToMask(context, drawFrame, image.CGImage)
-			tintColor.setFill()
-			CGContextFillRect(context, drawFrame)
-
-			lastDrawnTintColor = tintColor
-		}
-		else {
-			image.drawInRect(drawFrame)
-
-			lastDrawnTintColor = nil
-		}
-
-		let contents = UIGraphicsGetImageFromCurrentImageContext()
-		UIGraphicsEndImageContext()
-
-		layer.contents = contents.CGImage
-		layer.contentsScale = scale
 	}
 
 
@@ -719,5 +689,14 @@ private struct ClosureSessionListener: ImageView.SessionListener {
 
 	private func sessionDidRetrieveImage(image: UIImage) {
 		didRetrieveImage(image)
+	}
+}
+
+
+
+private final class Layer: CALayer {
+
+	private override func actionForKey(event: String) -> CAAction? {
+		return nil
 	}
 }
