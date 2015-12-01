@@ -52,7 +52,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 		}
 
 		for subview in childContainer.subviews {
-			guard let childView = subview as? ChildView where childView.viewController === viewController else {
+			guard let childView = subview as? ChildView where childView.childViewController === viewController else {
 				continue
 			}
 
@@ -189,7 +189,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 			updateChildView(childView, withPreferredAppearState: .DidDisappear, animated: false)
 
 			childView.index = -1
-			childView.viewController = nil
+			childView.childViewController = nil
 
 			reusableChildView = childView
 		}
@@ -205,7 +205,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 				let childView = reusableChildView ?? ChildView()
 				childView.index = index
-				childView.viewController = viewController
+				childView.childViewController = viewController
 
 				reusableChildView = nil
 
@@ -328,7 +328,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 			}
 
 			if intersection.width > mostVisibleWidth {
-				mostVisibleViewController = childView.viewController
+				mostVisibleViewController = childView.childViewController
 				mostVisibleWidth = intersection.width
 			}
 		}
@@ -571,7 +571,7 @@ private final class ChildView: View {
 
 		self.appearState = appearState
 
-		guard let viewController = self.viewController else {
+		guard let viewController = self.childViewController else {
 			return
 		}
 
@@ -635,9 +635,9 @@ private final class ChildView: View {
 	}
 
 
-	private var viewController: UIViewController? {
+	private var childViewController: UIViewController? {
 		didSet {
-			precondition((viewController != nil) != (oldValue != nil))
+			precondition((childViewController != nil) != (oldValue != nil))
 		}
 	}
 }

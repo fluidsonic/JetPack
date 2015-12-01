@@ -190,11 +190,12 @@ public extension UIViewController {
 
 	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews", toSelector: "JetPack_viewDidLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "viewDidAppear:",        toSelector: "JetPack_viewDidAppear:")
-		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",     toSelector: "JetPack_viewDidDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillAppear:",       toSelector: "JetPack_viewWillAppear:")
-		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",    toSelector: "JetPack_viewWillDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewDidAppear:",         toSelector: "JetPack_viewDidAppear:")
+		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",  toSelector: "JetPack_viewDidLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",      toSelector: "JetPack_viewDidDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillAppear:",        toSelector: "JetPack_viewWillAppear:")
+		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",     toSelector: "JetPack_viewWillDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillLayoutSubviews", toSelector: "JetPack_viewWillLayoutSubviews")
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
@@ -257,9 +258,11 @@ public extension UIViewController {
 
 	@objc(JetPack_viewDidLayoutSubviews)
 	private func swizzled_viewDidLayoutSubviews() {
-		updateDecorationInsets()
-
 		swizzled_viewDidLayoutSubviews()
+
+		if let navigationController = self as? UINavigationController {
+			navigationController.checkNavigationBarFrame()
+		}
 	}
 
 
@@ -279,7 +282,6 @@ public extension UIViewController {
 			}
 		}
 
-		// TODO invalidate decoration insets when moving to a window instead of when appearing
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
 
@@ -302,6 +304,14 @@ public extension UIViewController {
 		}
 
 		swizzled_viewWillDisappear(animated)
+	}
+
+
+	@objc(JetPack_viewWillLayoutSubviews)
+	private func swizzled_viewWillLayoutSubviews() {
+		updateDecorationInsets()
+
+		swizzled_viewWillLayoutSubviews()
 	}
 
 
@@ -365,6 +375,14 @@ public extension UIViewController {
 
 		decorationInsetsAnimation = nil
 		decorationInsetsAreValid = true
+	}
+
+
+	@objc(JetPack_viewDidMoveToWindow)
+	public func viewDidMoveToWindow() {
+		if window != nil && appearState.isAppear && !decorationInsetsAreValid {
+			view.setNeedsLayout()
+		}
 	}
 
 

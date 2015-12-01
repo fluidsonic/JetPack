@@ -168,9 +168,25 @@ public extension UIView {
 	}
 
 
+	@objc(JetPack_didMoveToWindow)
+	private func swizzled_didMoveToWindow() {
+		swizzled_didMoveToWindow()
+
+		viewController?.viewDidMoveToWindow()
+	}
+
+
 	@nonobjc
 	internal static func UIView_setUp() {
+		swizzleMethodInType(self, fromSelector: "didMoveToWindow",                toSelector: "JetPack_didMoveToWindow")
 		swizzleMethodInType(self, fromSelector: "invalidateIntrinsicContentSize", toSelector: "JetPack_invalidateIntrinsicContentSize")
+	}
+
+
+	@nonobjc
+	public final var viewController: UIViewController? {
+		// this or private API…
+		return nextResponder() as? UIViewController
 	}
 
 

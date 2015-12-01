@@ -3,6 +3,11 @@ import UIKit
 
 public extension UINavigationController {
 
+	private struct AssociatedKeys {
+		private static var lastKnownNavigationBarBottom = UInt8()
+	}
+
+
 	public override func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
 		return addTopAndBottomBarsToDecorationInsets(innerDecorationInsets)
 	}
@@ -23,6 +28,27 @@ public extension UINavigationController {
 		}
 
 		return decorationInsets
+	}
+
+
+	@nonobjc
+	internal func checkNavigationBarFrame() {
+		// UINavigationControllers update their navigation bar and force-layout their child view controllers at weird times (e.g. when they were added to a window)
+		// which causes decoration insets not being updated due to status bar height changes. So for now we check for changes here.
+
+		let navigationBarBottom = navigationBar.frame.bottom
+		if navigationBarBottom != lastKnownNavigationBarBottom {
+			lastKnownNavigationBarBottom = navigationBarBottom
+
+			topViewController?.invalidateDecorationInsetsWithAnimation(nil)
+		}
+	}
+
+
+	@nonobjc
+	private var lastKnownNavigationBarBottom: CGFloat {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.lastKnownNavigationBarBottom) as? CGFloat ?? 0 }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.lastKnownNavigationBarBottom, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
@@ -52,6 +78,8 @@ public extension UINavigationController {
 		}
 
 		swizzled_setNavigationBarHidden(navigationBarHidden, animated: animated)
+
+		lastKnownNavigationBarBottom = navigationBar.frame.bottom
 
 		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? Animation(duration: NSTimeInterval(UINavigationControllerHideShowBarDuration), timing: .EaseInEaseOut) : nil)
 	}
