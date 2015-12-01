@@ -4,10 +4,15 @@ import UIKit
 public extension UIImage {
 
 	@nonobjc
-	public convenience init?(placeholderOfSize size: CGSize) {
-		let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGImageAlphaInfo.PremultipliedLast.rawValue)
+	public convenience init(placeholderOfSize size: CGSize) {
+		guard size.isPositive else {
+			fatalError("\(__FUNCTION__) requires a positive size")
+		}
+		guard let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGImageAlphaInfo.PremultipliedLast.rawValue) else {
+			fatalError("\(__FUNCTION__) could not create context")
+		}
 		guard let cgimage = CGBitmapContextCreateImage(context) else {
-			return nil
+			fatalError("\(__FUNCTION__) could not create image from context")
 		}
 
 		self.init(CGImage: cgimage, scale: 1, orientation: .Up)
