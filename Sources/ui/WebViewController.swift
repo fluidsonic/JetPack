@@ -100,20 +100,21 @@ public /* non-final */ class WebViewController: ViewController {
 	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
-		let viewBounds = view.bounds
+		let bounds = view.bounds
 
 		animation.runAlways {
-			webView.scrollView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
-			webView.scrollView.scrollIndicatorInsets = outerDecorationInsets
+			let innerDecorationInsets = self.innerDecorationInsets
+
+			// WKWebView doesn't properly support non-zero scrollView.contentInset at the moment causing .contentSize to be too large.
+			webView.frame = bounds.insetBy(innerDecorationInsets)
+			webView.scrollView.scrollIndicatorInsets = outerDecorationInsets.increaseBy(innerDecorationInsets.inverse)
 
 			if activityIndicator.superview != nil {
 				var activityIndicatorFrame = CGRect()
 				activityIndicatorFrame.size = activityIndicator.sizeThatFits()
-				activityIndicatorFrame.center = viewBounds.insetBy(innerDecorationInsets).center
+				activityIndicatorFrame.center = bounds.insetBy(innerDecorationInsets).center
 				activityIndicator.frame = view.alignToGrid(activityIndicatorFrame)
 			}
-
-			webView.frame = view.bounds
 		}
 	}
 
