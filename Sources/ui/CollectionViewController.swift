@@ -3,6 +3,8 @@ import UIKit
 
 public /* non-final */ class CollectionViewController: ViewController {
 
+	private var lastLayoutedSize = CGSize()
+
 	internal let collectionViewLayout: UICollectionViewLayout
 
 
@@ -36,13 +38,20 @@ public /* non-final */ class CollectionViewController: ViewController {
 	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
+		let bounds = view.bounds
+
 		animation.runAlways {
 			if automaticallyAdjustsCollectionViewInsets {
 				collectionView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
 				collectionView.scrollIndicatorInsets = outerDecorationInsets
 			}
 
-			collectionView.frame = CGRect(size: view.bounds.size)
+			if bounds.size != lastLayoutedSize {
+				lastLayoutedSize = bounds.size
+
+				collectionView.frame = CGRect(size: bounds.size)
+				collectionViewLayout.invalidateLayout()
+			}
 		}
 	}
 
