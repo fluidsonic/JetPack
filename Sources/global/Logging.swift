@@ -16,5 +16,14 @@ public func log(@autoclosure messageClosure: Void throws -> String, function: St
 	let message = try messageClosure()
 	let fileName = (file.stringValue as NSString).lastPathComponent
 
-	NSLog("%@", "\(message) \t\t\t// \(fileName):\(line) in \(function.stringValue)")
+	logWithoutContext("\(message) \t\t\t// \(fileName):\(line) in \(function.stringValue)")
+}
+
+
+public func logWithoutContext(@autoclosure messageClosure: Void throws -> String) rethrows {
+	if !logEnabled {
+		return
+	}
+
+	NSLog("%@", "\(try messageClosure())")
 }
