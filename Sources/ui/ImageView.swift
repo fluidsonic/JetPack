@@ -531,13 +531,13 @@ public /* non-final */ class ImageView: View {
 
 		let bounds = self.bounds
 		let padding = self.padding
+		let scale = gridScaleFactor
 
 		let isOpaque = !image.hasAlphaChannel && drawFrame.contains(bounds)
 		let needsClipping = clipsImageToPadding && !padding.isEmpty
 		let needsTinting = image.renderingMode == .AlwaysTemplate
 
-		let scale = gridScaleFactor
-		UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, gridScaleFactor)
+		UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, scale)
 
 		let context = UIGraphicsGetCurrentContext()
 		if needsClipping {
