@@ -52,7 +52,7 @@ public extension UIBarButtonItem {
 
 	@nonobjc
 	public static func fixedSpaceOfWidth(width: CGFloat) -> UIBarButtonItem {
-		let item = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+		let item = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: nil)
 		item.width = width
 		return item
 	}
