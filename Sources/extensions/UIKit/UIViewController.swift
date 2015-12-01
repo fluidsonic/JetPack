@@ -437,6 +437,22 @@ public enum _UIViewControllerAppearState {
 	}
 
 
+	public var isAppear: Bool {
+		switch self {
+		case .WillAppear, .DidAppear:       return true
+		case .WillDisappear, .DidDisappear: return false
+		}
+	}
+
+
+	public var isDisappear: Bool {
+		switch self {
+		case .WillAppear, .DidAppear:       return false
+		case .WillDisappear, .DidDisappear: return true
+		}
+	}
+
+
 	public var isTransition: Bool {
 		switch self {
 		case .WillAppear, .WillDisappear: return true
