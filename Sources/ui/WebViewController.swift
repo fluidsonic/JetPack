@@ -51,10 +51,21 @@ public /* non-final */ class WebViewController: ViewController {
 
 	public func handleLink(link: NSURL) -> Bool {
 		switch link.scheme {
-		case "mailto":        return handleEmailLink(link)
-		case "http", "https": return handleWebLink(link)
-		default:              return handleUnknownLink(link)
+		case "http", "https":    return handleWebLink(link)
+		case "mailto":           return handleEmailLink(link)
+		case "tel", "telprompt": return handlePhoneLink(link)
+		default:                 return handleUnknownLink(link)
 		}
+	}
+
+
+	public func handlePhoneLink(link: NSURL) -> Bool {
+		guard opensLinksExternally else {
+			return false
+		}
+
+		UIApplication.sharedApplication().openURL(link)
+		return true
 	}
 
 
