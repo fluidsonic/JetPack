@@ -61,7 +61,7 @@ public func not<Parameter>(closure: Parameter throws -> Bool) -> Parameter throw
 }
 
 
-internal func obfuscatedSelector(parts: String...) -> Selector {
+public func obfuscatedSelector(parts: String...) -> Selector {
 	return Selector(parts.joinWithSeparator(""))
 }
 
@@ -114,7 +114,7 @@ public func pointerOf(object: AnyObject) -> COpaquePointer {
 }
 
 
-internal func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
+public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethod(type, fromSelector)
