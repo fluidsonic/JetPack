@@ -1,12 +1,27 @@
 public struct PhoneNumber {
 
-	public var countryCode: String?
 	public var digits: Digits
+	public var localCountry: Country?
 
 
-	public init(digits: Digits, countryCode: String?) {
-		self.countryCode = countryCode
+	public init(digits: Digits, localCountry: Country? = nil) {
 		self.digits = digits
+		self.localCountry = localCountry
+	}
+
+
+	public init(digits: String, localCountry: Country? = nil) {
+		self.init(digits: Digits(digits), localCountry: localCountry)
+	}
+
+
+	public var country: Country? {
+		return Country(phoneNumber: digits) ?? localCountry
+	}
+
+
+	public var isEmpty: Bool {
+		return digits.isEmpty
 	}
 
 
@@ -51,7 +66,17 @@ public struct PhoneNumber {
 		}
 
 
-		public init(string: String) {
+		public init(_ array: [Digit]) {
+			values = array
+		}
+
+
+		public init <Sequence: SequenceType where Sequence.Generator.Element == Digit>(_ sequence: Sequence) {
+			values = Array(sequence)
+		}
+
+
+		public init(_ string: String) {
 			values = string.characters.map({ Digit(character: $0) }).filterNonNil()
 		}
 
@@ -74,7 +99,7 @@ extension PhoneNumber: CustomStringConvertible {
 extension PhoneNumber: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
-		return "PhoneNumber(digits: \"\(digits)\", countryCode: \"\(countryCode)\""
+		return "PhoneNumber(digits: \"\(digits)\", localCountry: \(localCountry)"
 	}
 }
 
@@ -82,7 +107,7 @@ extension PhoneNumber: CustomDebugStringConvertible {
 extension PhoneNumber: Hashable {
 
 	public var hashValue: Int {
-		return (countryCode?.hashValue ?? -1) ^ digits.hashValue
+		return (localCountry?.hashValue ?? -1) ^ digits.hashValue
 	}
 }
 
@@ -90,7 +115,7 @@ extension PhoneNumber: Hashable {
 extension PhoneNumber.Digits: ArrayLiteralConvertible {
 
 	public init(arrayLiteral elements: Digit...) {
-		self.values = elements
+		self.init(elements)
 	}
 }
 
@@ -171,23 +196,23 @@ extension PhoneNumber.Digits: RangeReplaceableCollectionType {
 extension PhoneNumber.Digits: StringLiteralConvertible {
 
 	public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
-		self.init(string: value)
+		self.init(value)
 	}
 
 
 	public init(stringLiteral value: StringLiteralType) {
-		self.init(string: value)
+		self.init(value)
 	}
 
 
 	public init(unicodeScalarLiteral value: StringLiteralType) {
-		self.init(string: value)
+		self.init(value)
 	}
 }
 
 
 public func == (a: PhoneNumber, b: PhoneNumber) -> Bool {
-	return a.countryCode == b.countryCode && a.digits == b.digits
+	return a.localCountry == b.localCountry && a.digits == b.digits
 }
 
 
