@@ -228,7 +228,7 @@ extension Animation.Timing: CustomStringConvertible {
 extension _Optional where Wrapped == Animation {
 
 	public func runAlways(@noescape changes: Void -> Void) {
-		if let animation = map({ $0 }) {
+		if let animation = value {
 			animation.run(changes)
 		}
 		else {
@@ -238,7 +238,7 @@ extension _Optional where Wrapped == Animation {
 
 
 	public func runAlwaysWithCompletion(@noescape changes: (complete: Animation.CompletionRegistration) -> Void) {
-		if let animation = map({ $0 }) {
+		if let animation = value {
 			animation.runWithCompletion(changes)
 		}
 		else {
