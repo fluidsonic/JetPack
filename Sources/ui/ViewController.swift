@@ -37,6 +37,11 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	public override func loadView() {
+		view = View()
+	}
+
+
 	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation:) instead")
 	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		let preparation = seguePreparation
