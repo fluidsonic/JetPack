@@ -64,7 +64,7 @@ public extension UIViewController {
 		}
 
 		func nameForParentViewController() -> String {
-			guard let parentViewController = parentViewController else {
+			guard let parentViewController = reliableParentViewController else {
 				return "the parent view controller"
 			}
 
@@ -254,6 +254,20 @@ public extension UIViewController {
 
 
 	@nonobjc
+	private var reliableParentViewController: UIViewController? {
+		if let parentViewController = parentViewController {
+			return parentViewController
+		}
+		if let splitViewController = splitViewController where splitViewController.viewControllers.first === self {
+			// parentViewController may be nil while split view controller's master view controller is displayed as overlay
+			return splitViewController
+		}
+
+		return nil
+	}
+
+
+	@nonobjc
 	internal static func UIViewController_setUp() {
 		swizzleMethodInType(self, fromSelector: "viewDidAppear:",         toSelector: "JetPack_viewDidAppear:")
 		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",  toSelector: "JetPack_viewDidLayoutSubviews")
@@ -287,7 +301,7 @@ public extension UIViewController {
 	private func swizzled_viewDidAppear(animated: Bool) {
 		self.appearState = .DidAppear
 
-		if isBeingPresented() && parentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
+		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
 				guard viewController.appearState == .DidAppear else {
 					return
@@ -305,7 +319,7 @@ public extension UIViewController {
 	private func swizzled_viewDidDisappear(animated: Bool) {
 		self.appearState = .DidDisappear
 
-		if isBeingDismissed() && parentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
+		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
 				guard viewController.appearState == .DidAppear else {
 					return
@@ -335,7 +349,7 @@ public extension UIViewController {
 	private func swizzled_viewWillAppear(animated: Bool) {
 		self.appearState = .WillAppear
 
-		if isBeingPresented() && parentViewController == nil, let presentingViewController = self.presentingViewController, presentationController = presentationController where !presentationController.shouldRemovePresentersView() {
+		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, presentationController = presentationController where !presentationController.shouldRemovePresentersView() {
 			presentingViewControllerForCurrentCoverageCallbacks = presentingViewController
 
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
@@ -358,7 +372,7 @@ public extension UIViewController {
 	private func swizzled_viewWillDisappear(animated: Bool) {
 		self.appearState = .WillDisappear
 
-		if isBeingDismissed() && parentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
+		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
 				guard viewController.appearState == .DidAppear else {
 					return
@@ -404,6 +418,8 @@ public extension UIViewController {
 
 	@nonobjc
 	internal func updateDecorationInsets() {
+		let parentViewController = reliableParentViewController
+
 		guard let window = window where parentViewController == nil || !decorationInsetsAreValid else {
 			return
 		}
