@@ -16,3 +16,11 @@ public protocol _Optional: NilLiteralConvertible {
 
 
 extension Optional: _Optional {}
+
+
+internal extension _Optional {
+
+	internal var value: Wrapped? {
+		return map { $0 }
+	}
+}
