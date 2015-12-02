@@ -39,6 +39,7 @@ public /* non-final */ class ViewController: UIViewController {
 
 	public override func loadView() {
 		view = View()
+		view.frame = UIScreen.mainScreen().bounds // required or else UISplitViewController's overlay animation gets broken
 	}
 
 
