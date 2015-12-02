@@ -51,6 +51,13 @@ public extension UIView {
 
 
 	@nonobjc
+	public final var delegateViewController: UIViewController? {
+		// this or private API…
+		return nextResponder() as? UIViewController
+	}
+
+
+	@nonobjc
 	@warn_unused_result
 	public final func floorToGrid(value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
@@ -172,7 +179,7 @@ public extension UIView {
 	private func swizzled_didMoveToWindow() {
 		swizzled_didMoveToWindow()
 
-		viewController?.viewDidMoveToWindow()
+		delegateViewController?.viewDidMoveToWindow()
 	}
 
 
@@ -180,13 +187,6 @@ public extension UIView {
 	internal static func UIView_setUp() {
 		swizzleMethodInType(self, fromSelector: "didMoveToWindow",                toSelector: "JetPack_didMoveToWindow")
 		swizzleMethodInType(self, fromSelector: "invalidateIntrinsicContentSize", toSelector: "JetPack_invalidateIntrinsicContentSize")
-	}
-
-
-	@nonobjc
-	public final var viewController: UIViewController? {
-		// this or private API…
-		return nextResponder() as? UIViewController
 	}
 
 
