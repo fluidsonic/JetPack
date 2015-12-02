@@ -467,7 +467,6 @@ extension DelegateProxy: UIScrollViewDelegate {
 		let scrollViewController = self.scrollViewController
 
 		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
-		scrollViewController.updatePrimaryViewController()
 	}
 
 
@@ -512,7 +511,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 
 		scrollViewController.layoutChildrenForcingLayoutUpdate(false)
 
-		if scrollView.tracking {
+		if scrollView.tracking || scrollView.decelerating {
 			scrollViewController.updatePrimaryViewController()
 		}
 
