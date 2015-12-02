@@ -6,6 +6,7 @@ public struct Country {
 	public let englishName: String
 
 
+	// TODO refactor this as a calling code can result in multiple countries
 	public init?(callingCode: PhoneNumber.Digits) {
 		guard let country = Country.allByCallingCode[callingCode.count]?[callingCode] else {
 			return nil
@@ -15,6 +16,7 @@ public struct Country {
 	}
 
 
+	// TODO refactor this as a calling code can result in multiple countries
 	public init?(phoneNumber: PhoneNumber.Digits) {
 		let digitsExcludingPrefix: PhoneNumber.Digits
 		if phoneNumber.count >= 2 && phoneNumber[0] == .Plus {
@@ -142,7 +144,7 @@ public extension Country {
 		Country(isoCode2: "BQ", isoCode3: "BES", englishName: "Bonaire, Sint Eustatius and Saba", callingCodes: ["599-7"]),
 		Country(isoCode2: "BA", isoCode3: "BIH", englishName: "Bosnia and Herzegovina", callingCodes: ["387"]),
 		Country(isoCode2: "BW", isoCode3: "BWA", englishName: "Botswana", callingCodes: ["267"]),
-		Country(isoCode2: "BV", isoCode3: "BVT", englishName: "Bouvet Island", callingCodes: ["47"]),
+		Country(isoCode2: "BV", isoCode3: "BVT", englishName: "Bouvet Island", callingCodes: []), // calling code conflicts with Norway
 		Country(isoCode2: "BR", isoCode3: "BRA", englishName: "Brazil", callingCodes: ["55"]),
 		Country(isoCode2: "IO", isoCode3: "IOT", englishName: "British Indian Ocean Territory", callingCodes: ["246"]),
 		Country(isoCode2: "BN", isoCode3: "BRN", englishName: "Brunei Darussalam", callingCodes: ["673"]),
@@ -151,7 +153,7 @@ public extension Country {
 		Country(isoCode2: "BI", isoCode3: "BDI", englishName: "Burundi", callingCodes: ["257"]),
 		Country(isoCode2: "KH", isoCode3: "KHM", englishName: "Cambodia", callingCodes: ["855"]),
 		Country(isoCode2: "CM", isoCode3: "CMR", englishName: "Cameroon", callingCodes: ["237"]),
-		Country(isoCode2: "CA", isoCode3: "CAN", englishName: "Canada", callingCodes: ["1-403", "1-587", "1-780", "1-825", "1-236", "1-250", "1-604", "1-672", "1-778", "1-204", "1-431", "1-506", "1-709", "1-782", "1-902", "1-226", "1-249", "1-289", "1-343", "1-365", "1-387", "1-416", "1-437", "1-519", "1-548", "1-613", "1-647", "1-705", "1-742", "1-807", "1-905", "1-902", "1-418", "1-438", "1-450", "1-514", "1-579", "1-581", "1-819", "1-873", "1-306", "1-639", "1-867"]),
+		Country(isoCode2: "CA", isoCode3: "CAN", englishName: "Canada", callingCodes: ["1-403", "1-587", "1-780", "1-825", "1-236", "1-250", "1-604", "1-672", "1-778", "1-204", "1-431", "1-506", "1-709", "1-782", "1-902", "1-226", "1-249", "1-289", "1-343", "1-365", "1-387", "1-416", "1-437", "1-519", "1-548", "1-613", "1-647", "1-705", "1-742", "1-807", "1-905", "1-418", "1-438", "1-450", "1-514", "1-579", "1-581", "1-819", "1-873", "1-306", "1-639", "1-867"]),
 		Country(isoCode2: "CV", isoCode3: "CPV", englishName: "Cape Verde", callingCodes: ["238"]),
 		Country(isoCode2: "KY", isoCode3: "CYM", englishName: "Cayman Islands", callingCodes: ["1-345"]),
 		Country(isoCode2: "CF", isoCode3: "CAF", englishName: "Central African Republic", callingCodes: ["236"]),
@@ -190,7 +192,7 @@ public extension Country {
 		Country(isoCode2: "FR", isoCode3: "FRA", englishName: "France", callingCodes: ["33"]),
 		Country(isoCode2: "GF", isoCode3: "GUF", englishName: "French Guiana", callingCodes: ["594"]),
 		Country(isoCode2: "PF", isoCode3: "PYF", englishName: "French Polynesia", callingCodes: ["689"]),
-		Country(isoCode2: "TF", isoCode3: "ATF", englishName: "French Southern Territories", callingCodes: ["262"]),
+		Country(isoCode2: "TF", isoCode3: "ATF", englishName: "French Southern Territories", callingCodes: []), // calling code conflicts with Réunion
 		Country(isoCode2: "GA", isoCode3: "GAB", englishName: "Gabon", callingCodes: ["241"]),
 		Country(isoCode2: "GM", isoCode3: "GMB", englishName: "Gambia", callingCodes: ["220"]),
 		Country(isoCode2: "GE", isoCode3: "GEO", englishName: "Georgia", callingCodes: ["995"]),
@@ -226,7 +228,7 @@ public extension Country {
 		Country(isoCode2: "JP", isoCode3: "JPN", englishName: "Japan", callingCodes: ["81"]),
 		Country(isoCode2: "JE", isoCode3: "JEY", englishName: "Jersey", callingCodes: ["44-1534"]),
 		Country(isoCode2: "JO", isoCode3: "JOR", englishName: "Jordan", callingCodes: ["962"]),
-		Country(isoCode2: "KZ", isoCode3: "KAZ", englishName: "Kazakhstan", callingCodes: ["7"]),
+		Country(isoCode2: "KZ", isoCode3: "KAZ", englishName: "Kazakhstan", callingCodes: ["7-6", "7-7"]),
 		Country(isoCode2: "KE", isoCode3: "KEN", englishName: "Kenya", callingCodes: ["254"]),
 		Country(isoCode2: "KI", isoCode3: "KIR", englishName: "Kiribati", callingCodes: ["686"]),
 		Country(isoCode2: "KP", isoCode3: "PRK", englishName: "Korea, Democratic People's Republic of", callingCodes: ["850"]),
@@ -296,11 +298,11 @@ public extension Country {
 		Country(isoCode2: "RU", isoCode3: "RUS", englishName: "Russian Federation", callingCodes: ["7"]),
 		Country(isoCode2: "RW", isoCode3: "RWA", englishName: "Rwanda", callingCodes: ["250"]),
 		Country(isoCode2: "RE", isoCode3: "REU", englishName: "Réunion", callingCodes: ["262"]),
-		Country(isoCode2: "BL", isoCode3: "BLM", englishName: "Saint Barthélemy", callingCodes: ["590"]),
+		Country(isoCode2: "BL", isoCode3: "BLM", englishName: "Saint Barthélemy", callingCodes: []), // calling code conflicts with Guadeloupe
 		Country(isoCode2: "SH", isoCode3: "SHN", englishName: "Saint Helena, Ascension and Tristan da Cunha", callingCodes: ["290"]),
 		Country(isoCode2: "KN", isoCode3: "KNA", englishName: "Saint Kitts and Nevis", callingCodes: ["1-869"]),
 		Country(isoCode2: "LC", isoCode3: "LCA", englishName: "Saint Lucia", callingCodes: ["1-758"]),
-		Country(isoCode2: "MF", isoCode3: "MAF", englishName: "Saint Martin (French part)", callingCodes: ["590"]),
+		Country(isoCode2: "MF", isoCode3: "MAF", englishName: "Saint Martin (French part)", callingCodes: []), // calling code conflicts with Guadeloupe
 		Country(isoCode2: "PM", isoCode3: "SPM", englishName: "Saint Pierre and Miquelon", callingCodes: ["508"]),
 		Country(isoCode2: "VC", isoCode3: "VCT", englishName: "Saint Vincent and the Grenadines", callingCodes: ["1-784"]),
 		Country(isoCode2: "WS", isoCode3: "WSM", englishName: "Samoa", callingCodes: ["685"]),
@@ -318,7 +320,7 @@ public extension Country {
 		Country(isoCode2: "SB", isoCode3: "SLB", englishName: "Solomon Islands", callingCodes: ["677"]),
 		Country(isoCode2: "SO", isoCode3: "SOM", englishName: "Somalia", callingCodes: ["252"]),
 		Country(isoCode2: "ZA", isoCode3: "ZAF", englishName: "South Africa", callingCodes: ["27"]),
-		Country(isoCode2: "GS", isoCode3: "SGS", englishName: "South Georgia and the South Sandwich Islands", callingCodes: ["500"]),
+		Country(isoCode2: "GS", isoCode3: "SGS", englishName: "South Georgia and the South Sandwich Islands", callingCodes: []), // calling code conflicts with Falkland Islands
 		Country(isoCode2: "SS", isoCode3: "SSD", englishName: "South Sudan", callingCodes: ["211"]),
 		Country(isoCode2: "ES", isoCode3: "ESP", englishName: "Spain", callingCodes: ["34"]),
 		Country(isoCode2: "LK", isoCode3: "LKA", englishName: "Sri Lanka", callingCodes: ["94"]),
@@ -357,7 +359,7 @@ public extension Country {
 		Country(isoCode2: "VG", isoCode3: "VGB", englishName: "Virgin Islands, British", callingCodes: ["1-284"]),
 		Country(isoCode2: "VI", isoCode3: "VIR", englishName: "Virgin Islands, U.S.", callingCodes: ["1-340"]),
 		Country(isoCode2: "WF", isoCode3: "WLF", englishName: "Wallis and Futuna", callingCodes: ["681"]),
-		Country(isoCode2: "EH", isoCode3: "ESH", englishName: "Western Sahara", callingCodes: ["212"]),
+		Country(isoCode2: "EH", isoCode3: "ESH", englishName: "Western Sahara", callingCodes: ["212-5288", "212-5289"]),
 		Country(isoCode2: "YE", isoCode3: "YEM", englishName: "Yemen", callingCodes: ["967"]),
 		Country(isoCode2: "ZM", isoCode3: "ZMB", englishName: "Zambia", callingCodes: ["260"]),
 		Country(isoCode2: "ZW", isoCode3: "ZWE", englishName: "Zimbabwe", callingCodes: ["263"])
