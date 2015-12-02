@@ -81,7 +81,7 @@ public extension UIViewController {
 				+ "Possible causes:\n"
 				+ "\t- \(typeName) or one of its superclasses called super.\(toMethodName) multiple times\n"
 				+ "\t- it was called manually (it should never be called manually)\n"
-				+ "\t- the controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
+				+ "\t- the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
 			)
 
 			return
@@ -103,12 +103,12 @@ public extension UIViewController {
 
 			print(
 				"\nVIEW CONTROLLER LIFECYCLE BROKEN!\n\n"
-				+ "\(typeName) (indirctly) called super.\(toMethodName) unexpectedly while the view controller is in \(fromAppearState) state.\n"
+				+ "\(typeName) (indirectly) called super.\(toMethodName) unexpectedly while the view controller is in \(fromAppearState) state.\n"
 				+ "This method must only be called after \(expectedFromMethodNames).\n\n"
 				+ "Possible causes:\n"
 				+ "\t- \(typeName) or one of its superclasses forgot to call \(expectedFromSuperCalls) earlier (or called the wrong one)\n"
 				+ "\t- it was called manually (it should never be called manually)\n"
-				+ "\t- the controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
+				+ "\t- the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
 			)
 		}
 	}
