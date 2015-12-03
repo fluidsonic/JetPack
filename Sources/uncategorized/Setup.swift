@@ -14,12 +14,13 @@ public extension UIApplication {
 		dispatch_once(&onceToken) {
 			Keyboard.setUp()
 
-			UIViewController.UIViewController_setUp()
-			UINavigationController.UINavigationController_setUp()
-
 			UIView.UIView_setUp()
+			Window.Window_setUp()
 			UITableViewCell.UITableViewCell_setUp()
 			UITextField.UITextField_setUp()
+
+			UIViewController.UIViewController_setUp()
+			UINavigationController.UINavigationController_setUp()
 		}
 	}
 }
