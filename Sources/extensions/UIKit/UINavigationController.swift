@@ -67,13 +67,13 @@ public extension UINavigationController {
 
 
 	@objc(JetPack_setNavigationBarHidden:)
-	private func swizzled_setNavigationBarHidden(navigationBarHidden: Bool) {
+	private dynamic func swizzled_setNavigationBarHidden(navigationBarHidden: Bool) {
 		setNavigationBarHidden(navigationBarHidden, animated: false)
 	}
 
 
 	@objc(JetPack_setNavigationBarHidden:animated:)
-	private func swizzled_setNavigationBarHidden(navigationBarHidden: Bool, animated: Bool) {
+	private dynamic func swizzled_setNavigationBarHidden(navigationBarHidden: Bool, animated: Bool) {
 		guard navigationBarHidden != self.navigationBarHidden else {
 			return
 		}

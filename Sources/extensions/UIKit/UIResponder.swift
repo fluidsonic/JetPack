@@ -42,6 +42,7 @@ public extension UIResponder {
 	}
 
 
+	@available(*, unavailable, message="Never call this. It gets called by UIKit only.")
 	@objc(JetPack_determineFirstResponder)
 	private func determineFirstResponder() {
 		temporaryFirstResponder = self

@@ -298,7 +298,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewDidAppear:)
-	private func swizzled_viewDidAppear(animated: Bool) {
+	private dynamic func swizzled_viewDidAppear(animated: Bool) {
 		self.appearState = .DidAppear
 
 		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
@@ -316,7 +316,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewDidDisappear:)
-	private func swizzled_viewDidDisappear(animated: Bool) {
+	private dynamic func swizzled_viewDidDisappear(animated: Bool) {
 		self.appearState = .DidDisappear
 
 		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
@@ -336,7 +336,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewDidLayoutSubviews)
-	private func swizzled_viewDidLayoutSubviews() {
+	private dynamic func swizzled_viewDidLayoutSubviews() {
 		swizzled_viewDidLayoutSubviews()
 
 		if let navigationController = self as? UINavigationController {
@@ -346,7 +346,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWillAppear:)
-	private func swizzled_viewWillAppear(animated: Bool) {
+	private dynamic func swizzled_viewWillAppear(animated: Bool) {
 		self.appearState = .WillAppear
 
 		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, presentationController = presentationController where !presentationController.shouldRemovePresentersView() {
@@ -369,7 +369,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWillDisappear:)
-	private func swizzled_viewWillDisappear(animated: Bool) {
+	private dynamic func swizzled_viewWillDisappear(animated: Bool) {
 		self.appearState = .WillDisappear
 
 		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
@@ -387,7 +387,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWillLayoutSubviews)
-	private func swizzled_viewWillLayoutSubviews() {
+	private dynamic func swizzled_viewWillLayoutSubviews() {
 		updateDecorationInsets()
 
 		swizzled_viewWillLayoutSubviews()

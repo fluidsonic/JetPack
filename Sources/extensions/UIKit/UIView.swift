@@ -166,7 +166,7 @@ public extension UIView {
 
 
 	@objc(JetPack_invalidateIntrinsicContentSize)
-	private func swizzled_invalidateIntrinsicContentSize() {
+	private dynamic func swizzled_invalidateIntrinsicContentSize() {
 		swizzled_invalidateIntrinsicContentSize()
 
 		if let superview = superview {
@@ -176,7 +176,7 @@ public extension UIView {
 
 
 	@objc(JetPack_didMoveToWindow)
-	private func swizzled_didMoveToWindow() {
+	private dynamic func swizzled_didMoveToWindow() {
 		swizzled_didMoveToWindow()
 
 		delegateViewController?.viewDidMoveToWindow()

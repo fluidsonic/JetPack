@@ -17,7 +17,7 @@ public extension UITextField {
 
 
 	@objc(JetPack_scrollIntoSight)
-	private func swizzled_scrollIntoSight() {
+	private dynamic func swizzled_scrollIntoSight() {
 		if automaticallyScrollsIntoSight {
 			swizzled_scrollIntoSight()
 		}
