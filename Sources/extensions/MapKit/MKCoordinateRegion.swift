@@ -37,3 +37,11 @@ public extension MKCoordinateRegion {
 		center = CLLocationCoordinate2D(latitude: minLatitude + (span.latitudeDelta / 2), longitude: minLongitude + (span.longitudeDelta / 2))
 	}
 }
+
+
+extension MKCoordinateRegion: Equatable {}
+
+
+public func == (a: MKCoordinateRegion, b: MKCoordinateRegion) -> Bool {
+	return a.center == b.center && a.span == b.span
+}
