@@ -11,6 +11,10 @@ public /* non-final */ class Window: _WindowInitHack {
 
 	public init(workaroundForSubclassing: Void) {
 		super.init()
+
+		if bounds.isEmpty {
+			frame = UIScreen.mainScreen().bounds
+		}
 	}
 
 
