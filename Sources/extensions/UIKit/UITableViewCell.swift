@@ -11,6 +11,11 @@ import UIKit
 
 public extension UITableViewCell {
 
+	private struct AssociatedKeys {
+		private static var predictedConfiguration = UInt8()
+	}
+
+
 	@objc(JetPack_contentHeightThatFitsWidth:defaultHeight:)
 	internal func contentHeightThatFitsWidth(width: CGFloat, defaultHeight: CGFloat) -> CGFloat {
 		return defaultHeight
@@ -37,7 +42,26 @@ public extension UITableViewCell {
 			return fallbackSizeThatFitsSize(maximumSize)
 		}
 
+		let editing: Bool
+		if let tableView = (superview as? UITableView) ?? (superview?.superview as? UITableView), let indexPath = tableView.indexPathForCurrentHeightComputation {
+			editing = tableView.editing
+
+			predictedConfiguration = PredictedConfiguration(
+				editing:                   editing,
+				editingStyle:              tableView.delegate?.tableView?(tableView, editingStyleForRowAtIndexPath: indexPath) ?? .Delete,
+				shouldIndentWhileEditing:  tableView.delegate?.tableView?(tableView, shouldIndentWhileEditingRowAtIndexPath: indexPath) ?? true,
+				showsReorderControl:       showsReorderControl && (tableView.dataSource?.tableView?(tableView, canMoveRowAtIndexPath: indexPath) ?? false)
+			)
+		}
+		else {
+			editing = self.swizzled_editing
+
+			predictedConfiguration = nil
+		}
+
 		var contentFrame = layoutManager.private_contentFrameForCell(self, editing: editing, showingDeleteConfirmation: showingDeleteConfirmation, width: maximumSize.width)
+		predictedConfiguration = nil
+
 		guard !contentFrame.isNull else {
 			// Private method -[UITableViewCellLayoutManager _contentRectForCell:forEditingState:showingDeleteConfirmation:rowWidth:] was renamed or removed
 			return fallbackSizeThatFitsSize(maximumSize)
@@ -45,6 +69,13 @@ public extension UITableViewCell {
 
 		// finally we know how wide .contentView will be!
 		return sizeThatFitsContentWidth(contentFrame.width, cellWidth: maximumSize.width, defaultContentHeight: contentFrame.height)
+	}
+
+
+	@nonobjc
+	private var predictedConfiguration: PredictedConfiguration? {
+		get { return (objc_getAssociatedObject(self, &AssociatedKeys.predictedConfiguration) as? StrongReference<PredictedConfiguration>)?.target }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.predictedConfiguration, newValue != nil ? StrongReference(newValue!) : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
@@ -64,9 +95,14 @@ public extension UITableViewCell {
 
 	@nonobjc
 	internal static func UITableViewCell_setUp() {
+		swizzleMethodInType(self, fromSelector: "isEditing",                toSelector: "JetPack_isEditing")
+		swizzleMethodInType(self, fromSelector: "editingStyle",             toSelector: "JetPack_editingStyle")
+		swizzleMethodInType(self, fromSelector: "shouldIndentWhileEditing", toSelector: "JetPack_shouldIndentWhileEditing")
+		swizzleMethodInType(self, fromSelector: "showsReorderControl",      toSelector: "JetPack_showsReorderControl")
+
 		// yep, private API necessary :(
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		redirectMethodInType(self, fromSelector: "JetPack_layoutManager", toSelector: obfuscatedSelector("layout", "Manager"))
+		redirectMethodInType(self, fromSelector: "JetPack_layoutManager",  toSelector: obfuscatedSelector("layout", "Manager"))
 		redirectMethodInType(self, fromSelector: "JetPack_separatorStyle", toSelector: obfuscatedSelector("separator", "Style"))
 
 		LayoutManager.setUp()
@@ -82,6 +118,46 @@ public extension UITableViewCell {
 		cellHeight = ceilToGrid(cellHeight)
 
 		return CGSize(width: cellWidth, height: cellHeight)
+	}
+
+
+	@objc(JetPack_isEditing)
+	private dynamic var swizzled_editing: Bool {
+		if let predictedConfiguration = predictedConfiguration {
+			return predictedConfiguration.editing
+		}
+
+		return self.swizzled_editing
+	}
+
+
+	@objc(JetPack_editingStyle)
+	private dynamic var swizzled_editingStyle: UITableViewCellEditingStyle {
+		if let predictedConfiguration = predictedConfiguration {
+			return predictedConfiguration.editingStyle
+		}
+
+		return self.swizzled_editingStyle
+	}
+
+
+	@objc(JetPack_shouldIndentWhileEditing)
+	private dynamic var swizzled_shouldIndentWhileEditing: Bool {
+		if let predictedConfiguration = predictedConfiguration {
+			return predictedConfiguration.shouldIndentWhileEditing
+		}
+
+		return self.swizzled_shouldIndentWhileEditing
+	}
+
+
+	@objc(JetPack_showsReorderControl)
+	private dynamic var swizzled_showsReorderControl: Bool {
+		if let predictedConfiguration = predictedConfiguration {
+			return predictedConfiguration.showsReorderControl
+		}
+
+		return self.swizzled_showsReorderControl
 	}
 }
 
@@ -111,5 +187,35 @@ private final class LayoutManager: NSObject {
 			fromSelector: "JetPack_contentFrameForCell:editing:showingDeleteConfirmation:width:",
 			toSelector:   obfuscatedSelector("_", "content", "Rect", "For", "Cell:", "for", "Editing", "State:", "showingDeleteConfirmation:", "row", "Width:")
 		)
+	}
+}
+
+
+private struct PredictedConfiguration {
+
+	private var editing: Bool
+	private var editingStyle: UITableViewCellEditingStyle
+	private var shouldIndentWhileEditing: Bool
+	private var showsReorderControl: Bool
+}
+
+
+
+extension UITableViewCellEditingStyle: CustomDebugStringConvertible {
+
+	public var debugDescription: String {
+		return "UITableViewCellEditingStyle.\(description)"
+	}
+}
+
+
+extension UITableViewCellEditingStyle: CustomStringConvertible {
+
+	public var description: String {
+		switch self {
+		case .Delete: return "Delete"
+		case .Insert: return "Insert"
+		case .None:   return "None"
+		}
 	}
 }

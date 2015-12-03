@@ -16,6 +16,7 @@ public extension UIApplication {
 
 			UIView.UIView_setUp()
 			Window.Window_setUp()
+			UITableView.UITableView_setUp()
 			UITableViewCell.UITableViewCell_setUp()
 			UITextField.UITextField_setUp()
 
