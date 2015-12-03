@@ -9,6 +9,20 @@ internal func arc4random<Element: IntegerLiteralConvertible>() -> Element {
 }
 
 
+private func class_getInstanceMethodIgnoringSupertypes(clazz: AnyClass!, _ name: Selector) -> Method {
+	let method = class_getInstanceMethod(clazz, name)
+
+	if let superclass = class_getSuperclass(clazz) {
+		let superclassMethod = class_getInstanceMethod(superclass, name)
+		guard superclassMethod != method else {
+			return nil
+		}
+	}
+
+	return method
+}
+
+
 internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toType: AnyClass) {
 	precondition(fromType != toType)
 
@@ -114,29 +128,31 @@ public func pointerOf(object: AnyObject) -> COpaquePointer {
 }
 
 
-public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
-	precondition(fromSelector != toSelector)
+public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector, inType toType: AnyClass? = nil) {
+	let actualToType: AnyClass = toType ?? type
 
-	let fromMethod = class_getInstanceMethod(type, fromSelector)
+	precondition(fromSelector != toSelector || type != actualToType)
+
+	let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector)
 	guard fromMethod != nil else {
 		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the former is not present in '\(type)'.")
 		return
 	}
 
-	let toMethod = class_getInstanceMethod(type, toSelector)
+	let toMethod = class_getInstanceMethod(actualToType, toSelector)
 	guard toMethod != nil else {
-		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the latter is not present in '\(type)'.")
+		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the latter is not present in '\(actualToType)'.")
 		return
 	}
 
-	let fromTypePointer = method_getTypeEncoding(fromMethod)
-	let toTypePointer = method_getTypeEncoding(toMethod)
-	guard fromTypePointer != nil && toTypePointer != nil, let fromType = String.fromCString(fromTypePointer), toType = String.fromCString(toTypePointer) else {
+	let fromMethodTypePointer = method_getTypeEncoding(fromMethod)
+	let toMethodTypePointer = method_getTypeEncoding(toMethod)
+	guard fromMethodTypePointer != nil && toMethodTypePointer != nil, let fromMethodType = String.fromCString(fromMethodTypePointer), toMethodType = String.fromCString(toMethodTypePointer) else {
 		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since their type encodings could not be accessed.")
 		return
 	}
-	guard fromType == toType else {
-		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since their type encodings don't match: '\(fromType)' -> '\(toType)'.")
+	guard fromMethodType == toMethodType else {
+		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since their type encodings don't match: '\(fromMethodType)' -> '\(toMethodType)'.")
 		return
 	}
 
@@ -147,13 +163,13 @@ public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelec
 public func swizzleMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
-	let fromMethod = class_getInstanceMethod(type, fromSelector)
+	let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector)
 	guard fromMethod != nil else {
 		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the former is not present in '\(type)'.")
 		return
 	}
 
-	let toMethod = class_getInstanceMethod(type, toSelector)
+	let toMethod = class_getInstanceMethodIgnoringSupertypes(type, toSelector)
 	guard toMethod != nil else {
 		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the latter is not present in '\(type)'.")
 		return
