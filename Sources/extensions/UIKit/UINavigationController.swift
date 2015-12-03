@@ -60,8 +60,9 @@ public extension UINavigationController {
 
 	@nonobjc
 	internal static func UINavigationController_setUp() {
-		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:", toSelector: "JetPack_setNavigationBarHidden:")
-		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:animated:", toSelector: "JetPack_setNavigationBarHidden:animated:")
+		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:",                                    toSelector: "JetPack_setNavigationBarHidden:")
+		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:animated:",                           toSelector: "JetPack_setNavigationBarHidden:animated:")
+		swizzleMethodInType(self, fromSelector: "willTransitionToTraitCollection:withTransitionCoordinator:", toSelector: "JetPack_willTransitionToTraitCollection:withTransitionCoordinator:")
 	}
 
 
@@ -82,5 +83,15 @@ public extension UINavigationController {
 		lastKnownNavigationBarBottom = navigationBar.frame.bottom
 
 		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? Animation(duration: NSTimeInterval(UINavigationControllerHideShowBarDuration), timing: .EaseInEaseOut) : nil)
+	}
+
+
+	@objc(JetPack_willTransitionToTraitCollection:withTransitionCoordinator:)
+	private dynamic func swizzled_willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+		swizzled_willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
+
+		coordinator.animateAlongsideTransition { _ in
+			self.checkNavigationBarFrame()
+		}
 	}
 }
