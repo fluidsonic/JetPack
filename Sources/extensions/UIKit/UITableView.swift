@@ -9,6 +9,14 @@ public extension UITableView {
 
 
 	@nonobjc
+	public func deselectAllRowsAnimated(animated: Bool) {
+		for indexPath in indexPathsForSelectedRows ?? [] {
+			deselectRowAtIndexPath(indexPath, animated: animated)
+		}
+	}
+
+
+	@nonobjc
 	internal private(set) var indexPathForCurrentHeightComputation: NSIndexPath? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation) as? NSIndexPath }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
