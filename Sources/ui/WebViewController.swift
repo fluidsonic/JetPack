@@ -117,7 +117,14 @@ public /* non-final */ class WebViewController: ViewController {
 			let innerDecorationInsets = self.innerDecorationInsets
 
 			// WKWebView doesn't properly support non-zero scrollView.contentInset at the moment causing .contentSize to be too large.
-			webView.frame = bounds.insetBy(innerDecorationInsets)
+			var webViewFrame = bounds.insetBy(innerDecorationInsets)
+
+			// WKWebView rounds up it's scollView's contentSize no matter what the display scale is.
+			// That means the user would be able to scroll for less than a point even if they shouldn't be able to scroll at all in that axis.
+			webViewFrame.height = ceil(webViewFrame.height)
+			webViewFrame.width = ceil(webViewFrame.width)
+			webView.frame = webViewFrame
+
 			webView.scrollView.scrollIndicatorInsets = outerDecorationInsets.increaseBy(innerDecorationInsets.inverse)
 
 			if activityIndicator.superview != nil {
