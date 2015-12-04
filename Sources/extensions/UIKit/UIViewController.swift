@@ -297,14 +297,15 @@ public extension UIViewController {
 
 	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleMethodInType(self, fromSelector: "didMoveToParentViewController:",  toSelector: "JetPack_didMoveToParentViewController:")
-		swizzleMethodInType(self, fromSelector: "viewDidAppear:",                  toSelector: "JetPack_viewDidAppear:")
-		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",           toSelector: "JetPack_viewDidLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",               toSelector: "JetPack_viewDidDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillAppear:",                 toSelector: "JetPack_viewWillAppear:")
-		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",              toSelector: "JetPack_viewWillDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillLayoutSubviews",          toSelector: "JetPack_viewWillLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "willMoveToParentViewController:", toSelector: "JetPack_willMoveToParentViewController:")
+		swizzleMethodInType(self, fromSelector: "didMoveToParentViewController:",             toSelector: "JetPack_didMoveToParentViewController:")
+		swizzleMethodInType(self, fromSelector: "presentViewController:animated:completion:", toSelector: "JetPack_presentViewController:animated:completion:")
+		swizzleMethodInType(self, fromSelector: "viewDidAppear:",                             toSelector: "JetPack_viewDidAppear:")
+		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",                      toSelector: "JetPack_viewDidLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",                          toSelector: "JetPack_viewDidDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillAppear:",                            toSelector: "JetPack_viewWillAppear:")
+		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",                         toSelector: "JetPack_viewWillDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillLayoutSubviews",                     toSelector: "JetPack_viewWillLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "willMoveToParentViewController:",            toSelector: "JetPack_willMoveToParentViewController:")
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
@@ -356,7 +357,7 @@ public extension UIViewController {
 				possibleCauses.append("it was already called implicitly by \(typeName).removeFromParentViewController() so you must not call it again")
 			}
 
-			reportLifecycleProblem(".didMoveToParentViewController() was called unexpectedly while view controller is in \(oldContainmentState) state.", possibleCauses: possibleCauses)
+			reportLifecycleProblem(".didMoveToParentViewController(\(parentViewController != nil ? "non-nil" : "nil")) was called unexpectedly while view controller is in \(oldContainmentState) state.", possibleCauses: possibleCauses)
 		}
 		else if parentViewController !== self.parentViewController {
 			reportLifecycleProblem(".didMoveToParentViewController() was called with parent \(parentViewController ?? "<nil>") but is currently moving to \(self.parentViewController ?? "<nil>").", possibleCauses: [ "the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken" ]
@@ -375,6 +376,15 @@ public extension UIViewController {
 		self.containmentState = newContainmentState
 
 		swizzled_didMoveToParentViewController(parentViewController)
+	}
+
+
+	@objc(JetPack_presentViewController:animated:completion:)
+	private dynamic func swizzled_presentViewController(viewControllerToPresent: UIViewController, animated: Bool, completion: Closure?) {
+		swizzled_presentViewController(viewControllerToPresent, animated: animated, completion: completion)
+
+		// workaround for UIKit bug, see http://stackoverflow.com/a/30787046/1183577
+		CFRunLoopWakeUp(CFRunLoopGetCurrent())
 	}
 
 
