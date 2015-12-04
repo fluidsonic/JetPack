@@ -4,8 +4,13 @@ import UIKit
 
 public extension UIViewController {
 
+	public typealias AppearState = _UIViewControllerAppearState
+	public typealias ContainmentState = _UIViewControllerContainmentState
+
+
 	private struct AssociatedKeys {
 		private static var appearState = UInt8()
+		private static var containmentState = UInt8()
 		private static var presentingViewControllerForCurrentCoverageCallbacks = UInt8()
 		private static var decorationInsetsAnimation = UInt8()
 		private static var decorationInsetsAreValid = UInt8()
@@ -63,26 +68,16 @@ public extension UIViewController {
 			}
 		}
 
-		func nameForParentViewController() -> String {
-			guard let parentViewController = reliableParentViewController else {
-				return "the parent view controller"
-			}
-
-			return "\(parentViewController.dynamicType)"
-		}
-
 		guard fromAppearState != toAppearState else {
 			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
 			let typeName: String = "\(self.dynamicType)"
 
-			print(
-				"\nVIEW CONTROLLER LIFECYCLE BROKEN!\n\n"
-				+ "\(typeName) (indirectly) called super.\(toMethodName) multiple times.\n\n"
-				+ "Possible causes:\n"
-				+ "\t- \(typeName) or one of its superclasses called super.\(toMethodName) multiple times\n"
-				+ "\t- it was called manually (it should never be called manually)\n"
-				+ "\t- the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
-			)
+			reportLifecycleProblem("\(typeName) (indirectly) called super.\(toMethodName) multiple times.", possibleCauses: [
+				"\(typeName) or one of its superclasses called super.\(toMethodName) multiple times",
+				"\(typeName) or one of its superclasses called the wrong function instead of super.\(toMethodName)",
+				"it was called manually (it should never be called manually)",
+				"the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken"
+			])
 
 			return
 		}
@@ -101,16 +96,20 @@ public extension UIViewController {
 			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
 			let typeName: String = "\(self.dynamicType)"
 
-			print(
-				"\nVIEW CONTROLLER LIFECYCLE BROKEN!\n\n"
-				+ "\(typeName) (indirectly) called super.\(toMethodName) unexpectedly while the view controller is in \(fromAppearState) state.\n"
-				+ "This method must only be called after \(expectedFromMethodNames).\n\n"
-				+ "Possible causes:\n"
-				+ "\t- \(typeName) or one of its superclasses forgot to call \(expectedFromSuperCalls) earlier (or called the wrong one)\n"
-				+ "\t- it was called manually (it should never be called manually)\n"
-				+ "\t- the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken\n"
-			)
+			reportLifecycleProblem("\(typeName) (indirectly) called super.\(toMethodName) unexpectedly while the view controller is in \(fromAppearState) state. It method must only be called after \(expectedFromMethodNames).", possibleCauses: [
+				"\(typeName) or one of its superclasses forgot to call \(expectedFromSuperCalls) earlier",
+				"\(typeName) or one of its superclasses called the wrong function instead of super.\(toMethodName)",
+				"it was called manually (it should never be called manually)",
+				"the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken"
+			])
 		}
+	}
+
+
+	@nonobjc
+	public private(set) var containmentState: ContainmentState {
+		get { return ContainmentState(id: objc_getAssociatedObject(self, &AssociatedKeys.containmentState) as? Int ?? 0) }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.containmentState, newValue.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
@@ -213,6 +212,16 @@ public extension UIViewController {
 
 
 	@nonobjc
+	private func nameForParentViewController() -> String {
+		guard let parentViewController = reliableParentViewController else {
+			return "the parent view controller"
+		}
+
+		return "\(parentViewController.dynamicType)"
+	}
+
+
+	@nonobjc
 	public private(set) var outerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.UIEdgeInsetsValue() ?? .zero }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(UIEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -268,16 +277,49 @@ public extension UIViewController {
 
 
 	@nonobjc
+	private func reportLifecycleProblem(problem: String, possibleCauses: [String]) {
+		guard shouldReportLifecycleProblems else {
+			return
+		}
+
+		var message = "\nVIEW CONTROLLER LIFECYCLE BROKEN for \(self)\n\n"
+		message += "Problem:\n\t"
+		message += problem
+		message += "\n\n"
+		message += "Possible Causes:\n"
+		message += "\t- "
+		message += possibleCauses.joinWithSeparator("\n\t- ")
+		message += "\n"
+
+		print(message)
+	}
+
+
+	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleMethodInType(self, fromSelector: "viewDidAppear:",         toSelector: "JetPack_viewDidAppear:")
-		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",  toSelector: "JetPack_viewDidLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",      toSelector: "JetPack_viewDidDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillAppear:",        toSelector: "JetPack_viewWillAppear:")
-		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",     toSelector: "JetPack_viewWillDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillLayoutSubviews", toSelector: "JetPack_viewWillLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "didMoveToParentViewController:",  toSelector: "JetPack_didMoveToParentViewController:")
+		swizzleMethodInType(self, fromSelector: "viewDidAppear:",                  toSelector: "JetPack_viewDidAppear:")
+		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",           toSelector: "JetPack_viewDidLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",               toSelector: "JetPack_viewDidDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillAppear:",                 toSelector: "JetPack_viewWillAppear:")
+		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",              toSelector: "JetPack_viewWillDisappear:")
+		swizzleMethodInType(self, fromSelector: "viewWillLayoutSubviews",          toSelector: "JetPack_viewWillLayoutSubviews")
+		swizzleMethodInType(self, fromSelector: "willMoveToParentViewController:", toSelector: "JetPack_willMoveToParentViewController:")
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
+	}
+
+
+	@nonobjc
+	private var shouldReportLifecycleProblems: Bool {
+		let typeName = NSStringFromClass(self.dynamicType)
+		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
+			// broken implementations in public and private UIKit view controllers
+			return false
+		}
+
+		return true
 	}
 
 
@@ -297,9 +339,60 @@ public extension UIViewController {
 	}
 
 
+	@objc(JetPack_didMoveToParentViewController:)
+	private dynamic func swizzled_didMoveToParentViewController(parentViewController: UIViewController?) {
+		let oldContainmentState = self.containmentState
+		let newContainmentState: ContainmentState = parentViewController != nil ? .DidMoveToParent : .DidMoveFromParent
+
+		if !newContainmentState.isValidSuccessorFor(oldContainmentState) {
+			let typeName: String = "\(self.dynamicType)"
+
+			var possibleCauses = [
+				"\(typeName) or one of its superclasses called super.didMoveToParentViewController() multiple times",
+				"\(typeName) or one of its superclasses called super.didMoveToParentViewController() from within it's .willMoveToParentViewController()",
+				"the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken"
+			]
+			if parentViewController == nil {
+				possibleCauses.append("it was already called implicitly by \(typeName).removeFromParentViewController() so you must not call it again")
+			}
+
+			reportLifecycleProblem(".didMoveToParentViewController() was called unexpectedly while view controller is in \(oldContainmentState) state.", possibleCauses: possibleCauses)
+		}
+		else if parentViewController !== self.parentViewController {
+			reportLifecycleProblem(".didMoveToParentViewController() was called with parent \(parentViewController ?? "<nil>") but is currently moving to \(self.parentViewController ?? "<nil>").", possibleCauses: [ "the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken" ]
+			)
+		}
+		else if appearState.isTransition {
+			var possibleCauses = [ "the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken" ]
+
+			if appearState == .WillAppear && newContainmentState == .DidMoveToParent {
+				possibleCauses.append("this method was probably called from within the parent's .viewDidAppear() which does not imply that the child did complete it's transition yet")
+			}
+
+			reportLifecycleProblem(".didMoveToParentViewController() was called unexpectedly during an appearance transition. It must only be called while the view controller is in \(AppearState.DidDisappear) or \(AppearState.DidAppear) state.", possibleCauses: possibleCauses)
+		}
+
+		self.containmentState = newContainmentState
+
+		swizzled_didMoveToParentViewController(parentViewController)
+	}
+
+
 	@objc(JetPack_viewDidAppear:)
 	private dynamic func swizzled_viewDidAppear(animated: Bool) {
 		self.appearState = .DidAppear
+
+		if containmentState == .WillMoveToParent {
+			onMainQueueAfterDelay(1) {
+				guard self.containmentState == .WillMoveToParent && self.appearState == .DidAppear else {
+					return
+				}
+
+				self.reportLifecycleProblem(".didMoveToParentViewController(non-nil) was not called after .viewDidAppear() to complete an earlier .willMoveToParentViewController(non-nil).", possibleCauses: [
+					"the view controller containment implementation of \(self.nameForParentViewController()) is likely broken"
+				])
+			}
+		}
 
 		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
@@ -318,6 +411,18 @@ public extension UIViewController {
 	@objc(JetPack_viewDidDisappear:)
 	private dynamic func swizzled_viewDidDisappear(animated: Bool) {
 		self.appearState = .DidDisappear
+
+		if containmentState == .WillMoveFromParent {
+			onMainQueueAfterDelay(1) {
+				guard self.containmentState == .WillMoveFromParent && self.appearState == .DidDisappear else {
+					return
+				}
+
+				self.reportLifecycleProblem(".didMoveToParentViewController(nil) was not called after .viewDidDisappear() to complete an earlier .willMoveToParentViewController(nil).", possibleCauses: [
+					"the view controller containment implementation of \(self.nameForParentViewController()) is likely broken"
+				])
+			}
+		}
 
 		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
@@ -391,6 +496,37 @@ public extension UIViewController {
 		updateDecorationInsets()
 
 		swizzled_viewWillLayoutSubviews()
+	}
+
+
+	@objc(JetPack_willMoveToParentViewController:)
+	private dynamic func swizzled_willMoveToParentViewController(parentViewController: UIViewController?) {
+		let oldContainmentState = self.containmentState
+		let newContainmentState: ContainmentState = parentViewController != nil ? .WillMoveToParent : .WillMoveFromParent
+
+		if !newContainmentState.isValidSuccessorFor(oldContainmentState) {
+			let typeName: String = "\(self.dynamicType)"
+
+			var possibleCauses = [
+				"\(typeName) or one of its superclasses called super.willMoveToParentViewController() multiple times",
+				"\(typeName) or one of its superclasses called super.willMoveToParentViewController() from within it's .didMoveToParentViewController()",
+				"the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken"
+			]
+			if parentViewController != nil {
+				possibleCauses.append("it was already called implicitly by parent.addChildViewController(\(typeName)) so you must not call it again")
+			}
+
+			reportLifecycleProblem(".willMoveToParentViewController() was called unexpectedly while view controller is in \(oldContainmentState) state.", possibleCauses: possibleCauses)
+		}
+		else if appearState.isTransition {
+			reportLifecycleProblem(".willMoveToParentViewController() was called unexpectedly during an appearance transition. It must only be called while the view controller is in \(AppearState.DidDisappear) or \(AppearState.DidAppear) state.", possibleCauses: [
+				"the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken",
+			])
+		}
+
+		self.containmentState = newContainmentState
+
+		swizzled_willMoveToParentViewController(parentViewController)
 	}
 
 
@@ -499,9 +635,6 @@ public extension UIViewController {
 
 		return view.window
 	}
-
-
-	public typealias AppearState = _UIViewControllerAppearState
 }
 
 
@@ -569,6 +702,77 @@ extension UIViewController.AppearState: CustomStringConvertible {
 		case .DidDisappear:  return "DidDisappear"
 		case .WillAppear:    return "WillAppear"
 		case .WillDisappear: return "WillDisappear"
+		}
+	}
+}
+
+
+
+// Temporarily moved out of UIViewController extension due to compiler bug.
+// See https://travis-ci.org/fluidsonic/JetPack/jobs/93695509
+public enum _UIViewControllerContainmentState {
+	case DidMoveFromParent
+	case WillMoveToParent
+	case DidMoveToParent
+	case WillMoveFromParent
+
+
+	private init(id: Int) {
+		switch id {
+		case 0: self = .DidMoveFromParent
+		case 1: self = .WillMoveToParent
+		case 2: self = .DidMoveToParent
+		case 3: self = .WillMoveFromParent
+		default: fatalError()
+		}
+	}
+
+
+	private var id: Int {
+		switch self {
+		case .DidMoveFromParent:  return 0
+		case .WillMoveToParent:   return 1
+		case .DidMoveToParent:    return 2
+		case .WillMoveFromParent: return 3
+		}
+	}
+
+
+	public var isInOrMovingToParent: Bool {
+		switch self {
+		case .WillMoveToParent, .DidMoveToParent:     return true
+		case .WillMoveFromParent, .DidMoveFromParent: return false
+		}
+	}
+
+
+	public var isTransition: Bool {
+		switch self {
+		case .WillMoveToParent, .WillMoveFromParent: return true
+		case .DidMoveToParent, .DidMoveFromParent:   return false
+		}
+	}
+
+
+	private func isValidSuccessorFor(containmentState: _UIViewControllerContainmentState) -> Bool {
+		switch self {
+		case .DidMoveFromParent:  return (containmentState == .WillMoveFromParent)
+		case .DidMoveToParent:    return (containmentState == .WillMoveToParent)
+		case .WillMoveFromParent: return (containmentState == .WillMoveToParent   || containmentState == .DidMoveToParent)
+		case .WillMoveToParent:   return (containmentState == .WillMoveFromParent || containmentState == .DidMoveFromParent)
+		}
+	}
+}
+
+
+extension UIViewController.ContainmentState: CustomStringConvertible {
+
+	public var description: String {
+		switch self {
+		case .DidMoveToParent:    return "DidMoveToParent"
+		case .DidMoveFromParent:  return "DidMoveFromParent"
+		case .WillMoveToParent:   return "WillMoveToParent"
+		case .WillMoveFromParent: return "WillMoveFromParent"
 		}
 	}
 }
