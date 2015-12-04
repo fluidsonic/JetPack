@@ -214,11 +214,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 				updateChildView(childView, withPreferredAppearState: .WillAppear, animated: false)
 				childContainer.addSubview(childView)
 				updateChildView(childView, withPreferredAppearState: .DidAppear, animated: false)
-
-				if let index = viewControllersNotYetMovedToParentViewController.indexOfIdentical(viewController) {
-					viewControllersNotYetMovedToParentViewController.removeAtIndex(index)
-					viewController.didMoveToParentViewController(self)
-				}
 			}
 		}
 	}
@@ -293,6 +288,10 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	private func updateChildView(childView: ChildView, withPreferredAppearState preferredAppearState: AppearState, animated: Bool) {
+		guard let viewController = childView.viewController else {
+			return
+		}
+
 		var targetAppearState = min(preferredAppearState, appearState)
 		if isInTransition && targetAppearState != .DidDisappear {
 			switch childView.appearState {
@@ -304,6 +303,16 @@ public /* non-final */ class ScrollViewController: ViewController {
 		}
 
 		childView.updateAppearState(targetAppearState, animated: animated)
+
+		if targetAppearState == .DidAppear, let index = viewControllersNotYetMovedToParentViewController.indexOfIdentical(viewController) {
+			viewControllersNotYetMovedToParentViewController.removeAtIndex(index)
+
+			onMainQueue { // perform one cycle later since the child may not yet have completed the transitions in this cycle
+				if viewController.containmentState == .WillMoveToParent {
+					viewController.didMoveToParentViewController(self)
+				}
+			}
+		}
 	}
 
 
