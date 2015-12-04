@@ -314,7 +314,7 @@ public extension UIViewController {
 	@nonobjc
 	private var shouldReportLifecycleProblems: Bool {
 		let typeName = NSStringFromClass(self.dynamicType)
-		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
+		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
 			// broken implementations in public and private UIKit view controllers
 			return false
 		}
