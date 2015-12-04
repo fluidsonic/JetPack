@@ -36,6 +36,22 @@ public extension UIColor {
 
 	@nonobjc
 	@warn_unused_result
+	public func interpolateTo(destination: UIColor, fraction: CGFloat) -> UIColor {
+		guard let rgba = rgbaComponents, destinationRgba = destination.rgbaComponents else {
+			return self
+		}
+
+		return UIColor(
+			red:   rgba.red   + ((destinationRgba.red   - rgba.red)   * fraction),
+			green: rgba.green + ((destinationRgba.green - rgba.green) * fraction),
+			blue:  rgba.blue  + ((destinationRgba.blue  - rgba.blue)  * fraction),
+			alpha: rgba.alpha + ((destinationRgba.alpha - rgba.alpha) * fraction)
+		)
+	}
+
+
+	@nonobjc
+	@warn_unused_result
 	public func overlayWithColor(overlayColor: UIColor) -> UIColor {
 		guard let components = rgbaComponents, overlayComponents = overlayColor.rgbaComponents else {
 			return overlayColor
