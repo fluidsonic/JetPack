@@ -42,7 +42,7 @@ public final class Keyboard {
 			return .null
 		}
 
-		let windowSize = window.bounds.size;
+		let windowSize = window.bounds.size
 		var frameInWindow = window.convertRect(frame, fromWindow: nil)
 		frameInWindow.left = 0
 
