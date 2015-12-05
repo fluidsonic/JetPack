@@ -17,9 +17,49 @@ public extension UITableView {
 
 
 	@nonobjc
+	public var firstIndexPath: NSIndexPath? {
+		let sectionCount = numberOfSections
+		guard sectionCount > 0 else {
+			return nil
+		}
+
+		for section in 0 ..< sectionCount {
+			let rowCount = numberOfRowsInSection(section)
+			guard rowCount > 0 else {
+				continue
+			}
+
+			return NSIndexPath(forRow: 0, inSection: section)
+		}
+
+		return nil
+	}
+
+
+	@nonobjc
 	internal private(set) var indexPathForCurrentHeightComputation: NSIndexPath? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation) as? NSIndexPath }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@nonobjc
+	public var lastIndexPath: NSIndexPath? {
+		let sectionCount = numberOfSections
+		guard sectionCount > 0 else {
+			return nil
+		}
+
+		for section in (0 ..< sectionCount).reverse() {
+			let rowCount = numberOfRowsInSection(section)
+			guard rowCount > 0 else {
+				continue
+			}
+
+			return NSIndexPath(forRow: rowCount - 1, inSection: section)
+		}
+
+		return nil
 	}
 
 
