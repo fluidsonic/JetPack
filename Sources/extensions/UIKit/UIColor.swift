@@ -34,6 +34,17 @@ public extension UIColor {
 	}
 
 
+	@objc(JetPack_alpha)
+	public var alpha: CGFloat {
+		var alpha = CGFloat(1)
+		guard getRed(nil, green: nil, blue: nil, alpha: &alpha) else {
+			return 1
+		}
+
+		return alpha
+	}
+
+
 	@nonobjc
 	@warn_unused_result
 	public func interpolateTo(destination: UIColor, fraction: CGFloat) -> UIColor {
@@ -143,13 +154,18 @@ private final class ColorUsingTintColor: UIColor {
 
 	private static let fullAlpha = ColorUsingTintColor(alpha: 1)
 
-	private let alpha: CGFloat
+	private let _alpha: CGFloat
 
 
 	private init(alpha: CGFloat) {
-		self.alpha = alpha
+		_alpha = alpha
 
 		super.init()
+	}
+
+
+	private override var alpha: CGFloat {
+		return _alpha
 	}
 
 
@@ -243,6 +259,6 @@ private final class ColorUsingTintColor: UIColor {
 
 
 	private override func tintedWithColor(tintColor: UIColor) -> UIColor {
-		return tintColor.colorWithAlphaComponent(alpha)
+		return tintColor.colorWithAlphaComponent(alpha * tintColor.alpha)
 	}
 }
