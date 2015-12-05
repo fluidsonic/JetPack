@@ -31,57 +31,73 @@ public extension CGAffineTransform {
 	}
 
 
-	public mutating func rotate(angle: CGFloat) {
-		self = rotated(angle)
+	public init(scale: CGFloat) {
+		self = CGAffineTransformMakeScale(scale, scale)
 	}
 
 
-	@warn_unused_result(mutable_variant="rotate")
-	public func rotated(angle: CGFloat) -> CGAffineTransform {
+	public mutating func rotateBy(angle: CGFloat) {
+		self = rotatedBy(angle)
+	}
+
+
+	@warn_unused_result(mutable_variant="rotateBy")
+	public func rotatedBy(angle: CGFloat) -> CGAffineTransform {
 		return CGAffineTransformRotate(self, angle)
 	}
 
 
-	public mutating func scale(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) {
-		self = scaled(horizontally: horizontal, vertically: vertical)
+	public mutating func scaleBy(scale: CGFloat) {
+		scaleBy(horizontally: scale, vertically: scale)
 	}
 
 
-	public mutating func scale(vertically vertical: CGFloat) {
-		scale(horizontally: 1, vertically: vertical)
+	public mutating func scaleBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) {
+		self = scaledBy(horizontally: horizontal, vertically: vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="scale")
-	public func scaled(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) -> CGAffineTransform {
+	public mutating func scaleBy(vertically vertical: CGFloat) {
+		scaleBy(horizontally: 1, vertically: vertical)
+	}
+
+
+	@warn_unused_result(mutable_variant="scaleBy")
+	public func scaledBy(scale: CGFloat) -> CGAffineTransform {
+		return scaledBy(horizontally: scale, vertically: scale)
+	}
+
+
+	@warn_unused_result(mutable_variant="scaleBy")
+	public func scaledBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) -> CGAffineTransform {
 		return CGAffineTransformScale(self, horizontal, vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="scale")
-	public func scaled(vertically vertical: CGFloat) -> CGAffineTransform {
-		return scaled(horizontally: 1, vertically: vertical)
+	@warn_unused_result(mutable_variant="scaleBy")
+	public func scaledBy(vertically vertical: CGFloat) -> CGAffineTransform {
+		return scaledBy(horizontally: 1, vertically: vertical)
 	}
 
 
-	public mutating func translate(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) {
-		self = translated(horizontally: horizontal, vertically: vertical)
+	public mutating func translateBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) {
+		self = translatedBy(horizontally: horizontal, vertically: vertical)
 	}
 
 
-	public mutating func translate(vertically vertical: CGFloat) {
-		translate(horizontally: 0, vertically: vertical)
+	public mutating func translateBy(vertically vertical: CGFloat) {
+		translateBy(horizontally: 0, vertically: vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="translate")
-	public func translated(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) -> CGAffineTransform {
+	@warn_unused_result(mutable_variant="translateBy")
+	public func translatedBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) -> CGAffineTransform {
 		return CGAffineTransformTranslate(self, horizontal, vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="translate")
-	public func translated(vertically vertical: CGFloat) -> CGAffineTransform {
-		return translated(horizontally: 0, vertically: vertical)
+	@warn_unused_result(mutable_variant="translateBy")
+	public func translatedBy(vertically vertical: CGFloat) -> CGAffineTransform {
+		return translatedBy(horizontally: 0, vertically: vertical)
 	}
 }
