@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
 	s.name    = 'JetPack'
-	s.version = '0.0.1'
+	s.version = '0.0.2'
 
 	s.author   = { 'Marc Knaup' => 'marc@knaup.koeln' }
 	s.homepage = 'https://github.com/fluidsonic/JetPack'
