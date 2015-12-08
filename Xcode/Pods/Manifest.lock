@@ -1,14 +1,14 @@
 PODS:
-  - JetPack (0.0.1)
+  - JetPack (0.0.2)
 
 DEPENDENCIES:
   - JetPack (from `..`)
 
 EXTERNAL SOURCES:
   JetPack:
-    :path: ".."
+    :path: ..
 
 SPEC CHECKSUMS:
-  JetPack: 324ba8e1857130bd9f5a6663ffd4e245a1832364
+  JetPack: 9a1aa5af829c56925503b56cd8251496a4af4f8b
 
 COCOAPODS: 0.39.0

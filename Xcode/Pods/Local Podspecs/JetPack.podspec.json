@@ -1,6 +1,6 @@
 {
   "name": "JetPack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "authors": {
     "Marc Knaup": "marc@knaup.koeln"
   },
@@ -24,6 +24,7 @@
     "CoreImage",
     "CoreLocation",
     "Foundation",
+    "ImageIO",
     "MapKit",
     "Photos",
     "UIKit",
