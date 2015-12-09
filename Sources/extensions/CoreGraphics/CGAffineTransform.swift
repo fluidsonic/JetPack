@@ -101,3 +101,11 @@ public extension CGAffineTransform {
 		return translatedBy(horizontally: 0, vertically: vertical)
 	}
 }
+
+
+extension CGAffineTransform: Equatable {}
+
+
+public func == (a: CGAffineTransform, b: CGAffineTransform) -> Bool {
+	return CGAffineTransformEqualToTransform(a, b)
+}
