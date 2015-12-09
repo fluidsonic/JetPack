@@ -15,6 +15,7 @@ public extension UIApplication {
 			Keyboard.setUp()
 
 			UIView.UIView_setUp()
+			UISearchBar.UISearchBar_setUp()
 			UITableView.UITableView_setUp()
 			UITableViewCell.UITableViewCell_setUp()
 			UITextField.UITextField_setUp()
