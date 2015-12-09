@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_Label)
 public class Label: UILabel {
 
 	private var originalTextColor: UIColor?
@@ -21,22 +21,12 @@ public class Label: UILabel {
 	}
 
 
-	#if TARGET_INTERFACE_BUILDER
-		public override convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
-
-
 	public override func drawTextInRect(rect: CGRect) {
 		super.drawTextInRect(rect.insetBy(padding))
 	}
 
 
-	@IBInspectable
-	public var padding: UIEdgeInsets = .zero {
+	public var padding = UIEdgeInsets() {
 		didSet {
 			guard padding != oldValue else {
 				return

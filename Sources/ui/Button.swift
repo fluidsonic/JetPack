@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_Button)
 public class Button: View {
 
 	private var _activityIndicator: UIActivityIndicatorView?
@@ -24,15 +24,6 @@ public class Button: View {
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
-
-
-	#if TARGET_INTERFACE_BUILDER
-		public convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
 
 
 	public final var activityIndicator: UIActivityIndicatorView {
@@ -64,8 +55,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var arrangement: Arrangement = .ImageLeft {
+	public var arrangement = Arrangement.ImageLeft {
 		didSet {
 			guard arrangement != oldValue else {
 				return
@@ -113,8 +103,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var disabledAlpha: CGFloat = 1 {
+	public var disabledAlpha = CGFloat(1) {
 		didSet {
 			guard disabledAlpha != oldValue else {
 				return
@@ -125,8 +114,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var enabled: Bool = true {
+	public var enabled = true {
 		didSet {
 			userInteractionEnabled = enabled
 
@@ -155,8 +143,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var highlightedAlpha: CGFloat = 0.5 {
+	public var highlightedAlpha = CGFloat(0.5) {
 		didSet {
 			guard highlightedAlpha != oldValue else {
 				return
@@ -167,7 +154,6 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
 	public var highlightedBackgroundColor: UIColor? {
 		didSet {
 			guard highlightedBackgroundColor != oldValue else {
@@ -179,7 +165,6 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
 	public var highlightedBorderColor: UIColor? {
 		didSet {
 			guard highlightedBorderColor != oldValue else {
@@ -191,8 +176,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var horizontalAlignment: HorizontalAlignment = .Center {
+	public var horizontalAlignment = HorizontalAlignment.Center {
 		didSet {
 			guard horizontalAlignment != oldValue else {
 				return
@@ -203,8 +187,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var imageOffset: UIOffset = .zero  {
+	public var imageOffset = UIOffset() {
 		didSet {
 			guard imageOffset != oldValue else {
 				return
@@ -670,22 +653,6 @@ public class Button: View {
 	}
 
 
-	@available(*, unavailable, message="For Interface Builder only. Use textLabel.text instead.")
-	@IBInspectable
-	public final var text: String {
-		get { return _textLabel?.text ?? "" }
-		set { textLabel.text = newValue }
-	}
-
-
-	@available(*, unavailable, message="For Interface Builder only. Use textLabel.textColor instead.")
-	@IBInspectable
-	public final var textColor: UIColor? {
-		get { return _textLabel?.textColor }
-		set { textLabel.textColor = newValue }
-	}
-
-
 	public final var textLabel: Label {
 		get {
 			return _textLabel ?? {
@@ -707,8 +674,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var textOffset: UIOffset = .zero {
+	public var textOffset = UIOffset() {
 		didSet {
 			guard textOffset != oldValue else {
 				return
@@ -808,8 +774,7 @@ public class Button: View {
 	}
 
 
-	@IBInspectable
-	public var verticalAlignment: VerticalAlignment = .Center {
+	public var verticalAlignment = VerticalAlignment.Center {
 		didSet {
 			guard verticalAlignment != oldValue else {
 				return

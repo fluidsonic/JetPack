@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_GradientView)
 public/* non-final */ class GradientView: View {
 
 	public override init() {
@@ -16,18 +16,6 @@ public/* non-final */ class GradientView: View {
 	}
 
 
-	#if TARGET_INTERFACE_BUILDER
-		public convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-
-			userInteractionEnabled = false
-		}
-	#endif
-
-
-	@IBInspectable
 	public var colors: [UIColor] {
 		get {
 			let cgColors = gradientLayer.colors as? [CGColorRef]
@@ -39,7 +27,6 @@ public/* non-final */ class GradientView: View {
 	}
 
 
-	@IBInspectable
 	public var endPoint: CGPoint {
 		get { return gradientLayer.endPoint }
 		set { gradientLayer.endPoint = newValue }
@@ -54,14 +41,12 @@ public/* non-final */ class GradientView: View {
 	}
 
 
-	@IBInspectable
 	public var locations: [CGFloat] {
 		get { return gradientLayer.locations?.map { $0 as CGFloat } ?? [] }
 		set { gradientLayer.locations = newValue }
 	}
 
 
-	@IBInspectable
 	public var startPoint: CGPoint {
 		get { return gradientLayer.startPoint }
 		set { gradientLayer.startPoint = newValue }

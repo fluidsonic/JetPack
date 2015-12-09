@@ -1,6 +1,7 @@
 import UIKit
 
 
+@objc(JetPack_TableViewCell)
 public /* non-final */ class TableViewCell: UITableViewCell {
 
 	private var defaultContentHeight = CGFloat(0)

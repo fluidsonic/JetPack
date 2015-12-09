@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_View)
 public /* non-final */ class View: UIView {
 
 	private static let _dummyView = View()
@@ -9,17 +9,10 @@ public /* non-final */ class View: UIView {
 	private var originalBackgroundColor: UIColor?
 	private var originalBorderColor: UIColor?
 
-	@IBInspectable
-	public var additionalHitZone: UIEdgeInsets = .zero // TODO don't use UIEdgeInsets becase actually we outset
-
-	@IBInspectable
-	public var backgroundColorLocked: Bool = false
-
-	@IBInspectable
-	public var hitZoneFollowsCornerRadius: Bool = true
-
-	@IBInspectable
-	public var userInteractionLimitedToSubviews: Bool = false
+	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets becase actually we outset
+	public var backgroundColorLocked = false
+	public var hitZoneFollowsCornerRadius = true
+	public var userInteractionLimitedToSubviews = false
 
 
 	public init() {
@@ -43,15 +36,6 @@ public /* non-final */ class View: UIView {
 			borderColor = UIColor(CGColor: layerBorderColor)
 		}
 	}
-
-
-	#if TARGET_INTERFACE_BUILDER
-		public override convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
 
 
 	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
@@ -176,7 +160,6 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	@IBInspectable
 	public var borderColor: UIColor? {
 		get { return originalBorderColor }
 		set {
@@ -191,14 +174,12 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	@IBInspectable
 	public var borderWidth: CGFloat {
 		get { return layer.borderWidth }
 		set { layer.borderWidth = newValue }
 	}
 
 
-	@IBInspectable
 	public var cornerRadius: CGFloat {
 		get { return layer.cornerRadius }
 		set { layer.cornerRadius = newValue }
@@ -268,7 +249,6 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	@IBInspectable
 	public var shadowColor: UIColor? {
 		get {
 			guard let layerShadowColor = layer.shadowColor else {
@@ -283,7 +263,6 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	@IBInspectable
 	public var shadowOffset: UIOffset {
 		get {
 			let layerShadowOffset = layer.shadowOffset
@@ -295,14 +274,12 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	@IBInspectable
 	public var shadowOpacity: CGFloat {
 		get { return CGFloat(layer.shadowOpacity) }
 		set { layer.shadowOpacity = Float(newValue) }
 	}
 
 
-	@IBInspectable
 	public var shadowPath: UIBezierPath? {
 		get {
 			guard let layerShadowPath = layer.shadowPath else {
@@ -315,7 +292,6 @@ public /* non-final */ class View: UIView {
 	}
 
 
-	@IBInspectable
 	public var shadowRadius: CGFloat {
 		get { return layer.shadowRadius }
 		set { layer.shadowRadius = newValue }

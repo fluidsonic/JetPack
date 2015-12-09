@@ -1,6 +1,7 @@
 import UIKit
 
 
+@objc(JetPack_ViewController)
 public /* non-final */ class ViewController: UIViewController {
 
 	public typealias SeguePreparation = (segue: UIStoryboardSegue) -> Void

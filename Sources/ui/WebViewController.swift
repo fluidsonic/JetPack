@@ -2,6 +2,7 @@ import UIKit
 import WebKit
 
 
+@objc(JetPack_WebViewController)
 public /* non-final */ class WebViewController: ViewController {
 
 	private lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)

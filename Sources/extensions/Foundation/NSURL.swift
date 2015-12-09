@@ -5,16 +5,19 @@ import Foundation
 
 public extension NSURL {
 
+	@nonobjc
 	public convenience init(forPhoneCallWithNumber phoneNumber: String) {
 		self.init(string: "tel:\(phoneNumber.urlEncodedPath)")!
 	}
 
 
+	@nonobjc
 	public convenience init(forPhoneCallPromptWithNumber phoneNumber: String) {
 		self.init(string: "telprompt:\(phoneNumber.urlEncodedPath)")!
 	}
 
 
+	@nonobjc
 	public func URLByAppendingQueryItems(queryItems: [NSURLQueryItem]) -> NSURL? {
 		guard !queryItems.isEmpty else {
 			return self

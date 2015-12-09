@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_ImageView)
 public /* non-final */ class ImageView: View {
 
 	public typealias Session = _ImageViewSession
@@ -35,15 +35,6 @@ public /* non-final */ class ImageView: View {
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
-
-
-	#if TARGET_INTERFACE_BUILDER
-		public convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
 
 
 	deinit {
@@ -202,8 +193,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	@IBInspectable
-	public var gravity: Gravity = .Center {
+	public var gravity = Gravity.Center {
 		didSet {
 			guard gravity != oldValue else {
 				return
@@ -216,7 +206,6 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	@IBInspectable
 	public var image: UIImage? {
 		didSet {
 			precondition(!isSettingImage, "Cannot recursively set ImageView's 'image'.")
@@ -317,7 +306,6 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	@IBInspectable
 	public var padding = UIEdgeInsets() {
 		didSet {
 			if padding == oldValue {
@@ -344,8 +332,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	@IBInspectable
-	public var scaling: Scaling = .FitInside {
+	public var scaling = Scaling.FitInside {
 		didSet {
 			guard scaling != oldValue else {
 				return

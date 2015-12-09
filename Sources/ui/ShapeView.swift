@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_ShapeView)
 public /* non-final */ class ShapeView: View {
 
 	private var originalFillColor: UIColor?
@@ -32,15 +32,6 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	#if TARGET_INTERFACE_BUILDER
-		public convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
-
-
 	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
 		switch event {
 		case "fillColor", "path", "strokeColor":
@@ -59,7 +50,6 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	@IBInspectable
 	public var fillColor: UIColor? {
 		get { return originalFillColor }
 		set {
@@ -129,7 +119,6 @@ public /* non-final */ class ShapeView: View {
 	public private(set) final lazy var shapeLayer: CAShapeLayer = self.layer as! CAShapeLayer
 
 
-	@IBInspectable
 	public var strokeEnd: CGFloat {
 		get {
 			return shapeLayer.strokeEnd
@@ -140,7 +129,6 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	@IBInspectable
 	public var strokeColor: UIColor? {
 		get { return originalStrokeColor }
 		set {
@@ -155,7 +143,6 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	@IBInspectable
 	public var strokeStart: CGFloat {
 		get {
 			return shapeLayer.strokeStart

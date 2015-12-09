@@ -1,7 +1,7 @@
 import UIKit
 
 
-@IBDesignable
+@objc(JetPack_TextView)
 public /* non-final */ class TextView: UITextView {
 
 	private var changeObserver: NSObjectProtocol?
@@ -20,15 +20,6 @@ public /* non-final */ class TextView: UITextView {
 
 		subscribeToChangeNotifications()
 	}
-
-
-	#if TARGET_INTERFACE_BUILDER
-		public override convenience init(frame: CGRect) {
-			self.init()
-
-			subscribeToChangeNotifications()
-		}
-	#endif
 
 
 	deinit {

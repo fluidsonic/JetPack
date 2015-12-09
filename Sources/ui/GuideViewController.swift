@@ -1,6 +1,7 @@
 import UIKit
 
 
+@objc(JetPack_GuideViewController)
 public /* non-final */ class GuideViewController: ViewController {
 
 	private lazy var backgroundView = BackgroundView()
@@ -215,15 +216,6 @@ private final class BackgroundView: View {
 	private required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-
-
-	#if TARGET_INTERFACE_BUILDER
-		private convenience init(frame: CGRect) {
-			self.init()
-
-			self.frame = frame
-		}
-	#endif
 
 
 	private var focusPath: UIBezierPath? {

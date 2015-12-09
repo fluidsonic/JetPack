@@ -1,8 +1,8 @@
 import UIKit
 
 
-@IBDesignable
-public /* non-final */ class Window: _WindowInitHack {
+@objc(JetPack_Window)
+public /* non-final */ class Window: _Window {
 
 	public override convenience init() {
 		self.init(workaroundForSubclassing: ())
@@ -30,6 +30,15 @@ public /* non-final */ class Window: _WindowInitHack {
 	}
 
 
+	public override class func initialize() {
+		guard self == Window.self else {
+			return
+		}
+
+		redirectMethodInType(self, fromSelector: "initWithFrame:", toSelector: "initWithFrame:", inType: UIWindow.self)
+	}
+
+
 	public override var rootViewController: UIViewController? {
 		get { return super.rootViewController }
 		set {
@@ -44,18 +53,13 @@ public /* non-final */ class Window: _WindowInitHack {
 			super.rootViewController = newValue
 		}
 	}
-
-
-	internal static func Window_setUp() {
-		redirectMethodInType(self, fromSelector: "initWithFrame:", toSelector: "initWithFrame:", inType: UIWindow.self)
-
-		_WindowInitHack._WindowInitHack_setUp()
-	}
 }
 
 
 
-public /* non-final */ class _WindowInitHack: UIWindow {
+// fix to make init() the designated initializers of Window
+@objc(_JetPack_Window)
+public /* non-final */ class _Window: UIWindow {
 
 	private dynamic init() {
 		// not supposed to be called
@@ -74,7 +78,11 @@ public /* non-final */ class _WindowInitHack: UIWindow {
 	}
 
 
-	internal static func _WindowInitHack_setUp() {
+	public override class func initialize() {
+		guard self == _Window.self else {
+			return
+		}
+
 		redirectMethodInType(self, fromSelector: "init",           toSelector: "init",           inType: UIWindow.self)
 		redirectMethodInType(self, fromSelector: "initWithFrame:", toSelector: "initWithFrame:", inType: UIWindow.self)
 	}
