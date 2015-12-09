@@ -457,6 +457,8 @@ public extension UIViewController {
 		if let navigationController = self as? UINavigationController {
 			navigationController.checkNavigationBarFrame()
 		}
+
+		decorationInsetsAnimation = nil
 	}
 
 
@@ -600,7 +602,6 @@ public extension UIViewController {
 			decorationInsetsDidChangeWithAnimation(animation)
 		}
 
-		decorationInsetsAnimation = nil
 		decorationInsetsAreValid = true
 	}
 
