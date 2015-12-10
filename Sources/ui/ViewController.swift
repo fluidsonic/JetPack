@@ -22,7 +22,6 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	@available(*, deprecated=1, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
 		for childViewController in childViewControllers {
 			childViewController.invalidateDecorationInsetsWithAnimation(animation)
@@ -32,9 +31,7 @@ public /* non-final */ class ViewController: UIViewController {
 
 	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public final override func decorationInsetsDidChangeWithAnimation(animationWrapper: Animation.Wrapper?) {
-		for childViewController in childViewControllers {
-			childViewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
-		}
+		decorationInsetsDidChangeWithAnimation(animationWrapper?.animation)
 	}
 
 
