@@ -28,6 +28,7 @@ public extension NSProgress {
 	}
 
 
+	@nonobjc
 	private var observer: Observer? {
 		get {
 			return objc_getAssociatedObject(self, &AssociatedKeys.observer) as! Observer?
@@ -35,6 +36,22 @@ public extension NSProgress {
 		set {
 			objc_setAssociatedObject(self, &AssociatedKeys.observer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 		}
+	}
+
+
+	@nonobjc
+	internal static func NSProgress_setUp() {
+		swizzleMethodInType(self, fromSelector: "dealloc", toSelector: "JetPack_dealloc")
+	}
+
+
+	@objc(JetPack_dealloc)
+	private dynamic func swizzled_dealloc() {
+		if let observer = observer {
+			removeObserver(observer, forKeyPath: "fractionCompleted")
+		}
+
+		swizzled_dealloc()
 	}
 }
 

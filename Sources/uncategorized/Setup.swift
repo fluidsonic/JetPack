@@ -14,6 +14,8 @@ public extension UIApplication {
 		dispatch_once(&onceToken) {
 			Keyboard.setUp()
 
+			NSProgress.NSProgress_setUp()
+
 			UIView.UIView_setUp()
 			UISearchBar.UISearchBar_setUp()
 			UITableView.UITableView_setUp()
