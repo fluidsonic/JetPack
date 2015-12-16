@@ -90,11 +90,17 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	private func layoutChildContainer() {
+		++ignoresScrollViewDidScroll
+		defer { --ignoresScrollViewDidScroll }
+
 		let viewSize = view.bounds.size
 		let contentSize = CGSize(width: CGFloat(viewControllers.count) * viewSize.width, height: viewSize.height)
 
+		let contentOffset = scrollView.contentOffset
+		scrollView.frame = CGRect(size: viewSize)
 		childContainer.frame = CGRect(size: contentSize)
 		scrollView.contentSize = contentSize
+		scrollView.contentOffset = contentOffset
 	}
 
 
@@ -118,17 +124,16 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 		let viewBounds = view.bounds
 		let viewControllers = self.viewControllers
-		var contentOffset = scrollView.contentOffset
+		var contentOffset: CGPoint
+		let layoutsExistingChildren: Bool
 
-		var updatesLayout = forcesLayoutUpdate
 		let previousViewSize = self.lastLayoutedViewSize
-		if viewBounds.size != previousViewSize {
+		if forcesLayoutUpdate || viewBounds.size != previousViewSize {
 			self.lastLayoutedViewSize = viewBounds.size
 
-			updatesLayout = true
-		}
+			layoutChildContainer()
 
-		if updatesLayout {
+			contentOffset = scrollView.contentOffset
 			var newContentOffset = contentOffset
 
 			if viewControllers.count > 1 {
@@ -164,10 +169,17 @@ public /* non-final */ class ScrollViewController: ViewController {
 			}
 
 			newContentOffset = newContentOffset.clamp(min: scrollView.minimumContentOffset, max: scrollView.maximumContentOffset)
+
 			if newContentOffset != contentOffset {
 				scrollView.contentOffset = newContentOffset
 				contentOffset = newContentOffset
 			}
+
+			layoutsExistingChildren = true
+		}
+		else {
+			contentOffset = scrollView.contentOffset
+			layoutsExistingChildren = false
 		}
 
 		let visibleIndexes: Range<Int>
@@ -197,7 +209,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 		for index in visibleIndexes {
 			if let childView = childViewForIndex(index) {
-				if updatesLayout {
+				if layoutsExistingChildren {
 					layoutChildView(childView)
 				}
 			}
@@ -384,7 +396,6 @@ public /* non-final */ class ScrollViewController: ViewController {
 			}
 
 			if isViewLoaded() {
-				layoutChildContainer()
 				layoutChildrenForcingLayoutUpdate(true)
 				updatePrimaryViewController()
 			}
@@ -407,17 +418,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
-		++ignoresScrollViewDidScroll
-		defer { --ignoresScrollViewDidScroll }
-
-		let viewSize = view.bounds.size
-
-		let contentOffset = scrollView.contentOffset
-		scrollView.frame = CGRect(size: viewSize)
-		layoutChildContainer()
-		scrollView.contentOffset = contentOffset
-
 		layoutChildrenForcingLayoutUpdate(true)
+		updatePrimaryViewController()
 	}
 
 
