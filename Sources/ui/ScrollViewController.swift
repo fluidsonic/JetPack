@@ -10,12 +10,13 @@ public /* non-final */ class ScrollViewController: ViewController {
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(scrollViewController: self)
 
 	private var ignoresScrollViewDidScroll = 0
-	private var isAnimatingScrollView = false
 	private var isSettingPrimaryViewControllerInternally = false
 	private var lastLayoutedViewSize = CGSize()
 	private var reusableChildView: ChildView?
 	private var scrollCompletion: ScrollCompletion?
 	private var viewControllersNotYetMovedToParentViewController = [UIViewController]()
+
+	public private(set) final var isInScrollingAnimation = false
 
 
 	public override init() {
@@ -85,7 +86,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	private var isInTransition: Bool {
-		return appearState == .WillAppear || appearState == .WillDisappear || isAnimatingScrollView || scrollView.tracking || scrollView.decelerating
+		return appearState == .WillAppear || appearState == .WillDisappear || isInScrollingAnimation || scrollView.tracking || scrollView.decelerating
 	}
 
 
@@ -486,7 +487,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 	private func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
 		let scrollViewController = self.scrollViewController
 
-		scrollViewController.isAnimatingScrollView = false
+		scrollViewController.isInScrollingAnimation = false
 
 		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
 		scrollViewController.updatePrimaryViewController()
@@ -503,7 +504,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 	private func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		let scrollViewController = self.scrollViewController
 
-		scrollViewController.isAnimatingScrollView = false
+		scrollViewController.isInScrollingAnimation = false
 
 		if !decelerate {
 			onMainQueue { // loop one cycle because UIScrollView did not yet update .tracking
@@ -535,7 +536,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 	private func scrollViewWillBeginDragging(scrollView: UIScrollView) {
 		let scrollViewController = self.scrollViewController
 
-		scrollViewController.isAnimatingScrollView = false
+		scrollViewController.isInScrollingAnimation = false
 
 		let scrollCompletion = scrollViewController.scrollCompletion
 		scrollViewController.scrollCompletion = nil
@@ -548,7 +549,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 
 	@objc
 	private func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-		scrollViewController.isAnimatingScrollView = false
+		scrollViewController.isInScrollingAnimation = false
 	}
 }
 
@@ -663,7 +664,7 @@ private class SpecialScrollView: ScrollView {
 		super.setContentOffset(contentOffset, animated: animated)
 
 		if willBeginAnimation, let viewController = delegate as? ScrollViewController {
-			viewController.isAnimatingScrollView = true
+			viewController.isInScrollingAnimation = true
 		}
 	}
 }
