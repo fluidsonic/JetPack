@@ -663,8 +663,8 @@ private class SpecialScrollView: ScrollView {
 
 		super.setContentOffset(contentOffset, animated: animated)
 
-		if willBeginAnimation, let viewController = delegate as? ScrollViewController {
-			viewController.isInScrollingAnimation = true
+		if willBeginAnimation, let delegate = delegate as? DelegateProxy {
+			delegate.scrollViewController.isInScrollingAnimation = true
 		}
 	}
 }
