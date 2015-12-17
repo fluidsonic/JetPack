@@ -4,12 +4,15 @@ import UIKit
 @objc(JetPack_Label)
 public class Label: UILabel {
 
+	private var originalBackgroundColor: UIColor?
 	private var originalTextColor: UIColor?
 
 
 	public init() {
 		super.init(frame: .zero)
 
+		clipsToBounds = true
+		backgroundColor = super.backgroundColor
 		textColor = super.textColor
 	}
 
@@ -17,7 +20,22 @@ public class Label: UILabel {
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 
+		backgroundColor = super.backgroundColor
 		textColor = super.textColor
+	}
+
+
+	public override var backgroundColor: UIColor? {
+		get { return originalBackgroundColor }
+		set {
+			guard newValue != originalBackgroundColor else {
+				return
+			}
+
+			originalBackgroundColor = newValue
+
+			super.backgroundColor = newValue?.tintedWithColor(tintColor)
+		}
 	}
 
 
@@ -54,6 +72,10 @@ public class Label: UILabel {
 
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
+
+		if let originalBackgroundColor = originalBackgroundColor where originalBackgroundColor.tintAlpha != nil {
+			super.backgroundColor = originalBackgroundColor.tintedWithColor(tintColor)
+		}
 
 		if let originalTextColor = originalTextColor where originalTextColor.tintAlpha != nil {
 			super.textColor = originalTextColor.tintedWithColor(tintColor)
