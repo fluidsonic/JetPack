@@ -139,7 +139,10 @@ public class Button: View {
 			}
 
 			if highlightedAlpha != defaultAlpha || highlightedBackgroundColor != defaultBackgroundColor || highlightedBorderColor != defaultBorderColor {
-				Animation(duration: highlighted ? 0 : 0.3).run {
+				var animation: Animation? = highlighted ? nil : Animation(duration: 0.3)
+				animation?.allowsUserInteraction = true
+
+				animation.runAlways {
 					updateAlpha()
 					updateBackgroundColor()
 				}
