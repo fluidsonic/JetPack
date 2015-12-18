@@ -724,7 +724,7 @@ public class Button: View {
 	public override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		highlighted = false
 
-		if let tapped = tapped, touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+		if enabled, let tapped = tapped, touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
 			tapped()
 		}
 	}
