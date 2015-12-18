@@ -97,8 +97,13 @@ public class Button: View {
 	public override func didMoveToWindow() {
 		super.didMoveToWindow()
 
-		if window != nil, let activityIndicator = _activityIndicator where activityIndicator.superview === self {
-			activityIndicator.startAnimating()
+		if window != nil {
+			if let activityIndicator = _activityIndicator where activityIndicator.superview === self {
+				activityIndicator.startAnimating()
+			}
+		}
+		else {
+			highlighted = false
 		}
 	}
 
