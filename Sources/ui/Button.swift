@@ -108,13 +108,24 @@ public class Button: View {
 	}
 
 
-	public var disabledAlpha = CGFloat(1) {
+	public var disabledAlpha: CGFloat? {
 		didSet {
 			guard disabledAlpha != oldValue else {
 				return
 			}
 
 			updateAlpha()
+		}
+	}
+
+
+	public var disabledBackgroundColor: UIColor? {
+		didSet {
+			guard disabledBackgroundColor != oldValue else {
+				return
+			}
+
+			updateBackgroundColor()
 		}
 	}
 
@@ -128,6 +139,7 @@ public class Button: View {
 			}
 
 			updateAlpha()
+			updateBackgroundColor()
 		}
 	}
 
@@ -742,7 +754,7 @@ public class Button: View {
 
 	private func updateAlpha() {
 		let alpha: CGFloat
-		if !enabled {
+		if !enabled, let disabledAlpha = disabledAlpha {
 			alpha = disabledAlpha
 		}
 		else if highlighted {
@@ -758,7 +770,10 @@ public class Button: View {
 
 	private func updateBackgroundColor() {
 		let backgroundColor: UIColor?
-		if highlighted, let highlightedBackgroundColor = highlightedBackgroundColor {
+		if !enabled, let disabledBackgroundColor = disabledBackgroundColor {
+			backgroundColor = disabledBackgroundColor
+		}
+		else if highlighted, let highlightedBackgroundColor = highlightedBackgroundColor {
 			backgroundColor = highlightedBackgroundColor
 		}
 		else {
