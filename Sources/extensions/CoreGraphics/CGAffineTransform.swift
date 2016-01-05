@@ -16,7 +16,7 @@ public extension CGAffineTransform {
 	}
 
 
-	public init(horizontalTranslation: CGFloat, verticalTranslation: CGFloat = 1) {
+	public init(horizontalTranslation: CGFloat, verticalTranslation: CGFloat = 0) {
 		self = CGAffineTransformMakeTranslation(horizontalTranslation, verticalTranslation)
 	}
 
