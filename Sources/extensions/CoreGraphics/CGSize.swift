@@ -11,6 +11,11 @@ public extension CGSize {
 	}
 
 
+	public var absolute: CGSize {
+		return CGSize(width: width.absolute, height: height.absolute)
+	}
+
+
 	public var center: CGPoint {
 		return CGPoint(x: width / 2, y: height / 2)
 	}
