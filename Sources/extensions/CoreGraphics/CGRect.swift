@@ -48,6 +48,14 @@ public extension CGRect {
 	}
 
 
+	@warn_unused_result
+	public func centeredAt(center: CGPoint) -> CGRect {
+		var rect = self
+		rect.center = center
+		return rect
+	}
+
+
 	public var centerLeft: CGPoint {
 		get { return CGPoint(left: left, top: top + (height / 2)) }
 		mutating set { left = newValue.left; top = newValue.top - (height / 2) }
