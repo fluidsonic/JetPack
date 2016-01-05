@@ -9,6 +9,7 @@ public extension ImageView {
 	public struct AVAssetSource: Source, Equatable {
 
 		public var asset: AVAsset
+		public var videoComposition: AVVideoComposition?
 
 
 		public init(asset: AVAsset) {
@@ -17,7 +18,7 @@ public extension ImageView {
 
 
 		public func createSession() -> Session? {
-			return AVAssetSourceSession(asset: asset)
+			return AVAssetSourceSession(asset: asset, videoComposition: videoComposition)
 		}
 
 
@@ -42,9 +43,10 @@ private final class AVAssetSourceSession: ImageView.Session {
 	private var loading = false
 
 
-	private init(asset: AVAsset) {
+	private init(asset: AVAsset, videoComposition: AVVideoComposition?) {
 		generator = AVAssetImageGenerator(asset: asset)
 		generator.appliesPreferredTrackTransform = true
+		generator.videoComposition = videoComposition
 	}
 
 
