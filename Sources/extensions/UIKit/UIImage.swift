@@ -58,13 +58,12 @@ public extension UIImage {
 
 	@nonobjc
 	public func imageConstrainedToSize(maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .High) -> UIImage {
+		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
 		let coreImage = self.CGImage
-
 		let currentSize = CGSize(width: CGImageGetWidth(coreImage), height: CGImageGetHeight(coreImage))
-
-		let horizontalRatio = maximumSize.width / currentSize.width
-		let verticalRatio = maximumSize.height / currentSize.height
-		let scale = min(horizontalRatio, verticalRatio)
+		let horizontalScale = orientedMaximumSize.width / currentSize.width
+		let verticalScale = orientedMaximumSize.height / currentSize.height
+		let scale = min(horizontalScale, verticalScale)
 
 		var targetSize = currentSize.scaleBy(scale)
 		targetSize.height = floor(targetSize.height)
@@ -77,6 +76,38 @@ public extension UIImage {
 		let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(coreImage), 0, CGImageGetColorSpace(coreImage), CGImageGetBitmapInfo(coreImage).rawValue)
 		CGContextSetInterpolationQuality(context, interpolationQuality)
 		CGContextDrawImage(context, CGRect(size: targetSize), coreImage)
+
+		let newCoreImage = CGBitmapContextCreateImage(context)!
+		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
+
+		return newImage
+	}
+
+
+	@nonobjc
+	public func imageCroppedToSize(maximumSize: CGSize) -> UIImage {
+		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
+		let coreImage = self.CGImage
+		let currentSize = CGSize(width: CGImageGetWidth(coreImage), height: CGImageGetHeight(coreImage))
+
+		let targetSize = CGSize(
+			width:  min(currentSize.width, orientedMaximumSize.width),
+			height: min(currentSize.height, orientedMaximumSize.height)
+		)
+
+		if targetSize.height >= currentSize.height && targetSize.width >= currentSize.width {
+			return self
+		}
+
+		let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(coreImage), 0, CGImageGetColorSpace(coreImage), CGImageGetBitmapInfo(coreImage).rawValue)
+
+		let drawFrame = CGRect(
+			left:   floor((targetSize.width - currentSize.width) / 2),
+			top:    floor((targetSize.height - currentSize.height) / 2),
+			width:  currentSize.width,
+			height: currentSize.height
+		)
+		CGContextDrawImage(context, drawFrame, coreImage)
 
 		let newCoreImage = CGBitmapContextCreateImage(context)!
 		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
@@ -189,5 +220,21 @@ public extension UIImageOrientation {
 		case 8: self = .Left
 		default: return nil
 		}
+	}
+
+
+	public var isLandscape: Bool {
+		switch self {
+		case .Left, .LeftMirrored, .Right, .RightMirrored:
+			return true
+
+		case .Down, .DownMirrored, .Up, .UpMirrored:
+			return false
+		}
+	}
+
+
+	public var isPortrait: Bool {
+		return !isLandscape
 	}
 }
