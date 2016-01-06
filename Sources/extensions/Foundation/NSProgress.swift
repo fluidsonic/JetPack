@@ -16,8 +16,6 @@ public extension NSProgress {
 			return observer?.fractionCompletedHandler
 		}
 		set {
-			observer?.stopObserving()
-
 			if let fractionCompletedHandler = newValue {
 				observer = Observer(progress: self, fractionCompletedHandler: fractionCompletedHandler)
 			}
@@ -37,22 +35,6 @@ public extension NSProgress {
 			objc_setAssociatedObject(self, &AssociatedKeys.observer, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 		}
 	}
-
-
-	@nonobjc
-	internal static func NSProgress_setUp() {
-		swizzleMethodInType(self, fromSelector: "dealloc", toSelector: "JetPack_dealloc")
-	}
-
-
-	@objc(JetPack_dealloc)
-	private dynamic func swizzled_dealloc() {
-		if let observer = observer {
-			removeObserver(observer, forKeyPath: "fractionCompleted")
-		}
-
-		swizzled_dealloc()
-	}
 }
 
 
@@ -60,12 +42,12 @@ public extension NSProgress {
 private final class Observer: NSObject {
 
 	private let fractionCompletedHandler: Double -> Void
-	private unowned let progress: NSProgress
+	private let progress: Unmanaged<NSProgress>
 
 
 	private init(progress: NSProgress, fractionCompletedHandler: Double -> Void) {
 		self.fractionCompletedHandler = fractionCompletedHandler
-		self.progress = progress
+		self.progress = Unmanaged.passUnretained(progress)
 
 		super.init()
 
@@ -73,12 +55,12 @@ private final class Observer: NSObject {
 	}
 
 
-	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-		fractionCompletedHandler(progress.fractionCompleted)
+	deinit {
+		progress.takeUnretainedValue().removeObserver(self, forKeyPath: "fractionCompleted", context: nil)
 	}
 
 
-	private func stopObserving() {
-		progress.removeObserver(self, forKeyPath: "fractionCompleted")
+	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+		fractionCompletedHandler(progress.takeUnretainedValue().fractionCompleted)
 	}
 }

@@ -26,7 +26,14 @@ class NSProgress_Tests: XCTestCase {
 
 		XCTAssertEqual(_fractionCompleted, progress.fractionCompleted)
 		XCTAssertNil(progress.fractionCompletedHandler)
+	}
 
-		progress.fractionCompletedHandler = { _ in } // to test deinit
+
+	func testFractionCompletedHandlerDeinit() {
+		var progressWithHandler: NSProgress? = NSProgress()
+		progressWithHandler?.fractionCompletedHandler = { _ in }
+		progressWithHandler = nil
+
+		_ = NSProgress()
 	}
 }
