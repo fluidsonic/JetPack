@@ -107,9 +107,9 @@ public extension MKCoordinateRegion {
 
 		return MKCoordinateRegion(
 			north: min(self.north, region.north),
-			east:  max(self.west,  region.west),
+			east:  min(self.east,  region.east),
 			south: max(self.south, region.south),
-			west:  min(self.east,  region.east)
+			west:  max(self.west,  region.west)
 		)
 	}
 
