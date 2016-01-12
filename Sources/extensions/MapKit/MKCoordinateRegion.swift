@@ -4,7 +4,12 @@ import MapKit
 
 public extension MKCoordinateRegion {
 
-	@nonobjc
+	public init(north: CLLocationDegrees, east: CLLocationDegrees, south: CLLocationDegrees, west: CLLocationDegrees) {
+		span = MKCoordinateSpan(latitudeDelta: north - south, longitudeDelta: east - west)
+		center = CLLocationCoordinate2D(latitude: north - (span.latitudeDelta / 2), longitude: west + (span.longitudeDelta / 2))
+	}
+
+
 	public init? <Coordinates: SequenceType where Coordinates.Generator.Element == CLLocationCoordinate2D> (fittingCoordinates coordinates: Coordinates) {
 		var minLatitude = CLLocationDegrees(90)
 		var maxLatitude = CLLocationDegrees(-90)
@@ -94,6 +99,40 @@ public extension MKCoordinateRegion {
 	}
 
 
+	@warn_unused_result
+	public func intersectedWith(region: MKCoordinateRegion) -> MKCoordinateRegion? {
+		guard intersects(region) else {
+			return nil
+		}
+
+		return MKCoordinateRegion(
+			north: min(self.north, region.north),
+			east:  max(self.west,  region.west),
+			south: max(self.south, region.south),
+			west:  min(self.east,  region.east)
+		)
+	}
+
+
+	@warn_unused_result
+	public func intersects(region: MKCoordinateRegion) -> Bool {
+		if region.north < south {
+			return false
+		}
+		if north < region.south {
+			return false
+		}
+		if east < region.west {
+			return false
+		}
+		if region.east < west {
+			return false
+		}
+
+		return true
+	}
+
+
 	public var north: CLLocationDegrees {
 		return center.latitude + (span.latitudeDelta / 2)
 	}
@@ -140,6 +179,9 @@ public extension MKCoordinateRegion {
 	public var west: CLLocationDegrees {
 		return center.longitude - (span.longitudeDelta / 2)
 	}
+
+
+	public static let world: MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(), span: MKCoordinateSpan(latitudeDelta: 180, longitudeDelta: 360))
 }
 
 
