@@ -3,6 +3,14 @@ import MapKit
 
 public extension MKMapRect {
 
+	public init(region: MKCoordinateRegion) {
+		let bottomLeft = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: region.center.latitude + region.span.latitudeDelta / 2, longitude: region.center.longitude - region.span.longitudeDelta / 2))
+		let topRight = MKMapPointForCoordinate(CLLocationCoordinate2D(latitude: region.center.latitude - region.span.latitudeDelta / 2, longitude: region.center.longitude + region.span.longitudeDelta / 2))
+
+		self = MKMapRectMake(min(bottomLeft.x, topRight.x), min(bottomLeft.y, topRight.y), abs(bottomLeft.x - topRight.x), abs(bottomLeft.y - topRight.y))
+	}
+
+
 	@warn_unused_result
 	public func contains(point: MKMapPoint) -> Bool {
 		return MKMapRectContainsPoint(self, point)
