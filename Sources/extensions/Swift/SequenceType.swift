@@ -11,7 +11,7 @@ public extension SequenceType {
 	public func countMatching(@noescape predicate: Generator.Element throws -> Bool) rethrows -> Int {
 		var count = 0
 		for element in self where try predicate(element) {
-			++count
+			count += 1
 		}
 
 		return count

@@ -176,8 +176,10 @@ private final class ImageDownloader {
 			return {}
 		}
 
-		let id = nextId++
-		completions[nextId] = completion
+		let id = nextId
+		nextId += 1
+
+		completions[id] = completion
 
 		startDownload()
 
@@ -318,8 +320,10 @@ private final class ImageFileLoader {
 			return {}
 		}
 
-		let id = nextId++
-		completions[nextId] = completion
+		let id = nextId
+		nextId += 1
+
+		completions[id] = completion
 
 		startOperation()
 

@@ -269,10 +269,10 @@ public class Button: View {
 
 		var numberOfElements = 0
 		if wantsImage || wantsActivityIndicator {
-			++numberOfElements
+			numberOfElements += 1
 		}
 		if wantsText {
-			++numberOfElements
+			numberOfElements += 1
 		}
 
 		var horizontalAlignment = self.horizontalAlignment
@@ -547,7 +547,7 @@ public class Button: View {
 			if imageView.superview == nil {
 				insertSubview(imageView, atIndex: subviewIndex)
 			}
-			++subviewIndex
+			subviewIndex += 1
 
 			imageView.bounds = CGRect(size: imageViewFrame.size)
 			imageView.center = imageViewFrame.center
@@ -560,7 +560,7 @@ public class Button: View {
 			if textLabel.superview == nil {
 				insertSubview(textLabel, atIndex: subviewIndex)
 			}
-			++subviewIndex
+			subviewIndex += 1
 
 			textLabel.bounds = CGRect(size: textLabelFrame.size)
 			textLabel.center = textLabelFrame.center

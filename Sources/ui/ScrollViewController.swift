@@ -91,8 +91,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	private func layoutChildContainer() {
-		++ignoresScrollViewDidScroll
-		defer { --ignoresScrollViewDidScroll }
+		ignoresScrollViewDidScroll += 1
+		defer { ignoresScrollViewDidScroll -= 1 }
 
 		let viewSize = view.bounds.size
 		let contentSize = CGSize(width: CGFloat(viewControllers.count) * viewSize.width, height: viewSize.height)
@@ -120,8 +120,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 
 	private func layoutChildrenForcingLayoutUpdate(forcesLayoutUpdate: Bool) {
-		++ignoresScrollViewDidScroll
-		defer { --ignoresScrollViewDidScroll }
+		ignoresScrollViewDidScroll += 1
+		defer { ignoresScrollViewDidScroll -= 1 }
 
 		let viewBounds = view.bounds
 		let viewControllers = self.viewControllers
@@ -372,8 +372,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 				return
 			}
 
-			++ignoresScrollViewDidScroll
-			defer { --ignoresScrollViewDidScroll }
+			ignoresScrollViewDidScroll += 1
+			defer { ignoresScrollViewDidScroll -= 1 }
 
 			var removedViewControllers = [UIViewController]()
 			for viewController in oldValue where viewController.parentViewController === self && !viewControllers.containsIdentical(viewController) {

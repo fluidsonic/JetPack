@@ -119,7 +119,7 @@ public struct OrderedSet<T: Hashable> {
 					return index
 				}
 
-				++index
+				index += 1
 			}
 		}
 
