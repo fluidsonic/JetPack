@@ -26,6 +26,14 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
+	deinit {
+		if isViewLoaded() {
+			webView.removeObserver(self, forKeyPath: "loading", context: nil)
+			webView.removeObserver(self, forKeyPath: "title", context: nil)
+		}
+	}
+
+
 	public var animatesInitialLoading = false {
 		didSet {
 			guard animatesInitialLoading != oldValue else {
@@ -50,9 +58,9 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public func handleLink(link: NSURL) -> Bool {
+	public func handleLink(link: NSURL, newWindowRequested: Bool) -> Bool {
 		switch link.scheme {
-		case "http", "https":    return handleWebLink(link)
+		case "http", "https":    return handleWebLink(link, newWindowRequested: newWindowRequested)
 		case "mailto":           return handleEmailLink(link)
 		case "tel", "telprompt": return handlePhoneLink(link)
 		default:                 return handleUnknownLink(link)
@@ -80,13 +88,28 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public func handleWebLink(link: NSURL) -> Bool {
+	public func handleWebLink(link: NSURL, newWindowRequested: Bool) -> Bool {
 		guard opensLinksExternally else {
 			return false
 		}
 
 		UIApplication.sharedApplication().openURL(link)
 		return true
+	}
+
+
+	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+		if object === webView, let keyPath = keyPath {
+			switch keyPath {
+			case "loading", "title":
+				if updatesTitleFromDocument {
+					updateTitleFromDocument()
+				}
+
+			default:
+				break
+			}
+		}
 	}
 
 
@@ -105,7 +128,32 @@ public /* non-final */ class WebViewController: ViewController {
 
 
 	private func setUpWebView() {
+		webView.addObserver(self, forKeyPath: "loading", options: [], context: nil)
+		webView.addObserver(self, forKeyPath: "title", options: [], context: nil)
+
+		if updatesTitleFromDocument {
+			updateTitleFromDocument()
+		}
+
 		view.addSubview(webView)
+	}
+
+
+	private func updateTitleFromDocument() {
+		title = webView.title?.nonEmpty ?? (webView.loading ? "Loading…" : "")
+	}
+
+
+	public var updatesTitleFromDocument = false {
+		didSet {
+			guard updatesTitleFromDocument != oldValue else {
+				return
+			}
+
+			if updatesTitleFromDocument && isViewLoaded() {
+				updateTitleFromDocument()
+			}
+		}
 	}
 
 
@@ -179,7 +227,7 @@ extension WebViewController: WKNavigationDelegate {
 
 	public func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: WKNavigationActionPolicy -> Void) {
 		if navigationAction.navigationType == .LinkActivated, let url = navigationAction.request.URL {
-			decisionHandler(handleLink(url) ? .Cancel : .Allow)
+			decisionHandler(handleLink(url, newWindowRequested: navigationAction.targetFrame == nil) ? .Cancel : .Allow)
 			return
 		}
 
