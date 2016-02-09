@@ -19,7 +19,9 @@ public /* non-final */ class NavigationController: UINavigationController {
 			case .Pad:         return .All
 			case .Phone:       return .AllButUpsideDown
 			case .TV:          return .All
-			case .Unspecified: return .All
+
+			default: // add `case .CarPlay` & `case .Unspecified` as soon as Xcode 7.3 goes out of beta
+				return .All
 			}
 		}
 
