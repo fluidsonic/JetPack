@@ -53,6 +53,12 @@ public extension UINavigationController {
 
 
 	@nonobjc
+	public func popViewController() {
+		popViewControllerAnimated(true)
+	}
+
+
+	@nonobjc
 	public func pushViewController(viewController: UIViewController) {
 		pushViewController(viewController, animated: true)
 	}
