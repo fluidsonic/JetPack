@@ -247,7 +247,7 @@ public class Button: View {
 		}
 
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
-		let wantsImage = (_imageView?.image != nil || _imageView?.source != nil)
+		let wantsImage = !wantsActivityIndicator && (_imageView?.image != nil || _imageView?.source != nil)
 		let wantsText = !(_textLabel?.text?.isEmpty ?? true)
 
 		// step 1: show/hide views
@@ -258,7 +258,7 @@ public class Button: View {
 
 		// lazy initialization
 		let activityIndicator: UIActivityIndicatorView? = wantsActivityIndicator ? self.activityIndicator : nil
-		let imageView: ImageView? = wantsImage ? self.imageView : nil
+		let imageView: ImageView? = (wantsActivityIndicator || wantsImage) ? self.imageView : nil
 		let textLabel: Label? = wantsText ? self.textLabel : nil
 
 		var remainingSize = size
