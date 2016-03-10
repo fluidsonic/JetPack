@@ -224,6 +224,11 @@ private final class ColorUsingTintColor: UIColor {
 	}
 
 
+	private override var hash: Int {
+		return 123 ^ _alpha.hashValue
+	}
+
+
 	private override func isEqual(object: AnyObject?) -> Bool {
 		if object === self {
 			return true
