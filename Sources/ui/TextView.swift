@@ -48,7 +48,7 @@ public /* non-final */ class TextView: UITextView {
 	public override var font: UIFont? {
 		get { return super.font }
 		set {
-			guard newValue != font else {
+			guard let newValue = newValue where newValue != font else {
 				return
 			}
 
@@ -131,7 +131,9 @@ public /* non-final */ class TextView: UITextView {
 		else {
 			let placeholderLabel = self.placeholderLabel ?? {
 				let child = Label()
-				child.font = font
+				if let font = font {
+					child.font = font
+				}
 				child.text = placeholder
 				child.textColor = placeholderTextColor
 

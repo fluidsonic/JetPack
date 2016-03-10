@@ -194,9 +194,9 @@ public /* non-final */ class TooltipView: View {
 
 	private func setupLabel() {
 		let child = label
-		child.numberOfLines = 0
 		child.alpha = 0.87
 		child.font = UIFont.systemFontOfSize(UIFont.smallSystemFontSize() * 1.1)
+		child.maximumNumberOfLines = nil
 		child.textColor = .blackColor()
 
 		addSubview(child)

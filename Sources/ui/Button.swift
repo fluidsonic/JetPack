@@ -248,7 +248,7 @@ public class Button: View {
 
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
 		let wantsImage = !wantsActivityIndicator && (_imageView?.image != nil || _imageView?.source != nil)
-		let wantsText = !(_textLabel?.text?.isEmpty ?? true)
+		let wantsText = !(_textLabel?.text.isEmpty ?? true)
 
 		// step 1: show/hide views
 
@@ -605,7 +605,7 @@ public class Button: View {
 
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
 		let wantsImage = (_imageView?.image != nil || _imageView?.source != nil)
-		let wantsText = !(_textLabel?.text?.isEmpty ?? true)
+		let wantsText = !(_textLabel?.text.isEmpty ?? true)
 
 		// lazy initialization
 		let activityIndicator: UIActivityIndicatorView? = wantsActivityIndicator ? self.activityIndicator : nil
@@ -688,7 +688,7 @@ public class Button: View {
 	}
 
 
-	private func textLabelDidChangeText() {
+	private func textLabelDidChangeAttributedText() {
 		setNeedsLayout()
 		invalidateIntrinsicContentSize()
 	}
@@ -882,18 +882,18 @@ private final class ButtonLabel: Label {
 	}
 
 
-	private required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+	private override var attributedText: NSAttributedString {
+		didSet {
+		guard attributedText != oldValue else {
+			return
+		}
+
+		button?.textLabelDidChangeAttributedText()
+		}
 	}
 
 
-	private override var text: String? {
-		didSet {
-			guard (text ?? "") != (oldValue ?? "") else {
-				return
-			}
-
-			button?.textLabelDidChangeText()
-		}
+	private required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
 	}
 }
