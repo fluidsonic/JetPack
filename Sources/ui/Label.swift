@@ -31,12 +31,12 @@ public /* non-final */ class Label: View {
 	@NSCopying
 	public var attributedText = NSAttributedString() {
 		didSet {
-		guard attributedText != oldValue else {
-			return
-		}
+			guard attributedText != oldValue else {
+				return
+			}
 
-		invalidateIntrinsicContentSize()
-		setNeedsUpdateFinalizedText()
+			invalidateIntrinsicContentSize()
+			setNeedsUpdateFinalizedText()
 		}
 	}
 
@@ -53,12 +53,12 @@ public /* non-final */ class Label: View {
 
 	public var font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody) {
 		didSet {
-		guard font != oldValue else {
-			return
-		}
+			guard font != oldValue else {
+				return
+			}
 
-		invalidateIntrinsicContentSize()
-		setNeedsUpdateFinalizedText()
+			invalidateIntrinsicContentSize()
+			setNeedsUpdateFinalizedText()
 		}
 	}
 
@@ -86,7 +86,7 @@ public /* non-final */ class Label: View {
 			NSFontAttributeName: font,
 			NSForegroundColorAttributeName: finalTextColor,
 			NSParagraphStyleAttributeName: paragraphStyle
-		])
+			])
 
 		attributedText.enumerateAttributesInRange(NSRange(forString: finalizedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
 			finalizedText.addAttributes(attributes, range: range)
@@ -94,7 +94,7 @@ public /* non-final */ class Label: View {
 
 		textStorage.setAttributedString(finalizedText)
 
-		_finalizedText = finalizedText.copy() as! NSAttributedString
+		_finalizedText = finalizedText.copy() as? NSAttributedString
 		_numberOfLines = nil
 
 		return finalizedText
@@ -109,11 +109,11 @@ public /* non-final */ class Label: View {
 
 	public var horizontalAlignment = NSTextAlignment.Natural {
 		didSet {
-		guard horizontalAlignment != oldValue else {
-			return
-		}
+			guard horizontalAlignment != oldValue else {
+				return
+			}
 
-		setNeedsUpdateFinalizedText()
+			setNeedsUpdateFinalizedText()
 		}
 	}
 
@@ -151,46 +151,46 @@ public /* non-final */ class Label: View {
 
 	public var lineBreakMode = NSLineBreakMode.ByWordWrapping {
 		didSet {
-		guard lineBreakMode != oldValue else {
-			return
-		}
+			guard lineBreakMode != oldValue else {
+				return
+			}
 
-		textContainer.lineBreakMode = lineBreakMode
+			textContainer.lineBreakMode = lineBreakMode
 
-		invalidateIntrinsicContentSize()
-		setNeedsUpdateFinalizedText()
+			invalidateIntrinsicContentSize()
+			setNeedsUpdateFinalizedText()
 		}
 	}
 
 
 	public var maximumNumberOfLines: Int? = 1 {
 		didSet {
-		if let maximumNumberOfLines = maximumNumberOfLines {
-			precondition(maximumNumberOfLines > 0, "Label.maximumNumberOfLines must be either larger than zero or nil.")
-		}
+			if let maximumNumberOfLines = maximumNumberOfLines {
+				precondition(maximumNumberOfLines > 0, "Label.maximumNumberOfLines must be either larger than zero or nil.")
+			}
 
-		guard maximumNumberOfLines != oldValue else {
-			return
-		}
+			guard maximumNumberOfLines != oldValue else {
+				return
+			}
 
-		textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
+			textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
 
-		invalidateIntrinsicContentSize()
-		setNeedsDisplay()
+			invalidateIntrinsicContentSize()
+			setNeedsDisplay()
 		}
 	}
 
 
 	public var minimumScaleFactor = CGFloat(1) {
 		didSet {
-		minimumScaleFactor = minimumScaleFactor.clamp(min: 0, max: 1)
+			minimumScaleFactor = minimumScaleFactor.clamp(min: 0, max: 1)
 
-		guard minimumScaleFactor != oldValue else {
-			return
-		}
+			guard minimumScaleFactor != oldValue else {
+				return
+			}
 
-		invalidateIntrinsicContentSize()
-		setNeedsDisplay()
+			invalidateIntrinsicContentSize()
+			setNeedsDisplay()
 		}
 	}
 
@@ -205,7 +205,7 @@ public /* non-final */ class Label: View {
 
 		var numberOfLines = 0
 		var glyphIndex = 0
-		var numberOfGlyphs = layoutManager.numberOfGlyphs
+		let numberOfGlyphs = layoutManager.numberOfGlyphs
 
 		while (glyphIndex < numberOfGlyphs) {
 			var lineRange = NSRange()
@@ -213,7 +213,7 @@ public /* non-final */ class Label: View {
 
 			glyphIndex = NSMaxRange(lineRange)
 
-			++numberOfLines
+			numberOfLines += 1
 		}
 
 		_numberOfLines = numberOfLines
@@ -268,12 +268,12 @@ public /* non-final */ class Label: View {
 
 	public var padding = UIEdgeInsets.zero {
 		didSet {
-		guard padding != oldValue else {
-			return
-		}
+			guard padding != oldValue else {
+				return
+			}
 
-		invalidateIntrinsicContentSize()
-		setNeedsDisplay()
+			invalidateIntrinsicContentSize()
+			setNeedsDisplay()
 		}
 	}
 
@@ -311,11 +311,11 @@ public /* non-final */ class Label: View {
 
 	public var textColor = UIColor.darkTextColor() {
 		didSet {
-		guard textColor != oldValue else {
-			return
-		}
+			guard textColor != oldValue else {
+				return
+			}
 
-		updateFinalTextColor()
+			updateFinalTextColor()
 		}
 	}
 
@@ -347,11 +347,11 @@ public /* non-final */ class Label: View {
 
 	public var verticalAlignment = VerticalAlignment.Center {
 		didSet {
-		guard verticalAlignment != oldValue else {
-			return
-		}
+			guard verticalAlignment != oldValue else {
+				return
+			}
 
-		setNeedsDisplay()
+			setNeedsDisplay()
 		}
 	}
 
@@ -373,7 +373,7 @@ public /* non-final */ class Label: View {
 		private override init(layer: AnyObject) {
 			super.init(layer: layer)
 		}
-		
+
 
 		private required init?(coder: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
@@ -404,15 +404,15 @@ public /* non-final */ class Label: View {
 			default: return super.needsDisplayForKey(key)
 			}
 		}
-
-
+		
+		
 		private var label: Label? {
 			return delegate as? Label
 		}
 	}
-
-
-
+	
+	
+	
 	public enum VerticalAlignment {
 		case Bottom
 		case Center
