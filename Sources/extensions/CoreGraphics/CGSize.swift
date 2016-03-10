@@ -42,6 +42,21 @@ public extension CGSize {
 	}
 
 
+	public var rounded: CGSize {
+		return CGSize(width: width.rounded, height: height.rounded)
+	}
+
+
+	public var roundedDown: CGSize {
+		return CGSize(width: width.roundedDown, height: height.roundedDown)
+	}
+
+
+	public var roundedUp: CGSize {
+		return CGSize(width: width.roundedUp, height: height.roundedUp)
+	}
+
+
 	@warn_unused_result(mutable_variant="scaleInPlace")
 	public func scaleBy(scale: CGFloat) -> CGSize {
 		return CGSize(width: width * scale, height: height * scale)

@@ -7,7 +7,17 @@ public extension CGFloat {
 	public static let Pi = CGFloat(NativeType.Pi)
 
 
-	public var round: CGFloat {
-		return CoreGraphics.round(self)
+	public var rounded: CGFloat {
+		return round(self)
+	}
+
+
+	public var roundedDown: CGFloat {
+		return floor(self)
+	}
+
+
+	public var roundedUp: CGFloat {
+		return ceil(self)
 	}
 }
