@@ -3,7 +3,7 @@ import UIKit
 
 public /* non-final */ class Label: View {
 
-	private let layoutManager = NSLayoutManager()
+	private let layoutManager = LayoutManager()
 	private let textContainer = NSTextContainer()
 	private let textStorage = NSTextStorage()
 
@@ -416,5 +416,27 @@ public /* non-final */ class Label: View {
 		case Bottom
 		case Center
 		case Top
+	}
+}
+
+
+
+private final class LayoutManager: NSLayoutManager {
+
+	@objc(JetPack_linkAttributes)
+	private dynamic class var linkAttributes: [NSObject : AnyObject] {
+		return [:]
+	}
+
+
+	private override class func initialize() {
+		guard self == LayoutManager.self else {
+			return
+		}
+
+
+		let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
+		copyMethodWithSelector(defaultLinkAttributesSelector, fromType: object_getClass(NSLayoutManager.self), toType: object_getClass(self))
+		swizzleMethodInType(object_getClass(self), fromSelector: "JetPack_linkAttributes", toSelector: defaultLinkAttributesSelector)
 	}
 }
