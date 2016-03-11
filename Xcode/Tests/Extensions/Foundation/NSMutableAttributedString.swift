@@ -19,21 +19,33 @@ class NSMutableAttributedString_Tests: XCTestCase {
 
 	func testAppendString() {
 		do {
-			let expectedString = attributedString("redred", attributes: [(range: 0 ... 5, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
+			let expectedString = attributedString("rednothing", attributes: [(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
-			string.appendString("red")
+			string.appendString("nothing")
 			XCTAssertEqual(string, expectedString)
 		}
 
 		do {
-			let expectedString = attributedString("redblue", attributes: [
-				(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor()),
-				(range: 3 ... 6, name: NSForegroundColorAttributeName, value: UIColor.blueColor())
-			])
+			let expectedString = attributedString("redred", attributes: [(range: 0 ... 5, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
-			string.appendString("blue", attribute: NSForegroundColorAttributeName, value: UIColor.blueColor())
+			string.appendString("red", maintainingPrecedingAttributes: true)
+			XCTAssertEqual(string, expectedString)
+		}
+
+		do {
+			let expectedString = attributedString("redcustom", attributes: [
+				(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor()),
+				(range: 3 ... 8, name: "a", value: "a"),
+				(range: 3 ... 8, name: "b", value: "b")
+				])
+
+			let string = attributedString("red", attributes: [(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
+			string.appendString("custom", additionalAttributes: [
+				"a": "a",
+				"b": "b"
+			])
 			XCTAssertEqual(string, expectedString)
 		}
 
@@ -42,10 +54,10 @@ class NSMutableAttributedString_Tests: XCTestCase {
 				(range: 0 ... 8, name: NSForegroundColorAttributeName, value: UIColor.redColor()),
 				(range: 3 ... 8, name: "a", value: "a"),
 				(range: 3 ... 8, name: "b", value: "b")
-			])
+				])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: NSForegroundColorAttributeName, value: UIColor.redColor())])
-			string.appendString("custom", attributes: [
+			string.appendString("custom", maintainingPrecedingAttributes: true, additionalAttributes: [
 				"a": "a",
 				"b": "b"
 			])
