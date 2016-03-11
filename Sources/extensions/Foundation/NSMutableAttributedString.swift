@@ -4,28 +4,18 @@ import Foundation
 public extension NSMutableAttributedString {
 
 	@nonobjc
-	public func appendString(string: String) {
-		appendString(string, attributes: [:])
-	}
+	public func appendString(string: String, maintainingPrecedingAttributes: Bool = false, additionalAttributes: [String : AnyObject] = [:]) {
+		if maintainingPrecedingAttributes {
+			let location = length
 
+			replaceCharactersInRange(NSRange(location: location, length: 0), withString: string)
 
-	@nonobjc
-	public func appendString(string: String, attribute: String, value: AnyObject) {
-		let location = length
-
-		replaceCharactersInRange(NSRange(location: location, length: 0), withString: string)
-		addAttribute(attribute, value: value, range: NSRange(location: location, length: length - location))
-	}
-
-
-	@nonobjc
-	public func appendString(string: String, attributes: [String : AnyObject]) {
-		let location = length
-
-		replaceCharactersInRange(NSRange(location: location, length: 0), withString: string)
-
-		if !attributes.isEmpty {
-			addAttributes(attributes, range: NSRange(location: location, length: length - location))
+			if !additionalAttributes.isEmpty {
+				addAttributes(additionalAttributes, range: NSRange(location: location, length: length - location))
+			}
+		}
+		else {
+			appendAttributedString(NSAttributedString(string: string, attributes: additionalAttributes))
 		}
 	}
 }
