@@ -26,13 +26,13 @@ private func class_getInstanceMethodIgnoringSupertypes(clazz: AnyClass!, _ name:
 internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toType: AnyClass) {
 	precondition(fromType != toType)
 
-	let fromMethod = class_getInstanceMethod(fromType, selector)
+	let fromMethod = class_getInstanceMethodIgnoringSupertypes(fromType, selector)
 	guard fromMethod != nil else {
 		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's not present in the former.")
 		return
 	}
 
-	let toMethod = class_getInstanceMethod(toType, selector)
+	let toMethod = class_getInstanceMethodIgnoringSupertypes(toType, selector)
 	guard toMethod == nil else {
 		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's already present in the latter.")
 		return
