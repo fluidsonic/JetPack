@@ -1,21 +1,26 @@
 import UIKit
 
 
+@objc(JetPack_Label)
 public /* non-final */ class Label: View {
 
+	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
+
 	private let layoutManager = LayoutManager()
+	private let linkTapRecognizer = UITapGestureRecognizer()
 	private let textContainer = NSTextContainer()
 	private let textStorage = NSTextStorage()
 
 	public private(set) var lastDrawnFinalizedText: NSAttributedString?
 	public private(set) var lastUsedFinalTextColor: UIColor?
 
+	public var linkTapped: (NSURL -> Void)?
+
 
 	public override init() {
 		super.init()
 
 		opaque = false
-		userInteractionEnabled = false
 
 		layoutManager.addTextContainer(textContainer)
 
@@ -24,6 +29,8 @@ public /* non-final */ class Label: View {
 		textContainer.lineBreakMode = lineBreakMode
 
 		textStorage.addLayoutManager(layoutManager)
+
+		setUpLinkTapRecognizer()
 	}
 
 
@@ -92,13 +99,21 @@ public /* non-final */ class Label: View {
 			NSParagraphStyleAttributeName: paragraphStyle
 		])
 
+		var hasLinks = false
+
 		attributedText.enumerateAttributesInRange(NSRange(forString: finalizedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
+			if !hasLinks && attributes[NSLinkAttributeName] != nil {
+				hasLinks = true
+			}
+
 			finalizedText.addAttributes(attributes, range: range)
 		}
 
 		textStorage.setAttributedString(finalizedText)
+		linkTapRecognizer.enabled = hasLinks
 
 		_finalizedText = finalizedText.copy() as? NSAttributedString
+		_links = nil
 		_numberOfLines = nil
 
 		return finalizedText
@@ -108,6 +123,16 @@ public /* non-final */ class Label: View {
 	private var _finalizedText: NSAttributedString?
 	public final var finalizedText: NSAttributedString {
 		return finalizeText()
+	}
+
+
+	@objc
+	private func handleLinkTapRecognizer() {
+		guard let link = linkAtPoint(linkTapRecognizer.locationInView(self)) else {
+			return
+		}
+
+		linkTapped?(link.url)
 	}
 
 
@@ -160,6 +185,51 @@ public /* non-final */ class Label: View {
 			invalidateIntrinsicContentSize()
 			setNeedsUpdateFinalizedText()
 		}
+	}
+
+
+	private func linkAtPoint(point: CGPoint) -> Link? {
+		for link in links {
+			for frame in link.frames where frame.contains(point) {
+				return link
+			}
+		}
+
+		return nil
+	}
+
+
+	private var _links: [Link]?
+	private var links: [Link] {
+		if let links = _links {
+			return links
+		}
+
+		let finalizedText = self.finalizedText
+		let textContainerOrigin = originForTextContainer()
+
+		var links = [Link]()
+		finalizedText.enumerateAttribute(NSLinkAttributeName, inRange: NSRange(forString: finalizedText.string), options: []) { url, range, _ in
+			guard let url = url as? NSURL else {
+				return
+			}
+
+			links.append(Link(range: range, frames: [], url: url))
+		}
+
+		links = links.map { link in
+			let glyphRange = layoutManager.glyphRangeForCharacterRange(link.range, actualCharacterRange: nil)
+
+			var frames = [CGRect]()
+			layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSRange(location: NSNotFound, length: 0), inTextContainer: textContainer) { frame, _ in
+				frames.append(frame.offsetBy(dx: textContainerOrigin.x, dy: textContainerOrigin.y))
+			}
+
+			return Link(range: link.range, frames: frames, url: link.url)
+		}
+
+		_links = links
+		return links
 	}
 
 
@@ -279,6 +349,18 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public override func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+		guard super.pointInside(point, withEvent: event, additionalHitZone: additionalHitZone) else {
+			return false
+		}
+		guard userInteractionLimitedToLinks else {
+			return true
+		}
+
+		return linkAtPoint(point) != nil
+	}
+
+
 	private func setNeedsUpdateFinalizedText() {
 		guard _finalizedText != nil else {
 			return
@@ -287,6 +369,15 @@ public /* non-final */ class Label: View {
 		_finalizedText = nil
 		_numberOfLines = nil
 		setNeedsLayout()
+	}
+
+
+	private func setUpLinkTapRecognizer() {
+		let recognizer = linkTapRecognizer
+		recognizer.enabled = false
+		recognizer.addTarget(self, action: "handleLinkTapRecognizer")
+
+		addGestureRecognizer(recognizer)
 	}
 
 
@@ -335,6 +426,9 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public var userInteractionLimitedToLinks = true
+
+
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 
@@ -348,6 +442,7 @@ public /* non-final */ class Label: View {
 				return
 			}
 
+			_links = nil
 			setNeedsDisplay()
 		}
 	}
@@ -357,6 +452,18 @@ public /* non-final */ class Label: View {
 		super.willResizeToSize(newSize)
 
 		_numberOfLines = nil
+	}
+
+
+
+	private final class DelegateProxy: NSObject {
+
+		private unowned var label: Label
+
+
+		private init(label: Label) {
+			self.label = label
+		}
 	}
 
 
@@ -409,6 +516,37 @@ public /* non-final */ class Label: View {
 			}
 		}
 	}
+
+
+
+	private final class LayoutManager: NSLayoutManager {
+
+		@objc(JetPack_linkAttributes)
+		private dynamic class var linkAttributes: [NSObject : AnyObject] {
+			return [:]
+		}
+
+
+		private override class func initialize() {
+			guard self == LayoutManager.self else {
+				return
+			}
+
+
+			let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
+			copyMethodWithSelector(defaultLinkAttributesSelector, fromType: object_getClass(NSLayoutManager.self), toType: object_getClass(self))
+			swizzleMethodInType(object_getClass(self), fromSelector: "JetPack_linkAttributes", toSelector: defaultLinkAttributesSelector)
+		}
+	}
+
+
+
+	private struct Link {
+
+		private var range: NSRange
+		private var frames: [CGRect]
+		private var url: NSURL
+	}
 	
 	
 	
@@ -421,22 +559,9 @@ public /* non-final */ class Label: View {
 
 
 
-private final class LayoutManager: NSLayoutManager {
+extension Label.DelegateProxy: UIGestureRecognizerDelegate {
 
-	@objc(JetPack_linkAttributes)
-	private dynamic class var linkAttributes: [NSObject : AnyObject] {
-		return [:]
-	}
-
-
-	private override class func initialize() {
-		guard self == LayoutManager.self else {
-			return
-		}
-
-
-		let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
-		copyMethodWithSelector(defaultLinkAttributesSelector, fromType: object_getClass(NSLayoutManager.self), toType: object_getClass(self))
-		swizzleMethodInType(object_getClass(self), fromSelector: "JetPack_linkAttributes", toSelector: defaultLinkAttributesSelector)
+	private func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+		return label.linkAtPoint(touch.locationInView(label)) != nil
 	}
 }
