@@ -184,6 +184,11 @@ public /* non-final */ class View: UIView {
 		get { return layer.cornerRadius }
 		set { layer.cornerRadius = newValue }
 	}
+
+
+	public func didResizeFromSize(oldSize: CGSize) {
+		// override in subclasses
+	}
 	
 
 	// reference implementation
@@ -216,6 +221,12 @@ public /* non-final */ class View: UIView {
 	@warn_unused_result
 	public override func intrinsicContentSize() -> CGSize {
 		return CGSize(width: UIViewNoIntrinsicMetric, height: UIViewNoIntrinsicMetric)
+	}
+
+
+	@warn_unused_result
+	public override class func layerClass() -> AnyObject.Type {
+		return Layer.self
 	}
 
 
@@ -344,5 +355,10 @@ public /* non-final */ class View: UIView {
 		if let originalBorderColor = originalBorderColor where originalBorderColor.tintAlpha != nil {
 			layer.borderColor = originalBorderColor.tintedWithColor(tintColor).CGColor
 		}
+	}
+
+
+	public func willResizeToSize(newSize: CGSize) {
+		// override in subclasses
 	}
 }

@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
 	s.module_map    = 'Module/JetPack.modulemap'
 	s.source_files  = ['Sources/**/*.swift', 'Module/JetPack.h']
 	s.exclude_files = 'Sources/JetPack.swift'
-	s.frameworks    = 'AVFoundation', 'CoreGraphics', 'CoreImage', 'CoreLocation', 'Foundation', 'ImageIO', 'MapKit', 'Photos', 'UIKit', 'WebKit'
+	s.frameworks    = 'AVFoundation', 'CoreGraphics', 'CoreImage', 'CoreLocation', 'Foundation', 'ImageIO', 'MapKit', 'Photos', 'QuartzCore', 'UIKit', 'WebKit'
 end

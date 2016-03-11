@@ -9,7 +9,7 @@ public /* non-final */ class ImageView: View {
 	public typealias Source = _ImageViewSource
 
 	private var activityIndicatorIsVisible = false
-	private var imageLayer = Layer()
+	private var imageLayer = ImageLayer()
 	private var isLayouting = false
 	private var isSettingImage = false
 	private var isSettingImageFromSource = false
@@ -681,7 +681,7 @@ private struct ClosureSessionListener: ImageView.SessionListener {
 
 
 
-private final class Layer: CALayer {
+private final class ImageLayer: Layer {
 
 	private override func actionForKey(event: String) -> CAAction? {
 		return nil

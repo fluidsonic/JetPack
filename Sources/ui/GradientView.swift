@@ -36,7 +36,8 @@ public/* non-final */ class GradientView: View {
 	public private(set) final lazy var gradientLayer: CAGradientLayer = self.layer as! CAGradientLayer
 
 
-	public override class func layerClass() -> AnyClass {
+	@warn_unused_result
+	public final override class func layerClass() -> AnyClass {
 		return CAGradientLayer.self
 	}
 

@@ -3,6 +3,10 @@ import UIKit
 
 public /* non-final */ class Label: View {
 
+	private let layoutManager = NSLayoutManager()
+	private let textContainer = NSTextContainer()
+	private let textStorage = NSTextStorage()
+
 	public private(set) var lastDrawnFinalizedText: NSAttributedString?
 	public private(set) var lastUsedFinalTextColor: UIColor?
 
@@ -86,7 +90,7 @@ public /* non-final */ class Label: View {
 			NSFontAttributeName: font,
 			NSForegroundColorAttributeName: finalTextColor,
 			NSParagraphStyleAttributeName: paragraphStyle
-			])
+		])
 
 		attributedText.enumerateAttributesInRange(NSRange(forString: finalizedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
 			finalizedText.addAttributes(attributes, range: range)
@@ -118,28 +122,24 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private var labelLayer: Layer {
-		return layer as! Layer
+	private var labelLayer: LabelLayer {
+		return layer as! LabelLayer
 	}
 
 
-	private var labelPresentationLayer: Layer? {
-		return layer.presentationLayer() as? Layer
+	private var labelPresentationLayer: LabelLayer? {
+		return layer.presentationLayer() as? LabelLayer
 	}
 
 
-	public final override class func layerClass() -> AnyClass {
-		return Layer.self
+	@warn_unused_result
+	public final override class func layerClass() -> AnyObject.Type {
+		return LabelLayer.self
 	}
-
-
-	private let layoutManager = NSLayoutManager()
 
 
 	public override func layoutSubviews() {
 		super.layoutSubviews()
-
-		_numberOfLines = nil
 
 		textContainer.size = bounds.size.insetBy(padding)
 
@@ -221,6 +221,7 @@ public /* non-final */ class Label: View {
 	}
 
 
+	@warn_unused_result
 	private func originForTextContainer() -> CGPoint {
 		let padding = self.padding
 		let bounds = self.bounds
@@ -284,10 +285,12 @@ public /* non-final */ class Label: View {
 		}
 
 		_finalizedText = nil
+		_numberOfLines = nil
 		setNeedsLayout()
 	}
 
 
+	@warn_unused_result
 	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
 		let padding = self.padding
 
@@ -320,12 +323,6 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private let textContainer = NSTextContainer()
-
-
-	private let textStorage = NSTextStorage()
-
-
 	private func updateFinalTextColor() {
 		let finalTextColor = textColor.tintedWithColor(tintColor)
 		if finalTextColor != lastUsedFinalTextColor {
@@ -356,8 +353,15 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public override func willResizeToSize(newSize: CGSize) {
+		super.willResizeToSize(newSize)
 
-	private final class Layer: CALayer {
+		_numberOfLines = nil
+	}
+
+
+
+	private final class LabelLayer: Layer {
 
 		@objc @NSManaged
 		private dynamic var finalTextColor: CGColor
@@ -370,7 +374,7 @@ public /* non-final */ class Label: View {
 		}
 
 
-		private override init(layer: AnyObject) {
+		private required init(layer: AnyObject) {
 			super.init(layer: layer)
 		}
 
@@ -403,11 +407,6 @@ public /* non-final */ class Label: View {
 			case "finalTextColor": return true
 			default: return super.needsDisplayForKey(key)
 			}
-		}
-		
-		
-		private var label: Label? {
-			return delegate as? Label
 		}
 	}
 	

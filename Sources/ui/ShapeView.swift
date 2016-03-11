@@ -64,7 +64,8 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	public override class func layerClass() -> AnyClass {
+	@warn_unused_result
+	public final override class func layerClass() -> AnyObject.Type {
 		return CAShapeLayer.self
 	}
 
