@@ -28,6 +28,7 @@
     "ImageIO",
     "MapKit",
     "Photos",
+    "QuartzCore",
     "UIKit",
     "WebKit"
   ]
