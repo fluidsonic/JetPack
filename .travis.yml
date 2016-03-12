@@ -26,16 +26,16 @@ env:
     - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=9.2,name=iPhone 6S"      SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
 
 before_install:
-  - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
+  - gem install cocoapods xcpretty --no-rdoc --no-ri --no-document --quiet
 
 script:
   - set -o pipefail
   - cd Xcode && pod update --no-repo-update && cd ..
   - if [ $SDK == $IOS_DEVICE_SDK ]; then
-      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration "$CONFIGURATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO &&
+      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration "$CONFIGURATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty &&
       pod lib lint --allow-warnings --quick --verbose;
     else
-      xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration "$CONFIGURATION";
+      xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration "$CONFIGURATION" | xcpretty;
     fi
 
 after_success:
