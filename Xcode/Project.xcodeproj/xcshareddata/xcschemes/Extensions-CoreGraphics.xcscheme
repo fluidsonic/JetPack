@@ -42,9 +42,9 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "23B6ABA28083D0A701DB9579"
+               BlueprintIdentifier = "3ABA96556ECAA99FF8E3EAE0"
                BuildableName = "JetPack.framework"
-               BlueprintName = "Pods-Extensions-CoreGraphics-JetPack"
+               BlueprintName = "Pods-All-JetPack"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
