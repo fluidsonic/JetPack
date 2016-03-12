@@ -561,6 +561,7 @@ public /* non-final */ class Label: View {
 
 extension Label.DelegateProxy: UIGestureRecognizerDelegate {
 
+	@objc
 	private func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
 		return label.linkAtPoint(touch.locationInView(label)) != nil
 	}
