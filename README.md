@@ -37,7 +37,7 @@ Since JetPack isn't versioned yet it is recommended to add it as a Git submodule
 | [JetPack/Extensions/Swift](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/Swift) | Useful extensions for the Swift framework. |
 | [JetPack/Extensions/UIKit](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/UIKit) | Useful extensions for the UIKit framework. |
 | [JetPack/Measures](https://github.com/fluidsonic/JetPack/tree/master/Sources/Measures) | Working with and converting various measurement units made easy!<br>Angle, Length, Pressure, Speed, Temperature & Time so far. |
-| [JetPack/UI](https://github.com/fluidsonic/JetPack/tree/master/Sources/UI) | New UI components, replacements for existing UI components (e.g. an ImageView with URL loading, a text label with padding & link support) and subclasses augmenting existing UI components. |
+| [JetPack/UI](https://github.com/fluidsonic/JetPack/tree/master/Sources/UI) | New UI components, replacements for existing UI components (e.g. an [ImageView](https://github.com/fluidsonic/JetPack/blob/master/Sources/UI/ImageView.swift) with URL loading or a [Label](https://github.com/fluidsonic/JetPack/blob/master/Sources/UI/Label.swift) with padding & link support) and subclasses augmenting existing UI components. |
 
 
 
