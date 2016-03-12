@@ -21,7 +21,7 @@ else
 		COMMAND="$COMMAND CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO"
 	fi
 
-	COMMAND="$COMMAND | xcpretty"
+	COMMAND="$COMMAND | xcpretty -f `xcpretty-travis-formatter`"
 
 	eval "set -x; $COMMAND"
 fi
