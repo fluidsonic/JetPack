@@ -5,35 +5,32 @@ sudo: false
 env:
   global:
     - WORKSPACE=Xcode/Project.xcworkspace
-    - SCHEME="Project"
     - IOS_DEVICE_SDK=iphoneos9.2
     - IOS_SIMULATOR_SDK=iphonesimulator9.2
   matrix:
-    - SDK="$IOS_DEVICE_SDK"    CONFIGURATION="Debug"
-    - SDK="$IOS_DEVICE_SDK"    CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-O"
-    - SDK="$IOS_DEVICE_SDK"    CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Debug"   DESTINATION="OS=8.2,name=iPhone 4S"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=8.2,name=iPhone 4S"      SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Debug"   DESTINATION="OS=8.3,name=iPhone 5"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=8.3,name=iPhone 5"       SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Debug"   DESTINATION="OS=8.4,name=iPhone 5S"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=8.4,name=iPhone 5S"      SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Debug"   DESTINATION="OS=9.0,name=iPhone 6"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=9.0,name=iPhone 6"       SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Debug"   DESTINATION="OS=9.1,name=iPhone 6 Plus"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=9.1,name=iPhone 6 Plus"  SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Debug"   DESTINATION="OS=9.2,name=iPhone 6S"
-    - SDK="$IOS_SIMULATOR_SDK" CONFIGURATION="Release" DESTINATION="OS=9.2,name=iPhone 6S"      SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-
+    - POD_LINT="yes"
+    - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Debug"
+    - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-O"
+    - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Debug"   DESTINATION="OS=8.2,name=iPhone 4S"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Release" DESTINATION="OS=9.2,name=iPhone 6S" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics" CONFIGURATION="Debug"   DESTINATION="OS=9.2,name=iPhone 6S"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics" CONFIGURATION="Release" DESTINATION="OS=9.2,name=iPhone 6S" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation"   CONFIGURATION="Debug"   DESTINATION="OS=9.2,name=iPhone 6S"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation"   CONFIGURATION="Release" DESTINATION="OS=9.2,name=iPhone 6S" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift"        CONFIGURATION="Debug"   DESTINATION="OS=9.2,name=iPhone 6S"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift"        CONFIGURATION="Release" DESTINATION="OS=9.2,name=iPhone 6S" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    
 before_install:
   - gem install cocoapods xcpretty --no-rdoc --no-ri --no-document --quiet
 
 script:
   - set -o pipefail
   - cd Xcode && pod update --no-repo-update && cd ..
-  - if [ $SDK == $IOS_DEVICE_SDK ]; then
-      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration "$CONFIGURATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty &&
+  - if [ $POD_LINT == "yes" ]; then
       pod lib lint --allow-warnings --quick --verbose;
+    elif [ $SDK == $IOS_DEVICE_SDK ]; then
+      xcodebuild build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -configuration "$CONFIGURATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty;
     else
       xcodebuild test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration "$CONFIGURATION" | xcpretty;
     fi
