@@ -21,6 +21,7 @@ else
 		COMMAND="$COMMAND CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO"
 	fi
 
+	export NSUnbufferedIO=YES # https://github.com/supermarin/xcpretty/issues/192
 	COMMAND="$COMMAND | xcpretty -f `xcpretty-travis-formatter`"
 
 	eval "set -x; $COMMAND"
