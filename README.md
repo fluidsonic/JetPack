@@ -30,7 +30,7 @@ Since JetPack isn't versioned yet it is recommended to add it as a Git submodule
 | [JetPack/Extensions](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions) | Imports all extension modules listed below at once. |
 | [JetPack/Extensions/CoreGraphics](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/CoreGraphics) | Useful extensions for the CoreGraphics framework. |
 | [JetPack/Extensions/CoreLocation](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/CoreLocation) | Useful extensions for the CoreLocation framework. |
-| [JetPack/Extensions/CoreDarwin](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/CoreDarwin) | Useful extensions for the Darwin module. |
+| [JetPack/Extensions/CoreDarwin](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/Darwin) | Useful extensions for the Darwin module. |
 | [JetPack/Extensions/Foundation](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/Foundation) | Useful extensions for the Foundation framework. |
 | [JetPack/Extensions/MapKit](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/MapKit) | Useful extensions for the MapKit framework. |
 | [JetPack/Extensions/Photos](https://github.com/fluidsonic/JetPack/tree/master/Sources/Extensions/Photos) | Useful extensions for the Photos framework. |
