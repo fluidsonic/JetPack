@@ -1,8 +1,97 @@
 platform :ios, '8.0'
 use_frameworks!
-link_with ['Project', 'Tests']
 
-pod 'JetPack', :path => '..'
+
+target 'All' do
+	pod 'JetPack', :path => '..'
+end
+
+
+target 'Core' do
+	pod 'JetPack/Core', :path => '..'
+end
+
+
+target 'Deprecated' do
+	pod 'JetPack/Deprecated', :path => '..'
+end
+
+
+target 'Experimental' do
+	pod 'JetPack/Experimental', :path => '..'
+end
+
+
+target 'Extensions' do
+	pod 'JetPack/Extensions', :path => '..'
+end
+
+
+target 'Extensions-CoreGraphics' do
+	pod 'JetPack/Extensions/CoreGraphics', :path => '..'
+
+	target 'Extensions-CoreGraphics-Tests' do
+		pod 'JetPack/Extensions/CoreGraphics', :path => '..'
+	end
+end
+
+
+target 'Extensions-CoreLocation' do
+	pod 'JetPack/Extensions/CoreLocation', :path => '..'
+end
+
+
+target 'Extensions-Darwin' do
+	pod 'JetPack/Extensions/Darwin', :path => '..'
+end
+
+
+target 'Extensions-Foundation' do
+	pod 'JetPack/Extensions/Foundation', :path => '..'
+
+	target 'Extensions-Foundation-Tests' do
+		pod 'JetPack/Extensions/Foundation', :path => '..'
+	end
+end
+
+
+target 'Extensions-MapKit' do
+	pod 'JetPack/Extensions/MapKit', :path => '..'
+end
+
+
+target 'Extensions-Photos' do
+	pod 'JetPack/Extensions/Photos', :path => '..'
+end
+
+
+target 'Extensions-Swift' do
+	pod 'JetPack/Extensions/Swift', :path => '..'
+
+	target 'Extensions-Swift-Tests' do
+		pod 'JetPack/Extensions/Swift', :path => '..'
+	end
+end
+
+
+target 'Extensions-UIKit' do
+	pod 'JetPack/Extensions/UIKit', :path => '..'
+end
+
+
+target 'Measures' do
+	pod 'JetPack/Measures', :path => '..'
+end
+
+
+target 'UI' do
+	pod 'JetPack/UI', :path => '..'
+end
+
+
+pre_install do |installer|
+	installer.config.deterministic_uuids = false
+end
 
 
 post_install do |installer|

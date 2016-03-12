@@ -1,0 +1,6 @@
+framework module Pods_Extensions_Darwin {
+  umbrella header "Pods-Extensions-Darwin-umbrella.h"
+
+  export *
+  module * { export * }
+}

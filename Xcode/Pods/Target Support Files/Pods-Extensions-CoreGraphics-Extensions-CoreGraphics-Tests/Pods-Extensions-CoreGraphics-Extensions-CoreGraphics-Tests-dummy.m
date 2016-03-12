@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_Extensions_CoreGraphics_Extensions_CoreGraphics_Tests : NSObject
+@end
+@implementation PodsDummy_Pods_Extensions_CoreGraphics_Extensions_CoreGraphics_Tests
+@end

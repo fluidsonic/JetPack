@@ -1,0 +1,7 @@
+framework module JetPack {
+
+	umbrella header "JetPack.h"
+
+	export *
+	module * { export * }
+}

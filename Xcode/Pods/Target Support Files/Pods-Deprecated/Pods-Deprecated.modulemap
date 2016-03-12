@@ -1,0 +1,6 @@
+framework module Pods_Deprecated {
+  umbrella header "Pods-Deprecated-umbrella.h"
+
+  export *
+  module * { export * }
+}

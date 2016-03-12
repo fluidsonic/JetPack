@@ -1,0 +1,1 @@
+internal protocol _NonSystemWindow {}

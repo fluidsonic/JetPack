@@ -1,6 +1,13 @@
 import XCTest
 
 
+internal final class EmptyObject {
+
+	internal init() {}
+}
+
+
+
 internal func XCTAssertEqual<X: Equatable, Y: Equatable> (expression1: (X, Y)?, _ expression2: (X, Y)?) {
 	if let expression1 = expression1, expression2 = expression2 {
 		XCTAssertTrue(expression1.0 == expression2.0 && expression1.1 == expression2.1)

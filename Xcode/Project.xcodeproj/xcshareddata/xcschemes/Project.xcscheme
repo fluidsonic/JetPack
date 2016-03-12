@@ -14,9 +14,205 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4956ED031C94551600A33C45"
+               BuildableName = "All.app"
+               BlueprintName = "All"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "4986830C1BE404F7001DCBC7"
-               BuildableName = "JetPack.app"
-               BlueprintName = "Project"
+               BuildableName = "Core.app"
+               BlueprintName = "Core"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDD671C94406B00FB7DEF"
+               BuildableName = "Deprecated.app"
+               BlueprintName = "Deprecated"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDD771C94411D00FB7DEF"
+               BuildableName = "Experimental.app"
+               BlueprintName = "Experimental"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4956ED121C94552800A33C45"
+               BuildableName = "Extensions.app"
+               BlueprintName = "Extensions"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDD981C94433C00FB7DEF"
+               BuildableName = "Extensions-CoreGraphics.app"
+               BlueprintName = "Extensions-CoreGraphics"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDDA81C94464400FB7DEF"
+               BuildableName = "Extensions-CoreLocation.app"
+               BlueprintName = "Extensions-CoreLocation"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDDB91C94465D00FB7DEF"
+               BuildableName = "Extensions-Darwin.app"
+               BlueprintName = "Extensions-Darwin"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDDCA1C94467000FB7DEF"
+               BuildableName = "Extensions-Foundation.app"
+               BlueprintName = "Extensions-Foundation"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDDDB1C94474800FB7DEF"
+               BuildableName = "Extensions-MapKit.app"
+               BlueprintName = "Extensions-MapKit"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDDED1C94474900FB7DEF"
+               BuildableName = "Extensions-Photos.app"
+               BlueprintName = "Extensions-Photos"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDDFF1C94474B00FB7DEF"
+               BuildableName = "Extensions-Swift.app"
+               BlueprintName = "Extensions-Swift"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDE111C94488400FB7DEF"
+               BuildableName = "Extensions-UIKit.app"
+               BlueprintName = "Extensions-UIKit"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDD881C9442A700FB7DEF"
+               BuildableName = "Measures.app"
+               BlueprintName = "Measures"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDD561C943BD700FB7DEF"
+               BuildableName = "UI.app"
+               BlueprintName = "UI"
                ReferencedContainer = "container:Project.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +224,37 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "68D05187BDD34CB5FC5B6EF68763E7EB"
+               BlueprintIdentifier = "49CDDE241C9451F300FB7DEF"
+               BuildableName = "Extensions-Foundation-Tests.xctest"
+               BlueprintName = "Extensions-Foundation-Tests"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDE4E1C94520300FB7DEF"
+               BuildableName = "Extensions-Swift-Tests.xctest"
+               BlueprintName = "Extensions-Swift-Tests"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "492ECC913D1DB8BF74B55BE7"
                BuildableName = "JetPack.framework"
-               BlueprintName = "JetPack"
+               BlueprintName = "Pods-All-JetPack"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,8 +272,28 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "498683201BE404F7001DCBC7"
-               BuildableName = "Tests.xctest"
-               BlueprintName = "Tests"
+               BuildableName = "Extensions-CoreGraphics-Tests.xctest"
+               BlueprintName = "Extensions-CoreGraphics-Tests"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDE241C9451F300FB7DEF"
+               BuildableName = "Extensions-Foundation-Tests.xctest"
+               BlueprintName = "Extensions-Foundation-Tests"
+               ReferencedContainer = "container:Project.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "49CDDE4E1C94520300FB7DEF"
+               BuildableName = "Extensions-Swift-Tests.xctest"
+               BlueprintName = "Extensions-Swift-Tests"
                ReferencedContainer = "container:Project.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -57,9 +301,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4986830C1BE404F7001DCBC7"
-            BuildableName = "JetPack.app"
-            BlueprintName = "Project"
+            BlueprintIdentifier = "4956ED031C94551600A33C45"
+            BuildableName = "All.app"
+            BlueprintName = "All"
             ReferencedContainer = "container:Project.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -80,9 +324,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4986830C1BE404F7001DCBC7"
-            BuildableName = "JetPack.app"
-            BlueprintName = "Project"
+            BlueprintIdentifier = "4956ED031C94551600A33C45"
+            BuildableName = "All.app"
+            BlueprintName = "All"
             ReferencedContainer = "container:Project.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -99,9 +343,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4986830C1BE404F7001DCBC7"
-            BuildableName = "JetPack.app"
-            BlueprintName = "Project"
+            BlueprintIdentifier = "4956ED031C94551600A33C45"
+            BuildableName = "All.app"
+            BlueprintName = "All"
             ReferencedContainer = "container:Project.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

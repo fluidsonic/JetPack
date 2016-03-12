@@ -1,14 +1,74 @@
 PODS:
-  - JetPack (0.0.2)
+  - JetPack (0.0.3):
+    - JetPack/Core (= 0.0.3)
+    - JetPack/Deprecated (= 0.0.3)
+    - JetPack/Experimental (= 0.0.3)
+    - JetPack/Extensions (= 0.0.3)
+    - JetPack/Measures (= 0.0.3)
+    - JetPack/UI (= 0.0.3)
+  - JetPack/Core (0.0.3)
+  - JetPack/Deprecated (0.0.3)
+  - JetPack/Experimental (0.0.3):
+    - JetPack/Core
+    - JetPack/Extensions/Swift
+  - JetPack/Extensions (0.0.3):
+    - JetPack/Extensions/CoreGraphics (= 0.0.3)
+    - JetPack/Extensions/CoreLocation (= 0.0.3)
+    - JetPack/Extensions/Darwin (= 0.0.3)
+    - JetPack/Extensions/Foundation (= 0.0.3)
+    - JetPack/Extensions/MapKit (= 0.0.3)
+    - JetPack/Extensions/Photos (= 0.0.3)
+    - JetPack/Extensions/Swift (= 0.0.3)
+    - JetPack/Extensions/UIKit (= 0.0.3)
+  - JetPack/Extensions/CoreGraphics (0.0.3):
+    - JetPack/Extensions/Swift
+  - JetPack/Extensions/CoreLocation (0.0.3)
+  - JetPack/Extensions/Darwin (0.0.3)
+  - JetPack/Extensions/Foundation (0.0.3):
+    - JetPack/Core
+  - JetPack/Extensions/MapKit (0.0.3):
+    - JetPack/Extensions/CoreLocation
+    - JetPack/Extensions/Swift
+  - JetPack/Extensions/Photos (0.0.3)
+  - JetPack/Extensions/Swift (0.0.3):
+    - JetPack/Extensions/Darwin
+  - JetPack/Extensions/UIKit (0.0.3):
+    - JetPack/Core
+    - JetPack/Experimental
+    - JetPack/Extensions/CoreGraphics
+    - JetPack/Extensions/Foundation
+    - JetPack/Extensions/Swift
+  - JetPack/Measures (0.0.3):
+    - JetPack/Extensions/Swift
+  - JetPack/UI (0.0.3):
+    - JetPack/Core
+    - JetPack/Extensions/CoreGraphics
+    - JetPack/Extensions/Foundation
+    - JetPack/Extensions/Swift
+    - JetPack/Extensions/UIKit
 
 DEPENDENCIES:
   - JetPack (from `..`)
+  - JetPack/Core (from `..`)
+  - JetPack/Deprecated (from `..`)
+  - JetPack/Experimental (from `..`)
+  - JetPack/Extensions (from `..`)
+  - JetPack/Extensions/CoreGraphics (from `..`)
+  - JetPack/Extensions/CoreLocation (from `..`)
+  - JetPack/Extensions/Darwin (from `..`)
+  - JetPack/Extensions/Foundation (from `..`)
+  - JetPack/Extensions/MapKit (from `..`)
+  - JetPack/Extensions/Photos (from `..`)
+  - JetPack/Extensions/Swift (from `..`)
+  - JetPack/Extensions/UIKit (from `..`)
+  - JetPack/Measures (from `..`)
+  - JetPack/UI (from `..`)
 
 EXTERNAL SOURCES:
   JetPack:
     :path: ..
 
 SPEC CHECKSUMS:
-  JetPack: 23b2cf01fba7794a1a65bccb22096a9146a05552
+  JetPack: 73f2d44e1ebe6c18f8037db824fed41ab1547828
 
 COCOAPODS: 0.39.0

@@ -1,6 +1,6 @@
 {
   "name": "JetPack",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "authors": {
     "Marc Knaup": "marc@knaup.koeln"
   },
@@ -14,22 +14,200 @@
   },
   "summary": "A Swiss Army knife for iOS development with Swift in a very early stage.",
   "module_map": "Module/JetPack.modulemap",
-  "source_files": [
-    "Sources/**/*.swift",
-    "Module/JetPack.h"
-  ],
-  "exclude_files": "Sources/JetPack.swift",
-  "frameworks": [
-    "AVFoundation",
-    "CoreGraphics",
-    "CoreImage",
-    "CoreLocation",
-    "Foundation",
-    "ImageIO",
-    "MapKit",
-    "Photos",
-    "QuartzCore",
-    "UIKit",
-    "WebKit"
+  "subspecs": [
+    {
+      "name": "Core",
+      "frameworks": "Foundation",
+      "source_files": [
+        "Sources/Core/**/*.swift",
+        "Module/JetPack.h"
+      ]
+    },
+    {
+      "name": "Deprecated",
+      "frameworks": "Foundation",
+      "source_files": [
+        "Sources/Deprecated/**/*.swift",
+        "Module/JetPack.h"
+      ]
+    },
+    {
+      "name": "Experimental",
+      "frameworks": [
+        "Foundation",
+        "UIKit"
+      ],
+      "source_files": [
+        "Sources/Experimental/**/*.swift",
+        "Module/JetPack.h"
+      ],
+      "dependencies": {
+        "JetPack/Core": [
+
+        ],
+        "JetPack/Extensions/Swift": [
+
+        ]
+      }
+    },
+    {
+      "name": "Extensions",
+      "subspecs": [
+        {
+          "name": "CoreGraphics",
+          "frameworks": "CoreGraphics",
+          "source_files": [
+            "Sources/Extensions/CoreGraphics/**/*.swift",
+            "Module/JetPack.h"
+          ],
+          "dependencies": {
+            "JetPack/Extensions/Swift": [
+
+            ]
+          }
+        },
+        {
+          "name": "CoreLocation",
+          "frameworks": "CoreLocation",
+          "source_files": [
+            "Sources/Extensions/CoreLocation/**/*.swift",
+            "Module/JetPack.h"
+          ]
+        },
+        {
+          "name": "Darwin",
+          "source_files": [
+            "Sources/Extensions/Darwin/**/*.swift",
+            "Module/JetPack.h"
+          ]
+        },
+        {
+          "name": "Foundation",
+          "frameworks": "Foundation",
+          "source_files": [
+            "Sources/Extensions/Foundation/**/*.swift",
+            "Module/JetPack.h"
+          ],
+          "dependencies": {
+            "JetPack/Core": [
+
+            ]
+          }
+        },
+        {
+          "name": "MapKit",
+          "frameworks": [
+            "CoreLocation",
+            "MapKit"
+          ],
+          "source_files": [
+            "Sources/Extensions/MapKit/**/*.swift",
+            "Module/JetPack.h"
+          ],
+          "dependencies": {
+            "JetPack/Extensions/CoreLocation": [
+
+            ],
+            "JetPack/Extensions/Swift": [
+
+            ]
+          }
+        },
+        {
+          "name": "Photos",
+          "frameworks": "Photos",
+          "source_files": [
+            "Sources/Extensions/Photos/**/*.swift",
+            "Module/JetPack.h"
+          ]
+        },
+        {
+          "name": "Swift",
+          "frameworks": "Foundation",
+          "source_files": [
+            "Sources/Extensions/Swift/**/*.swift",
+            "Module/JetPack.h"
+          ],
+          "dependencies": {
+            "JetPack/Extensions/Darwin": [
+
+            ]
+          }
+        },
+        {
+          "name": "UIKit",
+          "frameworks": [
+            "CoreImage",
+            "Foundation",
+            "UIKit"
+          ],
+          "source_files": [
+            "Sources/Extensions/UIKit/**/*.swift",
+            "Module/JetPack.h"
+          ],
+          "dependencies": {
+            "JetPack/Core": [
+
+            ],
+            "JetPack/Experimental": [
+
+            ],
+            "JetPack/Extensions/CoreGraphics": [
+
+            ],
+            "JetPack/Extensions/Foundation": [
+
+            ],
+            "JetPack/Extensions/Swift": [
+
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Measures",
+      "source_files": [
+        "Sources/Measures/**/*.swift",
+        "Module/JetPack.h"
+      ],
+      "dependencies": {
+        "JetPack/Extensions/Swift": [
+
+        ]
+      }
+    },
+    {
+      "name": "UI",
+      "frameworks": [
+        "AVFoundation",
+        "ImageIO",
+        "Photos",
+        "QuartzCore",
+        "UIKit",
+        "WebKit"
+      ],
+      "source_files": [
+        "Sources/UI/**/*.swift",
+        "Module/JetPack.h"
+      ],
+      "dependencies": {
+        "JetPack/Core": [
+
+        ],
+        "JetPack/Extensions/CoreGraphics": [
+
+        ],
+        "JetPack/Extensions/Foundation": [
+
+        ],
+        "JetPack/Extensions/Swift": [
+
+        ],
+        "JetPack/Extensions/UIKit": [
+
+        ]
+      }
+    }
   ]
 }

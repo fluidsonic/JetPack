@@ -12,13 +12,34 @@ class Double_Tests: XCTestCase {
 	}
 
 
-	func testRound() {
-		XCTAssertEqual(Double(-0.9).round, -1)
-		XCTAssertEqual(Double(-0.5).round, -1)
-		XCTAssertEqual(Double(-0.1).round,  0)
-		XCTAssertEqual(Double( 0.0).round,  0)
-		XCTAssertEqual(Double( 0.1).round,  0)
-		XCTAssertEqual(Double( 0.5).round,  1)
-		XCTAssertEqual(Double( 0.9).round,  1)
+	func testRounded() {
+		XCTAssertEqual(Double(-0.9).rounded, -1)
+		XCTAssertEqual(Double(-0.5).rounded, -1)
+		XCTAssertEqual(Double(-0.1).rounded,  0)
+		XCTAssertEqual(Double( 0.0).rounded,  0)
+		XCTAssertEqual(Double( 0.1).rounded,  0)
+		XCTAssertEqual(Double( 0.5).rounded,  1)
+		XCTAssertEqual(Double( 0.9).rounded,  1)
+	}
+
+
+	func testRoundedDown() {
+		XCTAssertEqual(Double(-0.9).roundedDown, -1)
+		XCTAssertEqual(Double(-0.5).roundedDown, -1)
+		XCTAssertEqual(Double(-0.1).roundedDown, -1)
+		XCTAssertEqual(Double( 0.0).roundedDown,  0)
+		XCTAssertEqual(Double( 0.1).roundedDown,  0)
+		XCTAssertEqual(Double( 0.5).roundedDown,  0)
+		XCTAssertEqual(Double( 0.9).roundedDown,  0)
+	}
+
+
+	func testRoundedUp() {
+		XCTAssertEqual(Double(-0.9).roundedUp, 0)
+		XCTAssertEqual(Double(-0.5).roundedUp, 0)
+		XCTAssertEqual(Double(-0.1).roundedUp, 0)
+		XCTAssertEqual(Double( 0.0).roundedUp, 0)
+		XCTAssertEqual(Double( 0.1).roundedUp, 1)
+		XCTAssertEqual(Double( 0.5).roundedUp, 1)
 	}
 }
