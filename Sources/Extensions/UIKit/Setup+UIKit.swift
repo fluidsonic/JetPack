@@ -15,10 +15,13 @@ public extension UIApplication {
 			Keyboard.setUp()
 
 			UIView.UIView_setUp()
+
+			UINavigationBar.UINavigationBar_setUp()
 			UISearchBar.UISearchBar_setUp()
 			UITableView.UITableView_setUp()
 			UITableViewCell.UITableViewCell_setUp()
 			UITextField.UITextField_setUp()
+			UIWindow.UIWindow_setUp()
 
 			UIViewController.UIViewController_setUp()
 			UINavigationController.UINavigationController_setUp()
