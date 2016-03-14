@@ -90,7 +90,7 @@ public /* non-final */ class Label: View {
 
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = horizontalAlignment
-		paragraphStyle.lineBreakMode = lineBreakMode
+		paragraphStyle.lineBreakMode = .ByWordWrapping
 
 		let attributedText = self.attributedText
 		let finalizedText = NSMutableAttributedString(string: attributedText.string, attributes: [
@@ -174,7 +174,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var lineBreakMode = NSLineBreakMode.ByWordWrapping {
+	public var lineBreakMode = NSLineBreakMode.ByTruncatingTail {
 		didSet {
 			guard lineBreakMode != oldValue else {
 				return
@@ -304,7 +304,7 @@ public /* non-final */ class Label: View {
 			isRightToLeft = UIApplication.sharedApplication().userInterfaceLayoutDirection == .RightToLeft
 		}
 
-		let textFrame = alignToGrid(layoutManager.usedRectForTextContainer(textContainer))
+		let textFrame = layoutManager.usedRectForTextContainer(textContainer)
 
 		var textContainerOrigin = CGPoint()
 
@@ -333,7 +333,7 @@ public /* non-final */ class Label: View {
 		textContainerOrigin.left -= textFrame.left
 		textContainerOrigin.top -= textFrame.top
 
-		return alignToGrid(textContainerOrigin)
+		return textContainerOrigin
 	}
 
 
