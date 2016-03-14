@@ -138,6 +138,16 @@ public extension MKCoordinateRegion {
 	}
 
 
+	public var northEast: CLLocationCoordinate2D {
+		return CLLocationCoordinate2D(latitude: north, longitude: east)
+	}
+
+
+	public var northWest: CLLocationCoordinate2D {
+		return CLLocationCoordinate2D(latitude: north, longitude: west)
+	}
+
+
 	public mutating func scaleBy(scale: Double) {
 		scaleBy(latitudinally: scale, longitudinally: scale)
 	}
@@ -173,6 +183,16 @@ public extension MKCoordinateRegion {
 
 	public var south: CLLocationDegrees {
 		return center.latitude - (span.latitudeDelta / 2)
+	}
+
+
+	public var southEast: CLLocationCoordinate2D {
+		return CLLocationCoordinate2D(latitude: south, longitude: east)
+	}
+
+
+	public var southWest: CLLocationCoordinate2D {
+		return CLLocationCoordinate2D(latitude: south, longitude: west)
 	}
 
 
