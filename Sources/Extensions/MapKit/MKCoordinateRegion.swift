@@ -4,6 +4,11 @@ import MapKit
 
 public extension MKCoordinateRegion {
 
+	public init(center: CLLocationCoordinate2D, latitudalDistance: CLLocationDistance, longitudalDistance: CLLocationDistance) {
+		self = MKCoordinateRegionMakeWithDistance(center, latitudalDistance, longitudalDistance)
+	}
+
+
 	public init(north: CLLocationDegrees, east: CLLocationDegrees, south: CLLocationDegrees, west: CLLocationDegrees) {
 		span = MKCoordinateSpan(latitudeDelta: north - south, longitudeDelta: east - west)
 		center = CLLocationCoordinate2D(latitude: north - (span.latitudeDelta / 2), longitude: west + (span.longitudeDelta / 2))
