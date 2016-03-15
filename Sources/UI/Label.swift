@@ -5,6 +5,7 @@ import UIKit
 public /* non-final */ class Label: View {
 
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
+	private lazy var renderingLayer: LabelLayer = self.layer as! LabelLayer
 
 	private let layoutManager = LayoutManager()
 	private let linkTapRecognizer = UITapGestureRecognizer()
@@ -12,7 +13,7 @@ public /* non-final */ class Label: View {
 	private let textStorage = NSTextStorage()
 
 	public private(set) var lastDrawnFinalizedText: NSAttributedString?
-	public private(set) var lastUsedFinalTextColor: UIColor?
+	public private(set) var lastUsedFinalTextColor: CGColor?
 
 	public var linkTapped: (NSURL -> Void)?
 
@@ -52,13 +53,33 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func drawRect(rect: CGRect) {
+	public override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		guard let window = window else {
+			return
+		}
+
+		layer.contentsScale = window.screen.scale
+	}
+
+
+	public override func drawLayer(layer: CALayer, inContext context: CGContext) {
+		guard let layer = layer as? LabelLayer else {
+			return
+		}
+
+		renderingLayer = layer
 		lastDrawnFinalizedText = finalizeText()
+
+		UIGraphicsPushContext(context)
 
 		let textContainerOrigin = originForTextContainer()
 		let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
 		layoutManager.drawBackgroundForGlyphRange(glyphRange, atPoint: textContainerOrigin)
 		layoutManager.drawGlyphsForGlyphRange(glyphRange, atPoint: textContainerOrigin)
+
+		UIGraphicsPopContext()
 	}
 
 
@@ -80,7 +101,7 @@ public /* non-final */ class Label: View {
 
 
 	private func finalizeText() -> NSAttributedString {
-		let finalTextColor = UIColor(CGColor: (labelPresentationLayer ?? labelLayer).finalTextColor) // can change due to animation
+		let finalTextColor = renderingLayer.finalTextColor // can change due to animation
 		if finalTextColor != lastUsedFinalTextColor {
 			lastUsedFinalTextColor = finalTextColor
 		}
@@ -95,7 +116,7 @@ public /* non-final */ class Label: View {
 		let attributedText = self.attributedText
 		let finalizedText = NSMutableAttributedString(string: attributedText.string, attributes: [
 			NSFontAttributeName: font,
-			NSForegroundColorAttributeName: finalTextColor,
+			NSForegroundColorAttributeName: UIColor(CGColor: finalTextColor),
 			NSParagraphStyleAttributeName: paragraphStyle
 		])
 
@@ -149,11 +170,6 @@ public /* non-final */ class Label: View {
 
 	private var labelLayer: LabelLayer {
 		return layer as! LabelLayer
-	}
-
-
-	private var labelPresentationLayer: LabelLayer? {
-		return layer.presentationLayer() as? LabelLayer
 	}
 
 
@@ -414,26 +430,27 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func updateFinalTextColor() {
-		let finalTextColor = textColor.tintedWithColor(tintColor)
-		if finalTextColor != lastUsedFinalTextColor {
-			_finalizedText = nil
-		}
-
-		if finalTextColor.CGColor != labelLayer.finalTextColor {
-			labelLayer.finalTextColor = finalTextColor.CGColor
-		}
-	}
-
-
-	public var userInteractionLimitedToLinks = true
-
-
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 
 		updateFinalTextColor()
 	}
+
+
+	private func updateFinalTextColor() {
+		let finalTextColor = textColor.tintedWithColor(tintColor).CGColor
+		if finalTextColor != lastUsedFinalTextColor {
+			setNeedsUpdateFinalizedText()
+		}
+
+		if finalTextColor != labelLayer.finalTextColor {
+			labelLayer.finalTextColor = finalTextColor
+			setNeedsUpdateFinalizedText()
+		}
+	}
+
+
+	public var userInteractionLimitedToLinks = true
 
 
 	public var verticalAlignment = VerticalAlignment.Center {
