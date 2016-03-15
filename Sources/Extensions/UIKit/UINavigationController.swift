@@ -6,6 +6,7 @@ public extension UINavigationController {
 	private struct AssociatedKeys {
 		private static var lastKnownNavigationBarBottom = UInt8()
 	}
+	
 
 
 	public override func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
@@ -20,10 +21,10 @@ public extension UINavigationController {
 
 	@nonobjc
 	private func addTopAndBottomBarsToDecorationInsets(var decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
-		if !toolbarHidden, let toolbar = toolbar where !toolbar.opaque {
+		if !toolbarHidden, let toolbar = toolbar where toolbar.translucent {
 			decorationInsets.bottom = max(view.bounds.height - toolbar.frame.top, decorationInsets.bottom)
 		}
-		if !navigationBarHidden && !navigationBar.opaque {
+		if !navigationBarHidden && navigationBar.translucent {
 			decorationInsets.top = max(navigationBar.frame.bottom, decorationInsets.top)
 		}
 
