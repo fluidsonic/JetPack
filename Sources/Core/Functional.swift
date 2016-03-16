@@ -45,6 +45,11 @@ internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toT
 }
 
 
+public func lazyPlaceholder<T>() -> T {
+	fatalError("Lazy variable accessed before being initialized.")
+}
+
+
 @warn_unused_result
 public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Result) -> Parameters -> Result {
 	func cast<From,To>(instance: From) -> To {
