@@ -23,6 +23,8 @@ public /* non-final */ class Label: View {
 
 		opaque = false
 
+		layer.opaque = false
+
 		layoutManager.addTextContainer(textContainer)
 
 		textContainer.lineFragmentPadding = 0
@@ -64,6 +66,12 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public final override func drawRect(rect: CGRect) {
+		// drawLayer(_:inContext) will be called.
+		// drawRect() must still be implemented so that setNeedsDisplay() will work.
+	}
+
+
 	public override func drawLayer(layer: CALayer, inContext context: CGContext) {
 		guard let layer = layer as? LabelLayer else {
 			return
@@ -73,13 +81,12 @@ public /* non-final */ class Label: View {
 		lastDrawnFinalizedText = finalizeText()
 
 		UIGraphicsPushContext(context)
+		defer { UIGraphicsPopContext() }
 
 		let textContainerOrigin = originForTextContainer()
 		let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
 		layoutManager.drawBackgroundForGlyphRange(glyphRange, atPoint: textContainerOrigin)
 		layoutManager.drawGlyphsForGlyphRange(glyphRange, atPoint: textContainerOrigin)
-
-		UIGraphicsPopContext()
 	}
 
 
