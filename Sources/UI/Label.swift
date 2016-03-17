@@ -7,6 +7,7 @@ public /* non-final */ class Label: View {
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
 	private lazy var renderingLayer: LabelLayer = self.layer as! LabelLayer
 
+	private var attributedTextUsesTintColor = false
 	private let layoutManager = LayoutManager()
 	private let linkTapRecognizer = UITapGestureRecognizer()
 	private let textContainer = NSTextContainer()
@@ -127,18 +128,32 @@ public /* non-final */ class Label: View {
 			NSParagraphStyleAttributeName: paragraphStyle
 		])
 
+		var attributedTextUsesTintColor = false
 		var hasLinks = false
+		let tintColor = self.tintColor
 
 		attributedText.enumerateAttributesInRange(NSRange(forString: finalizedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
+			var finalAttributes = attributes
 			if !hasLinks && attributes[NSLinkAttributeName] != nil {
 				hasLinks = true
 			}
 
-			finalizedText.addAttributes(attributes, range: range)
+			if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor where backgroundColor.tintAlpha != nil {
+				finalAttributes[NSBackgroundColorAttributeName] = backgroundColor.tintedWithColor(tintColor)
+				attributedTextUsesTintColor = true
+			}
+			if let foregroundColor = attributes[NSForegroundColorAttributeName] as? UIColor where foregroundColor.tintAlpha != nil {
+				finalAttributes[NSForegroundColorAttributeName] = foregroundColor.tintedWithColor(tintColor)
+				attributedTextUsesTintColor = true
+			}
+
+			finalizedText.addAttributes(finalAttributes, range: range)
 		}
 
 		textStorage.setAttributedString(finalizedText)
 		linkTapRecognizer.enabled = hasLinks
+
+		self.attributedTextUsesTintColor = attributedTextUsesTintColor
 
 		_finalizedText = finalizedText.copy() as? NSAttributedString
 		_links = nil
@@ -441,6 +456,10 @@ public /* non-final */ class Label: View {
 		super.tintColorDidChange()
 
 		updateFinalTextColor()
+
+		if attributedTextUsesTintColor {
+			setNeedsUpdateFinalizedText()
+		}
 	}
 
 
