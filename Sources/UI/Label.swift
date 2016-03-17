@@ -22,6 +22,7 @@ public /* non-final */ class Label: View {
 	public override init() {
 		super.init()
 
+		contentMode = .Redraw
 		opaque = false
 
 		layer.opaque = false
@@ -574,7 +575,6 @@ public /* non-final */ class Label: View {
 			guard self == LayoutManager.self else {
 				return
 			}
-
 
 			let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
 			copyMethodWithSelector(defaultLinkAttributesSelector, fromType: object_getClass(NSLayoutManager.self), toType: object_getClass(self))
