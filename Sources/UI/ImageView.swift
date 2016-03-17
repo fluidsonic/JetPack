@@ -22,6 +22,8 @@ public /* non-final */ class ImageView: View {
 	private var sourceSessionConfigurationIsValid = true
 	private var tintedImage: UIImage?
 
+	public var imageChanged: Closure?
+
 
 	public override init() {
 		super.init()
@@ -452,6 +454,8 @@ public /* non-final */ class ImageView: View {
 					imageView.isSettingImageFromSource = false
 
 					imageView.updateActivityIndicatorAnimated(true)
+
+					imageView.imageChanged?()
 				}
 
 				self.sourceSession = sourceSession
