@@ -204,13 +204,24 @@ public extension CGRect {
 
 
 	@warn_unused_result(mutable_variant="transformInPlace")
-	public func transform(transform: CGAffineTransform) -> CGRect {
-		return CGRectApplyAffineTransform(self, transform)
+	public func transform(transform: CGAffineTransform, anchorPoint: CGPoint = .zero) -> CGRect {
+		if anchorPoint != .zero {
+			let anchorLeft = left + (width * anchorPoint.left)
+			let anchorTop = top + (height * anchorPoint.top)
+
+			let t1 = CGAffineTransform(horizontalTranslation: anchorLeft, verticalTranslation: anchorTop)
+			let t2 = CGAffineTransform(horizontalTranslation: -anchorLeft, verticalTranslation: -anchorTop)
+
+			return CGRectApplyAffineTransform(self, t2 * transform * t1)
+		}
+		else {
+			return CGRectApplyAffineTransform(self, transform)
+		}
 	}
 
 
-	public mutating func transformInPlace(transform: CGAffineTransform) {
-		self = self.transform(transform)
+	public mutating func transformInPlace(transform: CGAffineTransform, anchorPoint: CGPoint = .zero) {
+		self = self.transform(transform, anchorPoint: anchorPoint)
 	}
 
 
