@@ -10,8 +10,8 @@ public extension UIScrollView {
 		let contentSize = self.contentSize
 
 		return CGPoint(
-			left: max(contentSize.width + contentInset.right - size.width, 0),
-			top:  max(contentSize.height + contentInset.bottom - size.height, 0)
+			left: max(contentSize.width + contentInset.right - size.width, -contentInset.left),
+			top:  max(contentSize.height + contentInset.bottom - size.height, -contentInset.top)
 		)
 	}
 
