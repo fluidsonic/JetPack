@@ -66,6 +66,13 @@ public extension UIView {
 
 
 	@nonobjc
+	@warn_unused_result
+	public func frameWhenApplyingTransform(transform: CGAffineTransform) -> CGRect {
+		return untransformedFrame.transform(transform, anchorPoint: layer.anchorPoint)
+	}
+
+
+	@nonobjc
 	public final var gridScaleFactor: CGFloat {
 		return max(contentScaleFactor, (window?.screen.scale ?? UIScreen.mainScreen().scale))
 	}
@@ -94,6 +101,12 @@ public extension UIView {
 	@nonobjc
 	public var participatesInHitTesting: Bool {
 		return (!hidden && userInteractionEnabled && alpha >= 0.01)
+	}
+
+
+	@nonobjc
+	public func pixelsForPoints(points: CGFloat) -> CGFloat {
+		return points * gridScaleFactor
 	}
 
 
@@ -180,6 +193,25 @@ public extension UIView {
 		swizzled_didMoveToWindow()
 
 		delegateViewController?.viewDidMoveToWindow()
+	}
+
+
+	@nonobjc
+	public var untransformedFrame: CGRect {
+		get {
+			let size = bounds.size
+			let anchorPoint = layer.anchorPoint
+			let centerOffset = CGPoint(left: (0.5 - anchorPoint.left) * size.width, top: (0.5 - anchorPoint.top) * size.height)
+
+			return CGRect(size: size).centeredAt(center.offsetBy(centerOffset))
+		}
+		set {
+			let anchorPoint = layer.anchorPoint
+			let centerOffset = CGPoint(left: (0.5 - anchorPoint.left) * -newValue.width, top: (0.5 - anchorPoint.top) * -newValue.height)
+
+			bounds = CGRect(origin: bounds.origin, size: newValue.size)
+			center = newValue.center.offsetBy(centerOffset)
+		}
 	}
 
 
