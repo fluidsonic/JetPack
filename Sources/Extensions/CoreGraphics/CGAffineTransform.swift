@@ -216,3 +216,13 @@ extension CGAffineTransform: Equatable {}
 public func == (a: CGAffineTransform, b: CGAffineTransform) -> Bool {
 	return CGAffineTransformEqualToTransform(a, b)
 }
+
+
+public func * (a: CGAffineTransform, b: CGAffineTransform) -> CGAffineTransform {
+	return a.concatenatedWith(b)
+}
+
+
+public func *= (inout a: CGAffineTransform, b: CGAffineTransform) {
+	a.concatenateWith(b)
+}
