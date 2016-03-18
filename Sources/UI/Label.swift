@@ -86,6 +86,12 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public override func drawRect(rect: CGRect) {
+		// Although we use drawLayer(_:inContext:) we still need to implement this method.
+		// UIKit checks for its presence when it decides whether a call to setNeedsDisplay() is forwarded to its layer.
+	}
+
+
 	public var font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody) {
 		didSet {
 			guard font != oldValue else {
