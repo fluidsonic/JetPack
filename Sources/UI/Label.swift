@@ -25,8 +25,6 @@ public /* non-final */ class Label: View {
 		contentMode = .Redraw
 		opaque = false
 
-		layer.opaque = false
-
 		layoutManager.addTextContainer(textContainer)
 
 		textContainer.lineFragmentPadding = 0
@@ -68,13 +66,9 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public final override func drawRect(rect: CGRect) {
-		// drawLayer(_:inContext) will be called.
-		// drawRect() must still be implemented so that setNeedsDisplay() will work.
-	}
-
-
 	public override func drawLayer(layer: CALayer, inContext context: CGContext) {
+		super.drawLayer(layer, inContext: context)
+
 		guard let layer = layer as? LabelLayer else {
 			return
 		}
