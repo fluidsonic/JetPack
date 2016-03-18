@@ -242,18 +242,13 @@ public /* non-final */ class View: UIView {
 		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
 
 		let hitZoneCornerRadius: CGFloat
-		if hitZoneFollowsCornerRadius {
-			if cornerRadius > 0 {
-				let halfOriginalHitZoneSize = (originalHitZone.width + originalHitZone.height) / 4  // middle between half height and half width
-				let halfExtendedHitZoneSize = (extendedHitZone.width + extendedHitZone.height) / 4  // middle between half extended height and half extended width
-				hitZoneCornerRadius = halfExtendedHitZoneSize * (cornerRadius / halfOriginalHitZoneSize)
-			}
-			else {
-				hitZoneCornerRadius = 0
-			}
+		if hitZoneFollowsCornerRadius && cornerRadius > 0 {
+			let halfOriginalHitZoneSize = (originalHitZone.width + originalHitZone.height) / 4  // middle between half height and half width
+			let halfExtendedHitZoneSize = (extendedHitZone.width + extendedHitZone.height) / 4  // middle between half extended height and half extended width
+			hitZoneCornerRadius = halfExtendedHitZoneSize * (cornerRadius / halfOriginalHitZoneSize)
 		}
 		else {
-			hitZoneCornerRadius = cornerRadius
+			hitZoneCornerRadius = 0
 		}
 
 		return extendedHitZone.contains(point, atCornerRadius: hitZoneCornerRadius)
