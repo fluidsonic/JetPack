@@ -61,7 +61,8 @@ private final class UrlSourceSession: ImageView.Session {
 	private func startRetrievingImageForImageView(imageView: ImageView, listener: ImageView.SessionListener) {
 		precondition(stopLoading == nil)
 
-		func completion(var image: UIImage) {
+		func completion(image sourceImage: UIImage) {
+			var image = sourceImage
 			if self.source.isTemplate {
 				image = image.imageWithRenderingMode(.AlwaysTemplate)
 			}

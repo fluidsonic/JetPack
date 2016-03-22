@@ -20,12 +20,13 @@ public extension UITabBarController {
 
 
 	@nonobjc
-	private func addTabBarToDecorationInsets(var decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+	private func addTabBarToDecorationInsets(decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+		var adjustedDecorationInsets = decorationInsets
 		if !tabBar.hidden && tabBar.translucent {
-			decorationInsets.bottom = max(view.bounds.height - tabBar.frame.top, decorationInsets.bottom)
+			adjustedDecorationInsets.bottom = max(view.bounds.height - tabBar.frame.top, adjustedDecorationInsets.bottom)
 		}
 
-		return decorationInsets
+		return adjustedDecorationInsets
 	}
 
 
@@ -49,7 +50,7 @@ public extension UITabBarController {
 
 	@nonobjc
 	internal static func UITabBarController_setUp() {
-		swizzleMethodInType(self, fromSelector: "willTransitionToTraitCollection:withTransitionCoordinator:", toSelector: "JetPack_willTransitionToTraitCollection:withTransitionCoordinator:")
+		swizzleMethodInType(self, fromSelector: #selector(willTransitionToTraitCollection(_:withTransitionCoordinator:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 
 

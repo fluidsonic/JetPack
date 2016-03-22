@@ -297,15 +297,15 @@ public extension UIViewController {
 
 	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleMethodInType(self, fromSelector: "didMoveToParentViewController:",             toSelector: "JetPack_didMoveToParentViewController:")
-		swizzleMethodInType(self, fromSelector: "presentViewController:animated:completion:", toSelector: "JetPack_presentViewController:animated:completion:")
-		swizzleMethodInType(self, fromSelector: "viewDidAppear:",                             toSelector: "JetPack_viewDidAppear:")
-		swizzleMethodInType(self, fromSelector: "viewDidLayoutSubviews",                      toSelector: "JetPack_viewDidLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "viewDidDisappear:",                          toSelector: "JetPack_viewDidDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillAppear:",                            toSelector: "JetPack_viewWillAppear:")
-		swizzleMethodInType(self, fromSelector: "viewWillDisappear:",                         toSelector: "JetPack_viewWillDisappear:")
-		swizzleMethodInType(self, fromSelector: "viewWillLayoutSubviews",                     toSelector: "JetPack_viewWillLayoutSubviews")
-		swizzleMethodInType(self, fromSelector: "willMoveToParentViewController:",            toSelector: "JetPack_willMoveToParentViewController:")
+		swizzleMethodInType(self, fromSelector: #selector(didMoveToParentViewController(_:)),             toSelector: #selector(swizzled_didMoveToParentViewController(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(presentViewController(_:animated:completion:)), toSelector: #selector(swizzled_presentViewController(_:animated:completion:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewDidAppear(_:)),                             toSelector: #selector(swizzled_viewDidAppear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewDidLayoutSubviews),                         toSelector: #selector(swizzled_viewDidLayoutSubviews))
+		swizzleMethodInType(self, fromSelector: #selector(viewDidDisappear(_:)),                          toSelector: #selector(swizzled_viewDidDisappear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewWillAppear(_:)),                            toSelector: #selector(swizzled_viewWillAppear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewWillDisappear(_:)),                         toSelector: #selector(swizzled_viewWillDisappear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewWillLayoutSubviews),                        toSelector: #selector(swizzled_viewWillLayoutSubviews))
+		swizzleMethodInType(self, fromSelector: #selector(willMoveToParentViewController(_:)),            toSelector: #selector(swizzled_willMoveToParentViewController(_:)))
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()

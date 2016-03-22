@@ -37,7 +37,7 @@ public extension UITableViewCell {
 
 	@nonobjc
 	internal final func improvedSizeThatFitsSize(maximumSize: CGSize) -> CGSize {
-		guard let layoutManager = private_layoutManager where layoutManager.respondsToSelector("JetPack_contentFrameForCell:editing:showingDeleteConfirmation:width:") else {
+		guard let layoutManager = private_layoutManager where layoutManager.respondsToSelector(#selector(LayoutManager.private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:))) else {
 			// private property -[UITableViewCell layoutManager] was renamed, removed or changed type
 			return fallbackSizeThatFitsSize(maximumSize)
 		}
@@ -95,15 +95,15 @@ public extension UITableViewCell {
 
 	@nonobjc
 	internal static func UITableViewCell_setUp() {
-		swizzleMethodInType(self, fromSelector: "isEditing",                toSelector: "JetPack_isEditing")
-		swizzleMethodInType(self, fromSelector: "editingStyle",             toSelector: "JetPack_editingStyle")
-		swizzleMethodInType(self, fromSelector: "shouldIndentWhileEditing", toSelector: "JetPack_shouldIndentWhileEditing")
-		swizzleMethodInType(self, fromSelector: "showsReorderControl",      toSelector: "JetPack_showsReorderControl")
+		swizzleMethodInType(self, fromSelector: Selector("isEditing"),                toSelector: Selector("JetPack_isEditing"))
+		swizzleMethodInType(self, fromSelector: Selector("editingStyle"),             toSelector: Selector("JetPack_editingStyle"))
+		swizzleMethodInType(self, fromSelector: Selector("shouldIndentWhileEditing"), toSelector: Selector("JetPack_shouldIndentWhileEditing"))
+		swizzleMethodInType(self, fromSelector: Selector("showsReorderControl"),      toSelector: Selector("JetPack_showsReorderControl"))
 
 		// yep, private API necessary :(
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		redirectMethodInType(self, fromSelector: "JetPack_layoutManager",  toSelector: obfuscatedSelector("layout", "Manager"))
-		redirectMethodInType(self, fromSelector: "JetPack_separatorStyle", toSelector: obfuscatedSelector("separator", "Style"))
+		redirectMethodInType(self, fromSelector: Selector("JetPack_layoutManager"),  toSelector: obfuscatedSelector("layout", "Manager"))
+		redirectMethodInType(self, fromSelector: Selector("JetPack_separatorStyle"), toSelector: obfuscatedSelector("separator", "Style"))
 
 		LayoutManager.setUp()
 	}
@@ -182,9 +182,9 @@ private final class LayoutManager: NSObject {
 			return
 		}
 
-		copyMethodWithSelector("JetPack_contentFrameForCell:editing:showingDeleteConfirmation:width:", fromType: self, toType: layoutManagerType)
+		copyMethodWithSelector(#selector(private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:)), fromType: self, toType: layoutManagerType)
 		redirectMethodInType(layoutManagerType,
-			fromSelector: "JetPack_contentFrameForCell:editing:showingDeleteConfirmation:width:",
+			fromSelector: #selector(private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:)),
 			toSelector:   obfuscatedSelector("_", "content", "Rect", "For", "Cell:", "for", "Editing", "State:", "showingDeleteConfirmation:", "row", "Width:")
 		)
 	}

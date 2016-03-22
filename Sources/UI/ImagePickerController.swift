@@ -27,7 +27,7 @@ public /* non-final */ class ImagePickerController: _ImagePickerController {
 			return
 		}
 
-		redirectMethodInType(self, fromSelector: "initWithNibName:bundle:", toSelector: "initWithNibName:bundle:", inType: UIImagePickerController.self)
+		redirectMethodInType(self, fromSelector: #selector(UIViewController.init(nibName:bundle:)), toSelector: #selector(UIViewController.init(nibName:bundle:)), inType: UIImagePickerController.self)
 	}
 }
 
@@ -59,7 +59,7 @@ public /* non-final */ class _ImagePickerController: UIImagePickerController {
 			return
 		}
 
-		redirectMethodInType(self, fromSelector: "init",                    toSelector: "init",                    inType: UIImagePickerController.self)
-		redirectMethodInType(self, fromSelector: "initWithNibName:bundle:", toSelector: "initWithNibName:bundle:", inType: UIImagePickerController.self)
+		redirectMethodInType(self, fromSelector: #selector(NSObject.init), toSelector: #selector(NSObject.init),                                                   inType: UIImagePickerController.self)
+		redirectMethodInType(self, fromSelector: #selector(UIViewController.init(nibName:bundle:)), toSelector: #selector(UIViewController.init(nibName:bundle:)), inType: UIImagePickerController.self)
 	}
 }

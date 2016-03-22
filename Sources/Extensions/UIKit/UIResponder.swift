@@ -15,7 +15,7 @@ public extension UIResponder {
 		let application = UIApplication.sharedApplication()
 
 		temporaryFirstResponder = nil
-		application.sendAction("JetPack_determineFirstResponder", to: nil, from: nil, forEvent: nil)
+		application.sendAction(#selector(determineFirstResponder), to: nil, from: nil, forEvent: nil)
 
 		guard let firstResponder = temporaryFirstResponder else {
 			// there is no first responder at all
@@ -42,7 +42,6 @@ public extension UIResponder {
 	}
 
 
-	@available(*, unavailable, message="Never call this. It gets called by UIKit only.")
 	@objc(JetPack_determineFirstResponder)
 	private func determineFirstResponder() {
 		temporaryFirstResponder = self

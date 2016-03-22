@@ -194,8 +194,8 @@ private final class ColorUsingTintColor: UIColor {
 	}
 
 
-	private override func colorWithAlphaComponent(var alpha: CGFloat) -> UIColor {
-		alpha = alpha.clamp(min: 0, max: 1)
+	private override func colorWithAlphaComponent(requestedAlpha: CGFloat) -> UIColor {
+		let alpha = requestedAlpha.clamp(min: 0, max: 1)
 		if alpha == self.alpha {
 			return self
 		}

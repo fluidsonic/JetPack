@@ -84,7 +84,7 @@ public extension UITableView {
 	internal static func UITableView_setUp() {
 		// yep, private API necessary :(
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), toSelector: "JetPack_computeHeightForCell:atIndexPath:")
+		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), toSelector: #selector(swizzled_computeHeightForCell(_:atIndexPath:)))
 	}
 
 

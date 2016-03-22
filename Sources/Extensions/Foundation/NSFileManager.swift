@@ -26,7 +26,7 @@ public extension NSFileManager {
 
 
 	@nonobjc
-	private func reportError <ValueType> (error: ErrorType, @autoclosure withMessage message: Void -> String, function: StaticString = __FUNCTION__, file: StaticString = __FILE__, line: UInt = __LINE__, toHandler handler: (Result<ValueType> -> Void)?) {
+	private func reportError <ValueType> (error: ErrorType, @autoclosure withMessage message: Void -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line, toHandler handler: (Result<ValueType> -> Void)?) {
 		guard let handler = handler else {
 			log("'\(message())': \(error)", function: function, file: file, line: line)
 			return

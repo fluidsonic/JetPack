@@ -1,6 +1,6 @@
 public protocol Measure: Comparable, CustomDebugStringConvertible, Hashable, CustomStringConvertible {
 
-	typealias UnitType
+	associatedtype UnitType
 
 
 	init(rawValue: Double)

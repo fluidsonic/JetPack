@@ -2,7 +2,7 @@
 
 public protocol _Optional: NilLiteralConvertible {
 
-	typealias Wrapped
+	associatedtype Wrapped
 
 	init()
 	init(_ some: Wrapped)

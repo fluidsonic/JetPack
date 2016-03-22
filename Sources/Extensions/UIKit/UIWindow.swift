@@ -16,8 +16,8 @@ public extension UIWindow {
 
 	@nonobjc
 	internal static func UIWindow_setUp() {
-		copyMethodWithSelector("layoutIfNeeded", fromType: UIView.self, toType: self)
-		swizzleMethodInType(self, fromSelector: "JetPack_layoutIfNeeded", toSelector: "layoutIfNeeded")
+		copyMethodWithSelector(#selector(layoutIfNeeded), fromType: UIView.self, toType: self)
+		swizzleMethodInType(self, fromSelector: #selector(swizzled_layoutIfNeeded), toSelector: #selector(layoutIfNeeded))
 	}
 }
 

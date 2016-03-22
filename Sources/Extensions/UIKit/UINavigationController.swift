@@ -20,15 +20,16 @@ public extension UINavigationController {
 
 
 	@nonobjc
-	private func addTopAndBottomBarsToDecorationInsets(var decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+	private func addTopAndBottomBarsToDecorationInsets(decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+		var adjustedDecorationInsets = decorationInsets
 		if !toolbarHidden, let toolbar = toolbar where toolbar.translucent {
-			decorationInsets.bottom = max(view.bounds.height - toolbar.frame.top, decorationInsets.bottom)
+			adjustedDecorationInsets.bottom = max(view.bounds.height - toolbar.frame.top, adjustedDecorationInsets.bottom)
 		}
 		if !navigationBarHidden && navigationBar.translucent {
-			decorationInsets.top = max(navigationBar.frame.bottom, decorationInsets.top)
+			adjustedDecorationInsets.top = max(navigationBar.frame.bottom, adjustedDecorationInsets.top)
 		}
 
-		return decorationInsets
+		return adjustedDecorationInsets
 	}
 
 
@@ -67,9 +68,9 @@ public extension UINavigationController {
 
 	@nonobjc
 	internal static func UINavigationController_setUp() {
-		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:",                                    toSelector: "JetPack_setNavigationBarHidden:")
-		swizzleMethodInType(self, fromSelector: "setNavigationBarHidden:animated:",                           toSelector: "JetPack_setNavigationBarHidden:animated:")
-		swizzleMethodInType(self, fromSelector: "willTransitionToTraitCollection:withTransitionCoordinator:", toSelector: "JetPack_willTransitionToTraitCollection:withTransitionCoordinator:")
+		swizzleMethodInType(self, fromSelector: Selector("setNavigationBarHidden:"),                                      toSelector: #selector(swizzled_setNavigationBarHidden(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(setNavigationBarHidden(_:animated:)),                           toSelector: #selector(swizzled_setNavigationBarHidden(_:animated:)))
+		swizzleMethodInType(self, fromSelector: #selector(willTransitionToTraitCollection(_:withTransitionCoordinator:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 
 

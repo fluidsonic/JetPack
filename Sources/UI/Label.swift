@@ -414,7 +414,7 @@ public /* non-final */ class Label: View {
 	private func setUpLinkTapRecognizer() {
 		let recognizer = linkTapRecognizer
 		recognizer.enabled = false
-		recognizer.addTarget(self, action: "handleLinkTapRecognizer")
+		recognizer.addTarget(self, action: #selector(handleLinkTapRecognizer))
 
 		addGestureRecognizer(recognizer)
 	}
@@ -578,7 +578,7 @@ public /* non-final */ class Label: View {
 
 			let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
 			copyMethodWithSelector(defaultLinkAttributesSelector, fromType: object_getClass(NSLayoutManager.self), toType: object_getClass(self))
-			swizzleMethodInType(object_getClass(self), fromSelector: "JetPack_linkAttributes", toSelector: defaultLinkAttributesSelector)
+			swizzleMethodInType(object_getClass(self), fromSelector: Selector("JetPack_linkAttributes"), toSelector: defaultLinkAttributesSelector)
 		}
 	}
 

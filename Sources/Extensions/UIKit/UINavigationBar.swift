@@ -22,6 +22,6 @@ public extension UINavigationBar {
 	internal static func UINavigationBar_setUp() {
 		// yep, private API necessary :(
 		// If the private method is removed/renamed the related feature will cease to work but we won't crash.
-		swizzleMethodInType(self, fromSelector: "setPrompt:", toSelector: "JetPack_setPrompt:")
+		swizzleMethodInType(self, fromSelector: Selector("setPrompt:"), toSelector: #selector(swizzled_setPrompt(_:)))
 	}
 }

@@ -217,8 +217,8 @@ public extension UIView {
 
 	@nonobjc
 	internal static func UIView_setUp() {
-		swizzleMethodInType(self, fromSelector: "didMoveToWindow",                toSelector: "JetPack_didMoveToWindow")
-		swizzleMethodInType(self, fromSelector: "invalidateIntrinsicContentSize", toSelector: "JetPack_invalidateIntrinsicContentSize")
+		swizzleMethodInType(self, fromSelector: #selector(didMoveToWindow),                toSelector: #selector(swizzled_didMoveToWindow))
+		swizzleMethodInType(self, fromSelector: #selector(invalidateIntrinsicContentSize), toSelector: #selector(swizzled_invalidateIntrinsicContentSize))
 	}
 
 

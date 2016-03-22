@@ -84,12 +84,12 @@ private final class EventHandler: NSObject {
 		didSet {
 			if tapped != nil {
 				if oldValue == nil {
-					control.addTarget(self, action: "controlTapped", forControlEvents: .TouchUpInside)
+					control.addTarget(self, action: #selector(controlTapped), forControlEvents: .TouchUpInside)
 				}
 			}
 			else {
 				if oldValue != nil {
-					control.removeTarget(self, action: "controlTapped", forControlEvents: .TouchUpInside)
+					control.removeTarget(self, action: #selector(controlTapped), forControlEvents: .TouchUpInside)
 				}
 			}
 		}
@@ -100,14 +100,14 @@ private final class EventHandler: NSObject {
 		didSet {
 			if valueChanged != nil {
 				if oldValue == nil {
-					control.addTarget(self, action: "controlValueChanged", forControlEvents: .EditingChanged)
-					control.addTarget(self, action: "controlValueChanged", forControlEvents: .ValueChanged)
+					control.addTarget(self, action: #selector(controlValueChanged), forControlEvents: .EditingChanged)
+					control.addTarget(self, action: #selector(controlValueChanged), forControlEvents: .ValueChanged)
 				}
 			}
 			else {
 				if oldValue != nil {
-					control.removeTarget(self, action: "controlValueChanged", forControlEvents: .EditingChanged)
-					control.removeTarget(self, action: "controlValueChanged", forControlEvents: .TouchUpInside)
+					control.removeTarget(self, action: #selector(controlValueChanged), forControlEvents: .EditingChanged)
+					control.removeTarget(self, action: #selector(controlValueChanged), forControlEvents: .TouchUpInside)
 				}
 			}
 		}

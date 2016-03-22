@@ -96,7 +96,7 @@ public /* non-final */ class ScrollView: UIScrollView {
 		set {
 			super.delegate = newValue
 
-			delegateRespondsToViewForZooming = super.delegate?.respondsToSelector("viewForZoomingInScrollView:") ?? false
+			delegateRespondsToViewForZooming = super.delegate?.respondsToSelector(#selector(UIScrollViewDelegate.viewForZoomingInScrollView(_:))) ?? false
 		}
 	}
 

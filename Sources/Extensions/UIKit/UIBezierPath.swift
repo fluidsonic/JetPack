@@ -26,8 +26,8 @@ public extension UIBezierPath {
 
 
 	@nonobjc
-	public func addRoundedCorner(direction direction: RoundedCornerDirection, var radius: CGFloat) {
-		radius = max(radius, 0)
+	public func addRoundedCorner(direction direction: RoundedCornerDirection, radius requestedRadius: CGFloat) {
+		let radius = max(requestedRadius, 0)
 
 		var center: CGPoint
 		var clockwise: Bool

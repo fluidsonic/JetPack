@@ -5,7 +5,7 @@ public extension NSTimer {
 
 	@nonobjc
 	public static func scheduledTimerWithTimeInterval(timeInterval: NSTimeInterval, repeats: Bool = false, closure: Closure) -> NSTimer {
-		return scheduledTimerWithTimeInterval(timeInterval, target: timerHandler, selector: "handle:", userInfo: StrongReference(closure), repeats: repeats)
+		return scheduledTimerWithTimeInterval(timeInterval, target: timerHandler, selector: #selector(TimerHandler.handle(_:)), userInfo: StrongReference(closure), repeats: repeats)
 	}
 }
 

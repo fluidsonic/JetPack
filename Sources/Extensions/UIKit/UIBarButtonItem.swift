@@ -103,7 +103,7 @@ private final class EventProxy: NSObject {
 		didSet {
 			if handler != nil {
 				item.target = self
-				item.action = "action"
+				item.action = #selector(action)
 			}
 			else {
 				item.target = nil
