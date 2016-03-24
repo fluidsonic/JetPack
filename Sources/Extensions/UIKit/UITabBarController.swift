@@ -10,17 +10,21 @@ public extension UITabBarController {
 
 
 	public override func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
-		return addTabBarToDecorationInsets(innerDecorationInsets)
+		return addTabBarToDecorationInsets(innerDecorationInsets, forChildViewController: childViewController)
 	}
 
 
 	public override func computeOuterDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
-		return addTabBarToDecorationInsets(outerDecorationInsets)
+		return addTabBarToDecorationInsets(outerDecorationInsets, forChildViewController: childViewController)
 	}
 
 
 	@nonobjc
-	private func addTabBarToDecorationInsets(decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+	private func addTabBarToDecorationInsets(decorationInsets: UIEdgeInsets, forChildViewController childViewController: UIViewController) -> UIEdgeInsets {
+		guard tabBarAffectsDecorationInsetsForChildViewController(childViewController) else {
+			return decorationInsets
+		}
+
 		var adjustedDecorationInsets = decorationInsets
 		if !tabBar.hidden && tabBar.translucent {
 			adjustedDecorationInsets.bottom = max(view.bounds.height - tabBar.frame.top, adjustedDecorationInsets.bottom)
@@ -45,6 +49,25 @@ public extension UITabBarController {
 	private var lastKnownTabBarTop: CGFloat {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.lastKnownTabBarTop) as? CGFloat ?? 0 }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.lastKnownTabBarTop, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@nonobjc
+	private func tabBarAffectsDecorationInsetsForChildViewController(childViewController: UIViewController) -> Bool {
+		guard !tabBar.hidden && tabBar.translucent else {
+			return false
+		}
+		guard let navigationController = childViewController as? UINavigationController else {
+			return true
+		}
+
+		for viewController in navigationController.viewControllers {
+			guard !viewController.hidesBottomBarWhenPushed else {
+				return false
+			}
+		}
+
+		return true
 	}
 
 

@@ -466,6 +466,10 @@ public extension UIViewController {
 	private dynamic func swizzled_viewWillAppear(animated: Bool) {
 		self.appearState = .WillAppear
 
+		if tabBarController != nil, let navigationController = navigationController {
+			navigationController.invalidateDecorationInsetsWithAnimation(nil)
+		}
+
 		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, presentationController = presentationController where !presentationController.shouldRemovePresentersView() {
 			presentingViewControllerForCurrentCoverageCallbacks = presentingViewController
 
