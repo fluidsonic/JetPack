@@ -9,7 +9,7 @@ public /* non-final */ class View: UIView {
 	private var originalBackgroundColor: UIColor?
 	private var originalBorderColor: UIColor?
 
-	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets becase actually we outset
+	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	public var backgroundColorLocked = false
 	public var hitZoneFollowsCornerRadius = true
 	public var userInteractionLimitedToSubviews = false
