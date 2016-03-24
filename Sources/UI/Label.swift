@@ -16,12 +16,14 @@ public /* non-final */ class Label: View {
 	public private(set) var lastDrawnFinalizedText: NSAttributedString?
 	public private(set) var lastUsedFinalTextColor: CGColor?
 
+	public var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because actually we outset
 	public var linkTapped: (NSURL -> Void)?
 
 
 	public override init() {
 		super.init()
 
+		additionalHitZone = additionalLinkHitZone
 		contentMode = .Redraw
 		opaque = false
 
@@ -228,13 +230,30 @@ public /* non-final */ class Label: View {
 
 
 	private func linkAtPoint(point: CGPoint) -> Link? {
+		let additionalLinkHitZone = self.additionalLinkHitZone
+
+		var bestLink: Link?
+		var bestLinkDistance = CGFloat.infinity
+
 		for link in links {
-			for frame in link.frames where frame.contains(point) {
-				return link
+			for frame in link.frames {
+				let hitTestFrame = frame.insetBy(additionalLinkHitZone.inverse)
+				guard hitTestFrame.contains(point) else {
+					continue
+				}
+
+				// distance starts negative from inside the frame and increases the farther the point lies outside
+				let distance = frame.distanceTo(point) * (frame.contains(point) ? -1 : 1)
+				guard distance < bestLinkDistance else {
+					continue
+				}
+
+				bestLink = link
+				bestLinkDistance = distance
 			}
 		}
 
-		return nil
+		return bestLink
 	}
 
 
