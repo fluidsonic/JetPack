@@ -163,7 +163,7 @@ public class Button: View {
 	}
 
 
-	public var highlightedAlpha = CGFloat(0.5) {
+	public var highlightedAlpha: CGFloat? = 0.5 {
 		didSet {
 			guard highlightedAlpha != oldValue else {
 				return
@@ -757,7 +757,7 @@ public class Button: View {
 		if !enabled, let disabledAlpha = disabledAlpha {
 			alpha = disabledAlpha
 		}
-		else if highlighted {
+		else if highlighted, let highlightedAlpha = highlightedAlpha {
 			alpha = highlightedAlpha
 		}
 		else {
