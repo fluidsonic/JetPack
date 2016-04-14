@@ -134,6 +134,7 @@ public /* non-final */ class TextView: UITextView {
 				if let font = font {
 					child.font = font
 				}
+				child.maximumNumberOfLines = nil
 				child.text = placeholder
 				child.textColor = placeholderTextColor
 
