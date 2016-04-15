@@ -80,14 +80,6 @@ public extension UINavigationController {
 	}
 
 
-	@nonobjc
-	internal static func UINavigationController_setUp() {
-		swizzleMethodInType(self, fromSelector: Selector("setNavigationBarHidden:"),                                      toSelector: #selector(swizzled_setNavigationBarHidden(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(setNavigationBarHidden(_:animated:)),                           toSelector: #selector(swizzled_setNavigationBarHidden(_:animated:)))
-		swizzleMethodInType(self, fromSelector: #selector(willTransitionToTraitCollection(_:withTransitionCoordinator:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
-	}
-
-
 	@objc(JetPack_setNavigationBarHidden:)
 	private dynamic func swizzled_setNavigationBarHidden(navigationBarHidden: Bool) {
 		setNavigationBarHidden(navigationBarHidden, animated: false)
@@ -115,5 +107,13 @@ public extension UINavigationController {
 		coordinator.animateAlongsideTransition { _ in
 			self.checkNavigationBarFrame()
 		}
+	}
+
+
+	@nonobjc
+	internal static func UINavigationController_setUp() {
+		swizzleMethodInType(self, fromSelector: Selector("setNavigationBarHidden:"),                                      toSelector: #selector(swizzled_setNavigationBarHidden(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(setNavigationBarHidden(_:animated:)),                           toSelector: #selector(swizzled_setNavigationBarHidden(_:animated:)))
+		swizzleMethodInType(self, fromSelector: #selector(willTransitionToTraitCollection(_:withTransitionCoordinator:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 }

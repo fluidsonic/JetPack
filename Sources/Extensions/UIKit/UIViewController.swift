@@ -106,6 +106,12 @@ public extension UIViewController {
 	}
 
 
+	@objc(JetPack_childViewControllerForNavigationBarVisibility)
+	public var childViewControllerForNavigationBarVisibility: UIViewController? {
+		return nil
+	}
+
+
 	@nonobjc
 	public private(set) var containmentState: ContainmentState {
 		get { return ContainmentState(id: objc_getAssociatedObject(self, &AssociatedKeys.containmentState) as? Int ?? 0) }
@@ -225,6 +231,12 @@ public extension UIViewController {
 	public private(set) var outerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.UIEdgeInsetsValue() ?? .zero }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(UIEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@objc(JetPack_preferredNavigationBarVisibility)
+	public var preferredNavigationBarVisibility: NavigationBar.Visibility {
+		return .Visible
 	}
 
 
@@ -607,6 +619,16 @@ public extension UIViewController {
 		}
 
 		decorationInsetsAreValid = true
+	}
+
+
+	@nonobjc
+	public func updateNavigationBarVisibility(animation animation: Animation? = Animation()) {
+		guard let navigationController = navigationController as? NavigationController else {
+			return
+		}
+
+		navigationController.updateNavigationBarVisibilityOfTopViewController(animation: animation)
 	}
 
 
