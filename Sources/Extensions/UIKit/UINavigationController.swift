@@ -22,11 +22,25 @@ public extension UINavigationController {
 	@nonobjc
 	private func addTopAndBottomBarsToDecorationInsets(decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
 		var adjustedDecorationInsets = decorationInsets
-		if !toolbarHidden, let toolbar = toolbar where toolbar.translucent {
-			adjustedDecorationInsets.bottom = max(view.bounds.height - toolbar.frame.top, adjustedDecorationInsets.bottom)
+
+		if !toolbarHidden, let toolbar = toolbar {
+			let toolbarHeight = view.bounds.height - toolbar.frame.top
+			if toolbar.translucent {
+				adjustedDecorationInsets.bottom = max(toolbarHeight, adjustedDecorationInsets.bottom)
+			}
+			else {
+				adjustedDecorationInsets.bottom = max(adjustedDecorationInsets.bottom - toolbarHeight, 0)
+			}
 		}
-		if !navigationBarHidden && navigationBar.translucent {
-			adjustedDecorationInsets.top = max(navigationBar.frame.bottom, adjustedDecorationInsets.top)
+
+		if !navigationBarHidden {
+			let navigationBarHeight = navigationBar.frame.bottom
+			if navigationBar.translucent {
+				adjustedDecorationInsets.top = max(navigationBarHeight, adjustedDecorationInsets.top)
+			}
+			else {
+				adjustedDecorationInsets.top = max(adjustedDecorationInsets.top - navigationBarHeight, 0)
+			}
 		}
 
 		return adjustedDecorationInsets
