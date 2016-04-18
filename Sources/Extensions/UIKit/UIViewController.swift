@@ -155,6 +155,39 @@ public extension UIViewController {
 	}
 
 
+	// reverse-engineered from preferredInterfaceOrientationForPresentation() @ iOS 9.3
+	@nonobjc
+	public static func defaultPreferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+		return UIApplication.sharedApplication().statusBarOrientation
+	}
+
+
+	// reverse-engineered from UIViewController.supportedInterfaceOrientations() @ iOS 9.3
+	@nonobjc
+	public static func defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle: UIModalPresentationStyle) -> UIInterfaceOrientationMask {
+		if modalPresentationStyle == .Unknown16 {
+			return .All
+		}
+
+		switch modalPresentationStyle {
+		case .PageSheet, .FormSheet:
+			return .All
+
+		case .CurrentContext, .Custom, .FullScreen, .None, .OverCurrentContext, .OverFullScreen, .Popover:
+			switch UIDevice.currentDevice().userInterfaceIdiom {
+			case .Pad:
+				return .All
+
+			case .Phone:
+				return .AllButUpsideDown
+
+			case .CarPlay, .TV, .Unspecified:
+				return .Portrait
+			}
+		}
+	}
+
+
 	@nonobjc
 	public func dismissViewController(completion: Closure? = nil) {
 		dismissViewControllerAnimated(true, completion: completion)

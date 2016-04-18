@@ -41,6 +41,19 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	public func performSegueWithIdentifier(identifier: String, sender: AnyObject? = nil, preparation: SeguePreparation?) {
+		seguePreparation = preparation
+		defer { seguePreparation = nil }
+
+		performSegueWithIdentifier(identifier, sender: sender)
+	}
+
+
+	public override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+		return ViewController.defaultPreferredInterfaceOrientationForPresentation()
+	}
+
+
 	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation:) instead")
 	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 		let preparation = seguePreparation
@@ -55,11 +68,8 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public func performSegueWithIdentifier(identifier: String, sender: AnyObject? = nil, preparation: SeguePreparation?) {
-		seguePreparation = preparation
-		defer { seguePreparation = nil }
-
-		performSegueWithIdentifier(identifier, sender: sender)
+	public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+		return ViewController.defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle)
 	}
 
 
