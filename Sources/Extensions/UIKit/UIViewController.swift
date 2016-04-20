@@ -529,6 +529,7 @@ public extension UIViewController {
 
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
+		updateNavigationBarVisibility()
 
 		swizzled_viewWillAppear(animated)
 	}

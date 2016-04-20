@@ -34,12 +34,42 @@ internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toT
 	let implementation = method_getImplementation(fromMethod)
 
 	guard typePointer != nil && implementation != nil else {
-		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's implementation details could not be access.")
+		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's implementation details could not be accessed.")
 		return
 	}
 
 	guard class_addMethod(toType, selector, implementation, typePointer) else {
 		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since `class_addMethod` vetoed.")
+		return
+	}
+}
+
+
+internal func copyMethodInType(type: AnyClass, includingSupertypes: Bool = false, fromSelector: Selector, toSelector: Selector) {
+	precondition(fromSelector != toSelector)
+
+	let fromMethod = (includingSupertypes ? class_getInstanceMethod : class_getInstanceMethodIgnoringSupertypes)(type, fromSelector)
+	guard fromMethod != nil else {
+		log("Selector '\(fromSelector)' was not copied to '\(toSelector)' since the former not present in '\(type)'.")
+		return
+	}
+
+	let toMethod = class_getInstanceMethodIgnoringSupertypes(type, toSelector)
+	guard toMethod == nil else {
+		log("Selector '\(fromSelector)' was not copied to '\(toSelector)' since the latter is already present in '\(type)'.")
+		return
+	}
+
+	let typePointer = method_getTypeEncoding(fromMethod)
+	let implementation = method_getImplementation(fromMethod)
+
+	guard typePointer != nil && implementation != nil else {
+		log("Selector '\(fromSelector)' was not copied to '\(toSelector)' in '\(type)' since it's implementation details could not be accessed.")
+		return
+	}
+
+	guard class_addMethod(type, toSelector, implementation, typePointer) else {
+		log("Selector '\(fromMethod)' was not copied to '\(toSelector)' in '\(type)' since `class_addMethod` vetoed.")
 		return
 	}
 }

@@ -8,23 +8,64 @@ private let titleViewKey = ["_", "titleView"].joinWithSeparator("")
 @objc(JetPack_NavigationBar)
 public /* non-final */ class NavigationBar: UINavigationBar {
 
+	private var originalAlpha = CGFloat(1)
+
+
 	public convenience init() {
 		self.init(frame: .zero)
+
+		originalAlpha = alpha
 	}
 
 
 	public required override init(frame: CGRect) {
 		super.init(frame: frame)
+
+		originalAlpha = alpha
 	}
 
 
 	public required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		super.init(coder: coder)
+
+		originalAlpha = alpha
+	}
+
+
+	public override var alpha: CGFloat {
+		get { return originalAlpha }
+		set {
+			guard newValue != originalAlpha else {
+				return
+			}
+
+			originalAlpha = newValue
+
+			updateAlpha()
+		}
 	}
 
 
 	public final var backgroundView: UIView? {
 		return valueForKey(backgroundViewKey) as? UIView
+	}
+
+
+	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+		guard visibility != .Invisible else {
+			return nil
+		}
+
+		return super.hitTest(point, withEvent: event)
+	}
+
+
+	public override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+		guard visibility != .Invisible else {
+			return false
+		}
+
+		return super.pointInside(point, withEvent: event)
 	}
 
 
@@ -84,6 +125,13 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 				titleView.alpha = 0
 			}
 		}
+
+		updateAlpha()
+	}
+
+
+	private func updateAlpha() {
+		super.alpha = (visibility == .Invisible ? 0 : originalAlpha)
 	}
 
 

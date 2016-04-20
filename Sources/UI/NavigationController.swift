@@ -37,12 +37,22 @@ public /* non-final */ class NavigationController: UINavigationController {
 		}
 
 		redirectMethodInType(self, fromSelector: #selector(UINavigationController.init(nibName:bundle:)), toSelector: #selector(UINavigationController.init(nibName:bundle:)), inType: UINavigationController.self)
+
+		copyMethodInType(object_getClass(self), fromSelector: #selector(overridesPreferredInterfaceOrientationForPresentation), toSelector: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
 	}
 
 
 	@nonobjc
 	public override var navigationBar: NavigationBar {
 		return super.navigationBar as! NavigationBar
+	}
+
+
+	@objc
+	private static func overridesPreferredInterfaceOrientationForPresentation() -> Bool {
+		// UIKit will behave differently if we override preferredInterfaceOrientationForPresentation.
+		// Let's pretend we don't since we're just re-implementing the default behavior.
+		return overridesSelector(#selector(preferredInterfaceOrientationForPresentation), ofBaseClass: NavigationController.self)
 	}
 
 
@@ -62,17 +72,18 @@ public /* non-final */ class NavigationController: UINavigationController {
 
 
 	internal final func updateNavigationBarVisibilityOfTopViewController(animation animation: Animation? = Animation()) {
-		guard let topViewController = topViewController where navigationBar.topItem == topViewController.navigationItem else {
+		guard let topViewController = topViewController else {
 			return
 		}
 
 		let visibilityDeclaringChild = childViewControllerForNavigationBarVisibility ?? self
 		let visibility = visibilityDeclaringChild.preferredNavigationBarVisibility
-
 		setNavigationBarHidden(visibility == .Hidden, animated: animation != nil && appearState == .DidAppear)
 
-		animation.runAlways {
-			navigationBar.visibility = visibility
+		if navigationBar.topItem == topViewController.navigationItem {
+			animation.runAlways {
+				navigationBar.visibility = visibility
+			}
 		}
 	}
 }

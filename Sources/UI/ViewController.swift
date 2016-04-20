@@ -35,9 +35,26 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	public override class func initialize() {
+		guard self == ViewController.self else {
+			return
+		}
+
+		copyMethodInType(object_getClass(self), fromSelector: #selector(overridesPreferredInterfaceOrientationForPresentation), toSelector: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
+	}
+
+
 	public override func loadView() {
 		view = View()
 		view.frame = UIScreen.mainScreen().bounds // required or else UISplitViewController's overlay animation gets broken
+	}
+
+
+	@objc
+	private static func overridesPreferredInterfaceOrientationForPresentation() -> Bool {
+		// UIKit will behave differently if we override preferredInterfaceOrientationForPresentation.
+		// Let's pretend we don't since we're just re-implementing the default behavior.
+		return overridesSelector(#selector(preferredInterfaceOrientationForPresentation), ofBaseClass: ViewController.self)
 	}
 
 
