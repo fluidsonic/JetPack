@@ -8,6 +8,11 @@ public extension CollectionType {
 
 		return nil
 	}
+
+
+	public subscript(safe index: Index) -> Generator.Element? {
+		return indices.contains(index) ? self[index] : nil
+	}
 }
 
 
