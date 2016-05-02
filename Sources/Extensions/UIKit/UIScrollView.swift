@@ -4,6 +4,12 @@ import UIKit
 public extension UIScrollView {
 
 	@nonobjc
+	public var contentFrame: CGRect {
+		return CGRect(size: contentSize)
+	}
+
+
+	@nonobjc
 	public var maximumContentOffset: CGPoint {
 		let size = self.bounds.size
 		let contentInset = self.contentInset
