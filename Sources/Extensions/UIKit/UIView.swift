@@ -117,6 +117,21 @@ public extension UIView {
 
 
 	@nonobjc
+	public func recursivelyFindSuperviewOfType <ViewType: UIView>(type: ViewType.Type) -> ViewType? {
+		var view = self
+		while let superview = view.superview {
+			if let superview = superview as? ViewType {
+				return superview
+			}
+
+			view = superview
+		}
+
+		return nil
+	}
+
+
+	@nonobjc
 	public func removeAllSubviews() {
 		for subview in subviews.reverse() {
 			subview.removeFromSuperview()
