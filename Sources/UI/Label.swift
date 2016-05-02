@@ -123,6 +123,7 @@ public /* non-final */ class Label: View {
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = horizontalAlignment
 		paragraphStyle.lineBreakMode = .ByWordWrapping
+		paragraphStyle.lineHeightMultiple = lineHeightMultiple
 
 		let attributedText = self.attributedText
 		let finalizedText = NSMutableAttributedString(string: attributedText.string, attributes: [
@@ -222,6 +223,18 @@ public /* non-final */ class Label: View {
 			}
 
 			textContainer.lineBreakMode = lineBreakMode
+
+			invalidateIntrinsicContentSize()
+			setNeedsUpdateFinalizedText()
+		}
+	}
+
+
+	public var lineHeightMultiple = CGFloat(1) {
+		didSet {
+			guard lineHeightMultiple != oldValue else {
+				return
+			}
 
 			invalidateIntrinsicContentSize()
 			setNeedsUpdateFinalizedText()
