@@ -12,7 +12,7 @@ public extension CGFloat {
 	}
 
 
-	public func roundedTo(increment: Double) -> Double {
+	public func roundedTo(increment: CGFloat) -> CGFloat {
 		return round(self / increment) * increment
 	}
 
