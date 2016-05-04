@@ -12,6 +12,11 @@ public extension CGFloat {
 	}
 
 
+	public func roundedTo(increment: Double) -> Double {
+		return round(self / increment) * increment
+	}
+
+
 	public var roundedDown: CGFloat {
 		return floor(self)
 	}

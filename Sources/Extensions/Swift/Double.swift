@@ -12,6 +12,11 @@ public extension Double {
 	}
 
 
+	public func roundedTo(increment: Double) -> Double {
+		return round(self / increment) * increment
+	}
+
+
 	public var roundedDown: Double {
 		return floor(self)
 	}
