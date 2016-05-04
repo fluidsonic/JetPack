@@ -35,6 +35,17 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	public override func dismissViewController(animated animated: Bool = true, completion: Closure? = nil) {
+		super.dismissViewControllerAnimated(animated, completion: completion)
+	}
+
+
+	@available(*, unavailable, renamed="dismissViewController")
+	public final override func dismissViewControllerAnimated(flag: Bool, completion: Closure?) {
+		presentedViewController?.dismissViewController(completion: completion)
+	}
+
+
 	public override class func initialize() {
 		guard self == ViewController.self else {
 			return

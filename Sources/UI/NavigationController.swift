@@ -31,6 +31,17 @@ public /* non-final */ class NavigationController: UINavigationController {
 	}
 
 
+	public override func dismissViewController(animated animated: Bool = true, completion: Closure? = nil) {
+		super.dismissViewControllerAnimated(animated, completion: completion)
+	}
+
+
+	@available(*, unavailable, renamed="dismissViewController")
+	public final override func dismissViewControllerAnimated(flag: Bool, completion: Closure?) {
+		presentedViewController?.dismissViewController(completion: completion)
+	}
+
+
 	public override class func initialize() {
 		guard self == NavigationController.self else {
 			return
@@ -71,18 +82,21 @@ public /* non-final */ class NavigationController: UINavigationController {
 	}
 
 
-	internal final func updateNavigationBarVisibilityOfTopViewController(animation animation: Animation? = Animation()) {
+	internal final func updateNavigationBarStyleForTopViewController(animation animation: Animation? = Animation()) {
 		guard let topViewController = topViewController else {
 			return
 		}
 
-		let visibilityDeclaringChild = childViewControllerForNavigationBarVisibility ?? self
-		let visibility = visibilityDeclaringChild.preferredNavigationBarVisibility
-		setNavigationBarHidden(visibility == .Hidden, animated: animation != nil && appearState == .DidAppear)
+		let childForPreferredStyle = childViewControllerForNavigationBarVisibility ?? self
+		let preferredTintColor = childForPreferredStyle.preferredNavigationBarTintColor
+		let preferredVisibility = childForPreferredStyle.preferredNavigationBarVisibility
+
+		setNavigationBarHidden(preferredVisibility == .Hidden, animated: animation != nil && appearState == .DidAppear)
 
 		if navigationBar.topItem == topViewController.navigationItem {
 			animation.runAlways {
-				navigationBar.visibility = visibility
+				navigationBar.overridingTintColor = preferredTintColor
+				navigationBar.visibility = preferredVisibility
 			}
 		}
 	}

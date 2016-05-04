@@ -9,12 +9,11 @@ private let titleViewKey = ["_", "titleView"].joinWithSeparator("")
 public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private var originalAlpha = CGFloat(1)
+	private var originalTintColor: UIColor? = nil
 
 
 	public convenience init() {
 		self.init(frame: .zero)
-
-		originalAlpha = alpha
 	}
 
 
@@ -60,6 +59,17 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
+	internal var overridingTintColor: UIColor? {
+		didSet {
+			guard overridingTintColor != oldValue else {
+				return
+			}
+
+			updateTintColor()
+		}
+	}
+
+
 	public override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
 		guard visibility != .Invisible else {
 			return false
@@ -73,7 +83,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		let item = super.popNavigationItemWithTransition(transition)
 
 		if let navigationController = delegate as? NavigationController {
-			navigationController.updateNavigationBarVisibilityOfTopViewController()
+			navigationController.updateNavigationBarStyleForTopViewController()
 		}
 
 		return item
@@ -84,7 +94,17 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		super.pushNavigationItem(item, transition: transition)
 
 		if let navigationController = delegate as? NavigationController {
-			navigationController.updateNavigationBarVisibilityOfTopViewController()
+			navigationController.updateNavigationBarStyleForTopViewController()
+		}
+	}
+
+
+	public override var tintColor: UIColor! {
+		get { return super.tintColor }
+		set {
+			originalTintColor = newValue
+
+			updateTintColor()
 		}
 	}
 
@@ -132,6 +152,11 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private func updateAlpha() {
 		super.alpha = (visibility == .Invisible ? 0 : originalAlpha)
+	}
+
+
+	private func updateTintColor() {
+		super.tintColor = overridingTintColor ?? originalTintColor
 	}
 
 

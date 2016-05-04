@@ -188,15 +188,18 @@ public extension UIViewController {
 	}
 
 
-	@nonobjc
-	public func dismissViewController(completion: Closure? = nil) {
-		dismissViewControllerAnimated(true, completion: completion)
-	}
+	@objc(JetPack_dismissViewControllerAnimated:completion:)
+	public func dismissViewController(animated animated: Bool = true, completion: Closure? = nil) {
+		if let presentedViewController = presentedViewController {
+			log("Cannot dismiss view controller \(self) while it is presenting view controller \(presentedViewController).")
+			return
+		}
+		guard presentingViewController != nil else {
+			log("Cannot dismiss view controller \(self) which was not presented modally.")
+			return
+		}
 
-
-	@nonobjc
-	public func dismissViewControllerAnimated(animated: Bool) {
-		dismissViewControllerAnimated(animated, completion: nil)
+		dismissViewControllerAnimated(animated, completion: completion)
 	}
 
 
@@ -264,6 +267,12 @@ public extension UIViewController {
 	public private(set) var outerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.UIEdgeInsetsValue() ?? .zero }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(UIEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@objc(JetPack_preferredNavigationBarTintColor)
+	public var preferredNavigationBarTintColor: UIColor? {
+		return nil
 	}
 
 
@@ -529,7 +538,7 @@ public extension UIViewController {
 
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
-		updateNavigationBarVisibility()
+		updateNavigationBarStyle()
 
 		swizzled_viewWillAppear(animated)
 	}
@@ -657,12 +666,12 @@ public extension UIViewController {
 
 
 	@nonobjc
-	public func updateNavigationBarVisibility(animation animation: Animation? = Animation()) {
+	public func updateNavigationBarStyle(animation animation: Animation? = Animation()) {
 		guard let navigationController = navigationController as? NavigationController else {
 			return
 		}
 
-		navigationController.updateNavigationBarVisibilityOfTopViewController(animation: animation)
+		navigationController.updateNavigationBarStyleForTopViewController(animation: animation)
 	}
 
 
