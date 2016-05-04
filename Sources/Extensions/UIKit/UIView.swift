@@ -347,3 +347,15 @@ extension UIViewAnimationOptions: CustomStringConvertible {
 		return "UIViewAnimationOptions(\(options.joinWithSeparator(", ")))"
 	}
 }
+
+
+extension UIViewTintAdjustmentMode: CustomStringConvertible {
+
+	public var description: String {
+		switch self {
+		case .Automatic: return "UIViewTintAdjustmentMode.Automatic"
+		case .Dimmed:    return "UIViewTintAdjustmentMode.Dimmed"
+		case .Normal:    return "UIViewTintAdjustmentMode.Normal"
+		}
+	}
+}
