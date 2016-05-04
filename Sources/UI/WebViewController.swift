@@ -8,7 +8,7 @@ public /* non-final */ class WebViewController: ViewController {
 	private lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
 
 	private let configuration: WKWebViewConfiguration
-	private var initialNavigation: WKNavigation?
+	private var initialLoadingCompleted = false
 
 	public var initialUrl: NSURL?
 	public var opensLinksExternally = false
@@ -200,13 +200,16 @@ public /* non-final */ class WebViewController: ViewController {
 			self.initialUrl = nil
 
 			if webView.URL == nil && !webView.loading {
-				initialNavigation = webView.loadRequest(NSURLRequest(URL: initialUrl))
+				let navigation = webView.loadRequest(NSURLRequest(URL: initialUrl))
+				if navigation != nil {
+					initialLoadingCompleted = false
 
-				if initialNavigation != nil && animatesInitialLoading {
-					webView.alpha = 0
-					webView.userInteractionEnabled = false
+					if animatesInitialLoading {
+						webView.alpha = 0
+						webView.userInteractionEnabled = false
 
-					view.addSubview(activityIndicator)
+						view.addSubview(activityIndicator)
+					}
 				}
 			}
 		}
@@ -235,9 +238,9 @@ extension WebViewController: WKNavigationDelegate {
 	}
 
 
-	public func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
-		if navigation == initialNavigation {
-			initialNavigation = nil
+	public func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation) {
+		if !initialLoadingCompleted {
+			initialLoadingCompleted = true
 
 			if animatesInitialLoading {
 				Animation(duration: 0.5).runWithCompletion { complete in
