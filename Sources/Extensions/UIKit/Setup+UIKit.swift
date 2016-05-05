@@ -25,6 +25,7 @@ public extension UIApplication {
 
 			UIViewController.UIViewController_setUp()
 			UINavigationController.UINavigationController_setUp()
+			UIPresentationController.UIPresentationController_setUp()
 			UITabBarController.UITabBarController_setUp()
 		}
 	}
