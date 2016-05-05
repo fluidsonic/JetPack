@@ -6,10 +6,6 @@ private let dummyView = UIView()
 public extension UIView {
 
 	@nonobjc
-	internal static var onetimeTintAdjustmentModeOverride: UIViewTintAdjustmentMode?
-
-
-	@nonobjc
 	@warn_unused_result
 	public final func alignToGrid(rect: CGRect) -> CGRect {
 		return CGRect(origin: alignToGrid(rect.origin), size: alignToGrid(rect.size))
@@ -215,19 +211,6 @@ public extension UIView {
 	}
 
 
-	@objc(JetPack_setTintAdjustmentMode:)
-	private dynamic func swizzled_setTintAdjustmentMode(tintAdjustmentMode: UIViewTintAdjustmentMode) {
-		if let tintAdjustmentMode = UIView.onetimeTintAdjustmentModeOverride {
-			UIView.onetimeTintAdjustmentModeOverride = nil
-
-			swizzled_setTintAdjustmentMode(tintAdjustmentMode)
-		}
-		else {
-			swizzled_setTintAdjustmentMode(tintAdjustmentMode)
-		}
-	}
-
-
 	@nonobjc
 	public var untransformedFrame: CGRect {
 		get {
@@ -251,7 +234,6 @@ public extension UIView {
 	internal static func UIView_setUp() {
 		swizzleMethodInType(self, fromSelector: #selector(didMoveToWindow),                toSelector: #selector(swizzled_didMoveToWindow))
 		swizzleMethodInType(self, fromSelector: #selector(invalidateIntrinsicContentSize), toSelector: #selector(swizzled_invalidateIntrinsicContentSize))
-		swizzleMethodInType(self, fromSelector: Selector("setTintAdjustmentMode:"),        toSelector: #selector(swizzled_setTintAdjustmentMode(_:)))
 	}
 
 
