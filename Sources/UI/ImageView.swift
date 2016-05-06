@@ -363,12 +363,44 @@ public /* non-final */ class ImageView: View {
 			return alignToGrid(preferredSize)
 		}
 
-		guard let image = image else {
-			return .zero
+		let imageSizeThatFits: CGSize
+
+		let availableSize = maximumSize.insetBy(padding)
+		if availableSize.isPositive, let imageSize = image?.size where imageSize.isPositive {
+			let imageRatio = imageSize.width / imageSize.height
+
+			switch scaling {
+			case .FitHorizontally,
+			     .FitHorizontallyIgnoringAspectRatio:
+
+				imageSizeThatFits = CGSize(
+					width:  availableSize.width,
+					height: availableSize.width / imageRatio
+				)
+
+			case .FitVertically,
+			     .FitVerticallyIgnoringAspectRatio:
+
+				imageSizeThatFits = CGSize(
+					width:  availableSize.height * imageRatio,
+					height: availableSize.height
+				)
+
+			case .FitIgnoringAspectRatio,
+			     .FitInside,
+			     .FitOutside,
+			     .None:
+				imageSizeThatFits = imageSize
+			}
+		}
+		else {
+			imageSizeThatFits = .zero
 		}
 
-		let imageSize = image.size
-		return alignToGrid(CGSize(width: imageSize.width + padding.left + padding.right, height: imageSize.height + padding.top + padding.bottom))
+		return alignToGrid(CGSize(
+			width:  imageSizeThatFits.width  + padding.left + padding.right,
+			height: imageSizeThatFits.height + padding.top  + padding.bottom
+		))
 	}
 
 
