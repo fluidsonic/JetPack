@@ -7,9 +7,9 @@ public /* non-final */ class WebViewController: ViewController {
 
 	private lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
 
-	private let configuration: WKWebViewConfiguration
 	private var initialLoadingCompleted = false
 
+	public let configuration: WKWebViewConfiguration
 	public var initialUrl: NSURL?
 	public var opensLinksExternally = false
 
