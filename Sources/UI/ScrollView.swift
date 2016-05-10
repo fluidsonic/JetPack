@@ -6,7 +6,10 @@ public /* non-final */ class ScrollView: UIScrollView {
 
 	private var delegateRespondsToViewForZooming = false
 
+	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	public var centersViewForZooming = true
+	public var hitZoneFollowsCornerRadius = true
+	public var userInteractionLimitedToSubviews = false
 
 
 	public init() {
@@ -46,6 +49,12 @@ public /* non-final */ class ScrollView: UIScrollView {
 		}
 
 		viewForZooming.center = viewForZoomingFrame.center
+	}
+
+
+	public var cornerRadius: CGFloat {
+		get { return layer.cornerRadius }
+		set { layer.cornerRadius = newValue }
 	}
 
 
@@ -101,9 +110,74 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
+	// reference implementation
+	@warn_unused_result
+	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+		guard participatesInHitTesting else {
+			return nil
+		}
+		guard pointInside(point, withEvent: event) else {
+			return nil
+		}
+
+		var hitView: UIView?
+		for subview in subviews.reverse() {
+			hitView = subview.hitTest(convertPoint(point, toView: subview), withEvent: event)
+			if hitView != nil {
+				break
+			}
+		}
+
+		if hitView == nil && !userInteractionLimitedToSubviews {
+			hitView = self
+		}
+
+		return hitView
+	}
+
+
 	public override func layoutSubviews() {
 		super.layoutSubviews()
 
 		centerViewForZooming()
+	}
+
+
+	@warn_unused_result
+	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
+	}
+
+
+	@warn_unused_result
+	public func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+		let originalHitZone = bounds
+		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
+
+		let hitZoneCornerRadius: CGFloat
+		if hitZoneFollowsCornerRadius && cornerRadius > 0 {
+			let halfOriginalHitZoneSize = (originalHitZone.width + originalHitZone.height) / 4  // middle between half height and half width
+			let halfExtendedHitZoneSize = (extendedHitZone.width + extendedHitZone.height) / 4  // middle between half extended height and half extended width
+			hitZoneCornerRadius = halfExtendedHitZoneSize * (cornerRadius / halfOriginalHitZoneSize)
+		}
+		else {
+			hitZoneCornerRadius = 0
+		}
+
+		return extendedHitZone.contains(point, atCornerRadius: hitZoneCornerRadius)
+	}
+
+
+	@warn_unused_result
+	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+		return bounds.size
+	}
+
+
+	// Override `sizeThatFitsSize(_:)` instead!
+	@available(*, unavailable, renamed="sizeThatFitsSize")
+	@warn_unused_result
+	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
+		return sizeThatFitsSize(maximumSize)
 	}
 }
