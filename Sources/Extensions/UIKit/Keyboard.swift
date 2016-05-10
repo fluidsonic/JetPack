@@ -47,6 +47,10 @@ public final class Keyboard {
 		frameInWindow.left = 0
 
 		if isVisible {
+			// TODO
+			// This is wrong when a hardware keyboard is connected while an input accessory view is still visible.
+			// In that case the keyboard frame is only half-visible, so we cannot bottom-align the frame.
+
 			frameInWindow.bottom = windowSize.height
 		}
 		else {
