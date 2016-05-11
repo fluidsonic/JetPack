@@ -163,7 +163,12 @@ public /* non-final */ class WebViewController: ViewController {
 		let bounds = view.bounds
 
 		animation.runAlways {
-			let innerDecorationInsets = self.innerDecorationInsets
+			var innerDecorationInsets = self.innerDecorationInsets
+
+			// WKWebView always insets by the full keyboard height, even if it's not or just partially covered :(
+			if Keyboard.isVisible {
+				innerDecorationInsets.bottom = 0
+			}
 
 			// WKWebView doesn't properly support non-zero scrollView.contentInset at the moment causing .contentSize to be too large.
 			var webViewFrame = bounds.insetBy(innerDecorationInsets)
@@ -174,7 +179,7 @@ public /* non-final */ class WebViewController: ViewController {
 			webViewFrame.width = ceil(webViewFrame.width)
 			webView.frame = webViewFrame
 
-			webView.scrollView.scrollIndicatorInsets = outerDecorationInsets.increaseBy(innerDecorationInsets.inverse)
+			//webView.scrollView.scrollIndicatorInsets = outerDecorationInsets.increaseBy(innerDecorationInsets.inverse)
 
 			if activityIndicator.superview != nil {
 				var activityIndicatorFrame = CGRect()
