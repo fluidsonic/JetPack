@@ -197,8 +197,6 @@ public extension UIView {
 	private dynamic func swizzled_didChangeWindow(from from: UIWindow?, to: UIWindow?) {
 		swizzled_didChangeWindow(from: from, to: to)
 
-		log("\(self) -> \(delegateViewController) -> \(window != nil)")
-
 		delegateViewController?.viewDidMoveToWindow()
 	}
 
