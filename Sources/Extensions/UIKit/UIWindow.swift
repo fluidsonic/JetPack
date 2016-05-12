@@ -3,6 +3,13 @@ import UIKit
 
 public extension UIWindow {
 
+	@nonobjc
+	internal static var isPrivate: Bool {
+		let typeName = NSStringFromClass(self)
+		return typeName.hasPrefix("UIRemote") || typeName.hasPrefix("UIText")
+	}
+
+
 	@objc(JetPack_layoutIfNeeded)
 	private dynamic func swizzled_layoutIfNeeded() {
 		guard UINavigationBar.isSettingPromptCount <= 0 else {

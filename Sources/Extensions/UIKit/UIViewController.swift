@@ -627,7 +627,10 @@ public extension UIViewController {
 	internal func updateDecorationInsets() {
 		let parentViewController = reliableParentViewController
 
-		guard let window = window where parentViewController == nil || !decorationInsetsAreValid else {
+		guard let window = window where (parentViewController == nil || !decorationInsetsAreValid) else {
+			return
+		}
+		guard !window.dynamicType.isPrivate else {
 			return
 		}
 

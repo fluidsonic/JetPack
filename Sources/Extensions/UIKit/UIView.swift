@@ -193,6 +193,16 @@ public extension UIView {
 	}
 
 
+	@objc(JetPack_didChangeFromWindow:toWindow:)
+	private dynamic func swizzled_didChangeWindow(from from: UIWindow?, to: UIWindow?) {
+		swizzled_didChangeWindow(from: from, to: to)
+
+		log("\(self) -> \(delegateViewController) -> \(window != nil)")
+
+		delegateViewController?.viewDidMoveToWindow()
+	}
+
+
 	@objc(JetPack_invalidateIntrinsicContentSize)
 	private dynamic func swizzled_invalidateIntrinsicContentSize() {
 		swizzled_invalidateIntrinsicContentSize()
@@ -200,14 +210,6 @@ public extension UIView {
 		if let superview = superview {
 			superview.subviewDidInvalidateIntrinsicContentSize(self)
 		}
-	}
-
-
-	@objc(JetPack_didMoveToWindow)
-	private dynamic func swizzled_didMoveToWindow() {
-		swizzled_didMoveToWindow()
-
-		delegateViewController?.viewDidMoveToWindow()
 	}
 
 
@@ -232,7 +234,9 @@ public extension UIView {
 
 	@nonobjc
 	internal static func UIView_setUp() {
-		swizzleMethodInType(self, fromSelector: #selector(didMoveToWindow),                toSelector: #selector(swizzled_didMoveToWindow))
+		// cannot use didMoveToWindow() because some subclasses don't call super's implementation
+		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), toSelector: #selector(swizzled_didChangeWindow(from:to:)))
+
 		swizzleMethodInType(self, fromSelector: #selector(invalidateIntrinsicContentSize), toSelector: #selector(swizzled_invalidateIntrinsicContentSize))
 	}
 
