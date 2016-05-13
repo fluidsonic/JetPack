@@ -1,6 +1,8 @@
 platform :ios, '8.0'
 use_frameworks!
 
+install! 'cocoapods', :deterministic_uuids => false, :share_schemes_for_development_pods => false
+
 
 target 'All' do
 	pod 'JetPack', :path => '..'
@@ -89,17 +91,7 @@ target 'UI' do
 end
 
 
-pre_install do |installer|
-	installer.config.deterministic_uuids = false
-end
-
-
 post_install do |installer|
-	installer.pods_project.targets.each do |target|
-		target.build_configuration_list.set_setting('ENABLE_TESTABILITY', 'YES')
-
-		if ENV['SWIFT_OPTIMIZATION_LEVEL']
-			target.build_configuration_list.set_setting('SWIFT_OPTIMIZATION_LEVEL', ENV['SWIFT_OPTIMIZATION_LEVEL'])
-		end
-	end
+	installer.pods_project.build_configuration_list.set_setting('ENABLE_TESTABILITY', 'YES')
+	installer.pods_project.build_configuration_list.build_settings('Release')['SWIFT_OPTIMIZATION_LEVEL'] = ENV['SWIFT_OPTIMIZATION_LEVEL']
 end

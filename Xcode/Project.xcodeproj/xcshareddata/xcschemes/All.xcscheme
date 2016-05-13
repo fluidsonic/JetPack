@@ -21,16 +21,16 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3ABA96556ECAA99FF8E3EAE0"
-               BuildableName = "JetPack.framework"
-               BlueprintName = "Pods-All-JetPack"
+               BlueprintIdentifier = "7007730A7C6869B106FDE024"
+               BuildableName = "Pods_All.framework"
+               BlueprintName = "Pods-All"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
