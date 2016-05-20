@@ -187,6 +187,7 @@
 		35A654FF64EB04B52BA1AF68 /* CGMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA4876FB3F0AF11BE13C2D4 /* CGMath.swift */; };
 		3673FD2AC89A8FA445A156AC /* EmptyObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256C1592925BC089EAB8C00E /* EmptyObject.swift */; };
 		3769B0FDDE148E59A37F4D54 /* IntegerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82688CA06A940A7709652A0 /* IntegerType.swift */; };
+		3783ACCB1CEE4D7500B6F348 /* SignedNumberType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3783ACCA1CEE4D7500B6F348 /* SignedNumberType.swift */; };
 		3A63CF3161AF863B7C2F6284 /* Int32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA997B2EB4EBF75405E81CA /* Int32.swift */; };
 		3A891F44F1D0E9A5FF9048EA /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ADB9597B302744ECED45EB4 /* Double.swift */; };
 		3A904CF7EF13620AE0F7F6B5 /* Functional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F975CDA05F21888005A4016E /* Functional.swift */; };
@@ -1008,6 +1009,7 @@
 		3677A6D09FCD8E3BF415A744 /* NSCalendar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSCalendar.swift; sourceTree = "<group>"; };
 		3699A158D750454C6F8C9BBB /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		372B17C71C36D1A0EA749314 /* Pods-Experimental-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Experimental-resources.sh"; sourceTree = "<group>"; };
+		3783ACCA1CEE4D7500B6F348 /* SignedNumberType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignedNumberType.swift; sourceTree = "<group>"; };
 		3883CECED2B6F2F4D6A33779 /* Pods-Extensions-Swift-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Extensions-Swift-dummy.m"; sourceTree = "<group>"; };
 		38A3891CB174E8CFF93A8A3A /* CollectionType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionType.swift; sourceTree = "<group>"; };
 		38F1CAB90EA863FE21881F06 /* Pods-Extensions-Foundation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Extensions-Foundation.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2315,6 +2317,7 @@
 			children = (
 				A3836170BD2D5470E283CB91 /* AbsoluteValuable.swift */,
 				34E6FEC1BA3BE5D9686D4B70 /* AnyClass.swift */,
+				3783ACCA1CEE4D7500B6F348 /* SignedNumberType.swift */,
 				38A3891CB174E8CFF93A8A3A /* CollectionType.swift */,
 				4DF22D7F8FD5EB8F7DE4D65B /* Dictionary.swift */,
 				6ADB9597B302744ECED45EB4 /* Double.swift */,
@@ -4428,6 +4431,7 @@
 				2DF990FDCB94C4898821F0E4 /* Logging.swift in Sources */,
 				0B50A8D08EF4C35114225A7A /* Result.swift in Sources */,
 				A291C5CCC58639F149FE5E24 /* StrongReference.swift in Sources */,
+				3783ACCB1CEE4D7500B6F348 /* SignedNumberType.swift in Sources */,
 				B9366C1BCB0BDCFECBA2CDC0 /* Threading.swift in Sources */,
 				D02E510AB55C623BEA3D1A9A /* WeakReference.swift in Sources */,
 			);
