@@ -6,6 +6,8 @@ public /* non-final */ class ScrollView: UIScrollView {
 
 	private var delegateRespondsToViewForZooming = false
 
+	private weak var newDelegate: ScrollViewDelegate?
+
 	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	public var centersViewForZooming = true
 	public var hitZoneFollowsCornerRadius = true
@@ -100,13 +102,24 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
+	private func defaultShouldReceiveTouch(touch: UITouch) -> Bool {
+		return true
+	}
+
+
 	public override weak var delegate: UIScrollViewDelegate? {
 		get { return super.delegate }
 		set {
 			super.delegate = newValue
 
 			delegateRespondsToViewForZooming = super.delegate?.respondsToSelector(#selector(UIScrollViewDelegate.viewForZoomingInScrollView(_:))) ?? false
+			newDelegate = super.delegate as? ScrollViewDelegate
 		}
+	}
+
+
+	public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+		return newDelegate?.scrollView(self, shouldReceiveTouch: touch) ?? defaultShouldReceiveTouch(touch)
 	}
 
 
@@ -179,5 +192,19 @@ public /* non-final */ class ScrollView: UIScrollView {
 	@warn_unused_result
 	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
 		return sizeThatFitsSize(maximumSize)
+	}
+}
+
+
+public protocol ScrollViewDelegate: UIScrollViewDelegate {
+
+	func scrollView(scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool
+}
+
+
+public extension ScrollViewDelegate {
+
+	public func scrollView(scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool {
+		return scrollView.defaultShouldReceiveTouch(touch)
 	}
 }

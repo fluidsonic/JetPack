@@ -55,3 +55,6 @@ public extension UIScrollView {
 		self.contentOffset = newContentOffset
 	}
 }
+
+
+extension UIScrollView: UIGestureRecognizerDelegate {}
