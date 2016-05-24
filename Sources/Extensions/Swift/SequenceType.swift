@@ -1,6 +1,12 @@
 public extension SequenceType {
 
 	@warn_unused_result
+	public func toArray() -> [Generator.Element] {
+		return Array<Generator.Element>(self)
+	}
+
+
+	@warn_unused_result
 	public func countMatching(@noescape predicate: Generator.Element throws -> Bool) rethrows -> Int {
 		var count = 0
 		for element in self where try predicate(element) {
@@ -37,7 +43,20 @@ public extension SequenceType {
 
 		return (left, right)
 	}
+
+
+	@warn_unused_result
+	public func toDictionary <Key: Hashable, Value>(@noescape transform: Generator.Element throws -> (Key, Value)) rethrows -> [Key : Value] {
+		var dictionary = [Key : Value]()
+		for element in self {
+			let (key, value) = try transform(element)
+			dictionary[key] = value
+		}
+
+		return dictionary
+	}
 }
+
 
 
 public extension SequenceType where Generator.Element: AnyObject {
@@ -49,6 +68,16 @@ public extension SequenceType where Generator.Element: AnyObject {
 		}
 
 		return false
+	}
+}
+
+
+
+public extension SequenceType where Generator.Element: Hashable {
+
+	@warn_unused_result
+	public func toSet() -> Set<Generator.Element> {
+		return Set(self)
 	}
 }
 

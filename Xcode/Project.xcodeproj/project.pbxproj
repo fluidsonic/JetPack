@@ -27,6 +27,7 @@
 		4986834B1BE41ECF001DCBC7 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683471BE41ECF001DCBC7 /* CGPoint.swift */; };
 		4986834C1BE41ECF001DCBC7 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683481BE41ECF001DCBC7 /* CGRect.swift */; };
 		4986834D1BE41ECF001DCBC7 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683491BE41ECF001DCBC7 /* CGSize.swift */; };
+		499EEC3E1CF4C9A0008991A3 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EEC3D1CF4C9A0008991A3 /* Array.swift */; };
 		49A72CE71BE5A475001FDCE8 /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CE61BE5A475001FDCE8 /* Support.swift */; };
 		49CDDD591C943BD700FB7DEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683311BE405D6001DCBC7 /* AppDelegate.swift */; };
 		49CDDD5D1C943BD700FB7DEF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498683331BE405D6001DCBC7 /* LaunchScreen.storyboard */; };
@@ -150,6 +151,7 @@
 		498683471BE41ECF001DCBC7 /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		498683481BE41ECF001DCBC7 /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		498683491BE41ECF001DCBC7 /* CGSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
+		499EEC3D1CF4C9A0008991A3 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		49A72CA81BE5600A001FDCE8 /* NSCalendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCalendar.swift; sourceTree = "<group>"; };
 		49A72CA91BE5600A001FDCE8 /* NSCalendarUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCalendarUnit.swift; sourceTree = "<group>"; };
 		49A72CAA1BE5600A001FDCE8 /* NSCharacterSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCharacterSet.swift; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 			children = (
 				49A72CBD1BE588C2001FDCE8 /* AbsoluteValuable.swift */,
 				49A72CBE1BE588C2001FDCE8 /* AnyClass.swift */,
+				499EEC3D1CF4C9A0008991A3 /* Array.swift */,
 				49A72CBF1BE588C2001FDCE8 /* CollectionType.swift */,
 				49A72CC01BE588C2001FDCE8 /* Dictionary.swift */,
 				49A72CC11BE588C2001FDCE8 /* Double.swift */,
@@ -2132,6 +2135,7 @@
 				49CDDE591C94520300FB7DEF /* Dictionary.swift in Sources */,
 				49CDDE5B1C94520300FB7DEF /* CollectionType.swift in Sources */,
 				49CDDE5D1C94520300FB7DEF /* Double.swift in Sources */,
+				499EEC3E1CF4C9A0008991A3 /* Array.swift in Sources */,
 				49CDDE5E1C94520300FB7DEF /* AnyClass.swift in Sources */,
 				49CDDE601C94520300FB7DEF /* IntegerType.swift in Sources */,
 				49CDDE611C94520300FB7DEF /* SequenceType.swift in Sources */,

@@ -9,9 +9,9 @@ class CollectionType_Tests: XCTestCase {
 
 
 	func testIndexOfIdentical() {
-		let objects = [EmptyObject(), EmptyObject(), EmptyObject()]
-		XCTAssertEqual(objects.indexOfIdentical(EmptyObject()), nil)
-		XCTAssertEqual(objects.indexOfIdentical(objects[1]),    1)
+		let objects = [EmptyNonEqualObject(), EmptyNonEqualObject(), EmptyNonEqualObject()]
+		XCTAssertEqual(objects.indexOfIdentical(EmptyNonEqualObject()), nil)
+		XCTAssertEqual(objects.indexOfIdentical(objects[1]),            1)
 	}
 
 

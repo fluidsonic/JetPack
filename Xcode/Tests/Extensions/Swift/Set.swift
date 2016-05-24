@@ -42,4 +42,15 @@ class Set_Tests: XCTestCase {
 	func testInit() {
 		XCTAssertEqual(Set(element: 1), [1] as Set)
 	}
+
+
+	func testToSet() {
+		let a = EmptyEqualObject()
+		let b = EmptyEqualObject()
+
+		XCTAssertEqual(Set<Int>().toSet(),     Set([]))
+		XCTAssertEqual(Set([3, 1, 2]).toSet(), Set([3, 1, 2]))
+
+		XCTAssertIdentical(Set([b, a]).toSet(), Set([a]))
+	}
 }

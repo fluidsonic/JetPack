@@ -26,4 +26,10 @@ public extension Set {
 
 		subtractInPlace(excludes)
 	}
+
+
+	@warn_unused_result
+	public func toSet() -> Set<Generator.Element> {
+		return self
+	}
 }

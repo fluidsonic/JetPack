@@ -9,8 +9,8 @@ class SequenceType_Tests: XCTestCase {
 
 
 	func testContainsIdentical() {
-		let objects = [EmptyObject(), EmptyObject()]
-		XCTAssertFalse(objects.containsIdentical(EmptyObject()))
+		let objects = [EmptyNonEqualObject(), EmptyNonEqualObject()]
+		XCTAssertFalse(objects.containsIdentical(EmptyNonEqualObject()))
 		XCTAssertTrue(objects.containsIdentical(objects[1]))
 	}
 
@@ -25,6 +25,14 @@ class SequenceType_Tests: XCTestCase {
 		catch let error as NSError {
 			XCTAssertEqual(error, self.error)
 		}
+	}
+
+
+	func testFilterNonNil() {
+		XCTAssertEqual([Int?]().filterNonNil(), [])
+
+		let array: [Int?] = [nil, 1, nil, nil, 2, nil]
+		XCTAssertEqual(array.filterNonNil(), [1, 2])
 	}
 
 
@@ -54,5 +62,35 @@ class SequenceType_Tests: XCTestCase {
 		catch let error as NSError {
 			XCTAssertEqual(error, self.error)
 		}
+	}
+
+
+	func testToArray() {
+		let a = EmptyNonEqualObject()
+		let b = EmptyNonEqualObject()
+
+		XCTAssertEqual(AnySequence<Int>([]).toArray(),   [])
+		XCTAssertEqual(AnySequence([3, 1, 2]).toArray(), [3, 1, 2])
+
+		XCTAssertIdentical(AnySequence([b, a, b]).toArray(), [b, a, b])
+	}
+
+
+	func testToDictionary() {
+		XCTAssertEqual(AnySequence<Int>([]).toDictionary() { ($0, $0) },      [:])
+		XCTAssertEqual(AnySequence([1, 2, 3]).toDictionary({ ($0, $0 * 2) }), [1: 2, 2: 4, 3: 6])
+
+		XCTAssertEqual(AnySequence([(1, 1), (2, 2), (1, 3)]).toDictionary({ $0 }), [2: 2, 1: 3])
+	}
+
+
+	func testToSet() {
+		let a = EmptyEqualObject()
+		let b = EmptyEqualObject()
+
+		XCTAssertEqual(AnySequence<Int>([]).toSet(),   Set([]))
+		XCTAssertEqual(AnySequence([3, 1, 2]).toSet(), Set([3, 1, 2]))
+
+		XCTAssertIdentical(AnySequence([b, a]).toSet(), Set([a]))
 	}
 }

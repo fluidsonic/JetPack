@@ -6,9 +6,9 @@ import JetPack
 class AnyClass_Tests: XCTestCase {
 
 	func testPatternMatching() {
-		switch EmptyObject.self {
-		case EmptyObject.self: break
-		default:               XCTFail()
+		switch EmptyNonEqualObject.self {
+		case EmptyNonEqualObject.self: break
+		default:                       XCTFail()
 		}
 	}
 }

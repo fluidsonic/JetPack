@@ -20,14 +20,14 @@ class RangeReplaceableCollectionType_Tests: XCTestCase {
 
 
 	func testRemoveFirstIdentical() {
-		let objects = [EmptyObject(), EmptyObject(), EmptyObject()]
+		let objects = [EmptyNonEqualObject(), EmptyNonEqualObject(), EmptyNonEqualObject()]
 
 		var mutableObjects = objects
 		XCTAssertEqual(mutableObjects.removeFirstIdentical(objects[1]), 1)
 		XCTAssertIdentical(mutableObjects, [objects[0], objects[2]])
 
 		mutableObjects = objects
-		XCTAssertEqual(mutableObjects.removeFirstIdentical(EmptyObject()), nil)
+		XCTAssertEqual(mutableObjects.removeFirstIdentical(EmptyNonEqualObject()), nil)
 		XCTAssertIdentical(mutableObjects, objects)
 	}
 
