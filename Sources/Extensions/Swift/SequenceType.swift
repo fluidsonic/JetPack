@@ -28,6 +28,12 @@ public extension SequenceType {
 
 
 	@warn_unused_result
+	public func joinWithSeparator(separator: String, @noescape transform: Generator.Element throws -> String) rethrows -> String {
+		return try lazy.map(transform).joinWithSeparator(separator)
+	}
+
+
+	@warn_unused_result
 	public func separate(@noescape isLeftElement: Generator.Element throws -> Bool) rethrows -> ([Generator.Element], [Generator.Element]) {
 		var left = Array<Generator.Element>()
 		var right = Array<Generator.Element>()
