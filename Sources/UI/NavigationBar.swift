@@ -2,6 +2,7 @@ import UIKit
 
 
 private let backgroundViewKey = ["_", "backgroundView"].joinWithSeparator("")
+private let navigationItemViewClassName = ["UINavigationItem", "View"].joinWithSeparator("")
 private let titleViewKey = ["_", "titleView"].joinWithSeparator("")
 
 
@@ -10,6 +11,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private var originalAlpha = CGFloat(1)
 	private var originalTintColor: UIColor? = nil
+	private let titleContainerView = View()
 
 
 	public convenience init() {
@@ -21,6 +23,9 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		super.init(frame: frame)
 
 		originalAlpha = alpha
+
+		titleContainerView.clipsToBounds = false
+		titleContainerView.userInteractionLimitedToSubviews = true
 	}
 
 
@@ -28,6 +33,20 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		super.init(coder: coder)
 
 		originalAlpha = alpha
+
+		titleContainerView.clipsToBounds = false
+		titleContainerView.userInteractionLimitedToSubviews = true
+	}
+
+
+	public override func addSubview(view: UIView) {
+		guard !isTitleView(view) else {
+			titleContainerView.addSubview(view)
+			super.addSubview(titleContainerView)
+			return
+		}
+
+		super.addSubview(view)
 	}
 
 
@@ -56,6 +75,51 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		}
 
 		return super.hitTest(point, withEvent: event)
+	}
+
+
+	public override func insertSubview(view: UIView, atIndex index: Int) {
+		guard !isTitleView(view) else {
+			titleContainerView.addSubview(view)
+			super.insertSubview(titleContainerView, atIndex: index)
+			return
+		}
+
+		super.insertSubview(view, atIndex: index)
+	}
+
+
+	public override func insertSubview(view: UIView, aboveSubview siblingSubview: UIView) {
+		guard !isTitleView(view) else {
+			titleContainerView.addSubview(view)
+			super.insertSubview(titleContainerView, aboveSubview: siblingSubview)
+			return
+		}
+
+		super.insertSubview(view, aboveSubview: isTitleView(siblingSubview) ? titleContainerView : siblingSubview)
+	}
+
+
+	public override func insertSubview(view: UIView, belowSubview siblingSubview: UIView) {
+		guard !isTitleView(view) else {
+			titleContainerView.addSubview(view)
+			super.insertSubview(titleContainerView, belowSubview: siblingSubview)
+			return
+		}
+
+		super.insertSubview(view, belowSubview: isTitleView(siblingSubview) ? titleContainerView : siblingSubview)
+	}
+
+
+	private func isTitleView(view: UIView, checkingSubviews: Bool = true) -> Bool {
+		return view === titleView || NSStringFromClass(view.dynamicType) == navigationItemViewClassName
+	}
+
+
+	public override func layoutSubviews() {
+		super.layoutSubviews()
+
+		titleContainerView.frame = CGRect(size: bounds.size)
 	}
 
 
@@ -136,14 +200,12 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 			}
 		}
 
-		if let titleView = titleView {
-			switch visibility {
-			case .Hidden, .Invisible, .InvisibleBackground, .Visible:
-				titleView.alpha = 1
+		switch visibility {
+		case .Hidden, .Invisible, .InvisibleBackground, .Visible:
+			titleContainerView.alpha = 1
 
-			case .InvisibleBackgroundAndTitle:
-				titleView.alpha = 0
-			}
+		case .InvisibleBackgroundAndTitle:
+			titleContainerView.alpha = 0
 		}
 
 		updateAlpha()
