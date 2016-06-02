@@ -28,6 +28,43 @@ public extension SequenceType {
 
 
 	@warn_unused_result
+	public func joinWithSeparator(separator: String, lastSeparator: String, @noescape transform: Generator.Element throws -> String) rethrows -> String {
+		guard lastSeparator != separator else {
+			return try joinWithSeparator(separator, transform: transform)
+		}
+
+		var isFirstElement = true
+		var joinedString = ""
+		var previousElement: Generator.Element?
+
+		for element in self {
+			if let previousElement = previousElement {
+				if isFirstElement {
+					isFirstElement = false
+				}
+				else {
+					joinedString += separator
+				}
+
+				joinedString += try transform(previousElement)
+			}
+
+			previousElement = element
+		}
+
+		if let previousElement = previousElement {
+			if !isFirstElement {
+				joinedString += lastSeparator
+			}
+
+			joinedString += try transform(previousElement)
+		}
+
+		return joinedString
+	}
+
+
+	@warn_unused_result
 	public func joinWithSeparator(separator: String, @noescape transform: Generator.Element throws -> String) rethrows -> String {
 		return try lazy.map(transform).joinWithSeparator(separator)
 	}
@@ -84,6 +121,16 @@ public extension SequenceType where Generator.Element: Hashable {
 	@warn_unused_result
 	public func toSet() -> Set<Generator.Element> {
 		return Set(self)
+	}
+}
+
+
+
+public extension SequenceType where Generator.Element == String {
+
+	@warn_unused_result
+	public func joinWithSeparator(separator: String, lastSeparator: String) -> String {
+		return joinWithSeparator(separator, lastSeparator: lastSeparator, transform: identity)
 	}
 }
 
