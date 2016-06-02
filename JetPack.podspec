@@ -71,6 +71,7 @@ Pod::Spec.new do |s|
 			s.frameworks   = 'Foundation'
 			s.source_files = 'Sources/Extensions/Swift/**/*.swift', 'Module/JetPack.h'
 
+			s.dependency 'JetPack/Core'
 			s.dependency 'JetPack/Extensions/Darwin'
 		end
 
