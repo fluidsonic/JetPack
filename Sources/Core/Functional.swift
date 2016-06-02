@@ -75,6 +75,11 @@ internal func copyMethodInType(type: AnyClass, includingSupertypes: Bool = false
 }
 
 
+public func identity<T>(element: T) -> T {
+	return element
+}
+
+
 public func lazyPlaceholder<T>() -> T {
 	fatalError("Lazy variable accessed before being initialized.")
 }
