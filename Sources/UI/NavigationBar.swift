@@ -11,7 +11,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private var originalAlpha = CGFloat(1)
 	private var originalTintColor: UIColor? = nil
-	private let titleContainerView = View()
+	private let titleContainerView = TitleContainerView()
 
 
 	public convenience init() {
@@ -23,9 +23,6 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		super.init(frame: frame)
 
 		originalAlpha = alpha
-
-		titleContainerView.clipsToBounds = false
-		titleContainerView.userInteractionLimitedToSubviews = true
 	}
 
 
@@ -33,9 +30,6 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		super.init(coder: coder)
 
 		originalAlpha = alpha
-
-		titleContainerView.clipsToBounds = false
-		titleContainerView.userInteractionLimitedToSubviews = true
 	}
 
 
@@ -219,6 +213,42 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private func updateTintColor() {
 		super.tintColor = overridingTintColor ?? originalTintColor
+	}
+
+
+
+	private final class TitleContainerView: View {
+
+		private override init() {
+			super.init()
+
+			clipsToBounds = false
+			userInteractionLimitedToSubviews = true
+		}
+
+
+		private required init?(coder: NSCoder) {
+			fatalError("init(coder:) has not been implemented")
+		}
+
+
+		private override func didAddSubview(subview: UIView) {
+			super.didAddSubview(subview)
+
+			superview?.setNeedsLayout()
+		}
+
+
+		private override func setNeedsLayout() {
+			superview?.setNeedsLayout()
+		}
+
+
+		private override func willRemoveSubview(subview: UIView) {
+			super.willRemoveSubview(subview)
+
+			superview?.setNeedsLayout()
+		}
 	}
 
 
