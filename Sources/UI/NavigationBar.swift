@@ -11,7 +11,6 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private var originalAlpha = CGFloat(1)
 	private var originalTintColor: UIColor? = nil
-	private let titleContainerView = TitleContainerView()
 
 
 	public convenience init() {
@@ -30,17 +29,6 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 		super.init(coder: coder)
 
 		originalAlpha = alpha
-	}
-
-
-	public override func addSubview(view: UIView) {
-		guard !isTitleView(view) else {
-			titleContainerView.addSubview(view)
-			super.addSubview(titleContainerView)
-			return
-		}
-
-		super.addSubview(view)
 	}
 
 
@@ -72,48 +60,8 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	public override func insertSubview(view: UIView, atIndex index: Int) {
-		guard !isTitleView(view) else {
-			titleContainerView.addSubview(view)
-			super.insertSubview(titleContainerView, atIndex: index)
-			return
-		}
-
-		super.insertSubview(view, atIndex: index)
-	}
-
-
-	public override func insertSubview(view: UIView, aboveSubview siblingSubview: UIView) {
-		guard !isTitleView(view) else {
-			titleContainerView.addSubview(view)
-			super.insertSubview(titleContainerView, aboveSubview: siblingSubview)
-			return
-		}
-
-		super.insertSubview(view, aboveSubview: isTitleView(siblingSubview) ? titleContainerView : siblingSubview)
-	}
-
-
-	public override func insertSubview(view: UIView, belowSubview siblingSubview: UIView) {
-		guard !isTitleView(view) else {
-			titleContainerView.addSubview(view)
-			super.insertSubview(titleContainerView, belowSubview: siblingSubview)
-			return
-		}
-
-		super.insertSubview(view, belowSubview: isTitleView(siblingSubview) ? titleContainerView : siblingSubview)
-	}
-
-
 	private func isTitleView(view: UIView, checkingSubviews: Bool = true) -> Bool {
 		return view === titleView || NSStringFromClass(view.dynamicType) == navigationItemViewClassName
-	}
-
-
-	public override func layoutSubviews() {
-		super.layoutSubviews()
-
-		titleContainerView.frame = CGRect(size: bounds.size)
 	}
 
 
@@ -194,13 +142,18 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 			}
 		}
 
-		switch visibility {
-		case .Hidden, .Invisible, .InvisibleBackground, .Visible:
-			titleContainerView.alpha = 1
+		// TODO find another way to hide the titleView since this approach messes up the navigation hierarchy when using back-swipe gesture
+		/*
+		if let titleView = titleView {
+			switch visibility {
+			case .Hidden, .Invisible, .InvisibleBackground, .Visible:
+				titleView.alpha = 1
 
-		case .InvisibleBackgroundAndTitle:
-			titleContainerView.alpha = 0
+			case .InvisibleBackgroundAndTitle:
+				titleView.alpha = 0
+			}
 		}
+		*/
 
 		updateAlpha()
 	}
@@ -213,42 +166,6 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	private func updateTintColor() {
 		super.tintColor = overridingTintColor ?? originalTintColor
-	}
-
-
-
-	private final class TitleContainerView: View {
-
-		private override init() {
-			super.init()
-
-			clipsToBounds = false
-			userInteractionLimitedToSubviews = true
-		}
-
-
-		private required init?(coder: NSCoder) {
-			fatalError("init(coder:) has not been implemented")
-		}
-
-
-		private override func didAddSubview(subview: UIView) {
-			super.didAddSubview(subview)
-
-			superview?.setNeedsLayout()
-		}
-
-
-		private override func setNeedsLayout() {
-			superview?.setNeedsLayout()
-		}
-
-
-		private override func willRemoveSubview(subview: UIView) {
-			super.willRemoveSubview(subview)
-
-			superview?.setNeedsLayout()
-		}
 	}
 
 
