@@ -28,16 +28,21 @@ public class EventBus {
 	}
 
 
-	public func subscribe<T>(callback: (T) -> Void) -> Closure {
+	public func subscribe<Event>(for consumer: Consumer, callback: (Event) -> Void) {
+		consumer.subscribe(to: self, callback: callback)
+	}
+
+
+	public func subscribe<Event>(callback: (Event) -> Void) -> Closure {
 		return synchronized(lock) {
-			let scope = ObjectIdentifier(T.Type)
+			let scope = ObjectIdentifier(Event.Type)
 			let subscription = Subscription(callback: callback)
 
-			if let subscriptions = subscriptionsByScope[scope] as! Subscriptions<T>? {
+			if let subscriptions = subscriptionsByScope[scope] as! Subscriptions<Event>? {
 				subscriptions.list.append(subscription)
 			}
 			else {
-				let subscriptions = Subscriptions<T>()
+				let subscriptions = Subscriptions<Event>()
 				subscriptions.list.append(subscription)
 				subscriptionsByScope[scope] = subscriptions
 			}
@@ -49,7 +54,7 @@ public class EventBus {
 					synchronized(self.lock) {
 						subscription.callback = nil
 
-						if let subscriptions = self.subscriptionsByScope[scope] as! Subscriptions<T>? {
+						if let subscriptions = self.subscriptionsByScope[scope] as! Subscriptions<Event>? {
 							subscriptions.list.removeFirstIdentical(subscription)
 
 							if subscriptions.list.isEmpty {
@@ -58,6 +63,40 @@ public class EventBus {
 						}
 					}
 				}
+			}
+		}
+	}
+
+
+
+	public final class Consumer {
+
+		private let lock = EmptyObject()
+		private var unsubscribes = [Closure]()
+
+
+		public init() {}
+
+
+		deinit {
+			unsubscribeAll()
+		}
+
+
+		public func subscribe<Event>(to eventBus: EventBus, callback: (Event) -> Void) {
+			synchronized(lock) {
+				unsubscribes.append(eventBus.subscribe(callback))
+			}
+		}
+
+
+		public func unsubscribeAll() {
+			synchronized(lock) {
+				for unsubscribe in unsubscribes {
+					unsubscribe()
+				}
+
+				unsubscribes.removeAll(keepCapacity: false)
 			}
 		}
 	}
