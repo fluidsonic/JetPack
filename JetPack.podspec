@@ -52,6 +52,7 @@ Pod::Spec.new do |s|
 			s.source_files = 'Sources/Extensions/Foundation/**/*.swift', 'Module/JetPack.h'
 
 			s.dependency 'JetPack/Core'
+			s.dependency 'JetPack/Extensions/Swift'
 		end
 
 		s.subspec 'MapKit' do |s|
