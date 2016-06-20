@@ -1,4 +1,4 @@
-public class StrongReference<T> {
+public final class StrongReference<T> {
 
 	public var target: T
 
