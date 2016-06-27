@@ -1,7 +1,7 @@
 import ObjectiveC
 
 
-private func class_getInstanceMethodIgnoringSupertypes(clazz: AnyClass!, _ name: Selector) -> Method {
+private func class_getInstanceMethodIgnoringSupertypes(clazz: AnyClass, _ name: Selector) -> Method {
 	let method = class_getInstanceMethod(clazz, name)
 
 	if let superclass = class_getSuperclass(clazz) {
