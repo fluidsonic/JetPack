@@ -1,4 +1,4 @@
-public class WeakReference<T : AnyObject> {
+public final class WeakReference<T : AnyObject> {
 
 	public weak var target: T?
 
