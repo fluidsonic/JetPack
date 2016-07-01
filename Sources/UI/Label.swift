@@ -94,6 +94,21 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public var exclusionPaths: [UIBezierPath] {
+		get { return textContainer.exclusionPaths }
+		set {
+			guard newValue != exclusionPaths else {
+				return
+			}
+
+			textContainer.exclusionPaths = exclusionPaths
+
+			invalidateIntrinsicContentSize()
+			setNeedsDisplay()
+		}
+	}
+
+
 	public var font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody) {
 		didSet {
 			guard font != oldValue else {
