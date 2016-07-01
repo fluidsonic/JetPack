@@ -94,21 +94,6 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var exclusionPaths: [UIBezierPath] {
-		get { return textContainer.exclusionPaths }
-		set {
-			guard newValue != exclusionPaths else {
-				return
-			}
-
-			textContainer.exclusionPaths = exclusionPaths
-
-			invalidateIntrinsicContentSize()
-			setNeedsDisplay()
-		}
-	}
-
-
 	public var font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody) {
 		didSet {
 			guard font != oldValue else {
@@ -382,28 +367,10 @@ public /* non-final */ class Label: View {
 		let padding = self.padding
 		let bounds = self.bounds
 
-		let isRightToLeft: Bool
-		if #available(iOS 9.0, *) {
-			isRightToLeft = UIView.userInterfaceLayoutDirectionForSemanticContentAttribute(semanticContentAttribute) == .RightToLeft
-		}
-		else {
-			isRightToLeft = UIApplication.sharedApplication().userInterfaceLayoutDirection == .RightToLeft
-		}
-
-		let textFrame = layoutManager.usedRectForTextContainer(textContainer)
+		var textFrame = layoutManager.usedRectForTextContainer(textContainer)
 
 		var textContainerOrigin = CGPoint()
-
-		switch horizontalAlignment {
-		case .Right, .Justified where isRightToLeft, .Natural where isRightToLeft:
-			textContainerOrigin.left = bounds.width - padding.right - textFrame.width
-
-		case .Left, .Justified, .Natural:
-			textContainerOrigin.left = padding.left
-
-		case .Center:
-			textContainerOrigin.left = padding.left + ((bounds.width - padding.left - padding.right - textFrame.width) / 2)
-		}
+		textContainerOrigin.left = padding.left
 
 		switch verticalAlignment {
 		case .Bottom:
@@ -415,9 +382,6 @@ public /* non-final */ class Label: View {
 		case .Top:
 			textContainerOrigin.top = padding.top
 		}
-
-		textContainerOrigin.left -= textFrame.left
-		textContainerOrigin.top -= textFrame.top
 
 		return textContainerOrigin
 	}
