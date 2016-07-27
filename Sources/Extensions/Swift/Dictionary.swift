@@ -30,6 +30,20 @@ public extension Dictionary {
 	}
 
 
+	@warn_unused_result
+	public func mapAsDictionaryNotNil<K: Hashable, V>(@noescape transform: (key: Key, value: Value) throws -> (K?, V?)) rethrows -> [K : V] {
+		var mappedDictionary = [K : V](minimumCapacity: count)
+		for (key, value) in self {
+			let (mappedKey, mappedValue) = try transform(key: key, value: value)
+			if let mappedKey = mappedKey, mappedValue = mappedValue {
+				mappedDictionary[mappedKey] = mappedValue
+			}
+		}
+
+		return mappedDictionary
+	}
+
+
 	public mutating func mapInPlace(@noescape transform: (value: Value) throws -> Value) rethrows {
 		for (key, value) in self {
 			self[key] = try transform(value: value)
