@@ -4,6 +4,8 @@ import UIKit
 
 public extension UIColor {
 
+	public typealias GrayscaleComponents = (white: CGFloat, alpha: CGFloat)
+	public typealias HsbaComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
 	public typealias RgbaComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
 
 
@@ -36,12 +38,29 @@ public extension UIColor {
 
 	@objc(JetPack_alpha)
 	public var alpha: CGFloat {
-		var alpha = CGFloat(1)
-		guard getRed(nil, green: nil, blue: nil, alpha: &alpha) else {
-			return 1
+		return rgbaComponents?.alpha ?? hsbaComponents?.alpha ?? grayscaleComponents?.alpha ?? 1
+	}
+
+
+	@nonobjc
+	public var grayscaleComponents: GrayscaleComponents? {
+		var components = GrayscaleComponents(white: 0, alpha: 0)
+		guard getWhite(&components.white, alpha: &components.alpha) else {
+			return nil
 		}
 
-		return alpha
+		return components
+	}
+
+
+	@nonobjc
+	public var hsbaComponents: HsbaComponents? {
+		var components = HsbaComponents(hue: 0, saturation: 0, brightness: 0, alpha: 0)
+		guard getHue(&components.hue, saturation: &components.saturation, brightness: &components.brightness, alpha: &components.alpha) else {
+			return nil
+		}
+
+		return components
 	}
 
 
