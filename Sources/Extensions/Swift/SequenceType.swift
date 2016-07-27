@@ -71,6 +71,21 @@ public extension SequenceType {
 
 
 	@warn_unused_result
+	public func mapNotNil<T>(@noescape transform: (Generator.Element) throws -> T?) rethrows -> [T] {
+		var result = [T]()
+		for element in self {
+			guard let mappedElement = try transform(element) else {
+				continue
+			}
+
+			result.append(mappedElement)
+		}
+
+		return result
+	}
+
+
+	@warn_unused_result
 	public func separate(@noescape isLeftElement: Generator.Element throws -> Bool) rethrows -> ([Generator.Element], [Generator.Element]) {
 		var left = Array<Generator.Element>()
 		var right = Array<Generator.Element>()

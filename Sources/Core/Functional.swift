@@ -80,8 +80,8 @@ public func identity<T>(element: T) -> T {
 }
 
 
-public func lazyPlaceholder<T>() -> T {
-	fatalError("Lazy variable accessed before being initialized.")
+public func lazyPlaceholder<T>(file: StaticString = #file, line: UInt = #line) -> T {
+	fatalError("Lazy variable accessed before being initialized.", file: file, line: line)
 }
 
 
