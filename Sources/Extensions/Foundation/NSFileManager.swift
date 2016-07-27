@@ -26,6 +26,16 @@ public extension NSFileManager {
 
 
 	@nonobjc
+	public func itemExistsAtURL(url: NSURL) -> Bool {
+		guard url.fileURL, let path = url.path else {
+			return false
+		}
+
+		return fileExistsAtPath(path)
+	}
+
+
+	@nonobjc
 	private func reportError <ValueType> (error: ErrorType, @autoclosure withMessage message: Void -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line, toHandler handler: (Result<ValueType> -> Void)?) {
 		guard let handler = handler else {
 			log("'\(message())': \(error)", function: function, file: file, line: line)
