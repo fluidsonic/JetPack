@@ -4,17 +4,17 @@ import Foundation
 public extension String {
 
 	@warn_unused_result
-	public func firstMatchForRegularExpression(regularExpression: NSRegularExpression) -> [String]? {
+	public func firstMatchForRegularExpression(regularExpression: NSRegularExpression) -> [String?]? {
 		guard let match = regularExpression.firstMatchInString(self, options: [], range: NSMakeRange(0, utf16.count)) else {
 			return nil
 		}
 
-		return (0 ..< match.numberOfRanges).map { self[match.rangeAtIndex($0).rangeInString(self)!] }
+		return (0 ..< match.numberOfRanges).map { match.rangeAtIndex($0).rangeInString(self).map { self[$0] } }
 	}
 
 
 	@warn_unused_result
-	public func firstMatchForRegularExpression(regularExpressionPattern: String) -> [String]? {
+	public func firstMatchForRegularExpression(regularExpressionPattern: String) -> [String?]? {
 		do {
 			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: [])
 			return firstMatchForRegularExpression(regularExpression)

@@ -6,23 +6,29 @@ Pod::Spec.new do |s|
 	s.author   = { 'Marc Knaup' => 'marc@knaup.koeln' }
 	s.homepage = 'https://github.com/fluidsonic/JetPack'
 	s.license  = 'MIT'
-	s.platform = :ios, '8.0'
 	s.source   = { :git => 'https://github.com/fluidsonic/JetPack.git' }
 	s.summary  = 'A Swiss Army knife for iOS development with Swift in a very early stage.'
 
 	s.module_map = 'Module/JetPack.modulemap'
 
 	s.subspec 'Core' do |s|
+		s.ios.deployment_target = '8.0'
+		s.osx.deployment_target = '10.10'
+
 		s.frameworks   = 'Foundation'
 		s.source_files = 'Sources/Core/**/*.swift', 'Module/JetPack.h'
 	end
 
 	s.subspec 'Deprecated' do |s|
+		s.ios.deployment_target = '8.0'
+
 		s.frameworks   = 'Foundation'
 		s.source_files = 'Sources/Deprecated/**/*.swift', 'Module/JetPack.h'
 	end
 
 	s.subspec 'Experimental' do |s|
+		s.ios.deployment_target = '8.0'
+
 		s.frameworks   = 'Foundation', 'UIKit'
 		s.source_files = 'Sources/Experimental/**/*.swift', 'Module/JetPack.h'
 
@@ -32,6 +38,9 @@ Pod::Spec.new do |s|
 
 	s.subspec 'Extensions' do |s|
 		s.subspec 'CoreGraphics' do |s|
+			s.ios.deployment_target = '8.0'
+			s.osx.deployment_target = '10.10'
+
 			s.frameworks   = 'CoreGraphics'
 			s.source_files = 'Sources/Extensions/CoreGraphics/**/*.swift', 'Module/JetPack.h'
 
@@ -39,15 +48,24 @@ Pod::Spec.new do |s|
 		end
 
 		s.subspec 'CoreLocation' do |s|
+			s.ios.deployment_target = '8.0'
+			s.osx.deployment_target = '10.10'
+
 			s.frameworks   = 'CoreLocation'
 			s.source_files = 'Sources/Extensions/CoreLocation/**/*.swift', 'Module/JetPack.h'
 		end
 
 		s.subspec 'Darwin' do |s|
+			s.ios.deployment_target = '8.0'
+			s.osx.deployment_target = '10.10'
+
 			s.source_files = 'Sources/Extensions/Darwin/**/*.swift', 'Module/JetPack.h'
 		end
 
 		s.subspec 'Foundation' do |s|
+			s.ios.deployment_target = '8.0'
+			s.osx.deployment_target = '10.10'
+
 			s.frameworks   = 'Foundation'
 			s.source_files = 'Sources/Extensions/Foundation/**/*.swift', 'Module/JetPack.h'
 
@@ -56,6 +74,9 @@ Pod::Spec.new do |s|
 		end
 
 		s.subspec 'MapKit' do |s|
+			s.ios.deployment_target = '8.0'
+			s.osx.deployment_target = '10.10'
+
 			s.frameworks   = 'CoreLocation', 'MapKit'
 			s.source_files = 'Sources/Extensions/MapKit/**/*.swift', 'Module/JetPack.h'
 
@@ -64,11 +85,16 @@ Pod::Spec.new do |s|
 		end
 
 		s.subspec 'Photos' do |s|
+			s.ios.deployment_target = '8.0'
+
 			s.frameworks   = 'Photos'
 			s.source_files = 'Sources/Extensions/Photos/**/*.swift', 'Module/JetPack.h'
 		end
 
 		s.subspec 'Swift' do |s|
+			s.ios.deployment_target = '8.0'
+			s.osx.deployment_target = '10.10'
+
 			s.frameworks   = 'Foundation'
 			s.source_files = 'Sources/Extensions/Swift/**/*.swift', 'Module/JetPack.h'
 
@@ -77,6 +103,8 @@ Pod::Spec.new do |s|
 		end
 
 		s.subspec 'UIKit' do |s|
+			s.ios.deployment_target = '8.0'
+
 			s.frameworks   = 'CoreImage', 'Foundation', 'UIKit'
 			s.source_files = 'Sources/Extensions/UIKit/**/*.swift', 'Module/JetPack.h'
 
@@ -89,12 +117,16 @@ Pod::Spec.new do |s|
 	end
 
 	s.subspec 'Measures' do |s|
+		s.ios.deployment_target = '8.0'
+
 		s.source_files = 'Sources/Measures/**/*.swift', 'Module/JetPack.h'
 
 		s.dependency 'JetPack/Extensions/Swift'
 	end
 
 	s.subspec 'UI' do |s|
+		s.ios.deployment_target = '8.0'
+
 		s.frameworks   = 'AVFoundation', 'ImageIO', 'Photos', 'QuartzCore', 'UIKit', 'WebKit'
 		s.source_files = 'Sources/UI/**/*.swift', 'Module/JetPack.h'
 

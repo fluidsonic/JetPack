@@ -1,7 +1,7 @@
 platform :ios, '8.0'
 use_frameworks!
 
-install! 'cocoapods', :deterministic_uuids => false, :share_schemes_for_development_pods => false
+install! 'cocoapods', :share_schemes_for_development_pods => false
 
 
 target 'All' do

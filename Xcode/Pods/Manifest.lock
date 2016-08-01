@@ -26,11 +26,13 @@ PODS:
   - JetPack/Extensions/Darwin (0.0.3)
   - JetPack/Extensions/Foundation (0.0.3):
     - JetPack/Core
+    - JetPack/Extensions/Swift
   - JetPack/Extensions/MapKit (0.0.3):
     - JetPack/Extensions/CoreLocation
     - JetPack/Extensions/Swift
   - JetPack/Extensions/Photos (0.0.3)
   - JetPack/Extensions/Swift (0.0.3):
+    - JetPack/Core
     - JetPack/Extensions/Darwin
   - JetPack/Extensions/UIKit (0.0.3):
     - JetPack/Core
@@ -69,8 +71,8 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  JetPack: 73f2d44e1ebe6c18f8037db824fed41ab1547828
+  JetPack: c45a523c4a73d3a41fa81ae1a491966e3980b66a
 
-PODFILE CHECKSUM: bf3542098ffc7a68f1a180861d00437c554d86b8
+PODFILE CHECKSUM: 19fbe94e2915b1809f8a4d78f7a7aae90a838fdd
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.1.0.beta.1

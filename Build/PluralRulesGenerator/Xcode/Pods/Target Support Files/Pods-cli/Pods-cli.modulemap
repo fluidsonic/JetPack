@@ -1,0 +1,6 @@
+framework module Pods_cli {
+  umbrella header "Pods-cli-umbrella.h"
+
+  export *
+  module * { export * }
+}

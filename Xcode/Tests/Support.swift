@@ -34,71 +34,85 @@ internal func == (a: EmptyNonEqualObject, b: EmptyNonEqualObject) -> Bool {
 
 
 
-internal func XCTAssertEqual<X: Equatable, Y: Equatable> (expression1: (X, Y)?, _ expression2: (X, Y)?) {
+internal func XCTAssertEqual<X: Equatable, Y: Equatable> (expression1: (X, Y)?, _ expression2: (X, Y)?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, expression2 = expression2 {
-		XCTAssertTrue(expression1.0 == expression2.0 && expression1.1 == expression2.1)
+		XCTAssertTrue(expression1.0 == expression2.0 && expression1.1 == expression2.1, file: file, line: line)
 		return
 	}
 
-	XCTAssertTrue(expression1 == nil && expression2 == nil)
+	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
 }
 
 
-internal func XCTAssertEqual<X: Equatable, Y: Equatable> (expression1: [(X, Y)]?, _ expression2: [(X, Y)]?) {
+internal func XCTAssertEqual<X: Equatable, Y: Equatable> (expression1: [(X, Y)]?, _ expression2: [(X, Y)]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, expression2 = expression2 {
-		XCTAssertEqual(expression1.count, expression2.count)
+		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 
 		for index in 0 ..< expression1.count {
-			XCTAssertEqual(expression1[index], expression2[index])
+			XCTAssertEqual(expression1[index], expression2[index], file: file, line: line)
 		}
 
 		return
 	}
 
-	XCTAssertTrue(expression1 == nil && expression2 == nil)
+	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
 }
 
 
-internal func XCTAssertEqual<T: Equatable> (expression1: [T]?, _ expression2: [T]?) {
+internal func XCTAssertEqual<T: Equatable> (expression1: [T]?, _ expression2: [T]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, expression2 = expression2 {
-		XCTAssertEqual(expression1, expression2)
+		XCTAssertEqual(expression1, expression2, file: file, line: line)
 		return
 	}
 
-	XCTAssertTrue(expression1 == nil && expression2 == nil)
+	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
 }
 
 
-internal func XCTAssertIdentical<T: AnyObject> (expression1: T?, _ expression2: T?) {
-	XCTAssertTrue(expression1 === expression2)
-}
-
-
-internal func XCTAssertIdentical<T: AnyObject> (expression1: [T]?, _ expression2: [T]?) {
+internal func XCTAssertEqual<T: Equatable> (expression1: [T?]?, _ expression2: [T?]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, expression2 = expression2 {
-		XCTAssertEqual(expression1.count, expression2.count)
-
+		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 		for index in 0 ..< expression1.count {
-			XCTAssertIdentical(expression1[index], expression2[index])
+			XCTAssertEqual(expression1[index], expression2[index], file: file, line: line)
 		}
 
 		return
 	}
 
-	XCTAssertTrue(expression1 == nil && expression2 == nil)
+	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
 }
 
 
-internal func XCTAssertIdentical<T where T: AnyObject, T: Hashable> (expression1: Set<T>?, _ expression2: Set<T>?) {
+internal func XCTAssertIdentical<T: AnyObject> (expression1: T?, _ expression2: T?, file: StaticString = #file, line: UInt = #line) {
+	XCTAssertTrue(expression1 === expression2, file: file, line: line)
+}
+
+
+internal func XCTAssertIdentical<T: AnyObject> (expression1: [T]?, _ expression2: [T]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, expression2 = expression2 {
-		XCTAssertEqual(expression1.count, expression2.count)
+		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
+
+		for index in 0 ..< expression1.count {
+			XCTAssertIdentical(expression1[index], expression2[index], file: file, line: line)
+		}
+
+		return
+	}
+
+	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
+}
+
+
+internal func XCTAssertIdentical<T where T: AnyObject, T: Hashable> (expression1: Set<T>?, _ expression2: Set<T>?, file: StaticString = #file, line: UInt = #line) {
+	if let expression1 = expression1, expression2 = expression2 {
+		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 
 		for (element1, element2) in zip(expression1, expression2) {
-			XCTAssertIdentical(element1, element2)
+			XCTAssertIdentical(element1, element2, file: file, line: line)
 		}
 
 		return
 	}
 
-	XCTAssertTrue(expression1 == nil && expression2 == nil)
+	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
 }

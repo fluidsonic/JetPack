@@ -1,0 +1,28 @@
+{
+  "name": "PluralRulesGenerator",
+  "version": "0.0.1",
+  "authors": {
+    "Marc Knaup": "marc@knaup.koeln"
+  },
+  "homepage": "https://github.com/fluidsonic/JetPack",
+  "license": "MIT",
+  "source": {
+    "git": "https://github.com/fluidsonic/JetPack/Build/PluralRulesGenerator.git"
+  },
+  "summary": "Generates plural rules based on Unicode CLDR plural rules.",
+  "frameworks": "Foundation",
+  "module_map": "Module/Module.modulemap",
+  "source_files": [
+    "Sources/**/*.swift",
+    "Module/Module.h"
+  ],
+  "platforms": {
+    "ios": "8.0",
+    "osx": "10.10"
+  },
+  "dependencies": {
+    "AEXML": [
+      "~> 3.0.0"
+    ]
+  }
+}
