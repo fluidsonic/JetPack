@@ -17,6 +17,11 @@ public extension UINavigationBar {
 	}
 
 
+	internal func setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
+		swizzled_setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
+	}
+
+
 	@objc(JetPack_popNavigationItemWithTransition:)
 	private dynamic func swizzled_popNavigationItemWithTransition(transition: Int32) -> UINavigationItem {
 		return popNavigationItemWithTransition(transition)
@@ -26,6 +31,12 @@ public extension UINavigationBar {
 	@objc(JetPack_pushNavigationItem:transition:)
 	private dynamic func swizzled_pushNavigationItem(item: UINavigationItem, transition: Int32) {
 		pushNavigationItem(item, transition: transition)
+	}
+
+
+	@objc(JetPack_setItems:transition:reset:resetOwningRelationship:)
+	private dynamic func swizzled_setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
+		setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
 	}
 
 
@@ -47,5 +58,6 @@ public extension UINavigationBar {
 		swizzleMethodInType(self, fromSelector: Selector("setPrompt:"), toSelector: #selector(swizzled_setPrompt(_:)))
 		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "popNavigationItemWithTransition:"), toSelector: #selector(swizzled_popNavigationItemWithTransition(_:)))
 		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "pushNavigationItem:", "transition:"), toSelector: #selector(swizzled_pushNavigationItem(_:transition:)))
+		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "setItems:", "transition:", "reset:", "resetOwningRelationship:"), toSelector: #selector(swizzled_setItems(_:transition:reset:resetOwningRelationship:)))
 	}
 }

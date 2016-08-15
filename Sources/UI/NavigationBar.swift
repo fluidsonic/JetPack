@@ -105,6 +105,15 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
+	internal override func setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
+		super.setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
+
+		if let navigationController = delegate as? NavigationController {
+			navigationController.updateNavigationBarStyleForTopViewController()
+		}
+	}
+
+
 	public override var tintColor: UIColor! {
 		get { return super.tintColor }
 		set {
