@@ -42,13 +42,13 @@ public /* non-final */ class TableViewCell: UITableViewCell {
 	}
 
 
-	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentSizeThatFitsSize(_:) instead.
+	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentHeightThatFitsWidth(_:) instead.
 	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
 		return self.sizeThatFitsSize(maximumSize)
 	}
 
 
-	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentSizeThatFitsSize(_:) instead.
+	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentHeightThatFitsWidth(_:) instead.
 	public final override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
 		var sizeThatFits = super.improvedSizeThatFitsSize(maximumSize)
 		sizeThatFits.height = max(sizeThatFits.height, minimumHeight)
