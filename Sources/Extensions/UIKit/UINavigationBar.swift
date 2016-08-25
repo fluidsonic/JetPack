@@ -7,34 +7,37 @@ public extension UINavigationBar {
 	internal private(set) static var isSettingPromptCount = 0
 
 
+	@objc(JetPack_popNavigationItemWithTransition:)
 	internal func popNavigationItemWithTransition(transition: Int32) -> UINavigationItem {
 		return swizzled_popNavigationItemWithTransition(transition)
 	}
 
 
+	@objc(JetPack_pushNavigationItem:transition:)
 	internal func pushNavigationItem(item: UINavigationItem, transition: Int32) {
 		swizzled_pushNavigationItem(item, transition: transition)
 	}
 
 
+	@objc(JetPack_setItems:transition:reset:resetOwningRelationship:)
 	internal func setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
 		swizzled_setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
 	}
 
 
-	@objc(JetPack_popNavigationItemWithTransition:)
+	@objc(JetPack_swizzled_popNavigationItemWithTransition:)
 	private dynamic func swizzled_popNavigationItemWithTransition(transition: Int32) -> UINavigationItem {
 		return popNavigationItemWithTransition(transition)
 	}
 
 
-	@objc(JetPack_pushNavigationItem:transition:)
+	@objc(JetPack_swizzled_pushNavigationItem:transition:)
 	private dynamic func swizzled_pushNavigationItem(item: UINavigationItem, transition: Int32) {
 		pushNavigationItem(item, transition: transition)
 	}
 
 
-	@objc(JetPack_setItems:transition:reset:resetOwningRelationship:)
+	@objc(JetPack_swizzled_setItems:transition:reset:resetOwningRelationship:)
 	private dynamic func swizzled_setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
 		setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
 	}

@@ -9,6 +9,7 @@ private let titleViewKey = ["_", "titleView"].joinWithSeparator("")
 @objc(JetPack_NavigationBar)
 public /* non-final */ class NavigationBar: UINavigationBar {
 
+	private var ignoresItemChanges = 0
 	private var originalAlpha = CGFloat(1)
 	private var originalTintColor: UIColor? = nil
 
@@ -51,6 +52,16 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
+	internal func beginIgnoringItemChanges() {
+		ignoresItemChanges += 1
+	}
+
+
+	internal func endIgnoringItemChanges() {
+		ignoresItemChanges = max(ignoresItemChanges - 1, 0)
+	}
+
+
 	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
 		guard visibility != .Invisible else {
 			return nil
@@ -88,7 +99,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	internal override func popNavigationItemWithTransition(transition: Int32) -> UINavigationItem {
 		let item = super.popNavigationItemWithTransition(transition)
 
-		if let navigationController = delegate as? NavigationController {
+		if ignoresItemChanges == 0, let navigationController = delegate as? NavigationController {
 			navigationController.updateNavigationBarStyleForTopViewController()
 		}
 
@@ -99,7 +110,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	internal override func pushNavigationItem(item: UINavigationItem, transition: Int32) {
 		super.pushNavigationItem(item, transition: transition)
 
-		if let navigationController = delegate as? NavigationController {
+		if ignoresItemChanges == 0, let navigationController = delegate as? NavigationController {
 			navigationController.updateNavigationBarStyleForTopViewController()
 		}
 	}
@@ -108,7 +119,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	internal override func setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
 		super.setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
 
-		if let navigationController = delegate as? NavigationController {
+		if ignoresItemChanges == 0, let navigationController = delegate as? NavigationController {
 			navigationController.updateNavigationBarStyleForTopViewController()
 		}
 	}

@@ -87,11 +87,14 @@ public /* non-final */ class NavigationController: UINavigationController {
 			return
 		}
 
+		let navigationBar = self.navigationBar
 		let childForPreferredStyle = childViewControllerForNavigationBarVisibility ?? self
 		let preferredTintColor = childForPreferredStyle.preferredNavigationBarTintColor
 		let preferredVisibility = childForPreferredStyle.preferredNavigationBarVisibility
 
+		navigationBar.beginIgnoringItemChanges()
 		setNavigationBarHidden(preferredVisibility == .Hidden, animated: animation != nil && appearState == .DidAppear)
+		navigationBar.endIgnoringItemChanges()
 
 		if navigationBar.topItem == topViewController.navigationItem {
 			animation.runAlways {
