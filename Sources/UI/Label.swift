@@ -125,12 +125,24 @@ public /* non-final */ class Label: View {
 		paragraphStyle.lineBreakMode = .ByWordWrapping
 		paragraphStyle.lineHeightMultiple = lineHeightMultiple
 
-		let attributedText = self.attributedText
-		let finalizedText = NSMutableAttributedString(string: attributedText.string, attributes: [
+		var defaultAttributes = [
 			NSFontAttributeName: font,
 			NSForegroundColorAttributeName: UIColor(CGColor: finalTextColor),
 			NSParagraphStyleAttributeName: paragraphStyle
-		])
+		]
+
+		if let kerning = kerning {
+			let kerningValue: CGFloat
+			switch kerning {
+			case let .Absolute(value): kerningValue = value
+			case let .Relative(value): kerningValue = font.pointSize * value
+			}
+
+			defaultAttributes[NSKernAttributeName] = kerningValue
+		}
+
+		let attributedText = self.attributedText
+		let finalizedText = NSMutableAttributedString(string: attributedText.string, attributes: defaultAttributes)
 
 		var attributedTextUsesTintColor = false
 		var hasLinks = false
@@ -189,6 +201,18 @@ public /* non-final */ class Label: View {
 				return
 			}
 
+			setNeedsUpdateFinalizedText()
+		}
+	}
+
+
+	public var kerning: Kerning? {
+		didSet {
+			guard kerning != oldValue else {
+				return
+			}
+
+			invalidateIntrinsicContentSize()
 			setNeedsUpdateFinalizedText()
 		}
 	}
@@ -601,10 +625,19 @@ public /* non-final */ class Label: View {
 		private var frames: [CGRect]
 		private var url: NSURL
 	}
+
+
+
+	public enum Kerning: Equatable {
+
+		case Absolute(CGFloat)
+		case Relative(CGFloat)
+	}
 	
 	
 	
 	public enum VerticalAlignment {
+
 		case Bottom
 		case Center
 		case Top
@@ -612,11 +645,19 @@ public /* non-final */ class Label: View {
 }
 
 
-
 extension Label.DelegateProxy: UIGestureRecognizerDelegate {
 
 	@objc
 	private func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
 		return label.linkAtPoint(touch.locationInView(label)) != nil
+	}
+}
+
+
+public func == (a: Label.Kerning, b: Label.Kerning) -> Bool {
+	switch (a, b) {
+	case let (.Absolute(a), .Absolute(b)): return a == b
+	case let (.Relative(a), .Relative(b)): return a == b
+	default:                               return false
 	}
 }
