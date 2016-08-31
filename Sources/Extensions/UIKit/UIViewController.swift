@@ -259,7 +259,7 @@ public extension UIViewController {
 			return "the parent view controller"
 		}
 
-		return "\(parentViewController.dynamicType)"
+		return String(parentViewController.dynamicType)
 	}
 
 
