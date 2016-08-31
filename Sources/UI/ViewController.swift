@@ -6,6 +6,7 @@ public /* non-final */ class ViewController: UIViewController {
 
 	public typealias SeguePreparation = (segue: UIStoryboardSegue) -> Void
 
+	private var viewLayoutAnimation: Animation?
 	private var seguePreparation: SeguePreparation?
 
 
@@ -96,6 +97,16 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
+	public final func setViewNeedsLayout(animation animation: Animation? = nil) {
+		guard isViewLoaded() else {
+			return
+		}
+
+		viewLayoutAnimation = animation
+		view.setNeedsLayout()
+	}
+
+
 	public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
 		return ViewController.defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle)
 	}
@@ -103,7 +114,8 @@ public /* non-final */ class ViewController: UIViewController {
 
 	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public final override func viewDidLayoutSubviews() {
-		let animation = decorationInsetsAnimation?.animation
+		let animation = decorationInsetsAnimation?.animation ?? viewLayoutAnimation
+		viewLayoutAnimation = nil
 
 		super.viewDidLayoutSubviews()
 
