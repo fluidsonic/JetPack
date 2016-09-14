@@ -22,7 +22,8 @@ env:
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift"        CONFIGURATION="Release" DESTINATION="OS=9.1,name=iPhone 7" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
     
 before_install:
-  - gem install cocoapods xcpretty xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
+  - gem install cocoapods -v 1.1.0.rc.2 --no-rdoc --no-ri --no-document --quiet
+  - gem install xcpretty xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
 
 script:
   - Xcode/Tests/Travis.sh
