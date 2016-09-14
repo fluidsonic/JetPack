@@ -102,8 +102,12 @@ private final class ImageCache {
 
 
 	private func costForImage(image: UIImage) -> Int {
+		guard let cgImage = image.CGImage else {
+			return 0
+		}
+
 		// TODO does CGImageGetHeight() include the scale?
-		return CGImageGetBytesPerRow(image.CGImage) * CGImageGetHeight(image.CGImage)
+		return CGImageGetBytesPerRow(cgImage) * CGImageGetHeight(cgImage)
 	}
 
 
@@ -227,7 +231,7 @@ private final class ImageDownloader {
 
 		let url = self.url
 		let task = NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
-			guard let data = data, image = UIImage(data: data) else {
+			guard let data = data, let image = UIImage(data: data) else {
 				onMainQueue {
 					self.task = nil
 				}

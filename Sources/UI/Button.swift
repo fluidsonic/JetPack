@@ -728,7 +728,7 @@ public class Button: View {
 	}
 
 
-	public override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+	public override func touchesCancelled(touches: Set<UITouch>, withEvent event: UIEvent?) {
 		highlighted = false
 	}
 

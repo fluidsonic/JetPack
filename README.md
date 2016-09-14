@@ -12,6 +12,8 @@ Functionality is developed along with the apps using it so everything in this li
 Installation
 ------------
 
+JetPack requires **Swift 2.3** and a deployment target of **iOS 9.0 or newer**.
+
 ```ruby
 pod 'JetPack', :git => 'https://github.com/fluidsonic/JetPack.git'
 ```

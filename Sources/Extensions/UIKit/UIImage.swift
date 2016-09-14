@@ -26,18 +26,23 @@ public extension UIImage {
 
 
 	@nonobjc
-	@warn_unused_result
 	public static func fromColor(color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
 		let frame = CGRect(size: size)
 
 		UIGraphicsBeginImageContextWithOptions(frame.size, false, scale)
 
-		let context = UIGraphicsGetCurrentContext()
+		guard let context = UIGraphicsGetCurrentContext() else {
+			fatalError("Cannot create UIGraphics image context.")
+		}
+
+		defer { UIGraphicsEndImageContext() }
+
 		CGContextSetFillColorWithColor(context, color.CGColor)
 		CGContextFillRect(context, frame)
 
-		let image = UIGraphicsGetImageFromCurrentImageContext()
-		UIGraphicsEndImageContext()
+		guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
+			fatalError("Cannot create image from image context.")
+		}
 
 		return image
 	}
@@ -45,7 +50,11 @@ public extension UIImage {
 
 	@nonobjc
 	public var hasAlphaChannel: Bool {
-		let info = CGImageGetAlphaInfo(CGImage)
+		guard let cgImage = CGImage else {
+			return false // TODO support CIImage
+		}
+
+		let info = CGImageGetAlphaInfo(cgImage)
 		switch info {
 		case .First, .Last, .Only, .PremultipliedFirst, .PremultipliedLast:
 			return true
@@ -59,8 +68,12 @@ public extension UIImage {
 	@nonobjc
 	public func imageConstrainedToSize(maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .High) -> UIImage {
 		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
-		let coreImage = self.CGImage
-		let currentSize = CGSize(width: CGImageGetWidth(coreImage), height: CGImageGetHeight(coreImage))
+
+		guard let cgImage = self.CGImage else {
+			return self // TODO support CIImage
+		}
+
+		let currentSize = CGSize(width: CGImageGetWidth(cgImage), height: CGImageGetHeight(cgImage))
 		let horizontalScale = orientedMaximumSize.width / currentSize.width
 		let verticalScale = orientedMaximumSize.height / currentSize.height
 		let scale = min(horizontalScale, verticalScale)
@@ -73,9 +86,13 @@ public extension UIImage {
 			return self
 		}
 
-		let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(coreImage), 0, CGImageGetColorSpace(coreImage), CGImageGetBitmapInfo(coreImage).rawValue)
+		// TODO handle nil color space
+		guard let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(cgImage), 0, CGImageGetColorSpace(cgImage)!, CGImageGetBitmapInfo(cgImage).rawValue) else {
+			return self // TODO when can this happen?
+		}
+
 		CGContextSetInterpolationQuality(context, interpolationQuality)
-		CGContextDrawImage(context, CGRect(size: targetSize), coreImage)
+		CGContextDrawImage(context, CGRect(size: targetSize), cgImage)
 
 		let newCoreImage = CGBitmapContextCreateImage(context)!
 		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
@@ -87,8 +104,11 @@ public extension UIImage {
 	@nonobjc
 	public func imageCroppedToSize(maximumSize: CGSize) -> UIImage {
 		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
-		let coreImage = self.CGImage
-		let currentSize = CGSize(width: CGImageGetWidth(coreImage), height: CGImageGetHeight(coreImage))
+		guard let cgImage = self.CGImage else {
+			return self
+		}
+
+		let currentSize = CGSize(width: CGImageGetWidth(cgImage), height: CGImageGetHeight(cgImage))
 
 		let targetSize = CGSize(
 			width:  min(currentSize.width, orientedMaximumSize.width),
@@ -99,7 +119,10 @@ public extension UIImage {
 			return self
 		}
 
-		let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(coreImage), 0, CGImageGetColorSpace(coreImage), CGImageGetBitmapInfo(coreImage).rawValue)
+		// TODO handle nil color space
+		guard let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(cgImage), 0, CGImageGetColorSpace(cgImage)!, CGImageGetBitmapInfo(cgImage).rawValue) else {
+			return self // TODO when can this happen?
+		}
 
 		let drawFrame = CGRect(
 			left:   floor((targetSize.width - currentSize.width) / 2),
@@ -107,7 +130,7 @@ public extension UIImage {
 			width:  currentSize.width,
 			height: currentSize.height
 		)
-		CGContextDrawImage(context, drawFrame, coreImage)
+		CGContextDrawImage(context, drawFrame, cgImage)
 
 		let newCoreImage = CGBitmapContextCreateImage(context)!
 		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
@@ -194,7 +217,11 @@ public extension UIImage {
 	*/
 	@nonobjc
 	public func inflate() {
-		CGDataProviderCopyData(CGImageGetDataProvider(CGImage))
+		guard let cgImage = CGImage, let dataProvider = CGImageGetDataProvider(cgImage) else {
+			return
+		}
+
+		CGDataProviderCopyData(dataProvider)
 	}
 
 

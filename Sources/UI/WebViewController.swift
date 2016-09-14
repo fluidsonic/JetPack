@@ -59,7 +59,11 @@ public /* non-final */ class WebViewController: ViewController {
 
 
 	public func handleLink(link: NSURL, newWindowRequested: Bool) -> Bool {
-		switch link.scheme {
+		guard let scheme = link.scheme else {
+			return handleUnknownLink(link)
+		}
+
+		switch scheme {
 		case "http", "https":    return handleWebLink(link, newWindowRequested: newWindowRequested)
 		case "mailto":           return handleEmailLink(link)
 		case "tel", "telprompt": return handlePhoneLink(link)
