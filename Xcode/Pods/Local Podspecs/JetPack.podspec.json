@@ -21,7 +21,7 @@
     {
       "name": "Core",
       "platforms": {
-        "ios": "8.0",
+        "ios": "9.0",
         "osx": "10.10"
       },
       "frameworks": "Foundation",
@@ -33,7 +33,7 @@
     {
       "name": "Deprecated",
       "platforms": {
-        "ios": "8.0"
+        "ios": "9.0"
       },
       "frameworks": "Foundation",
       "source_files": [
@@ -44,7 +44,7 @@
     {
       "name": "Experimental",
       "platforms": {
-        "ios": "8.0"
+        "ios": "9.0"
       },
       "frameworks": [
         "Foundation",
@@ -69,7 +69,7 @@
         {
           "name": "CoreGraphics",
           "platforms": {
-            "ios": "8.0",
+            "ios": "9.0",
             "osx": "10.10"
           },
           "frameworks": "CoreGraphics",
@@ -86,7 +86,7 @@
         {
           "name": "CoreLocation",
           "platforms": {
-            "ios": "8.0",
+            "ios": "9.0",
             "osx": "10.10"
           },
           "frameworks": "CoreLocation",
@@ -98,7 +98,7 @@
         {
           "name": "Darwin",
           "platforms": {
-            "ios": "8.0",
+            "ios": "9.0",
             "osx": "10.10"
           },
           "source_files": [
@@ -109,7 +109,7 @@
         {
           "name": "Foundation",
           "platforms": {
-            "ios": "8.0",
+            "ios": "9.0",
             "osx": "10.10"
           },
           "frameworks": "Foundation",
@@ -129,7 +129,7 @@
         {
           "name": "MapKit",
           "platforms": {
-            "ios": "8.0",
+            "ios": "9.0",
             "osx": "10.10"
           },
           "frameworks": [
@@ -152,7 +152,7 @@
         {
           "name": "Photos",
           "platforms": {
-            "ios": "8.0"
+            "ios": "9.0"
           },
           "frameworks": "Photos",
           "source_files": [
@@ -163,7 +163,7 @@
         {
           "name": "Swift",
           "platforms": {
-            "ios": "8.0",
+            "ios": "9.0",
             "osx": "10.10"
           },
           "frameworks": "Foundation",
@@ -183,7 +183,7 @@
         {
           "name": "UIKit",
           "platforms": {
-            "ios": "8.0"
+            "ios": "9.0"
           },
           "frameworks": [
             "CoreImage",
@@ -217,7 +217,7 @@
     {
       "name": "Measures",
       "platforms": {
-        "ios": "8.0"
+        "ios": "9.0"
       },
       "source_files": [
         "Sources/Measures/**/*.swift",
@@ -232,7 +232,7 @@
     {
       "name": "UI",
       "platforms": {
-        "ios": "8.0"
+        "ios": "9.0"
       },
       "frameworks": [
         "AVFoundation",

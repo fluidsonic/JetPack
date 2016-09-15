@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
 install! 'cocoapods', :share_schemes_for_development_pods => false
@@ -92,6 +92,7 @@ end
 
 
 post_install do |installer|
+	installer.pods_project.build_configuration_list.set_setting('ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES', 'YES')
 	installer.pods_project.build_configuration_list.set_setting('ENABLE_TESTABILITY', 'YES')
 	installer.pods_project.build_configuration_list.build_settings('Release')['SWIFT_OPTIMIZATION_LEVEL'] = ENV['SWIFT_OPTIMIZATION_LEVEL']
 end

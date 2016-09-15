@@ -67,10 +67,8 @@ public extension UIAlertController {
 	public func addOkayAction(handler: Closure? = nil) -> UIAlertAction {
 		let action = addActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("OK", value: "OK", table: nil), handler: handler)
 
-		if #available(iOS 9.0, *) {
-			if preferredAction == nil {
-				preferredAction = action
-			}
+		if preferredAction == nil {
+			preferredAction = action
 		}
 
 		return action
@@ -82,9 +80,7 @@ public extension UIAlertController {
 		let action = UIAlertAction(title: title, style: .Default) { _ in handler?() }
 		addAction(action)
 
-		if #available(iOS 9.0, *) {
-			preferredAction = action
-		}
+		preferredAction = action
 
 		return action
 	}

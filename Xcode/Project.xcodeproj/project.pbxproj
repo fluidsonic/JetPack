@@ -969,14 +969,64 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = JetPack;
 				TargetAttributes = {
+					4956ED031C94551600A33C45 = {
+						LastSwiftMigration = 0800;
+					};
+					4956ED121C94552800A33C45 = {
+						LastSwiftMigration = 0800;
+					};
 					4986830C1BE404F7001DCBC7 = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0800;
 					};
 					498683201BE404F7001DCBC7 = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0800;
+					};
+					49CDDD561C943BD700FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDD671C94406B00FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDD771C94411D00FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDD881C9442A700FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDD981C94433C00FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDDA81C94464400FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDDB91C94465D00FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDDCA1C94467000FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDDDB1C94474800FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDDED1C94474900FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDDFF1C94474B00FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDE111C94488400FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDE241C9451F300FB7DEF = {
+						LastSwiftMigration = 0800;
+					};
+					49CDDE4E1C94520300FB7DEF = {
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -2159,6 +2209,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2172,6 +2223,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2185,6 +2237,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2198,6 +2251,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2215,8 +2269,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2238,7 +2294,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2259,8 +2315,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2276,9 +2334,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2292,6 +2351,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2305,6 +2365,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2317,6 +2378,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -2328,6 +2390,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -2340,6 +2403,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2353,6 +2417,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2366,6 +2431,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2379,6 +2445,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2392,6 +2459,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2405,6 +2473,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2418,6 +2487,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2431,6 +2501,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2444,6 +2515,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2457,6 +2529,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2470,6 +2543,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2483,6 +2557,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2496,6 +2571,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2509,6 +2585,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2522,6 +2599,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2535,6 +2613,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2548,6 +2627,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2561,6 +2641,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2574,6 +2655,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2587,6 +2669,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2600,6 +2683,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2613,6 +2697,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2626,6 +2711,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2639,6 +2725,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2651,6 +2738,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -2662,6 +2750,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -2673,6 +2762,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -2684,6 +2774,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

@@ -84,8 +84,8 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/JetPack.default-Extensions_CoreGraphics-Extensions_CoreLocation-Extensions_Darwin-Extensions_Foundation-Extensions_MapKit-Extensions_Photos-Extensions_Swift-Extensions_UIKit/JetPack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/JetPack-07550a9b/JetPack.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/JetPack.default-Extensions_CoreGraphics-Extensions_CoreLocation-Extensions_Darwin-Extensions_Foundation-Extensions_MapKit-Extensions_Photos-Extensions_Swift-Extensions_UIKit/JetPack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/JetPack-07550a9b/JetPack.framework"
 fi
