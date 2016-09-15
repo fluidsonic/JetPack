@@ -1,6 +1,9 @@
 import XCTest
 
 
+internal struct EmptyStruct {}
+
+
 internal final class EmptyEqualObject: Hashable {
 
 	internal init() {}
