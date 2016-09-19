@@ -1,6 +1,6 @@
 public struct Time: Measure {
 
-	public static let name = "Time"
+	public static let name = MeasuresStrings.Measurement.time
 	public static let rawUnit = TimeUnit.Seconds
 
 	public var rawValue: Double
@@ -100,27 +100,27 @@ extension TimeUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Hours:   return "h"
-		case .Minutes: return "m"
-		case .Seconds: return "s"
+		case .Hours:   return MeasuresStrings.Unit.Hour.abbreviation
+		case .Minutes: return MeasuresStrings.Unit.Minute.abbreviation
+		case .Seconds: return MeasuresStrings.Unit.Second.abbreviation
 		}
 	}
 
 
 	public var pluralName: String {
 		switch self {
-		case .Hours:   return "Hours"
-		case .Minutes: return "Minutes"
-		case .Seconds: return "Seconds"
+		case .Hours:   return MeasuresStrings.Unit.Hour.name.forPluralCategory(.many)
+		case .Minutes: return MeasuresStrings.Unit.Minute.name.forPluralCategory(.many)
+		case .Seconds: return MeasuresStrings.Unit.Second.name.forPluralCategory(.many)
 		}
 	}
 
 
 	public var singularName: String {
 		switch self {
-		case .Hours:   return "Hour"
-		case .Minutes: return "Minute"
-		case .Seconds: return "Second"
+		case .Hours:   return MeasuresStrings.Unit.Hour.name.forPluralCategory(.one)
+		case .Minutes: return MeasuresStrings.Unit.Minute.name.forPluralCategory(.one)
+		case .Seconds: return MeasuresStrings.Unit.Second.name.forPluralCategory(.one)
 		}
 	}
 

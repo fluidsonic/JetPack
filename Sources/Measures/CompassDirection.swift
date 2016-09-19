@@ -26,28 +26,28 @@ extension CompassDirection8 {
 
 	public var mediumName: String {
 		switch self {
-		case North: return "North"
-		case NE:    return "NE"
-		case East:  return "East"
-		case SE:    return "SE"
-		case South: return "South"
-		case SW:    return "SW"
-		case West:  return "West"
-		case NW:    return "NW"
+		case North: return MeasuresStrings.CompassDirection.Long.north
+		case NE:    return MeasuresStrings.CompassDirection.Short.northEast
+		case East:  return MeasuresStrings.CompassDirection.Long.east
+		case SE:    return MeasuresStrings.CompassDirection.Short.southEast
+		case South: return MeasuresStrings.CompassDirection.Long.south
+		case SW:    return MeasuresStrings.CompassDirection.Short.southWest
+		case West:  return MeasuresStrings.CompassDirection.Long.west
+		case NW:    return MeasuresStrings.CompassDirection.Short.northWest
 		}
 	}
 
 
 	public var shortName: String {
 		switch self {
-		case North: return "N"
-		case NE:    return "NE"
-		case East:  return "E"
-		case SE:    return "SE"
-		case South: return "S"
-		case SW:    return "SW"
-		case West:  return "W"
-		case NW:    return "NW"
+		case North: return MeasuresStrings.CompassDirection.Short.north
+		case NE:    return MeasuresStrings.CompassDirection.Short.northWest
+		case East:  return MeasuresStrings.CompassDirection.Short.east
+		case SE:    return MeasuresStrings.CompassDirection.Short.southEast
+		case South: return MeasuresStrings.CompassDirection.Short.south
+		case SW:    return MeasuresStrings.CompassDirection.Short.southWest
+		case West:  return MeasuresStrings.CompassDirection.Short.west
+		case NW:    return MeasuresStrings.CompassDirection.Short.northWest
 		}
 	}
 
@@ -111,44 +111,44 @@ extension CompassDirection16 {
 
 	public var mediumName: String {
 		switch self {
-		case North: return "North"
-		case NNE:   return "NNE"
-		case NE:    return "NE"
-		case ENE:   return "ENE"
-		case East:  return "East"
-		case ESE:   return "ESE"
-		case SE:    return "SE"
-		case SSE:   return "SSE"
-		case South: return "South"
-		case SSW:   return "SSW"
-		case SW:    return "SW"
-		case WSW:   return "WSW"
-		case West:  return "West"
-		case WNW:   return "WNW"
-		case NW:    return "NW"
-		case NNW:   return "NNW"
+		case North: return MeasuresStrings.CompassDirection.Long.north
+		case NNE:   return MeasuresStrings.CompassDirection.Short.northNorthEast
+		case NE:    return MeasuresStrings.CompassDirection.Short.northEast
+		case ENE:   return MeasuresStrings.CompassDirection.Short.eastNorthEast
+		case East:  return MeasuresStrings.CompassDirection.Long.east
+		case ESE:   return MeasuresStrings.CompassDirection.Short.eastSouthEast
+		case SE:    return MeasuresStrings.CompassDirection.Short.southEast
+		case SSE:   return MeasuresStrings.CompassDirection.Short.southSouthEast
+		case South: return MeasuresStrings.CompassDirection.Long.south
+		case SSW:   return MeasuresStrings.CompassDirection.Short.southSouthWest
+		case SW:    return MeasuresStrings.CompassDirection.Short.southWest
+		case WSW:   return MeasuresStrings.CompassDirection.Short.westSouthWest
+		case West:  return MeasuresStrings.CompassDirection.Long.west
+		case WNW:   return MeasuresStrings.CompassDirection.Short.westNorthWest
+		case NW:    return MeasuresStrings.CompassDirection.Short.northWest
+		case NNW:   return MeasuresStrings.CompassDirection.Short.northNorthWest
 		}
 	}
 
 
 	public var shortName: String {
 		switch self {
-		case North: return "N"
-		case NNE:   return "NNE"
-		case NE:    return "NE"
-		case ENE:   return "ENE"
-		case East:  return "E"
-		case ESE:   return "ESE"
-		case SE:    return "SE"
-		case SSE:   return "SSE"
-		case South: return "S"
-		case SSW:   return "SSW"
-		case SW:    return "SW"
-		case WSW:   return "WSW"
-		case West:  return "W"
-		case WNW:   return "WNW"
-		case NW:    return "NW"
-		case NNW:   return "NNW"
+		case North: return MeasuresStrings.CompassDirection.Short.north
+		case NNE:   return MeasuresStrings.CompassDirection.Short.northNorthEast
+		case NE:    return MeasuresStrings.CompassDirection.Short.northEast
+		case ENE:   return MeasuresStrings.CompassDirection.Short.eastNorthEast
+		case East:  return MeasuresStrings.CompassDirection.Short.east
+		case ESE:   return MeasuresStrings.CompassDirection.Short.eastSouthEast
+		case SE:    return MeasuresStrings.CompassDirection.Short.southEast
+		case SSE:   return MeasuresStrings.CompassDirection.Short.southSouthEast
+		case South: return MeasuresStrings.CompassDirection.Short.south
+		case SSW:   return MeasuresStrings.CompassDirection.Short.southSouthWest
+		case SW:    return MeasuresStrings.CompassDirection.Short.southWest
+		case WSW:   return MeasuresStrings.CompassDirection.Short.westSouthWest
+		case West:  return MeasuresStrings.CompassDirection.Short.west
+		case WNW:   return MeasuresStrings.CompassDirection.Short.westNorthWest
+		case NW:    return MeasuresStrings.CompassDirection.Short.northWest
+		case NNW:   return MeasuresStrings.CompassDirection.Short.northNorthWest
 		}
 	}
 }

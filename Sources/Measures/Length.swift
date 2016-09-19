@@ -150,22 +150,22 @@ extension LengthUnit {
 	public var abbreviation: String {
 		switch self {
 		case .Centimeters:
-			return "cm"
+			return MeasuresStrings.Unit.Centimeter.abbreviation
 
 		case .Feet:
-			return "ft"
+			return MeasuresStrings.Unit.Foot.abbreviation
 
 		case .Inches:
-			return "in"
+			return MeasuresStrings.Unit.Inch.abbreviation
 
 		case .Kilometers:
-			return "km"
+			return MeasuresStrings.Unit.Kilometer.abbreviation
 
 		case .Meters:
-			return "m"
+			return MeasuresStrings.Unit.Meter.abbreviation
 
 		case .Miles:
-			return "mi"
+			return MeasuresStrings.Unit.Mile.abbreviation
 		}
 	}
 
@@ -173,22 +173,22 @@ extension LengthUnit {
 	public var pluralName: String {
 		switch self {
 		case .Centimeters:
-			return "Centimeters"
+			return MeasuresStrings.Unit.Centimeter.name.forPluralCategory(.many)
 
 		case .Feet:
-			return "Feet"
+			return MeasuresStrings.Unit.Foot.name.forPluralCategory(.many)
 
 		case .Inches:
-			return "Inches"
+			return MeasuresStrings.Unit.Inch.name.forPluralCategory(.many)
 
 		case .Kilometers:
-			return "Kilometers"
+			return MeasuresStrings.Unit.Kilometer.name.forPluralCategory(.many)
 
 		case .Meters:
-			return "Meters"
+			return MeasuresStrings.Unit.Meter.name.forPluralCategory(.many)
 
 		case .Miles:
-			return "Miles"
+			return MeasuresStrings.Unit.Mile.name.forPluralCategory(.many)
 		}
 	}
 
@@ -196,22 +196,22 @@ extension LengthUnit {
 	public var singularName: String {
 		switch self {
 		case .Centimeters:
-			return "Centimeter"
+			return MeasuresStrings.Unit.Centimeter.name.forPluralCategory(.one)
 
 		case .Feet:
-			return "Foot"
+			return MeasuresStrings.Unit.Foot.name.forPluralCategory(.one)
 
 		case .Inches:
-			return "Inch"
+			return MeasuresStrings.Unit.Inch.name.forPluralCategory(.one)
 
 		case .Kilometers:
-			return "Kilometer"
+			return MeasuresStrings.Unit.Kilometer.name.forPluralCategory(.one)
 
 		case .Meters:
-			return "Meter"
+			return MeasuresStrings.Unit.Meter.name.forPluralCategory(.one)
 
 		case .Miles:
-			return "Mile"
+			return MeasuresStrings.Unit.Mile.name.forPluralCategory(.one)
 		}
 	}
 

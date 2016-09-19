@@ -84,8 +84,8 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/JetPack-Core-Extensions_Darwin-Extensions_Swift-Measures/JetPack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/JetPack-d9ead517/JetPack.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/JetPack-Core-Extensions_Darwin-Extensions_Swift-Measures/JetPack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/JetPack-d9ead517/JetPack.framework"
 fi

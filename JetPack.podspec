@@ -120,7 +120,9 @@ Pod::Spec.new do |s|
 		s.ios.deployment_target = '9.0'
 
 		s.source_files = 'Sources/Measures/**/*.swift', 'Module/JetPack.h'
+		s.resources    = 'Sources/Measures/Resources/**/*.strings'
 
+		s.dependency 'JetPack/Extensions/Foundation'
 		s.dependency 'JetPack/Extensions/Swift'
 	end
 

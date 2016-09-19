@@ -1,6 +1,6 @@
 public struct Temperature: Measure {
 
-	public static let name = "Temperature"
+	public static let name = MeasuresStrings.Measurement.temperature
 	public static let rawUnit = TemperatureUnit.DegreesCelsius
 
 	public var rawValue: Double
@@ -86,10 +86,10 @@ extension TemperatureUnit {
 	public var abbreviation: String {
 		switch self {
 		case .DegreesCelsius:
-			return "°C"
+			return MeasuresStrings.Unit.DegreeCelsius.abbreviation
 
 		case .DegreesFahrenheit:
-			return "°F"
+			return MeasuresStrings.Unit.DegreeFahrenheit.abbreviation
 		}
 	}
 
@@ -97,10 +97,10 @@ extension TemperatureUnit {
 	public var pluralName: String {
 		switch self {
 		case .DegreesCelsius:
-			return "Celsius"  // should we include 'Degrees'?
+			return MeasuresStrings.Unit.DegreeCelsius.name.forPluralCategory(.many)
 
 		case .DegreesFahrenheit:
-			return "Fahrenheit"  // should we include 'Degrees'?
+			return MeasuresStrings.Unit.DegreeFahrenheit.name.forPluralCategory(.many)
 		}
 	}
 
@@ -108,10 +108,10 @@ extension TemperatureUnit {
 	public var singularName: String {
 		switch self {
 		case .DegreesCelsius:
-			return "Celsius"  // should we include 'Degree'?
+			return MeasuresStrings.Unit.DegreeCelsius.name.forPluralCategory(.one)
 
 		case .DegreesFahrenheit:
-			return "Fahrenheit"  // should we include 'Degree'?
+			return MeasuresStrings.Unit.DegreeFahrenheit.name.forPluralCategory(.one)
 		}
 	}
 

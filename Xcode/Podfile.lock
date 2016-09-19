@@ -41,6 +41,7 @@ PODS:
     - JetPack/Extensions/Foundation
     - JetPack/Extensions/Swift
   - JetPack/Measures (0.0.3):
+    - JetPack/Extensions/Foundation
     - JetPack/Extensions/Swift
   - JetPack/UI (0.0.3):
     - JetPack/Core
@@ -71,7 +72,7 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  JetPack: 7fd7a4ca0f501284ce977040da15e713cc259e15
+  JetPack: dce7c3d6ddcbff819fc5cbf83e03a037b795ae4e
 
 PODFILE CHECKSUM: 767e7ed09ae04301d5bf9641ef4bb2bc59980c42
 

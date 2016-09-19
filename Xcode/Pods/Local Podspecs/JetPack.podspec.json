@@ -223,7 +223,11 @@
         "Sources/Measures/**/*.swift",
         "Module/JetPack.h"
       ],
+      "resources": "Sources/Measures/Resources/**/*.strings",
       "dependencies": {
+        "JetPack/Extensions/Foundation": [
+
+        ],
         "JetPack/Extensions/Swift": [
 
         ]

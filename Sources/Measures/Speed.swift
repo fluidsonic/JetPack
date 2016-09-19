@@ -6,7 +6,7 @@ private let mphPerKmh   = 1.0 / kmhPerMph
 
 public struct Speed: Measure {
 
-	public static let name = "Speed"
+	public static let name = MeasuresStrings.Measurement.speed
 	public static let rawUnit = SpeedUnit.KilometersPerHour
 
 	public var rawValue: Double
@@ -105,13 +105,13 @@ extension SpeedUnit {
 	public var abbreviation: String {
 		switch self {
 		case .KilometersPerHour:
-			return "km/h"
+			return MeasuresStrings.Unit.KilometerPerHour.abbreviation
 
 		case .Knots:
-			return "kn"
+			return MeasuresStrings.Unit.Knot.abbreviation
 
 		case .MilesPerHour:
-			return "mph"
+			return MeasuresStrings.Unit.MilePerHour.abbreviation
 		}
 	}
 
@@ -119,13 +119,13 @@ extension SpeedUnit {
 	public var pluralName: String {
 		switch self {
 		case .KilometersPerHour:
-			return "Kilometers per Hour"
+			return MeasuresStrings.Unit.KilometerPerHour.name.forPluralCategory(.many)
 
 		case .Knots:
-			return "Knots"
+			return MeasuresStrings.Unit.Knot.name.forPluralCategory(.many)
 
 		case .MilesPerHour:
-			return "Miles per Hour"
+			return MeasuresStrings.Unit.MilePerHour.name.forPluralCategory(.many)
 		}
 	}
 
@@ -133,13 +133,13 @@ extension SpeedUnit {
 	public var singularName: String {
 		switch self {
 		case .KilometersPerHour:
-			return "Kilometer per Hour"
+			return MeasuresStrings.Unit.KilometerPerHour.name.forPluralCategory(.one)
 
 		case .Knots:
-			return "Knot"
+			return MeasuresStrings.Unit.Knot.name.forPluralCategory(.one)
 
 		case .MilesPerHour:
-			return "Mile per Hour"
+			return MeasuresStrings.Unit.MilePerHour.name.forPluralCategory(.one)
 		}
 	}
 

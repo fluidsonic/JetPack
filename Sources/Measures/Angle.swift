@@ -4,7 +4,7 @@ private let radiansPerDegree = .Pi / 180.0
 
 public struct Angle: Measure {
 
-	public static let name = "Angle"
+	public static let name = MeasuresStrings.Measurement.angle
 	public static let rawUnit = AngleUnit.Degrees
 
 	public var rawValue: Double
@@ -90,10 +90,10 @@ extension AngleUnit {
 	public var abbreviation: String {
 		switch self {
 		case .Degrees:
-			return "deg"
+			return MeasuresStrings.Unit.Degree.abbreviation
 
 		case .Radians:
-			return "rad"
+			return MeasuresStrings.Unit.Radian.abbreviation
 		}
 	}
 
@@ -101,10 +101,10 @@ extension AngleUnit {
 	public var pluralName: String {
 		switch self {
 		case .Degrees:
-			return "Degrees"
+			return MeasuresStrings.Unit.Degree.name.forPluralCategory(.other)
 
 		case .Radians:
-			return "Radians"
+			return MeasuresStrings.Unit.Radian.name.forPluralCategory(.other)
 		}
 	}
 
@@ -112,10 +112,10 @@ extension AngleUnit {
 	public var singularName: String {
 		switch self {
 		case .Degrees:
-			return "Degree"
+			return MeasuresStrings.Unit.Degree.name.forPluralCategory(.one)
 
 		case .Radians:
-			return "Radian"
+			return MeasuresStrings.Unit.Radian.name.forPluralCategory(.one)
 		}
 	}
 
@@ -126,7 +126,7 @@ extension AngleUnit {
 			return "°"
 
 		case .Radians:
-			return "\u{33AD}"
+			return "㎭"
 		}
 	}
 }

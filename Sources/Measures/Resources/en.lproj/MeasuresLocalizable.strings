@@ -1,0 +1,100 @@
+compassDirection.long.east       = "East";
+compassDirection.long.north      = "North";
+compassDirection.long.south      = "South";
+compassDirection.long.west       = "West";
+
+compassDirection.short.east           = "E";
+compassDirection.short.eastNorthEast  = "ENE";
+compassDirection.short.eastSouthEast  = "ESE";
+compassDirection.short.north          = "N";
+compassDirection.short.northEast      = "NE";
+compassDirection.short.northNorthEast = "NNE";
+compassDirection.short.northNorthWest = "NNW";
+compassDirection.short.northWest      = "NW";
+compassDirection.short.south          = "S";
+compassDirection.short.southEast      = "SE";
+compassDirection.short.southSouthEast = "SSE";
+compassDirection.short.southSouthWest = "SSW";
+compassDirection.short.southWest      = "SW";
+compassDirection.short.west           = "W";
+compassDirection.short.westNorthWest  = "WNW";
+compassDirection.short.westSouthWest  = "WSW";
+
+measurement.angle       = "Angle";
+measurement.length      = "Length";
+measurement.pressure    = "Pressure";
+measurement.speed       = "Speed";
+measurement.temperature = "Temperature";
+measurement.time        = "Time";
+
+unit.centimeter.abbreviation = "cm";
+unit.centimeter.name$one     = "Centimeter";
+unit.centimeter.name$other   = "Centimeters";
+
+unit.degree.abbreviation = "deg";
+unit.degree.name$one     = "Degree";
+unit.degree.name$other   = "Degrees";
+
+unit.degreeCelsius.abbreviation = "°C";
+unit.degreeCelsius.name$one     = "Celsius";
+unit.degreeCelsius.name$other   = "Celsius";
+
+unit.degreeFahrenheit.abbreviation = "°F";
+unit.degreeFahrenheit.name$one     = "Fahrenheit";
+unit.degreeFahrenheit.name$other   = "Fahrenheit";
+
+unit.foot.abbreviation = "ft";
+unit.foot.name$one     = "Foot";
+unit.foot.name$other   = "Feet";
+
+unit.hour.abbreviation = "h";
+unit.hour.name$one     = "Hour";
+unit.hour.name$other   = "Hours";
+
+unit.inch.abbreviation = "in";
+unit.inch.name$one     = "Inch";
+unit.inch.name$other   = "Inches";
+
+unit.inchOfMercury.abbreviation = "inHg";
+unit.inchOfMercury.name$one     = "Inch of Mercury";
+unit.inchOfMercury.name$other   = "Inches of Mercury";
+
+unit.kilometer.abbreviation = "km";
+unit.kilometer.name$one     = "Kilometer";
+unit.kilometer.name$other   = "Kilometers";
+
+unit.kilometerPerHour.abbreviation = "km/h";
+unit.kilometerPerHour.name$one     = "Kilometer per Hour";
+unit.kilometerPerHour.name$other   = "Kilometers per Hour";
+
+unit.knot.abbreviation = "kn";
+unit.knot.name$one     = "Knot";
+unit.knot.name$other   = "Knots";
+
+unit.meter.abbreviation = "m";
+unit.meter.name$one     = "Meter";
+unit.meter.name$other   = "Meters";
+
+unit.millibar.abbreviation = "mbar";
+unit.millibar.name$one     = "Millibar";
+unit.millibar.name$other   = "Millibars";
+
+unit.mile.abbreviation = "mi";
+unit.mile.name$one     = "Mile";
+unit.mile.name$other   = "Miles";
+
+unit.milePerHour.abbreviation = "mph";
+unit.milePerHour.name$one     = "Mile per Hour";
+unit.milePerHour.name$other   = "Miles per Hour";
+
+unit.minute.abbreviation = "m";
+unit.minute.name$one     = "Minute";
+unit.minute.name$other   = "Minutes";
+
+unit.radian.abbreviation = "rad";
+unit.radian.name$one     = "Radian";
+unit.radian.name$other   = "Radians";
+
+unit.second.abbreviation = "s";
+unit.second.name$one     = "Second";
+unit.second.name$other   = "Seconds";

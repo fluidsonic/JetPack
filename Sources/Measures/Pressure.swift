@@ -7,7 +7,7 @@ private let millibarsPerInchOfMercury  = 1 / inchesOfMercuryPerMillibar
 
 public struct Pressure: Measure {
 
-	public static let name = "Pressure"
+	public static let name = MeasuresStrings.Measurement.pressure
 	public static let rawUnit = PressureUnit.Millibars
 
 	public var rawValue: Double
@@ -92,24 +92,24 @@ extension PressureUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .InchesOfMercury: return "inHg"
-		case .Millibars:       return "mbar"
+		case .InchesOfMercury: return MeasuresStrings.Unit.InchOfMercury.abbreviation
+		case .Millibars:       return MeasuresStrings.Unit.Millibar.abbreviation
 		}
 	}
 	
 
 	public var pluralName: String {
 		switch self {
-		case .InchesOfMercury: return "Inches of Mercury"
-		case .Millibars:       return "Millibars"
+		case .InchesOfMercury: return MeasuresStrings.Unit.InchOfMercury.name.forPluralCategory(.many)
+		case .Millibars:       return MeasuresStrings.Unit.Millibar.name.forPluralCategory(.many)
 		}
 	}
 
 
 	public var singularName: String {
 		switch self {
-		case .InchesOfMercury: return "Inch of Mercury"
-		case .Millibars:       return "Millibar"
+		case .InchesOfMercury: return MeasuresStrings.Unit.InchOfMercury.name.forPluralCategory(.one)
+		case .Millibars:       return MeasuresStrings.Unit.Millibar.name.forPluralCategory(.one)
 		}
 	}
 
