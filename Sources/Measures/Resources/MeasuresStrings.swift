@@ -8,126 +8,126 @@ internal enum `MeasuresStrings` {
 		internal enum `Hour` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.hour.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.hour.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.hour.name") }
 		}
 
 
 		internal enum `MilePerHour` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.milePerHour.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.milePerHour.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.milePerHour.name") }
 		}
 
 
 		internal enum `Millibar` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.millibar.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.millibar.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.millibar.name") }
 		}
 
 
 		internal enum `DegreeCelsius` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.degreeCelsius.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.degreeCelsius.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.degreeCelsius.name") }
 		}
 
 
 		internal enum `Meter` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.meter.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.meter.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.meter.name") }
 		}
 
 
 		internal enum `Inch` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.inch.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.inch.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.inch.name") }
 		}
 
 
 		internal enum `Kilometer` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.kilometer.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.kilometer.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.kilometer.name") }
 		}
 
 
 		internal enum `InchOfMercury` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.inchOfMercury.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.inchOfMercury.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.inchOfMercury.name") }
 		}
 
 
 		internal enum `Second` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.second.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.second.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.second.name") }
 		}
 
 
 		internal enum `Mile` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.mile.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.mile.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.mile.name") }
 		}
 
 
 		internal enum `Radian` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.radian.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.radian.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.radian.name") }
 		}
 
 
 		internal enum `Foot` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.foot.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.foot.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.foot.name") }
 		}
 
 
 		internal enum `Degree` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.degree.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.degree.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.degree.name") }
 		}
 
 
 		internal enum `KilometerPerHour` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.kilometerPerHour.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.kilometerPerHour.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.kilometerPerHour.name") }
 		}
 
 
 		internal enum `Minute` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.minute.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.minute.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.minute.name") }
 		}
 
 
 		internal enum `Centimeter` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.centimeter.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.centimeter.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.centimeter.name") }
 		}
 
 
 		internal enum `DegreeFahrenheit` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.degreeFahrenheit.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.degreeFahrenheit.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.degreeFahrenheit.name") }
 		}
 
 
 		internal enum `Knot` {
 
 			internal static var `abbreviation`: String { return `MeasuresStrings`.__getWithFallback("unit.knot.abbreviation") }
-			internal static var `name`: PluralizedString { return PluralizedString(key: "unit.knot.name") }
+			internal static var `name`: PluralizedString { return __PluralizedString(key: "unit.knot.name") }
 		}
 
 	}
@@ -167,14 +167,14 @@ internal enum `MeasuresStrings` {
 	}
 
 
-	internal enum `Measurement` {
+	internal enum `Measure` {
 
-		internal static var `length`: String { return `MeasuresStrings`.__getWithFallback("measurement.length") }
-		internal static var `speed`: String { return `MeasuresStrings`.__getWithFallback("measurement.speed") }
-		internal static var `angle`: String { return `MeasuresStrings`.__getWithFallback("measurement.angle") }
-		internal static var `pressure`: String { return `MeasuresStrings`.__getWithFallback("measurement.pressure") }
-		internal static var `temperature`: String { return `MeasuresStrings`.__getWithFallback("measurement.temperature") }
-		internal static var `time`: String { return `MeasuresStrings`.__getWithFallback("measurement.time") }
+		internal static var `speed`: String { return `MeasuresStrings`.__getWithFallback("measure.speed") }
+		internal static var `length`: String { return `MeasuresStrings`.__getWithFallback("measure.length") }
+		internal static var `angle`: String { return `MeasuresStrings`.__getWithFallback("measure.angle") }
+		internal static var `pressure`: String { return `MeasuresStrings`.__getWithFallback("measure.pressure") }
+		internal static var `temperature`: String { return `MeasuresStrings`.__getWithFallback("measure.temperature") }
+		internal static var `time`: String { return `MeasuresStrings`.__getWithFallback("measure.time") }
 	}
 
 
@@ -273,7 +273,7 @@ internal enum `MeasuresStrings` {
 
 
 
-	internal struct PluralizedString {
+	private struct __PluralizedString: PluralizedString {
 
 		private var converter: ((String) -> String)?
 		private var key: String
@@ -285,7 +285,7 @@ internal enum `MeasuresStrings` {
 		}
 
 
-		internal func forPluralCategory(category: NSLocale.PluralCategory) -> String {
+		private func forPluralCategory(category: NSLocale.PluralCategory) -> String {
 			let keySuffix = keySuffixForPluralCategory(category)
 
 			guard var value = `MeasuresStrings`.__get("\(key)\(keySuffix)") ?? `MeasuresStrings`.__get("\(key)$other") else {

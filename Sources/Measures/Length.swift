@@ -12,7 +12,7 @@ private let milesPerMeter       = 1.0 / metersPerMile
 
 public struct Length: Measure {
 
-	public static let name = "Length"
+	public static let name = MeasuresStrings.Measure.length
 	public static let rawUnit = LengthUnit.Meters
 
 	public var rawValue: Double
@@ -110,32 +110,9 @@ public struct Length: Measure {
 }
 
 
-extension Length: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "\(rawValue.description) \(Length.rawUnit.debugDescription)"
-	}
-}
-
-
-extension Length: CustomStringConvertible {
-
-	public var description: String {
-		return "\(rawValue.description) \(Length.rawUnit.abbreviation)"
-	}
-}
-
-
-extension Length: Hashable {
-
-	public var hashValue: Int {
-		return rawValue.hashValue
-	}
-}
-
-
 
 public enum LengthUnit: Unit {
+
 	case Centimeters
 	case Feet
 	case Inches
@@ -149,108 +126,36 @@ extension LengthUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Centimeters:
-			return MeasuresStrings.Unit.Centimeter.abbreviation
-
-		case .Feet:
-			return MeasuresStrings.Unit.Foot.abbreviation
-
-		case .Inches:
-			return MeasuresStrings.Unit.Inch.abbreviation
-
-		case .Kilometers:
-			return MeasuresStrings.Unit.Kilometer.abbreviation
-
-		case .Meters:
-			return MeasuresStrings.Unit.Meter.abbreviation
-
-		case .Miles:
-			return MeasuresStrings.Unit.Mile.abbreviation
+		case .Centimeters: return MeasuresStrings.Unit.Centimeter.abbreviation
+		case .Feet:        return MeasuresStrings.Unit.Foot.abbreviation
+		case .Inches:      return MeasuresStrings.Unit.Inch.abbreviation
+		case .Kilometers:  return MeasuresStrings.Unit.Kilometer.abbreviation
+		case .Meters:      return MeasuresStrings.Unit.Meter.abbreviation
+		case .Miles:       return MeasuresStrings.Unit.Mile.abbreviation
 		}
 	}
 
 
-	public var pluralName: String {
+	public var name: PluralizedString {
 		switch self {
-		case .Centimeters:
-			return MeasuresStrings.Unit.Centimeter.name.forPluralCategory(.many)
-
-		case .Feet:
-			return MeasuresStrings.Unit.Foot.name.forPluralCategory(.many)
-
-		case .Inches:
-			return MeasuresStrings.Unit.Inch.name.forPluralCategory(.many)
-
-		case .Kilometers:
-			return MeasuresStrings.Unit.Kilometer.name.forPluralCategory(.many)
-
-		case .Meters:
-			return MeasuresStrings.Unit.Meter.name.forPluralCategory(.many)
-
-		case .Miles:
-			return MeasuresStrings.Unit.Mile.name.forPluralCategory(.many)
-		}
-	}
-
-
-	public var singularName: String {
-		switch self {
-		case .Centimeters:
-			return MeasuresStrings.Unit.Centimeter.name.forPluralCategory(.one)
-
-		case .Feet:
-			return MeasuresStrings.Unit.Foot.name.forPluralCategory(.one)
-
-		case .Inches:
-			return MeasuresStrings.Unit.Inch.name.forPluralCategory(.one)
-
-		case .Kilometers:
-			return MeasuresStrings.Unit.Kilometer.name.forPluralCategory(.one)
-
-		case .Meters:
-			return MeasuresStrings.Unit.Meter.name.forPluralCategory(.one)
-
-		case .Miles:
-			return MeasuresStrings.Unit.Mile.name.forPluralCategory(.one)
+		case .Centimeters: return MeasuresStrings.Unit.Centimeter.name
+		case .Feet:        return MeasuresStrings.Unit.Foot.name
+		case .Inches:      return MeasuresStrings.Unit.Inch.name
+		case .Kilometers:  return MeasuresStrings.Unit.Kilometer.name
+		case .Meters:      return MeasuresStrings.Unit.Meter.name
+		case .Miles:       return MeasuresStrings.Unit.Mile.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .Centimeters:
-			return nil
-
-		case .Feet:
-			return "′"
-
-		case .Inches:
-			return "″"
-
-		case .Kilometers:
-			return nil
-
-		case .Meters:
-			return nil
-
-		case .Miles:
-			return nil
+		case .Centimeters: return nil
+		case .Feet:        return "′"
+		case .Inches:      return "″"
+		case .Kilometers:  return nil
+		case .Meters:      return nil
+		case .Miles:       return nil
 		}
-	}
-}
-
-
-extension LengthUnit: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "LengthUnit(\(pluralName))"
-	}
-}
-
-
-extension LengthUnit: CustomStringConvertible {
-
-	public var description: String {
-		return pluralName
 	}
 }

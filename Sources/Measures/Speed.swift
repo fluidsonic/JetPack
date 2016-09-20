@@ -6,7 +6,7 @@ private let mphPerKmh   = 1.0 / kmhPerMph
 
 public struct Speed: Measure {
 
-	public static let name = MeasuresStrings.Measurement.speed
+	public static let name = MeasuresStrings.Measure.speed
 	public static let rawUnit = SpeedUnit.KilometersPerHour
 
 	public var rawValue: Double
@@ -68,32 +68,9 @@ public struct Speed: Measure {
 }
 
 
-extension Speed: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "\(rawValue.description) \(Speed.rawUnit.debugDescription)"
-	}
-}
-
-
-extension Speed: CustomStringConvertible {
-
-	public var description: String {
-		return "\(rawValue.description) \(Speed.rawUnit.abbreviation)"
-	}
-}
-
-
-extension Speed: Hashable {
-
-	public var hashValue: Int {
-		return rawValue.hashValue
-	}
-}
-
-
 
 public enum SpeedUnit: Unit {
+
 	case KilometersPerHour
 	case Knots
 	case MilesPerHour
@@ -104,72 +81,27 @@ extension SpeedUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .KilometersPerHour:
-			return MeasuresStrings.Unit.KilometerPerHour.abbreviation
-
-		case .Knots:
-			return MeasuresStrings.Unit.Knot.abbreviation
-
-		case .MilesPerHour:
-			return MeasuresStrings.Unit.MilePerHour.abbreviation
+		case .KilometersPerHour: return MeasuresStrings.Unit.KilometerPerHour.abbreviation
+		case .Knots:             return MeasuresStrings.Unit.Knot.abbreviation
+		case .MilesPerHour:      return MeasuresStrings.Unit.MilePerHour.abbreviation
 		}
 	}
 
 
-	public var pluralName: String {
+	public var name: PluralizedString {
 		switch self {
-		case .KilometersPerHour:
-			return MeasuresStrings.Unit.KilometerPerHour.name.forPluralCategory(.many)
-
-		case .Knots:
-			return MeasuresStrings.Unit.Knot.name.forPluralCategory(.many)
-
-		case .MilesPerHour:
-			return MeasuresStrings.Unit.MilePerHour.name.forPluralCategory(.many)
-		}
-	}
-
-
-	public var singularName: String {
-		switch self {
-		case .KilometersPerHour:
-			return MeasuresStrings.Unit.KilometerPerHour.name.forPluralCategory(.one)
-
-		case .Knots:
-			return MeasuresStrings.Unit.Knot.name.forPluralCategory(.one)
-
-		case .MilesPerHour:
-			return MeasuresStrings.Unit.MilePerHour.name.forPluralCategory(.one)
+		case .KilometersPerHour: return MeasuresStrings.Unit.KilometerPerHour.name
+		case .Knots:             return MeasuresStrings.Unit.Knot.name
+		case .MilesPerHour:      return MeasuresStrings.Unit.MilePerHour.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .KilometersPerHour:
-			return nil
-
-		case .Knots:
-			return nil
-
-		case .MilesPerHour:
-			return nil
+		case .KilometersPerHour: return nil
+		case .Knots:             return nil
+		case .MilesPerHour:      return nil
 		}
-	}
-}
-
-
-extension SpeedUnit: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "SpeedUnit(\(pluralName))"
-	}
-}
-
-
-extension SpeedUnit: CustomStringConvertible {
-
-	public var description: String {
-		return pluralName
 	}
 }

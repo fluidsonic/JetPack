@@ -4,7 +4,7 @@ private let radiansPerDegree = .Pi / 180.0
 
 public struct Angle: Measure {
 
-	public static let name = MeasuresStrings.Measurement.angle
+	public static let name = MeasuresStrings.Measure.angle
 	public static let rawUnit = AngleUnit.Degrees
 
 	public var rawValue: Double
@@ -54,32 +54,9 @@ public struct Angle: Measure {
 }
 
 
-extension Angle: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "\(rawValue.description) \(Angle.rawUnit.debugDescription)"
-	}
-}
-
-
-extension Angle: CustomStringConvertible {
-
-	public var description: String {
-		return "\(rawValue.description) \(Angle.rawUnit.abbreviation)"
-	}
-}
-
-
-extension Angle: Hashable {
-
-	public var hashValue: Int {
-		return rawValue.hashValue
-	}
-}
-
-
 
 public enum AngleUnit: Unit {
+
 	case Degrees
 	case Radians
 }
@@ -89,60 +66,24 @@ extension AngleUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Degrees:
-			return MeasuresStrings.Unit.Degree.abbreviation
-
-		case .Radians:
-			return MeasuresStrings.Unit.Radian.abbreviation
+		case .Degrees: return MeasuresStrings.Unit.Degree.abbreviation
+		case .Radians: return MeasuresStrings.Unit.Radian.abbreviation
 		}
 	}
 
 
-	public var pluralName: String {
+	public var name: PluralizedString {
 		switch self {
-		case .Degrees:
-			return MeasuresStrings.Unit.Degree.name.forPluralCategory(.other)
-
-		case .Radians:
-			return MeasuresStrings.Unit.Radian.name.forPluralCategory(.other)
-		}
-	}
-
-
-	public var singularName: String {
-		switch self {
-		case .Degrees:
-			return MeasuresStrings.Unit.Degree.name.forPluralCategory(.one)
-
-		case .Radians:
-			return MeasuresStrings.Unit.Radian.name.forPluralCategory(.one)
+		case .Degrees: return MeasuresStrings.Unit.Degree.name
+		case .Radians: return MeasuresStrings.Unit.Radian.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .Degrees:
-			return "°"
-
-		case .Radians:
-			return "㎭"
+		case .Degrees: return "°"
+		case .Radians: return "㎭"
 		}
-	}
-}
-
-
-extension AngleUnit: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "AngleUnit(\(pluralName))"
-	}
-}
-
-
-extension AngleUnit: CustomStringConvertible {
-
-	public var description: String {
-		return pluralName
 	}
 }

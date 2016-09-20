@@ -1,6 +1,6 @@
-public protocol Measure: Comparable, CustomDebugStringConvertible, Hashable, CustomStringConvertible {
+public protocol Measure: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable {
 
-	associatedtype UnitType
+	associatedtype UnitType: Unit
 
 
 	init(rawValue: Double)
@@ -11,6 +11,30 @@ public protocol Measure: Comparable, CustomDebugStringConvertible, Hashable, Cus
 	var rawValue: Double { get mutating set }
 
 	func valueInUnit(unit: UnitType) -> Double
+}
+
+
+public extension Measure { // CustomDebugStringConvertible
+
+	public var debugDescription: String {
+		return "\(rawValue.description) \(Self.rawUnit.debugDescription)"
+	}
+}
+
+
+public extension Measure { // CustomStringConvertible
+
+	public var description: String {
+		return "\(rawValue.description) \(Self.rawUnit.abbreviation)"
+	}
+}
+
+
+public extension Measure { // Hashable
+
+	public var hashValue: Int {
+		return rawValue.hashValue
+	}
 }
 
 

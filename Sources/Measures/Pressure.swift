@@ -7,7 +7,7 @@ private let millibarsPerInchOfMercury  = 1 / inchesOfMercuryPerMillibar
 
 public struct Pressure: Measure {
 
-	public static let name = MeasuresStrings.Measurement.pressure
+	public static let name = MeasuresStrings.Measure.pressure
 	public static let rawUnit = PressureUnit.Millibars
 
 	public var rawValue: Double
@@ -57,32 +57,9 @@ public struct Pressure: Measure {
 }
 
 
-extension Pressure: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "\(rawValue.description) \(Pressure.rawUnit.debugDescription)"
-	}
-}
-
-
-extension Pressure: CustomStringConvertible {
-
-	public var description: String {
-		return "\(rawValue.description) \(Pressure.rawUnit.abbreviation)"
-	}
-}
-
-
-extension Pressure: Hashable {
-
-	public var hashValue: Int {
-		return rawValue.hashValue
-	}
-}
-
-
 
 public enum PressureUnit: Unit {
+
 	case InchesOfMercury
 	case Millibars
 }
@@ -98,18 +75,10 @@ extension PressureUnit {
 	}
 	
 
-	public var pluralName: String {
+	public var name: PluralizedString {
 		switch self {
-		case .InchesOfMercury: return MeasuresStrings.Unit.InchOfMercury.name.forPluralCategory(.many)
-		case .Millibars:       return MeasuresStrings.Unit.Millibar.name.forPluralCategory(.many)
-		}
-	}
-
-
-	public var singularName: String {
-		switch self {
-		case .InchesOfMercury: return MeasuresStrings.Unit.InchOfMercury.name.forPluralCategory(.one)
-		case .Millibars:       return MeasuresStrings.Unit.Millibar.name.forPluralCategory(.one)
+		case .InchesOfMercury: return MeasuresStrings.Unit.InchOfMercury.name
+		case .Millibars:       return MeasuresStrings.Unit.Millibar.name
 		}
 	}
 
@@ -119,21 +88,5 @@ extension PressureUnit {
 		case .InchesOfMercury: return "″Hg"
 		case .Millibars:       return nil
 		}
-	}
-}
-
-
-extension PressureUnit: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "PressureUnit(\(pluralName))"
-	}
-}
-
-
-extension PressureUnit: CustomStringConvertible {
-
-	public var description: String {
-		return pluralName
 	}
 }

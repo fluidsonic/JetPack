@@ -7,11 +7,20 @@ public extension NSLocale {
 
 
 	@nonobjc
+	internal static let defaultDecimalFormatterForResolvingPluralCategory: NSNumberFormatter = {
+		let formatter = NSNumberFormatter()
+		formatter.locale = NSLocale.englishUnitedStatesComputer
+		formatter.numberStyle = .DecimalStyle
+		return formatter
+	}()
+
+
+	@nonobjc
 	public static let englishUnitedStatesComputer = NSLocale(localeIdentifier: "en_US_POSIX")
 
 
 	@nonobjc
-	public func pluralCategoryForNumber(number: NSNumber, formatter: NSNumberFormatter = simpleDecimalFormatter) -> PluralCategory {
+	public func pluralCategoryForNumber(number: NSNumber, formatter: NSNumberFormatter = defaultDecimalFormatterForResolvingPluralCategory) -> PluralCategory {
 		guard let formatter = formatter.copy() as? NSNumberFormatter else {
 			return .other
 		}
@@ -30,6 +39,7 @@ public extension NSLocale {
 			return .other
 		}
 
+		let simpleDecimalFormatter = NSLocale.defaultDecimalFormatterForResolvingPluralCategory
 		guard let
 			wholeNumber = match[0],
 			integerPart = match[1],
@@ -113,12 +123,3 @@ public enum _NSLocale_PluralCategory {
 	case two
 	case zero
 }
-
-
-
-private let simpleDecimalFormatter: NSNumberFormatter = {
-	let formatter = NSNumberFormatter()
-	formatter.locale = NSLocale.englishUnitedStatesComputer
-	formatter.numberStyle = .DecimalStyle
-	return formatter
-}()

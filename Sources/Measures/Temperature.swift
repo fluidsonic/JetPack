@@ -1,6 +1,6 @@
 public struct Temperature: Measure {
 
-	public static let name = MeasuresStrings.Measurement.temperature
+	public static let name = MeasuresStrings.Measure.temperature
 	public static let rawUnit = TemperatureUnit.DegreesCelsius
 
 	public var rawValue: Double
@@ -50,32 +50,9 @@ public struct Temperature: Measure {
 }
 
 
-extension Temperature: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "\(rawValue.description) \(Temperature.rawUnit.debugDescription)"
-	}
-}
-
-
-extension Temperature: CustomStringConvertible {
-
-	public var description: String {
-		return "\(rawValue.description) \(Temperature.rawUnit.abbreviation)"
-	}
-}
-
-
-extension Temperature: Hashable {
-
-	public var hashValue: Int {
-		return rawValue.hashValue
-	}
-}
-
-
 
 public enum TemperatureUnit: Unit {
+
 	case DegreesCelsius
 	case DegreesFahrenheit
 }
@@ -85,60 +62,24 @@ extension TemperatureUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .DegreesCelsius:
-			return MeasuresStrings.Unit.DegreeCelsius.abbreviation
-
-		case .DegreesFahrenheit:
-			return MeasuresStrings.Unit.DegreeFahrenheit.abbreviation
+		case .DegreesCelsius:    return MeasuresStrings.Unit.DegreeCelsius.abbreviation
+		case .DegreesFahrenheit: return MeasuresStrings.Unit.DegreeFahrenheit.abbreviation
 		}
 	}
 
 
-	public var pluralName: String {
+	public var name: PluralizedString {
 		switch self {
-		case .DegreesCelsius:
-			return MeasuresStrings.Unit.DegreeCelsius.name.forPluralCategory(.many)
-
-		case .DegreesFahrenheit:
-			return MeasuresStrings.Unit.DegreeFahrenheit.name.forPluralCategory(.many)
-		}
-	}
-
-
-	public var singularName: String {
-		switch self {
-		case .DegreesCelsius:
-			return MeasuresStrings.Unit.DegreeCelsius.name.forPluralCategory(.one)
-
-		case .DegreesFahrenheit:
-			return MeasuresStrings.Unit.DegreeFahrenheit.name.forPluralCategory(.one)
+		case .DegreesCelsius:    return MeasuresStrings.Unit.DegreeCelsius.name
+		case .DegreesFahrenheit: return MeasuresStrings.Unit.DegreeFahrenheit.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .DegreesCelsius:
-			return nil
-
-		case .DegreesFahrenheit:
-			return nil
+		case .DegreesCelsius:    return nil
+		case .DegreesFahrenheit: return nil
 		}
-	}
-}
-
-
-extension TemperatureUnit: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "TemperatureUnit(\(pluralName))"
-	}
-}
-
-
-extension TemperatureUnit: CustomStringConvertible {
-
-	public var description: String {
-		return pluralName
 	}
 }

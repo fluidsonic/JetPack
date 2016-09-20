@@ -20,12 +20,12 @@ compassDirection.short.west           = "W";
 compassDirection.short.westNorthWest  = "WNW";
 compassDirection.short.westSouthWest  = "WSW";
 
-measurement.angle       = "Angle";
-measurement.length      = "Length";
-measurement.pressure    = "Pressure";
-measurement.speed       = "Speed";
-measurement.temperature = "Temperature";
-measurement.time        = "Time";
+measure.angle       = "Angle";
+measure.length      = "Length";
+measure.pressure    = "Pressure";
+measure.speed       = "Speed";
+measure.temperature = "Temperature";
+measure.time        = "Time";
 
 unit.centimeter.abbreviation = "cm";
 unit.centimeter.name$one     = "Centimeter";
