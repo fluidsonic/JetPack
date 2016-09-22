@@ -28,4 +28,4 @@ fi
 IMP=$IMP_DIRECTORY/Build/Library/Bundles/imp-cli.bundle/Contents/MacOS/imp-cli
 
 cd "$ROOT_DIRECTORY"
-"$IMP" strings --destination "Sources/Measures/Resources/MeasuresStrings.swift" --no-emit-jetpack-import --tableName MeasuresLocalizable --typeName MeasuresStrings --visibility internal "Sources/Measures/Resources/en.lproj/MeasuresLocalizable.strings"
+"$IMP" strings --destination "Sources/Measures/Resources/MeasuresStrings.swift" --no-emit-attributed-templates --no-emit-jetpack-import --tableName MeasuresLocalizable --typeName MeasuresStrings --visibility internal "Sources/Measures/Resources/en.lproj/MeasuresLocalizable.strings"
