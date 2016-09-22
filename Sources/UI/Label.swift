@@ -148,7 +148,7 @@ public /* non-final */ class Label: View {
 		var hasLinks = false
 		let tintColor = self.tintColor
 
-		attributedText.enumerateAttributesInRange(NSRange(forString: finalizedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
+		attributedText.enumerateAttributesInRange(NSRange(forString: attributedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
 			var finalAttributes = attributes
 			if !hasLinks && attributes[NSLinkAttributeName] != nil {
 				hasLinks = true
@@ -164,6 +164,17 @@ public /* non-final */ class Label: View {
 			}
 
 			finalizedText.addAttributes(finalAttributes, range: range)
+		}
+
+		if let textTransform = textTransform {
+			let transform: (String) -> String
+			switch textTransform {
+			case .Capitalize: transform = { $0.localizedCapitalizedString } // TODO this isn't 100% reliable when applying to segments instead of to the whole string
+			case .Lowercase:  transform = { $0.localizedLowercaseString }
+			case .Uppercase:  transform = { $0.localizedUppercaseString }
+			}
+
+			finalizedText.transformStringSegments(transform)
 		}
 
 		textStorage.setAttributedString(finalizedText)
@@ -488,6 +499,17 @@ public /* non-final */ class Label: View {
 	}
 
 
+	public var textTransform: TextTransform? {
+		didSet {
+			guard textTransform != oldValue else {
+				return
+			}
+
+			setNeedsUpdateFinalizedText()
+		}
+	}
+
+
 	public override func tintColorDidChange() {
 		super.tintColorDidChange()
 
@@ -632,6 +654,15 @@ public /* non-final */ class Label: View {
 
 		case Absolute(CGFloat)
 		case Relative(CGFloat)
+	}
+
+
+
+	public enum TextTransform {
+
+		case Capitalize
+		case Lowercase
+		case Uppercase
 	}
 	
 	
