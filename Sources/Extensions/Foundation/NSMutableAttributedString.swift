@@ -18,4 +18,21 @@ public extension NSMutableAttributedString {
 			appendAttributedString(NSAttributedString(string: string, attributes: additionalAttributes))
 		}
 	}
+
+
+	@nonobjc
+	public func transformStringSegments(@noescape transform: (String) -> String) {
+		let length = self.length
+		guard length > 0 else {
+			return
+		}
+
+		let escapingTransform = makeEscapable(transform)
+
+		beginEditing()
+		enumerateAttributesInRange(NSRange(location: 0, length: length), options: []) { _, range, _ in
+			replaceCharactersInRange(range, withString: escapingTransform(attributedSubstringFromRange(range).string))
+		}
+		endEditing()
+	}
 }
