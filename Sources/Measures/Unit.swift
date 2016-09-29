@@ -9,7 +9,7 @@ public protocol Unit: CustomDebugStringConvertible, CustomStringConvertible {
 public extension Unit { // CustomDebugStringConvertible
 
 	public var debugDescription: String {
-		return "\(self.dynamicType)(\(description)"
+		return "\(self.dynamicType)(\(description))"
 	}
 }
 
