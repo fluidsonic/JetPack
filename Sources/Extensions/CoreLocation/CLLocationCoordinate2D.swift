@@ -10,7 +10,12 @@ public extension CLLocationCoordinate2D {
 }
 
 
-extension CLLocationCoordinate2D: Equatable {}
+extension CLLocationCoordinate2D: Hashable {
+
+	public var hashValue: Int {
+		return latitude.hashValue ^ longitude.hashValue
+	}
+}
 
 
 public func == (a: CLLocationCoordinate2D, b: CLLocationCoordinate2D) -> Bool {
