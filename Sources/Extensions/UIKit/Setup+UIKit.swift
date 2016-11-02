@@ -16,6 +16,7 @@ public extension UIApplication {
 
 			UIView.UIView_setUp()
 
+			UIBlurEffect.UIBlurEffect_setUp()
 			UINavigationBar.UINavigationBar_setUp()
 			UISearchBar.UISearchBar_setUp()
 			UITableView.UITableView_setUp()
