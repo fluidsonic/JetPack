@@ -523,7 +523,7 @@ public class Button: View {
 
 		return Layout(
 			activityIndicatorFrame: wantsActivityIndicator ? alignToGrid(activityIndicatorFrame) : nil,
-			imageViewFrame:         wantsImage ? alignToGrid(imageViewFrame) : nil,
+			imageViewFrame:         (wantsImage && !wantsActivityIndicator) ? alignToGrid(imageViewFrame) : nil,
 			textLabelFrame:         wantsText ? alignToGrid(textLabelFrame) : nil
 		)
 	}
