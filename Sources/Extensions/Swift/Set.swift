@@ -29,6 +29,12 @@ public extension Set {
 
 
 	@warn_unused_result
+	public func intersects(set: Set<Element>) -> Bool {
+		return contains { set.contains($0) }
+	}
+
+
+	@warn_unused_result
 	public func toSet() -> Set<Generator.Element> {
 		return self
 	}
