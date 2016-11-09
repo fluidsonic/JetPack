@@ -27,13 +27,16 @@ public /* non-final */ class CollectionViewController: ViewController {
 	public var clearsSelectionOnViewWillAppear = true
 
 
-	public private(set) lazy var collectionView: UICollectionView = {
-		let child = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
+	public private(set) lazy var collectionView: UICollectionView = self.createCollectionView()
+
+
+	private func createCollectionView() -> UICollectionView {
+		let child = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
 		child.dataSource = self
 		child.delegate = self
 
 		return child
-	}()
+	}
 
 
 	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {

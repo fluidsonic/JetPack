@@ -48,6 +48,15 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
+	private func createWebView() -> WKWebView {
+		let child = WKWebView(frame: .zero, configuration: configuration)
+		child.navigationDelegate = self
+		child.UIDelegate = self
+
+		return child
+	}
+
+
 	public func handleEmailLink(link: NSURL) -> Bool {
 		guard opensLinksExternally else {
 			return false
@@ -225,13 +234,7 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public private(set) lazy var webView: WKWebView = {
-		let child = WKWebView(frame: .zero, configuration: self.configuration)
-		child.navigationDelegate = self
-		child.UIDelegate = self
-
-		return child
-	}()
+	public private(set) lazy var webView: WKWebView = self.createWebView()
 }
 
 

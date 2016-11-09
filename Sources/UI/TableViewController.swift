@@ -25,6 +25,16 @@ public /* non-final */ class TableViewController: ViewController {
 	public var clearsSelectionOnViewWillAppear = true
 
 
+	private func createTableView() -> UITableView {
+		let child = UITableView(frame: .zero, style: style)
+		child.estimatedRowHeight = 44
+		child.dataSource = self
+		child.delegate = self
+
+		return child
+	}
+
+
 	public override func setEditing(editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
@@ -34,14 +44,7 @@ public /* non-final */ class TableViewController: ViewController {
 	}
 
 
-	public private(set) lazy var tableView: UITableView = {
-		let child = UITableView(frame: .zero, style: self.style)
-		child.estimatedRowHeight = 44
-		child.dataSource = self
-		child.delegate = self
-
-		return child
-	}()
+	public private(set) lazy var tableView: UITableView = self.createTableView()
 
 
 	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {

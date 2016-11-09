@@ -65,6 +65,21 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
+	private func createScrollView() -> UIScrollView {
+		let child = SpecialScrollView()
+		child.bounces = false
+		child.canCancelContentTouches = true
+		child.delaysContentTouches = true
+		child.delegate = self.delegateProxy
+		child.pagingEnabled = true
+		child.scrollsToTop = false
+		child.showsHorizontalScrollIndicator = false
+		child.showsVerticalScrollIndicator = false
+
+		return child
+	}
+
+
 	public var currentIndex: CGFloat {
 		let scrollViewWidth = scrollView.bounds.width
 		
@@ -270,19 +285,7 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
-	public private(set) final lazy var scrollView: UIScrollView = {
-		let child = SpecialScrollView()
-		child.bounces = false
-		child.canCancelContentTouches = true
-		child.delaysContentTouches = true
-		child.delegate = self.delegateProxy
-		child.pagingEnabled = true
-		child.scrollsToTop = false
-		child.showsHorizontalScrollIndicator = false
-		child.showsVerticalScrollIndicator = false
-
-		return child
-	}()
+	public private(set) final lazy var scrollView: UIScrollView = self.createScrollView()
 
 
 	public override func shouldAutomaticallyForwardAppearanceMethods() -> Bool {
