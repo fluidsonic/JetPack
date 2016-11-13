@@ -37,6 +37,13 @@ public extension UITableView {
 
 
 	@nonobjc
+	public var floatsHeaderAndFooterViews: Bool {
+		get { return redirected_headerAndFooterViewsFloat() }
+		set { redirected_setHeaderAndFooterViewsFloat(newValue) }
+	}
+
+
+	@nonobjc
 	internal private(set) var indexPathForCurrentHeightComputation: NSIndexPath? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation) as? NSIndexPath }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
@@ -63,6 +70,19 @@ public extension UITableView {
 	}
 
 
+	@objc(JetPack_floatsHeaderAndFooterViews)
+	private dynamic func redirected_headerAndFooterViewsFloat() -> Bool {
+		// called when private function is no longer available
+		return true
+	}
+
+
+	@objc(JetPack_setFloatsHeaderAndFooterViews:)
+	private dynamic func redirected_setHeaderAndFooterViewsFloat(headerAndFooterViewsFloat: Bool) {
+		// called when private function is no longer available
+	}
+
+
 	@nonobjc
 	public func scrollRowAtIndexPathToVisible(indexPath: NSIndexPath, insets: UIEdgeInsets = .zero, animated: Bool = false) -> Bool {
 		let contentSize = self.contentSize
@@ -83,6 +103,11 @@ public extension UITableView {
 	@nonobjc
 	internal static func UITableView_setUp() {
 		// yep, private API necessary :(
+
+		redirectMethodInType(self, fromSelector: #selector(redirected_headerAndFooterViewsFloat), toSelector: obfuscatedSelector("_header", "And", "Footer", "Views", "Float"))
+
+		redirectMethodInType(self, fromSelector: #selector(redirected_setHeaderAndFooterViewsFloat), toSelector: obfuscatedSelector("_set", "Header", "And", "Footer", "Views" ,"Float:"))
+
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
 		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), toSelector: #selector(swizzled_computeHeightForCell(_:atIndexPath:)))
 	}
