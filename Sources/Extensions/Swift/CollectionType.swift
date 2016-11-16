@@ -10,6 +10,11 @@ public extension CollectionType {
 	}
 
 
+	public var nonEmpty: Self? {
+		return isEmpty ? nil : self
+	}
+
+
 	public subscript(safe index: Index) -> Generator.Element? {
 		return indices.contains(index) ? self[index] : nil
 	}
