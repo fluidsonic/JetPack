@@ -148,7 +148,7 @@ public /* non-final */ class GuideViewController: ViewController {
 		let focusPath: UIBezierPath
 		switch focus {
 		case let .Rectangle(frame, cornerRadius, referenceView):
-			focusPath = UIBezierPath(animatableRoundedRect: referenceView.convertRect(frame, toCoordinateSpace: view), cornerRadius: cornerRadius)
+			focusPath = UIBezierPath(animatableRoundedRect: referenceView.convertRect(frame, toCoordinateSpace: view), cornerRadii: CornerRadii(all: cornerRadius))
 		}
 
 		backgroundView.focusPath = focusPath

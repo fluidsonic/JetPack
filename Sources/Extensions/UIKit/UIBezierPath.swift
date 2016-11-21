@@ -4,24 +4,18 @@ import UIKit
 public extension UIBezierPath {
 
 	@nonobjc
-	public convenience init(animatableRoundedRect rect: CGRect, cornerRadius: CGFloat) {
-		self.init(animatableRoundedRect: rect, topLeftCornerRadius: cornerRadius, topRightCornerRadius: cornerRadius, bottomRightCornerRadius: cornerRadius, bottomLeftCornerRadius: cornerRadius)
-	}
-
-
-	@nonobjc
-	public convenience init(animatableRoundedRect rect: CGRect, topLeftCornerRadius: CGFloat, topRightCornerRadius: CGFloat, bottomRightCornerRadius: CGFloat, bottomLeftCornerRadius: CGFloat) {
+	public convenience init(animatableRoundedRect rect: CGRect, cornerRadii: CornerRadii = .zero) {
 		self.init()
 
-		moveToPoint(CGPoint(left: rect.left + topLeftCornerRadius, top: rect.top))
-		addLineToPoint(CGPoint(left: rect.right - topRightCornerRadius, top: rect.top))
-		addRoundedCorner(direction: .RightDown, radius: topRightCornerRadius)
-		addLineToPoint(CGPoint(left: rect.right, top: rect.bottom - bottomRightCornerRadius))
-		addRoundedCorner(direction: .DownLeft, radius: bottomRightCornerRadius)
-		addLineToPoint(CGPoint(left: rect.left + bottomLeftCornerRadius, top: rect.bottom))
-		addRoundedCorner(direction: .LeftUp, radius: bottomLeftCornerRadius)
-		addLineToPoint(CGPoint(left: rect.left, top: rect.top + topLeftCornerRadius))
-		addRoundedCorner(direction: .UpRight, radius: topLeftCornerRadius)
+		moveToPoint(CGPoint(left: rect.left + cornerRadii.topLeft, top: rect.top))
+		addLineToPoint(CGPoint(left: rect.right - cornerRadii.topRight, top: rect.top))
+		addRoundedCorner(direction: .RightDown, radius: cornerRadii.topRight)
+		addLineToPoint(CGPoint(left: rect.right, top: rect.bottom - cornerRadii.bottomRight))
+		addRoundedCorner(direction: .DownLeft, radius: cornerRadii.bottomRight)
+		addLineToPoint(CGPoint(left: rect.left + cornerRadii.bottomLeft, top: rect.bottom))
+		addRoundedCorner(direction: .LeftUp, radius: cornerRadii.bottomLeft)
+		addLineToPoint(CGPoint(left: rect.left, top: rect.top + cornerRadii.topLeft))
+		addRoundedCorner(direction: .UpRight, radius: cornerRadii.topLeft)
 	}
 
 
