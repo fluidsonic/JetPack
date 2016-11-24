@@ -6,6 +6,8 @@ if [ "$POD_LINT" == "yes" ]; then
 	(set -x; pod lib lint --allow-warnings --quick --verbose)
 else
 	cd Xcode
+	(set -x; pod deintegrate)
+	(set -x; rm -rf Podfile.lock Project.xcworkspace )
 	(set -x; pod update --no-repo-update)
 	cd ..
 
