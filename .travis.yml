@@ -22,8 +22,8 @@ env:
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift"        CONFIGURATION="Release" DESTINATION="OS=9.1,name=iPhone 6S" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
     
 before_install:
-  - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
-  - gem install xcpretty xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
+  - gem install cocoapods snapshot xcpretty xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
+  - SNAPSHOT_FORCE_DELETE=1 snapshot reset_simulators
 
 script:
   - Xcode/Tests/Travis.sh
