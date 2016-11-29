@@ -1,8 +1,20 @@
 public extension SequenceType {
 
 	@warn_unused_result
-	public func toArray() -> [Generator.Element] {
-		return Array<Generator.Element>(self)
+	public func associated <Key: Hashable, Value>(@noescape elementSelector: Generator.Element throws -> (Key, Value)) rethrows -> [Key : Value] {
+		var dictionary = [Key : Value]()
+		for element in self {
+			let (key, value) = try elementSelector(element)
+			dictionary[key] = value
+		}
+
+		return dictionary
+	}
+
+
+	@warn_unused_result
+	public func associated <Key: Hashable> (@noescape by keySelector: Generator.Element throws -> Key) rethrows -> [Key : Generator.Element] {
+		return try associated { (try keySelector($0), $0) }
 	}
 
 
@@ -104,14 +116,13 @@ public extension SequenceType {
 
 
 	@warn_unused_result
-	public func toDictionary <Key: Hashable, Value>(@noescape transform: Generator.Element throws -> (Key, Value)) rethrows -> [Key : Value] {
-		var dictionary = [Key : Value]()
-		for element in self {
-			let (key, value) = try transform(element)
-			dictionary[key] = value
-		}
+	public func toArray() -> [Generator.Element] {
+		return Array<Generator.Element>(self)
+	}
 
-		return dictionary
+	@warn_unused_result @available(*, deprecated=1, renamed="associated")
+	public func toDictionary <Key: Hashable, Value>(@noescape transform: Generator.Element throws -> (Key, Value)) rethrows -> [Key : Value] {
+		return try associated(transform)
 	}
 }
 
