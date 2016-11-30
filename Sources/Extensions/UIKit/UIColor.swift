@@ -10,6 +10,17 @@ public extension UIColor {
 
 
 	@nonobjc
+	public convenience init(argb: Int) {
+		let alpha = CGFloat((argb >> 24) & 0xFF) / 255
+		let red   = CGFloat((argb >> 16) & 0xFF) / 255
+		let green = CGFloat((argb >> 8)  & 0xFF) / 255
+		let blue  = CGFloat( argb        & 0xFF) / 255
+
+		self.init(red: red, green: green, blue: blue, alpha: alpha)
+	}
+
+
+	@nonobjc
 	public convenience init(rgb: Int) {
 		self.init(rgb: rgb, alpha: 1)
 	}
