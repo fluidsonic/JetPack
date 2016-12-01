@@ -153,7 +153,7 @@ public /* non-final */ class WebViewController: ViewController {
 
 
 	private func updateTitleFromDocument() {
-		title = webView.title?.nonEmpty ?? (webView.loading ? "Loading…" : "")
+		title = webView.title?.nonEmpty ?? (webView.loading ? "Loading…" : "") // FIXME l10n
 	}
 
 
