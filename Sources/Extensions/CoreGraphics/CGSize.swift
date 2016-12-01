@@ -21,14 +21,38 @@ public extension CGSize {
 	}
 
 
-	public mutating func constrainInPlace(constrain: CGSize) {
-		self = constrainTo(constrain)
+	@warn_unused_result
+	public func coerced(atLeast minimum: CGSize) -> CGSize {
+		return CGSize(
+			width:  width.coerced(atLeast: minimum.width),
+			height: height.coerced(atLeast: minimum.height)
+		)
 	}
 
 
-	@warn_unused_result(mutable_variant="constrainInPlace")
+	@warn_unused_result
+	public func coerced(atMost maximum: CGSize) -> CGSize {
+		return CGSize(
+			width:  width.coerced(atMost: maximum.width),
+			height: height.coerced(atMost: maximum.height)
+		)
+	}
+
+
+	@warn_unused_result
+	public func coerced(atLeast minimum: CGSize, atMost maximum: CGSize) -> CGSize {
+		return coerced(atMost: maximum).coerced(atLeast: minimum)
+	}
+
+
+	public mutating func constrainInPlace(constrain: CGSize) {
+		self = coerced(atMost: constrain)
+	}
+
+
+	@available(*, deprecated=1, renamed="coerced(atMost:)")
 	public func constrainTo(constrain: CGSize) -> CGSize {
-		return CGSize(width: min(width, constrain.width), height: min(height, constrain.height))
+		return coerced(atMost: constrain)
 	}
 
 
@@ -39,6 +63,11 @@ public extension CGSize {
 
 	public var isPositive: Bool {
 		return (height > 0 && width > 0)
+	}
+
+
+	public var isValid: Bool {
+		return (height >= 0 && width >= 0)
 	}
 
 

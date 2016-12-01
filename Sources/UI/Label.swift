@@ -8,6 +8,7 @@ public /* non-final */ class Label: View {
 	private lazy var renderingLayer: LabelLayer = self.layer as! LabelLayer
 
 	private var attributedTextUsesTintColor = false
+	private var cachedSizeThatFits: SizeThatFitsResult?
 	private let layoutManager = LayoutManager()
 	private let linkTapRecognizer = UITapGestureRecognizer()
 	private let textContainer = NSTextContainer()
@@ -143,6 +144,7 @@ public /* non-final */ class Label: View {
 
 		let attributedText = self.attributedText
 		let finalizedText = NSMutableAttributedString(string: attributedText.string, attributes: defaultAttributes)
+		finalizedText.beginEditing()
 
 		var attributedTextUsesTintColor = false
 		var hasLinks = false
@@ -177,12 +179,13 @@ public /* non-final */ class Label: View {
 			finalizedText.transformStringSegments(transform)
 		}
 
+		finalizedText.endEditing()
 		textStorage.setAttributedString(finalizedText)
 		linkTapRecognizer.enabled = hasLinks
 
 		self.attributedTextUsesTintColor = attributedTextUsesTintColor
 
-		_finalizedText = finalizedText.copy() as? NSAttributedString
+		_finalizedText = finalizedText
 		_links = nil
 		_numberOfLines = nil
 
@@ -214,6 +217,13 @@ public /* non-final */ class Label: View {
 
 			setNeedsUpdateFinalizedText()
 		}
+	}
+
+
+	public override func invalidateIntrinsicContentSize() {
+		cachedSizeThatFits = nil
+
+		super.invalidateIntrinsicContentSize()
 	}
 
 
@@ -468,6 +478,18 @@ public /* non-final */ class Label: View {
 
 	@warn_unused_result
 	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+		assert(maximumSize.isPositive)
+
+		let maximumSize = maximumSize.coerced(atLeast: .zero)
+		if maximumSize.isPositive, let cachedSizeThatFits = cachedSizeThatFits {
+			let cachedMaximumHeights = min(cachedSizeThatFits.maximumSize.height, cachedSizeThatFits.sizeThatFits.height) ... max(cachedSizeThatFits.maximumSize.height, cachedSizeThatFits.sizeThatFits.height)
+			let cachedMaximumWidths = min(cachedSizeThatFits.maximumSize.width, cachedSizeThatFits.sizeThatFits.width) ... max(cachedSizeThatFits.maximumSize.width, cachedSizeThatFits.sizeThatFits.width)
+
+			if cachedMaximumWidths.contains(maximumSize.width) && cachedMaximumHeights.contains(maximumSize.height) {
+				return cachedSizeThatFits.sizeThatFits
+			}
+		}
+
 		let padding = self.padding
 
 		finalizeText()
@@ -478,7 +500,10 @@ public /* non-final */ class Label: View {
 
 		let textSize = alignToGrid(layoutManager.usedRectForTextContainer(textContainer).size)
 
-		return textSize.insetBy(padding.inverse)
+		let sizeThatFits = textSize.insetBy(padding.inverse)
+		cachedSizeThatFits = SizeThatFitsResult(maximumSize: maximumSize, sizeThatFits: sizeThatFits)
+
+		return sizeThatFits
 	}
 
 
@@ -654,6 +679,14 @@ public /* non-final */ class Label: View {
 
 		case Absolute(CGFloat)
 		case Relative(CGFloat)
+	}
+
+
+
+	private struct SizeThatFitsResult {
+
+		private var maximumSize: CGSize
+		private var sizeThatFits: CGSize
 	}
 
 

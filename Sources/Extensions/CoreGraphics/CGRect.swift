@@ -167,6 +167,11 @@ public extension CGRect {
 	}
 
 
+	public var isValid: Bool {
+		return size.isValid
+	}
+
+
 	public var left: CGFloat {
 		get { return origin.left }
 		mutating set { origin.left = newValue }
