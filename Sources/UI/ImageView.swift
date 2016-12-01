@@ -698,9 +698,16 @@ public func == (a: ImageView.Source?, b: ImageView.Source?) -> Bool {
 	if let a = a, let b = b {
 		return a.equals(b)
 	}
-	else {
-		return a == nil && b == nil
+
+	switch (a, b) {
+	case (.None, .None): return true
+	default:             return false
 	}
+}
+
+
+public func != (a: ImageView.Source?, b: ImageView.Source?) -> Bool {
+	return !(a == b)
 }
 
 
