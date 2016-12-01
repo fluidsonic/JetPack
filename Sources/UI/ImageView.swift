@@ -694,6 +694,16 @@ extension _ImageViewSource where Self: Equatable {
 }
 
 
+public func == (a: ImageView.Source?, b: ImageView.Source?) -> Bool {
+	if let a = a, let b = b {
+		return a.equals(b)
+	}
+	else {
+		return a == nil && b == nil
+	}
+}
+
+
 
 private struct ClosureSessionListener: ImageView.SessionListener {
 
