@@ -216,7 +216,7 @@ public /* non-final */ class ImageView: View {
 			isSettingImage = true
 			defer { isSettingImage = false }
 
-			if image == oldValue {
+			guard image != oldValue || (oldValue == nil && source != nil) else { // TODO what if the current image is set again manually? source should be unset?
 				return
 			}
 
