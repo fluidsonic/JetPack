@@ -29,11 +29,6 @@ public /* non-final */ class Label: View {
 		opaque = false
 
 		layoutManager.addTextContainer(textContainer)
-
-		textContainer.lineFragmentPadding = 0
-		textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
-		textContainer.lineBreakMode = lineBreakMode
-
 		textStorage.addLayoutManager(layoutManager)
 
 		setUpLinkTapRecognizer()
@@ -76,11 +71,18 @@ public /* non-final */ class Label: View {
 			return
 		}
 
+		let bounds = self.bounds
+		guard bounds.size.isPositive else {
+			return
+		}
+
 		renderingLayer = layer
 		lastDrawnFinalizedText = finalizeText()
 
 		UIGraphicsPushContext(context)
 		defer { UIGraphicsPopContext() }
+
+		updateTextContainer(forSize: textContainerSize)
 
 		let textContainerOrigin = originForTextContainer()
 		let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
@@ -253,8 +255,6 @@ public /* non-final */ class Label: View {
 	public override func layoutSubviews() {
 		super.layoutSubviews()
 
-		textContainer.size = bounds.size.insetBy(padding)
-
 		if finalizedText != lastDrawnFinalizedText {
 			setNeedsDisplay()
 		}
@@ -266,8 +266,6 @@ public /* non-final */ class Label: View {
 			guard lineBreakMode != oldValue else {
 				return
 			}
-
-			textContainer.lineBreakMode = lineBreakMode
 
 			invalidateIntrinsicContentSize()
 			setNeedsUpdateFinalizedText()
@@ -321,6 +319,8 @@ public /* non-final */ class Label: View {
 			return links
 		}
 
+		updateTextContainer(forSize: textContainerSize)
+
 		let finalizedText = self.finalizedText
 		let textContainerOrigin = originForTextContainer()
 
@@ -358,8 +358,6 @@ public /* non-final */ class Label: View {
 			guard maximumNumberOfLines != oldValue else {
 				return
 			}
-
-			textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
 
 			invalidateIntrinsicContentSize()
 			setNeedsDisplay()
@@ -492,11 +490,7 @@ public /* non-final */ class Label: View {
 
 		let padding = self.padding
 
-		finalizeText()
-
-		let savedTextContainerSize = textContainer.size
-		textContainer.size = maximumSize.insetBy(padding)
-		defer { textContainer.size = savedTextContainerSize }
+		updateTextContainer(forSize: maximumSize.insetBy(padding))
 
 		let textSize = alignToGrid(layoutManager.usedRectForTextContainer(textContainer).size)
 
@@ -521,6 +515,11 @@ public /* non-final */ class Label: View {
 
 			updateFinalTextColor()
 		}
+	}
+
+
+	private var textContainerSize: CGSize {
+		return bounds.size.insetBy(padding)
 	}
 
 
@@ -556,6 +555,15 @@ public /* non-final */ class Label: View {
 			labelLayer.finalTextColor = finalTextColor
 			setNeedsUpdateFinalizedText()
 		}
+	}
+
+
+	private func updateTextContainer(forSize size: CGSize) {
+		textContainer.lineFragmentPadding = 0
+		textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
+		textContainer.lineBreakMode = lineBreakMode
+		textContainer.size = size
+		textStorage.setAttributedString(finalizeText())
 	}
 
 
