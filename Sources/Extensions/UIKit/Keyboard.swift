@@ -3,6 +3,8 @@ import UIKit
 
 public final class Keyboard {
 
+	private static var preloaded = false
+
 	public private(set) static var animation = Animation(duration: 0.25, timing: .Curve(UIViewAnimationCurve(rawValue: 7)!))
 	public private(set) static var frame = CGRect()
 	public private(set) static var isVisible = false
@@ -16,6 +18,8 @@ public final class Keyboard {
 
 
 	private static func didChangeFrameWithNotification(notification: NSNotification) {
+		preloaded = true
+
 		updateFromNotification(notification)
 
 		eventBus.publish(Event.DidChangeFrame())
@@ -23,6 +27,8 @@ public final class Keyboard {
 
 
 	private static func didHideWithNotification(notification: NSNotification) {
+		preloaded = true
+
 		updateFromNotification(notification)
 
 		eventBus.publish(Event.DidHide())
@@ -30,6 +36,8 @@ public final class Keyboard {
 
 
 	private static func didShowWithNotification(notification: NSNotification) {
+		preloaded = true
+
 		updateFromNotification(notification)
 
 		eventBus.publish(Event.DidShow())
@@ -59,6 +67,22 @@ public final class Keyboard {
 
 		let frameInView = view.convertRect(frameInWindow, fromView: window)
 		return frameInView
+	}
+
+
+	public static func preload() {
+		guard !preloaded, let _window = UIApplication.sharedApplication().delegate?.window, let window = _window where window.firstResponder == nil else { // why the double optional???
+			return
+		}
+
+		preloaded = true
+
+		let input = UITextField(frame: .zero)
+		window.addSubview(input)
+
+		input.becomeFirstResponder()
+		input.resignFirstResponder()
+		input.removeFromSuperview()
 	}
 
 
@@ -99,6 +123,8 @@ public final class Keyboard {
 
 
 	private static func willChangeFrameWithNotification(notification: NSNotification) {
+		preloaded = true
+
 		updateFromNotification(notification)
 
 		eventBus.publish(Event.WillChangeFrame())
@@ -106,6 +132,8 @@ public final class Keyboard {
 
 
 	private static func willHideWithNotification(notification: NSNotification) { // called after willChangeFrame
+		preloaded = true
+
 		updateFromNotification(notification)
 
 		eventBus.publish(Event.WillHide())
@@ -113,6 +141,8 @@ public final class Keyboard {
 
 
 	private static func willShowWithNotification(notification: NSNotification) { // called after willChangeFrame
+		preloaded = true
+
 		updateFromNotification(notification)
 
 		eventBus.publish(Event.WillShow())
