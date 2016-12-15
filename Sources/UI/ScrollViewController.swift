@@ -11,7 +11,8 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 	private var ignoresScrollViewDidScroll = 0
 	private var isSettingPrimaryViewControllerInternally = false
-	private var lastLayoutedViewSize = CGSize()
+	private var lastLayoutedSize = CGSize.zero
+	private var lastLayoutedSizeForChildren = CGSize.zero
 	private var reusableChildView: ChildView?
 	private var scrollCompletion: ScrollCompletion?
 	private var viewControllersNotYetMovedToParentViewController = [UIViewController]()
@@ -138,14 +139,14 @@ public /* non-final */ class ScrollViewController: ViewController {
 		ignoresScrollViewDidScroll += 1
 		defer { ignoresScrollViewDidScroll -= 1 }
 
-		let viewBounds = view.bounds
+		let bounds = view.bounds
 		let viewControllers = self.viewControllers
 		var contentOffset: CGPoint
 		let layoutsExistingChildren: Bool
 
-		let previousViewSize = self.lastLayoutedViewSize
-		if forcesLayoutUpdate || viewBounds.size != previousViewSize {
-			self.lastLayoutedViewSize = viewBounds.size
+		let previousViewSize = lastLayoutedSizeForChildren
+		if forcesLayoutUpdate || bounds.size != lastLayoutedSizeForChildren {
+			lastLayoutedSizeForChildren = bounds.size
 
 			layoutChildContainer()
 
@@ -177,10 +178,10 @@ public /* non-final */ class ScrollViewController: ViewController {
 				}
 
 				if let closestChildIndex = closestChildIndex {
-					newContentOffset = CGPoint(left: (CGFloat(closestChildIndex) - closestChildOffset) * viewBounds.width, top: 0)
+					newContentOffset = CGPoint(left: (CGFloat(closestChildIndex) - closestChildOffset) * bounds.width, top: 0)
 				}
 				else if let primaryViewController = primaryViewController, let index = viewControllers.indexOfIdentical(primaryViewController) {
-					newContentOffset = CGPoint(left: (CGFloat(index) * viewBounds.width), top: 0)
+					newContentOffset = CGPoint(left: (CGFloat(index) * bounds.width), top: 0)
 				}
 			}
 
@@ -200,11 +201,11 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 		let visibleIndexes: Range<Int>
 
-		if viewControllers.isEmpty || viewBounds.isEmpty {
+		if viewControllers.isEmpty || bounds.isEmpty {
 			visibleIndexes = 0 ..< 0
 		}
 		else {
-			let floatingIndex = contentOffset.left / viewBounds.width
+			let floatingIndex = contentOffset.left / bounds.width
 			visibleIndexes = Int(floor(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1) ... Int(ceil(floatingIndex)).clamp(min: 0, max: viewControllers.count - 1)
 		}
 
@@ -422,7 +423,14 @@ public /* non-final */ class ScrollViewController: ViewController {
 	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
-		layoutChildrenForcingLayoutUpdate(true)
+		let bounds = view.bounds
+		guard bounds.size != lastLayoutedSize else {
+			return
+		}
+
+		lastLayoutedSize = bounds.size
+
+		layoutChildrenForcingLayoutUpdate(false)
 		updatePrimaryViewController()
 	}
 
