@@ -96,6 +96,16 @@ public /* non-final */ class ScrollViewController: ViewController {
 	}
 
 
+	public func didEndDecelerating() {
+		// override in subclasses
+	}
+
+
+	public func didEndDragging(willDecelerate willDecelerate: Bool) {
+		// override in subclasses
+	}
+
+
 	public func didScroll() {
 		// override in subclasses
 	}
@@ -469,6 +479,11 @@ public /* non-final */ class ScrollViewController: ViewController {
 
 		updateAppearStateForAllChildrenAnimated(animated)
 	}
+
+
+	public func willBeginDragging() {
+		// override in subclasses
+	}
 }
 
 
@@ -491,6 +506,7 @@ extension DelegateProxy: UIScrollViewDelegate {
 		let scrollViewController = self.scrollViewController
 
 		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
+		scrollViewController.didEndDecelerating()
 	}
 
 
@@ -517,10 +533,14 @@ extension DelegateProxy: UIScrollViewDelegate {
 
 		scrollViewController.isInScrollingAnimation = false
 
-		if !decelerate {
+		if decelerate {
+			scrollViewController.didEndDragging(willDecelerate: true)
+		}
+		else {
 			onMainQueue { // loop one cycle because UIScrollView did not yet update .tracking
 				scrollViewController.updateAppearStateForAllChildrenAnimated(true)
 				scrollViewController.updatePrimaryViewController()
+				scrollViewController.didEndDragging(willDecelerate: false)
 			}
 		}
 	}
@@ -555,6 +575,8 @@ extension DelegateProxy: UIScrollViewDelegate {
 		scrollViewController.updateAppearStateForAllChildrenAnimated(true)
 
 		scrollCompletion?(cancelled: true)
+
+		scrollViewController.willBeginDragging()
 	}
 
 
