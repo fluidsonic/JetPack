@@ -1,17 +1,14 @@
 // Allows extension for Optional depending on the wrapped type.
 
-public protocol _Optional: NilLiteralConvertible {
+public protocol _Optional: ExpressibleByNilLiteral {
 
 	associatedtype Wrapped
 
-	init()
 	init(_ some: Wrapped)
 
-	@warn_unused_result
-	func map<U>(@noescape f: (Wrapped) throws -> U) rethrows -> U?
 
-	@warn_unused_result
-	func flatMap<U>(@noescape f: (Wrapped) throws -> U?) rethrows -> U?
+	func flatMap<U> (_ transform: (Wrapped) throws -> U?) rethrows -> U?
+	func map<U>     (_ transform: (Wrapped) throws -> U) rethrows -> U?
 }
 
 

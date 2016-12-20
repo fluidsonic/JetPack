@@ -11,19 +11,19 @@ import UIKit
 
 public extension UITableViewCell {
 
-	private struct AssociatedKeys {
-		private static var predictedConfiguration = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var predictedConfiguration = UInt8()
 	}
 
 
 	@objc(JetPack_contentHeightThatFitsWidth:defaultHeight:)
-	internal func contentHeightThatFitsWidth(width: CGFloat, defaultHeight: CGFloat) -> CGFloat {
+	internal func contentHeightThatFitsWidth(_ width: CGFloat, defaultHeight: CGFloat) -> CGFloat {
 		return defaultHeight
 	}
 
 
 	@nonobjc
-	private func fallbackSizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	fileprivate func fallbackSizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		// Private API has changed :(
 		// So in the worst case we have to provide an acceptable fallback until the issue is resolved.
 		// @Apple, please make this easier to implement! We don't want to make our own UITableView just to implement manual layouting of UITableViewCells correctly…
@@ -36,21 +36,21 @@ public extension UITableViewCell {
 
 
 	@nonobjc
-	internal final func improvedSizeThatFitsSize(maximumSize: CGSize) -> CGSize {
-		guard let layoutManager = private_layoutManager where layoutManager.respondsToSelector(#selector(LayoutManager.private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:))) else {
+	internal final func improvedSizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
+		guard let layoutManager = private_layoutManager, layoutManager.responds(to: #selector(LayoutManager.private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:))) else {
 			// private property -[UITableViewCell layoutManager] was renamed, removed or changed type
 			return fallbackSizeThatFitsSize(maximumSize)
 		}
 
 		let editing: Bool
 		if let tableView = (superview as? UITableView) ?? (superview?.superview as? UITableView), let indexPath = tableView.indexPathForCurrentHeightComputation {
-			editing = tableView.editing
+			editing = tableView.isEditing
 
 			predictedConfiguration = PredictedConfiguration(
 				editing:                   editing,
-				editingStyle:              tableView.delegate?.tableView?(tableView, editingStyleForRowAtIndexPath: indexPath) ?? .Delete,
-				shouldIndentWhileEditing:  tableView.delegate?.tableView?(tableView, shouldIndentWhileEditingRowAtIndexPath: indexPath) ?? true,
-				showsReorderControl:       showsReorderControl && (tableView.dataSource?.tableView?(tableView, canMoveRowAtIndexPath: indexPath) ?? false)
+				editingStyle:              tableView.delegate?.tableView?(tableView, editingStyleForRowAt: indexPath as IndexPath) ?? .delete,
+				shouldIndentWhileEditing:  tableView.delegate?.tableView?(tableView, shouldIndentWhileEditingRowAt: indexPath as IndexPath) ?? true,
+				showsReorderControl:       showsReorderControl && (tableView.dataSource?.tableView?(tableView, canMoveRowAt: indexPath as IndexPath) ?? false)
 			)
 		}
 		else {
@@ -73,23 +73,23 @@ public extension UITableViewCell {
 
 
 	@nonobjc
-	private var predictedConfiguration: PredictedConfiguration? {
+	fileprivate var predictedConfiguration: PredictedConfiguration? {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.predictedConfiguration) as? StrongReference<PredictedConfiguration>)?.target }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.predictedConfiguration, newValue != nil ? StrongReference(newValue!) : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@objc(JetPack_layoutManager)
-	private dynamic var private_layoutManager: LayoutManager? {
+	fileprivate dynamic var private_layoutManager: LayoutManager? {
 		// called only when private property was renamed or removed
 		return nil
 	}
 
 
 	@objc(JetPack_separatorStyle)
-	private dynamic var private_separatorStyle: UITableViewCellSeparatorStyle {
+	fileprivate dynamic var private_separatorStyle: UITableViewCellSeparatorStyle {
 		// called only when private property was renamed or removed
-		return .SingleLine
+		return .singleLine
 	}
 
 
@@ -110,9 +110,9 @@ public extension UITableViewCell {
 
 
 	@nonobjc
-	private func sizeThatFitsContentWidth(contentWidth: CGFloat, cellWidth: CGFloat, defaultContentHeight: CGFloat) -> CGSize {
+	fileprivate func sizeThatFitsContentWidth(_ contentWidth: CGFloat, cellWidth: CGFloat, defaultContentHeight: CGFloat) -> CGSize {
 		var cellHeight = contentHeightThatFitsWidth(contentWidth, defaultHeight: defaultContentHeight)
-		if private_separatorStyle != .None {
+		if private_separatorStyle != .none {
 			cellHeight += pointsForPixels(1)
 		}
 		cellHeight = ceilToGrid(cellHeight)
@@ -122,7 +122,7 @@ public extension UITableViewCell {
 
 
 	@objc(JetPack_isEditing)
-	private dynamic var swizzled_editing: Bool {
+	fileprivate dynamic var swizzled_editing: Bool {
 		if let predictedConfiguration = predictedConfiguration {
 			return predictedConfiguration.editing
 		}
@@ -132,7 +132,7 @@ public extension UITableViewCell {
 
 
 	@objc(JetPack_editingStyle)
-	private dynamic var swizzled_editingStyle: UITableViewCellEditingStyle {
+	fileprivate dynamic var swizzled_editingStyle: UITableViewCellEditingStyle {
 		if let predictedConfiguration = predictedConfiguration {
 			return predictedConfiguration.editingStyle
 		}
@@ -142,7 +142,7 @@ public extension UITableViewCell {
 
 
 	@objc(JetPack_shouldIndentWhileEditing)
-	private dynamic var swizzled_shouldIndentWhileEditing: Bool {
+	fileprivate dynamic var swizzled_shouldIndentWhileEditing: Bool {
 		if let predictedConfiguration = predictedConfiguration {
 			return predictedConfiguration.shouldIndentWhileEditing
 		}
@@ -152,7 +152,7 @@ public extension UITableViewCell {
 
 
 	@objc(JetPack_showsReorderControl)
-	private dynamic var swizzled_showsReorderControl: Bool {
+	fileprivate dynamic var swizzled_showsReorderControl: Bool {
 		if let predictedConfiguration = predictedConfiguration {
 			return predictedConfiguration.showsReorderControl
 		}
@@ -166,18 +166,18 @@ public extension UITableViewCell {
 private final class LayoutManager: NSObject {
 
 	@objc(JetPack_contentFrameForCell:editing:showingDeleteConfirmation:width:)
-	private dynamic func private_contentFrameForCell(cell: UITableViewCell, editing: Bool, showingDeleteConfirmation: Bool, width: CGFloat) -> CGRect {
+	fileprivate dynamic func private_contentFrameForCell(_ cell: UITableViewCell, editing: Bool, showingDeleteConfirmation: Bool, width: CGFloat) -> CGRect {
 		// called only when private method was renamed or removed
 		return .null
 	}
 
 
 	@nonobjc
-	private static func setUp() {
+	fileprivate static func setUp() {
 		// yep, private API necessary :(
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
 
-		guard let layoutManagerType = NSClassFromString(["UITableView", "Cell", "Layout", "Manager"].joinWithSeparator("")) else {
+		guard let layoutManagerType = NSClassFromString(["UITableView", "Cell", "Layout", "Manager"].joined(separator: "")) else {
 			log("Integration with UITableViewCell's layout system does not work anymore.\nReport this at https://github.com/fluidsonic/JetPack/issues?q=contentHeightThatFitsWidth+broken")
 			return
 		}
@@ -193,10 +193,10 @@ private final class LayoutManager: NSObject {
 
 private struct PredictedConfiguration {
 
-	private var editing: Bool
-	private var editingStyle: UITableViewCellEditingStyle
-	private var shouldIndentWhileEditing: Bool
-	private var showsReorderControl: Bool
+	fileprivate var editing: Bool
+	fileprivate var editingStyle: UITableViewCellEditingStyle
+	fileprivate var shouldIndentWhileEditing: Bool
+	fileprivate var showsReorderControl: Bool
 }
 
 
@@ -213,9 +213,9 @@ extension UITableViewCellEditingStyle: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .Delete: return "Delete"
-		case .Insert: return "Insert"
-		case .None:   return "None"
+		case .delete: return "Delete"
+		case .insert: return "Insert"
+		case .none:   return "None"
 		}
 	}
 }

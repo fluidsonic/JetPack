@@ -1,9 +1,9 @@
 public extension Dictionary {
 
-	@warn_unused_result(mutable_variant="filterInPlace")
-	public func filterAsDictionary(@noescape includeElement: (key: Key, value: Value) throws -> Bool) rethrows -> [Key : Value] {
+	
+	public func filterAsDictionary(includeElement: (_ key: Key, _ value: Value) throws -> Bool) rethrows -> [Key : Value] {
 		var filteredDictionary = [Key : Value]()
-		for (key, value) in self where try includeElement(key: key, value: value) {
+		for (key, value) in self where try includeElement(key, value) {
 			filteredDictionary[key] = value
 		}
 
@@ -11,18 +11,18 @@ public extension Dictionary {
 	}
 
 
-	public mutating func filterInPlace(@noescape includeElement: (key: Key, value: Value) throws -> Bool) rethrows {
-		for (key, value) in self where !(try includeElement(key: key, value: value)) {
+	public mutating func filterInPlace(includeElement: (_ key: Key, _ value: Value) throws -> Bool) rethrows {
+		for (key, value) in self where !(try includeElement(key, value)) {
 			self[key] = nil
 		}
 	}
 
 
-	@warn_unused_result(mutable_variant="mapInPlace")
-	public func mapAsDictionary<K: Hashable, V>(@noescape transform: (key: Key, value: Value) throws -> (K, V)) rethrows -> [K : V] {
+	
+	public func mapAsDictionary<K: Hashable, V>(transform: (_ key: Key, _ value: Value) throws -> (K, V)) rethrows -> [K : V] {
 		var mappedDictionary = [K : V](minimumCapacity: count)
 		for (key, value) in self {
-			let (mappedKey, mappedValue) = try transform(key: key, value: value)
+			let (mappedKey, mappedValue) = try transform(key, value)
 			mappedDictionary[mappedKey] = mappedValue
 		}
 
@@ -30,12 +30,12 @@ public extension Dictionary {
 	}
 
 
-	@warn_unused_result
-	public func mapAsDictionaryNotNil<K: Hashable, V>(@noescape transform: (key: Key, value: Value) throws -> (K?, V?)) rethrows -> [K : V] {
+	
+	public func mapAsDictionaryNotNil<K: Hashable, V>(transform: (_ key: Key, _ value: Value) throws -> (K?, V?)) rethrows -> [K : V] {
 		var mappedDictionary = [K : V](minimumCapacity: count)
 		for (key, value) in self {
-			let (mappedKey, mappedValue) = try transform(key: key, value: value)
-			if let mappedKey = mappedKey, mappedValue = mappedValue {
+			let (mappedKey, mappedValue) = try transform(key, value)
+			if let mappedKey = mappedKey, let mappedValue = mappedValue {
 				mappedDictionary[mappedKey] = mappedValue
 			}
 		}
@@ -44,14 +44,14 @@ public extension Dictionary {
 	}
 
 
-	public mutating func mapInPlace(@noescape transform: (value: Value) throws -> Value) rethrows {
+	public mutating func mapInPlace(transform: (_ value: Value) throws -> Value) rethrows {
 		for (key, value) in self {
-			self[key] = try transform(value: value)
+			self[key] = try transform(value)
 		}
 	}
 
 
-	mutating func updateValues(fromDictionary: [Key : Value]) {
+	mutating func updateValues(_ fromDictionary: [Key : Value]) {
 		for (key, value) in fromDictionary {
 			updateValue(value, forKey: key)
 		}

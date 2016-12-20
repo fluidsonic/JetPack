@@ -4,10 +4,10 @@ import Foundation
 import JetPack
 
 
-class NSLocale_Tests: XCTestCase {
+class Locale_Tests: XCTestCase {
 
 	func testPluralCategories() {
-		let data: [String : [NSNumber : NSLocale.PluralCategory]] = [
+		let data: [String : [NSNumber : Locale.PluralCategory]] = [
 			"de_DE": [
 				0: .other,
 				1: .one,
@@ -43,7 +43,7 @@ class NSLocale_Tests: XCTestCase {
 		]
 
 		for (localeIdentifier, values) in data {
-			let locale = NSLocale(localeIdentifier: localeIdentifier)
+			let locale = Locale(identifier: localeIdentifier)
 			for (number, expectedCategory) in values {
 				let category = locale.pluralCategoryForNumber(number)
 				if category != expectedCategory {
@@ -55,13 +55,13 @@ class NSLocale_Tests: XCTestCase {
 
 
 	func testUses24HourFormat() {
-		XCTAssertEqual(NSLocale(localeIdentifier: "en_US").uses24HourFormat, false)
-		XCTAssertEqual(NSLocale(localeIdentifier: "de_DE").uses24HourFormat, true)
+		XCTAssertEqual(Locale(identifier: "en_US").uses24HourFormat, false)
+		XCTAssertEqual(Locale(identifier: "de_DE").uses24HourFormat, true)
 	}
 
 
 	func testUsesMetricSystem() {
-		XCTAssertEqual(NSLocale(localeIdentifier: "en_US").usesMetricSystem, false)
-		XCTAssertEqual(NSLocale(localeIdentifier: "de_DE").usesMetricSystem, true)
+		XCTAssertEqual(Locale(identifier: "en_US").usesMetricSystem9, false)
+		XCTAssertEqual(Locale(identifier: "de_DE").usesMetricSystem9, true)
 	}
 }

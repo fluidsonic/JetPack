@@ -1,24 +1,24 @@
 import Foundation
 
 
-public extension NSCalendarUnit {
+public extension NSCalendar.Unit {
 
 	@nonobjc
-	public static let All: NSCalendarUnit = [
-		.Era,
-		.Year,
-		.Month,
-		.Day,
-		.Hour,
-		.Minute,
-		.Second,
-		.Weekday,
-		.WeekdayOrdinal,
-		.WeekOfMonth,
-		.WeekOfYear,
-		.YearForWeekOfYear,
-		.Nanosecond,
-		.Calendar,
-		.TimeZone
+	public static let All: NSCalendar.Unit = [
+		.era,
+		.year,
+		.month,
+		.day,
+		.hour,
+		.minute,
+		.second,
+		.weekday,
+		.weekdayOrdinal,
+		.weekOfMonth,
+		.weekOfYear,
+		.yearForWeekOfYear,
+		.nanosecond,
+		.calendar,
+		.timeZone
 	]
 }

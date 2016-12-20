@@ -2,25 +2,25 @@ import ObjectiveC
 import UIKit
 
 
-public extension UIViewController {
+extension UIViewController {
 
 	public typealias AppearState = _UIViewControllerAppearState
 	public typealias ContainmentState = _UIViewControllerContainmentState
 
 
-	private struct AssociatedKeys {
-		private static var appearState = UInt8()
-		private static var containmentState = UInt8()
-		private static var presentingViewControllerForCurrentCoverageCallbacks = UInt8()
-		private static var decorationInsetsAnimation = UInt8()
-		private static var decorationInsetsAreValid = UInt8()
-		private static var innerDecorationInsets = UInt8()
-		private static var outerDecorationInsets = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var appearState = UInt8()
+		fileprivate static var containmentState = UInt8()
+		fileprivate static var presentingViewControllerForCurrentCoverageCallbacks = UInt8()
+		fileprivate static var decorationInsetsAnimation = UInt8()
+		fileprivate static var decorationInsetsAreValid = UInt8()
+		fileprivate static var innerDecorationInsets = UInt8()
+		fileprivate static var outerDecorationInsets = UInt8()
 	}
 
 
 	@nonobjc
-	public private(set) var appearState: AppearState {
+	public fileprivate(set) var appearState: AppearState {
 		get { return AppearState(id: objc_getAssociatedObject(self, &AssociatedKeys.appearState) as? Int ?? 0) }
 		set {
 			checkTransitionFromAppearState(self.appearState, toAppearState: newValue)
@@ -30,13 +30,13 @@ public extension UIViewController {
 
 
 	@objc(JetPack_applicationDidBecomeActive)
-	public func applicationDidBecomeActive() {
+	open func applicationDidBecomeActive() {
 		// override in subclasses
 	}
 
 
 	@nonobjc
-	private static func applicationDidBecomeActive(notification: NSNotification) {
+	fileprivate static func applicationDidBecomeActive(_ notification: Notification) {
 		traverseAllViewControllers() { viewController in
 			viewController.applicationDidBecomeActive()
 		}
@@ -44,13 +44,13 @@ public extension UIViewController {
 
 
 	@objc(JetPack_applicationWillResignActive)
-	public func applicationWillResignActive() {
+	open func applicationWillResignActive() {
 		// override in subclasses
 	}
 
 
 	@nonobjc
-	private static func applicationWillResignActive(notification: NSNotification) {
+	fileprivate static func applicationWillResignActive(_ notification: Notification) {
 		traverseAllViewControllers() { viewController in
 			viewController.applicationWillResignActive()
 		}
@@ -58,19 +58,19 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private func checkTransitionFromAppearState(fromAppearState: AppearState, toAppearState: AppearState) {
-		func lifecycleMethodNameForAppearState(appearState: AppearState) -> String {
+	fileprivate func checkTransitionFromAppearState(_ fromAppearState: AppearState, toAppearState: AppearState) {
+		func lifecycleMethodNameForAppearState(_ appearState: AppearState) -> String {
 			switch appearState {
-			case .DidAppear:     return "viewDidAppear()"
-			case .DidDisappear:  return "viewDidDisappear()"
-			case .WillAppear:    return "viewWillAppear()"
-			case .WillDisappear: return "viewWillDisappear()"
+			case .didAppear:     return "viewDidAppear()"
+			case .didDisappear:  return "viewDidDisappear()"
+			case .willAppear:    return "viewWillAppear()"
+			case .willDisappear: return "viewWillDisappear()"
 			}
 		}
 
 		guard fromAppearState != toAppearState else {
 			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
-			let typeName: String = "\(self.dynamicType)"
+			let typeName: String = "\(type(of: self))"
 
 			reportLifecycleProblem("\(typeName) (indirectly) called super.\(toMethodName) multiple times.", possibleCauses: [
 				"\(typeName) or one of its superclasses called super.\(toMethodName) multiple times",
@@ -84,17 +84,17 @@ public extension UIViewController {
 
 		let expectedFromAppearStates: Set<AppearState>
 		switch toAppearState {
-		case .DidAppear:     expectedFromAppearStates = [.WillAppear]
-		case .DidDisappear:  expectedFromAppearStates = [.WillDisappear]
-		case .WillAppear:    expectedFromAppearStates = [.WillDisappear, .DidDisappear]
-		case .WillDisappear: expectedFromAppearStates = [.WillAppear, .DidAppear]
+		case .didAppear:     expectedFromAppearStates = [.willAppear]
+		case .didDisappear:  expectedFromAppearStates = [.willDisappear]
+		case .willAppear:    expectedFromAppearStates = [.willDisappear, .didDisappear]
+		case .willDisappear: expectedFromAppearStates = [.willAppear, .didAppear]
 		}
 
 		if !expectedFromAppearStates.contains(fromAppearState) {
-			let expectedFromMethodNames: String = expectedFromAppearStates.map({ lifecycleMethodNameForAppearState($0) }).joinWithSeparator(" or ")
-			let expectedFromSuperCalls: String = "super." + expectedFromAppearStates.map({ lifecycleMethodNameForAppearState($0) }).joinWithSeparator("/")
+			let expectedFromMethodNames: String = expectedFromAppearStates.map({ lifecycleMethodNameForAppearState($0) }).joined(separator: " or ")
+			let expectedFromSuperCalls: String = "super." + expectedFromAppearStates.map({ lifecycleMethodNameForAppearState($0) }).joined(separator: "/")
 			let toMethodName: String = lifecycleMethodNameForAppearState(toAppearState)
-			let typeName: String = "\(self.dynamicType)"
+			let typeName: String = "\(type(of: self))"
 
 			reportLifecycleProblem("\(typeName) (indirectly) called super.\(toMethodName) unexpectedly while the view controller is in \(fromAppearState) state. It method must only be called after \(expectedFromMethodNames).", possibleCauses: [
 				"\(typeName) or one of its superclasses forgot to call \(expectedFromSuperCalls) earlier",
@@ -113,42 +113,42 @@ public extension UIViewController {
 
 
 	@nonobjc
-	public private(set) var containmentState: ContainmentState {
+	public fileprivate(set) var containmentState: ContainmentState {
 		get { return ContainmentState(id: objc_getAssociatedObject(self, &AssociatedKeys.containmentState) as? Int ?? 0) }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.containmentState, newValue.id, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@objc(JetPack_computeInnerDecorationInsetsForChildViewController:)
-	@warn_unused_result
-	public func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
+	
+	open func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return innerDecorationInsets
 	}
 
 
 	@objc(JetPack_computeOuterDecorationInsetsForChildViewController:)
-	@warn_unused_result
-	public func computeOuterDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
+	
+	open func computeOuterDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return outerDecorationInsets
 	}
 
 
 	@nonobjc
-	internal private(set) var decorationInsetsAnimation: Animation.Wrapper? {
+	internal fileprivate(set) var decorationInsetsAnimation: Animation.Wrapper? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation) as? Animation.Wrapper }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.decorationInsetsAnimation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@nonobjc
-	private var decorationInsetsAreValid: Bool {
+	fileprivate var decorationInsetsAreValid: Bool {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.decorationInsetsAreValid) as? NSNumber)?.boolValue ?? false }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.decorationInsetsAreValid, newValue ? true : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@objc(JetPack_decorationInsetsDidChangeWithAnimation:)
-	public func decorationInsetsDidChangeWithAnimation(animationWrapper: Animation.Wrapper?) {
+	public func decorationInsetsDidChangeWithAnimation(_ animationWrapper: Animation.Wrapper?) {
 		for childViewController in childViewControllers {
 			childViewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
 		}
@@ -158,38 +158,38 @@ public extension UIViewController {
 	// reverse-engineered from preferredInterfaceOrientationForPresentation() @ iOS 9.3
 	@nonobjc
 	public static func defaultPreferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
-		return UIApplication.sharedApplication().statusBarOrientation
+		return UIApplication.shared.statusBarOrientation
 	}
 
 
 	// reverse-engineered from UIViewController.supportedInterfaceOrientations() @ iOS 9.3
 	@nonobjc
-	public static func defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle: UIModalPresentationStyle) -> UIInterfaceOrientationMask {
+	public static func defaultSupportedInterfaceOrientationsForModalPresentationStyle(_ modalPresentationStyle: UIModalPresentationStyle) -> UIInterfaceOrientationMask {
 		if modalPresentationStyle == .Unknown16 {
-			return .All
+			return .all
 		}
 
 		switch modalPresentationStyle {
-		case .PageSheet, .FormSheet:
-			return .All
+		case .pageSheet, .formSheet:
+			return .all
 
-		case .CurrentContext, .Custom, .FullScreen, .None, .OverCurrentContext, .OverFullScreen, .Popover:
-			switch UIDevice.currentDevice().userInterfaceIdiom {
-			case .Pad:
-				return .All
+		case .currentContext, .custom, .fullScreen, .none, .overCurrentContext, .overFullScreen, .popover:
+			switch UIDevice.current.userInterfaceIdiom {
+			case .pad:
+				return .all
 
-			case .Phone:
-				return .AllButUpsideDown
+			case .phone:
+				return .allButUpsideDown
 
-			case .CarPlay, .TV, .Unspecified:
-				return .Portrait
+			case .carPlay, .tv, .unspecified:
+				return .portrait
 			}
 		}
 	}
 
 
 	@objc(JetPack_dismissViewControllerAnimated:completion:)
-	public func dismissViewController(animated animated: Bool = true, completion: Closure? = nil) {
+	public func dismissViewController(animated: Bool = true, completion: Closure? = nil) {
 		if let presentedViewController = presentedViewController {
 			log("Cannot dismiss view controller \(self) while it is presenting view controller \(presentedViewController).")
 			return
@@ -199,25 +199,25 @@ public extension UIViewController {
 			return
 		}
 
-		dismissViewControllerAnimated(animated, completion: completion)
+		dismiss(animated: animated, completion: completion)
 	}
 
 
 	@nonobjc
-	public private(set) var innerDecorationInsets: UIEdgeInsets {
-		get { return (objc_getAssociatedObject(self, &AssociatedKeys.innerDecorationInsets) as? NSValue)?.UIEdgeInsetsValue() ?? .zero }
-		set { objc_setAssociatedObject(self, &AssociatedKeys.innerDecorationInsets, newValue.isEmpty ? nil : NSValue(UIEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	public fileprivate(set) var innerDecorationInsets: UIEdgeInsets {
+		get { return (objc_getAssociatedObject(self, &AssociatedKeys.innerDecorationInsets) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.innerDecorationInsets, newValue.isEmpty ? nil : NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@nonobjc
-	public func invalidateDecorationInsetsWithAnimation(animation: Animation?) {
+	public func invalidateDecorationInsetsWithAnimation(_ animation: Animation?) {
 		invalidateDecorationInsetsWithAnimationWrapper(animation?.wrap())
 	}
 
 
 	@nonobjc
-	internal func invalidateDecorationInsetsWithAnimationWrapper(animationWrapper: Animation.Wrapper?) {
+	internal func invalidateDecorationInsetsWithAnimationWrapper(_ animationWrapper: Animation.Wrapper?) {
 		if decorationInsetsAnimation == nil {
 			decorationInsetsAnimation = animationWrapper
 		}
@@ -235,9 +235,9 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private static func invalidateTopLevelDecorationInsetsWithAnimation(animation: Animation?) {
-		for window in UIApplication.sharedApplication().windows {
-			guard window.dynamicType == UIWindow.self || window is _NonSystemWindow || !NSStringFromClass(window.dynamicType).hasPrefix("UI") else {
+	fileprivate static func invalidateTopLevelDecorationInsetsWithAnimation(_ animation: Animation?) {
+		for window in UIApplication.shared.windows {
+			guard type(of: window) == UIWindow.self || window is _NonSystemWindow || !NSStringFromClass(type(of: window)).hasPrefix("UI") else {
 				// ignore system windows like the keyboard
 				continue
 			}
@@ -254,42 +254,42 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private func nameForParentViewController() -> String {
+	fileprivate func nameForParentViewController() -> String {
 		guard let parentViewController = reliableParentViewController else {
 			return "the parent view controller"
 		}
 
-		return String(parentViewController.dynamicType)
+		return String(describing: type(of: parentViewController))
 	}
 
 
 	@nonobjc
-	public private(set) var outerDecorationInsets: UIEdgeInsets {
-		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.UIEdgeInsetsValue() ?? .zero }
-		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(UIEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	public fileprivate(set) var outerDecorationInsets: UIEdgeInsets {
+		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@objc(JetPack_preferredNavigationBarTintColor)
-	public var preferredNavigationBarTintColor: UIColor? {
+	open var preferredNavigationBarTintColor: UIColor? {
 		return nil
 	}
 
 
 	@objc(JetPack_preferredNavigationBarVisibility)
-	public var preferredNavigationBarVisibility: NavigationBar.Visibility {
-		return .Visible
+	open var preferredNavigationBarVisibility: NavigationBar.Visibility {
+		return .visible
 	}
 
 
 	@nonobjc
-	public func presentAlertWithMessage(message: String, okayHandler: Closure? = nil) {
+	public func presentAlertWithMessage(_ message: String, okayHandler: Closure? = nil) {
 		presentAlertWithTitle("", message: message, okayHandler: okayHandler)
 	}
 
 
 	@nonobjc
-	public func presentAlertWithTitle(title: String, message: String, okayHandler: Closure? = nil) {
+	public func presentAlertWithTitle(_ title: String, message: String, okayHandler: Closure? = nil) {
 		let alertController = UIAlertController(alertWithTitle: title, message: message)
 		alertController.addOkayAction(okayHandler)
 
@@ -298,30 +298,30 @@ public extension UIViewController {
 
 
 	@nonobjc
-	public func presentViewController(viewControllerToPresent: UIViewController, animated: Bool) {
-		presentViewController(viewControllerToPresent, animated: animated, completion: nil)
+	public func presentViewController(_ viewControllerToPresent: UIViewController, animated: Bool) {
+		present(viewControllerToPresent, animated: animated, completion: nil)
 	}
 
 
 	@nonobjc
-	public func presentViewController(viewControllerToPresent: UIViewController, completion: Closure? = nil) {
-		presentViewController(viewControllerToPresent, animated: true, completion: completion)
+	public func presentViewController(_ viewControllerToPresent: UIViewController, completion: Closure? = nil) {
+		present(viewControllerToPresent, animated: true, completion: completion)
 	}
 
 
 	@nonobjc
-	private var presentingViewControllerForCurrentCoverageCallbacks: UIViewController? {
+	fileprivate var presentingViewControllerForCurrentCoverageCallbacks: UIViewController? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.presentingViewControllerForCurrentCoverageCallbacks) as? UIViewController }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.presentingViewControllerForCurrentCoverageCallbacks, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@nonobjc
-	private var reliableParentViewController: UIViewController? {
-		if let parentViewController = parentViewController {
+	fileprivate var reliableParentViewController: UIViewController? {
+		if let parentViewController = parent {
 			return parentViewController
 		}
-		if let splitViewController = splitViewController where splitViewController.viewControllers.first === self {
+		if let splitViewController = splitViewController, splitViewController.viewControllers.first === self {
 			// parentViewController may be nil while split view controller's master view controller is displayed as overlay
 			return splitViewController
 		}
@@ -331,7 +331,7 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private func reportLifecycleProblem(problem: String, possibleCauses: [String]) {
+	fileprivate func reportLifecycleProblem(_ problem: String, possibleCauses: [String]) {
 		guard shouldReportLifecycleProblems else {
 			return
 		}
@@ -342,7 +342,7 @@ public extension UIViewController {
 		message += "\n\n"
 		message += "Possible Causes:\n"
 		message += "\t- "
-		message += possibleCauses.joinWithSeparator("\n\t- ")
+		message += possibleCauses.joined(separator: "\n\t- ")
 		message += "\n"
 
 		print(message)
@@ -351,15 +351,15 @@ public extension UIViewController {
 
 	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleMethodInType(self, fromSelector: #selector(didMoveToParentViewController(_:)),             toSelector: #selector(swizzled_didMoveToParentViewController(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(presentViewController(_:animated:completion:)), toSelector: #selector(swizzled_presentViewController(_:animated:completion:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewDidAppear(_:)),                             toSelector: #selector(swizzled_viewDidAppear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewDidLayoutSubviews),                         toSelector: #selector(swizzled_viewDidLayoutSubviews))
-		swizzleMethodInType(self, fromSelector: #selector(viewDidDisappear(_:)),                          toSelector: #selector(swizzled_viewDidDisappear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewWillAppear(_:)),                            toSelector: #selector(swizzled_viewWillAppear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewWillDisappear(_:)),                         toSelector: #selector(swizzled_viewWillDisappear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewWillLayoutSubviews),                        toSelector: #selector(swizzled_viewWillLayoutSubviews))
-		swizzleMethodInType(self, fromSelector: #selector(willMoveToParentViewController(_:)),            toSelector: #selector(swizzled_willMoveToParentViewController(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(didMove(toParentViewController:)),  toSelector: #selector(swizzled_didMoveToParentViewController(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(present(_:animated:completion:)),   toSelector: #selector(swizzled_presentViewController(_:animated:completion:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewDidAppear(_:)),                 toSelector: #selector(swizzled_viewDidAppear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewDidLayoutSubviews),             toSelector: #selector(swizzled_viewDidLayoutSubviews))
+		swizzleMethodInType(self, fromSelector: #selector(viewDidDisappear(_:)),              toSelector: #selector(swizzled_viewDidDisappear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewWillAppear(_:)),                toSelector: #selector(swizzled_viewWillAppear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewWillDisappear(_:)),             toSelector: #selector(swizzled_viewWillDisappear(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(viewWillLayoutSubviews),            toSelector: #selector(swizzled_viewWillLayoutSubviews))
+		swizzleMethodInType(self, fromSelector: #selector(willMove(toParentViewController:)), toSelector: #selector(swizzled_willMoveToParentViewController(_:)))
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
@@ -367,8 +367,8 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private var shouldReportLifecycleProblems: Bool {
-		let typeName = NSStringFromClass(self.dynamicType)
+	fileprivate var shouldReportLifecycleProblems: Bool {
+		let typeName = NSStringFromClass(type(of: self))
 		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
 			// broken implementations in public and private UIKit view controllers
 			return false
@@ -379,15 +379,15 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private static func subscribeToApplicationActiveNotifications() {
-		let notificationCenter = NSNotificationCenter.defaultCenter()
-		notificationCenter.addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil, usingBlock: applicationDidBecomeActive)
-		notificationCenter.addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil, usingBlock: applicationWillResignActive)
+	fileprivate static func subscribeToApplicationActiveNotifications() {
+		let notificationCenter = NotificationCenter.default
+		notificationCenter.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil, using: applicationDidBecomeActive)
+		notificationCenter.addObserver(forName: NSNotification.Name.UIApplicationWillResignActive, object: nil, queue: nil, using: applicationWillResignActive)
 	}
 
 
 	@nonobjc
-	private static func subscribeToKeyboardNotifications() {
+	fileprivate static func subscribeToKeyboardNotifications() {
 		let _ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
 			self.invalidateTopLevelDecorationInsetsWithAnimation(Keyboard.animation)
 		}
@@ -395,12 +395,12 @@ public extension UIViewController {
 
 
 	@objc(JetPack_didMoveToParentViewController:)
-	private dynamic func swizzled_didMoveToParentViewController(parentViewController: UIViewController?) {
+	fileprivate dynamic func swizzled_didMoveToParentViewController(_ parentViewController: UIViewController?) {
 		let oldContainmentState = self.containmentState
-		let newContainmentState: ContainmentState = parentViewController != nil ? .DidMoveToParent : .DidMoveFromParent
+		let newContainmentState: ContainmentState = parentViewController != nil ? .didMoveToParent : .didMoveFromParent
 
 		if !newContainmentState.isValidSuccessorFor(oldContainmentState) {
-			let typeName: String = "\(self.dynamicType)"
+			let typeName: String = "\(type(of: self))"
 
 			var possibleCauses = [
 				"\(typeName) or one of its superclasses called super.didMoveToParentViewController() multiple times",
@@ -413,18 +413,21 @@ public extension UIViewController {
 
 			reportLifecycleProblem(".didMoveToParentViewController(\(parentViewController != nil ? "non-nil" : "nil")) was called unexpectedly while view controller is in \(oldContainmentState) state.", possibleCauses: possibleCauses)
 		}
-		else if parentViewController !== self.parentViewController {
-			reportLifecycleProblem(".didMoveToParentViewController() was called with parent \(parentViewController ?? "<nil>") but is currently moving to \(self.parentViewController ?? "<nil>").", possibleCauses: [ "the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken" ]
+		else if parentViewController !== self.parent {
+			let newParentName = parentViewController.map { String(describing: $0) } ?? "<nil>"
+			let currentParentName = self.parent.map { String(describing: $0) } ?? "<nil>"
+
+			reportLifecycleProblem(".didMoveToParentViewController() was called with parent \(newParentName) but is currently moving to \(currentParentName).", possibleCauses: [ "the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken" ]
 			)
 		}
 		else if appearState.isTransition {
 			var possibleCauses = [ "the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken" ]
 
-			if appearState == .WillAppear && newContainmentState == .DidMoveToParent {
+			if appearState == .willAppear && newContainmentState == .didMoveToParent {
 				possibleCauses.append("this method was probably called from within the parent's .viewDidAppear() which does not imply that the child did complete it's transition yet")
 			}
 
-			reportLifecycleProblem(".didMoveToParentViewController() was called unexpectedly during an appearance transition. It must only be called while the view controller is in \(AppearState.DidDisappear) or \(AppearState.DidAppear) state.", possibleCauses: possibleCauses)
+			reportLifecycleProblem(".didMoveToParentViewController() was called unexpectedly during an appearance transition. It must only be called while the view controller is in \(AppearState.didDisappear) or \(AppearState.didAppear) state.", possibleCauses: possibleCauses)
 		}
 
 		self.containmentState = newContainmentState
@@ -434,7 +437,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_presentViewController:animated:completion:)
-	private dynamic func swizzled_presentViewController(viewControllerToPresent: UIViewController, animated: Bool, completion: Closure?) {
+	fileprivate dynamic func swizzled_presentViewController(_ viewControllerToPresent: UIViewController, animated: Bool, completion: Closure?) {
 		swizzled_presentViewController(viewControllerToPresent, animated: animated, completion: completion)
 
 		// workaround for UIKit bug, see http://stackoverflow.com/a/30787046/1183577
@@ -443,12 +446,12 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewDidAppear:)
-	private dynamic func swizzled_viewDidAppear(animated: Bool) {
-		self.appearState = .DidAppear
+	fileprivate dynamic func swizzled_viewDidAppear(_ animated: Bool) {
+		self.appearState = .didAppear
 
-		if containmentState == .WillMoveToParent {
+		if containmentState == .willMoveToParent {
 			onMainQueueAfterDelay(1) {
-				guard self.containmentState == .WillMoveToParent && self.appearState == .DidAppear else {
+				guard self.containmentState == .willMoveToParent && self.appearState == .didAppear else {
 					return
 				}
 
@@ -458,9 +461,9 @@ public extension UIViewController {
 			}
 		}
 
-		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
+		if isBeingPresented && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
-				guard viewController.appearState == .DidAppear else {
+				guard viewController.appearState == .didAppear else {
 					return
 				}
 
@@ -473,12 +476,12 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewDidDisappear:)
-	private dynamic func swizzled_viewDidDisappear(animated: Bool) {
-		self.appearState = .DidDisappear
+	fileprivate dynamic func swizzled_viewDidDisappear(_ animated: Bool) {
+		self.appearState = .didDisappear
 
-		if containmentState == .WillMoveFromParent {
+		if containmentState == .willMoveFromParent {
 			onMainQueueAfterDelay(1) {
-				guard self.containmentState == .WillMoveFromParent && self.appearState == .DidDisappear else {
+				guard self.containmentState == .willMoveFromParent && self.appearState == .didDisappear else {
 					return
 				}
 
@@ -488,9 +491,9 @@ public extension UIViewController {
 			}
 		}
 
-		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
+		if isBeingDismissed && reliableParentViewController == nil, let presentingViewController = presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
-				guard viewController.appearState == .DidAppear else {
+				guard viewController.appearState == .didAppear else {
 					return
 				}
 
@@ -505,7 +508,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewDidLayoutSubviews)
-	private dynamic func swizzled_viewDidLayoutSubviews() {
+	fileprivate dynamic func swizzled_viewDidLayoutSubviews() {
 		swizzled_viewDidLayoutSubviews()
 
 		if let navigationController = self as? UINavigationController {
@@ -517,18 +520,18 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWillAppear:)
-	private dynamic func swizzled_viewWillAppear(animated: Bool) {
-		self.appearState = .WillAppear
+	fileprivate dynamic func swizzled_viewWillAppear(_ animated: Bool) {
+		self.appearState = .willAppear
 
 		if tabBarController != nil, let navigationController = navigationController {
 			navigationController.invalidateDecorationInsetsWithAnimation(nil)
 		}
 
-		if isBeingPresented() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, presentationController = presentationController where !presentationController.shouldRemovePresentersView() {
+		if isBeingPresented && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, let presentationController = presentationController, !presentationController.shouldRemovePresentersView {
 			presentingViewControllerForCurrentCoverageCallbacks = presentingViewController
 
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
-				guard viewController.appearState == .DidAppear else {
+				guard viewController.appearState == .didAppear else {
 					return
 				}
 
@@ -545,12 +548,12 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWillDisappear:)
-	private dynamic func swizzled_viewWillDisappear(animated: Bool) {
-		self.appearState = .WillDisappear
+	fileprivate dynamic func swizzled_viewWillDisappear(_ animated: Bool) {
+		self.appearState = .willDisappear
 
-		if isBeingDismissed() && reliableParentViewController == nil, let presentingViewController = self.presentingViewController where presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
+		if isBeingDismissed && reliableParentViewController == nil, let presentingViewController = self.presentingViewController, presentingViewController === presentingViewControllerForCurrentCoverageCallbacks {
 			presentingViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(false) { viewController in
-				guard viewController.appearState == .DidAppear else {
+				guard viewController.appearState == .didAppear else {
 					return
 				}
 
@@ -563,7 +566,7 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWillLayoutSubviews)
-	private dynamic func swizzled_viewWillLayoutSubviews() {
+	fileprivate dynamic func swizzled_viewWillLayoutSubviews() {
 		updateDecorationInsets()
 
 		swizzled_viewWillLayoutSubviews()
@@ -571,12 +574,12 @@ public extension UIViewController {
 
 
 	@objc(JetPack_willMoveToParentViewController:)
-	private dynamic func swizzled_willMoveToParentViewController(parentViewController: UIViewController?) {
+	fileprivate dynamic func swizzled_willMoveToParentViewController(_ parentViewController: UIViewController?) {
 		let oldContainmentState = self.containmentState
-		let newContainmentState: ContainmentState = parentViewController != nil ? .WillMoveToParent : .WillMoveFromParent
+		let newContainmentState: ContainmentState = parentViewController != nil ? .willMoveToParent : .willMoveFromParent
 
 		if !newContainmentState.isValidSuccessorFor(oldContainmentState) {
-			let typeName: String = "\(self.dynamicType)"
+			let typeName: String = "\(type(of: self))"
 
 			var possibleCauses = [
 				"\(typeName) or one of its superclasses called super.willMoveToParentViewController() multiple times",
@@ -590,7 +593,7 @@ public extension UIViewController {
 			reportLifecycleProblem(".willMoveToParentViewController() was called unexpectedly while view controller is in \(oldContainmentState) state.", possibleCauses: possibleCauses)
 		}
 		else if appearState.isTransition {
-			reportLifecycleProblem(".willMoveToParentViewController() was called unexpectedly during an appearance transition. It must only be called while the view controller is in \(AppearState.DidDisappear) or \(AppearState.DidAppear) state.", possibleCauses: [
+			reportLifecycleProblem(".willMoveToParentViewController() was called unexpectedly during an appearance transition. It must only be called while the view controller is in \(AppearState.didDisappear) or \(AppearState.didAppear) state.", possibleCauses: [
 				"the view controller containment implementation of \(nameForParentViewController()) or one if its parents is broken",
 			])
 		}
@@ -602,15 +605,15 @@ public extension UIViewController {
 
 
 	@nonobjc
-	private static func traverseAllViewControllers(closure: UIViewController -> Void) {
-		for window in UIApplication.sharedApplication().windows {
+	fileprivate static func traverseAllViewControllers(_ closure: (UIViewController) -> Void) {
+		for window in UIApplication.shared.windows {
 			window.rootViewController?.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(true, closure: closure)
 		}
 	}
 
 
 	@nonobjc
-	private func traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(includesPresentedViewControllers: Bool, closure: UIViewController -> Void) {
+	fileprivate func traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(_ includesPresentedViewControllers: Bool, closure: (UIViewController) -> Void) {
 		closure(self)
 
 		for childViewController in childViewControllers {
@@ -627,10 +630,10 @@ public extension UIViewController {
 	internal func updateDecorationInsets() {
 		let parentViewController = reliableParentViewController
 
-		guard let window = window where (parentViewController == nil || !decorationInsetsAreValid) else {
+		guard let window = window, (parentViewController == nil || !decorationInsetsAreValid) else {
 			return
 		}
-		guard !window.dynamicType.isPrivate else {
+		guard !type(of: window).isPrivate else {
 			return
 		}
 
@@ -669,7 +672,7 @@ public extension UIViewController {
 
 
 	@nonobjc
-	public func updateNavigationBarStyle(animation animation: Animation? = Animation()) {
+	public func updateNavigationBarStyle(animation: Animation? = Animation()) {
 		guard let navigationController = navigationController as? NavigationController else {
 			return
 		}
@@ -687,32 +690,32 @@ public extension UIViewController {
 
 
 	@objc(JetPack_viewWasCoveredByViewController:animated:)
-	public func viewWasCoveredByViewController(viewController: UIViewController, animated: Bool) {
+	public func viewWasCoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_viewWasUncoveredByViewController:animated:)
-	public func viewWasUncoveredByViewController(viewController: UIViewController, animated: Bool) {
+	public func viewWasUncoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_viewWillBeCoveredByViewController:animated:)
-	public func viewWillBeCoveredByViewController(viewController: UIViewController, animated: Bool) {
+	public func viewWillBeCoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_viewWillBeUncoveredByViewController:animated:)
-	public func viewWillBeUncoveredByViewController(viewController: UIViewController, animated: Bool) {
+	public func viewWillBeUncoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@nonobjc
 	public var window: UIWindow? {
-		guard isViewLoaded() else {
+		guard isViewLoaded else {
 			return nil
 		}
 
@@ -725,53 +728,53 @@ public extension UIViewController {
 // Temporarily moved out of UIViewController extension due to compiler bug.
 // See https://travis-ci.org/fluidsonic/JetPack/jobs/93695509
 public enum _UIViewControllerAppearState {
-	case DidDisappear
-	case WillAppear
-	case DidAppear
-	case WillDisappear
+	case didDisappear
+	case willAppear
+	case didAppear
+	case willDisappear
 
 
-	private init(id: Int) {
+	fileprivate init(id: Int) {
 		switch id {
-		case 0: self = .DidDisappear
-		case 1: self = .WillAppear
-		case 2: self = .DidAppear
-		case 3: self = .WillDisappear
+		case 0: self = .didDisappear
+		case 1: self = .willAppear
+		case 2: self = .didAppear
+		case 3: self = .willDisappear
 		default: fatalError()
 		}
 	}
 
 
-	private var id: Int {
+	fileprivate var id: Int {
 		switch self {
-		case .DidDisappear:  return 0
-		case .WillAppear:    return 1
-		case .DidAppear:     return 2
-		case .WillDisappear: return 3
+		case .didDisappear:  return 0
+		case .willAppear:    return 1
+		case .didAppear:     return 2
+		case .willDisappear: return 3
 		}
 	}
 
 
 	public var isAppear: Bool {
 		switch self {
-		case .WillAppear, .DidAppear:       return true
-		case .WillDisappear, .DidDisappear: return false
+		case .willAppear, .didAppear:       return true
+		case .willDisappear, .didDisappear: return false
 		}
 	}
 
 
 	public var isDisappear: Bool {
 		switch self {
-		case .WillAppear, .DidAppear:       return false
-		case .WillDisappear, .DidDisappear: return true
+		case .willAppear, .didAppear:       return false
+		case .willDisappear, .didDisappear: return true
 		}
 	}
 
 
 	public var isTransition: Bool {
 		switch self {
-		case .WillAppear, .WillDisappear: return true
-		case .DidAppear, .DidDisappear:   return false
+		case .willAppear, .willDisappear: return true
+		case .didAppear, .didDisappear:   return false
 		}
 	}
 }
@@ -781,10 +784,10 @@ extension UIViewController.AppearState: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .DidAppear:     return "DidAppear"
-		case .DidDisappear:  return "DidDisappear"
-		case .WillAppear:    return "WillAppear"
-		case .WillDisappear: return "WillDisappear"
+		case .didAppear:     return "DidAppear"
+		case .didDisappear:  return "DidDisappear"
+		case .willAppear:    return "WillAppear"
+		case .willDisappear: return "WillDisappear"
 		}
 	}
 }
@@ -794,55 +797,55 @@ extension UIViewController.AppearState: CustomStringConvertible {
 // Temporarily moved out of UIViewController extension due to compiler bug.
 // See https://travis-ci.org/fluidsonic/JetPack/jobs/93695509
 public enum _UIViewControllerContainmentState {
-	case DidMoveFromParent
-	case WillMoveToParent
-	case DidMoveToParent
-	case WillMoveFromParent
+	case didMoveFromParent
+	case willMoveToParent
+	case didMoveToParent
+	case willMoveFromParent
 
 
-	private init(id: Int) {
+	fileprivate init(id: Int) {
 		switch id {
-		case 0: self = .DidMoveFromParent
-		case 1: self = .WillMoveToParent
-		case 2: self = .DidMoveToParent
-		case 3: self = .WillMoveFromParent
+		case 0: self = .didMoveFromParent
+		case 1: self = .willMoveToParent
+		case 2: self = .didMoveToParent
+		case 3: self = .willMoveFromParent
 		default: fatalError()
 		}
 	}
 
 
-	private var id: Int {
+	fileprivate var id: Int {
 		switch self {
-		case .DidMoveFromParent:  return 0
-		case .WillMoveToParent:   return 1
-		case .DidMoveToParent:    return 2
-		case .WillMoveFromParent: return 3
+		case .didMoveFromParent:  return 0
+		case .willMoveToParent:   return 1
+		case .didMoveToParent:    return 2
+		case .willMoveFromParent: return 3
 		}
 	}
 
 
 	public var isInOrMovingToParent: Bool {
 		switch self {
-		case .WillMoveToParent, .DidMoveToParent:     return true
-		case .WillMoveFromParent, .DidMoveFromParent: return false
+		case .willMoveToParent, .didMoveToParent:     return true
+		case .willMoveFromParent, .didMoveFromParent: return false
 		}
 	}
 
 
 	public var isTransition: Bool {
 		switch self {
-		case .WillMoveToParent, .WillMoveFromParent: return true
-		case .DidMoveToParent, .DidMoveFromParent:   return false
+		case .willMoveToParent, .willMoveFromParent: return true
+		case .didMoveToParent, .didMoveFromParent:   return false
 		}
 	}
 
 
-	private func isValidSuccessorFor(containmentState: _UIViewControllerContainmentState) -> Bool {
+	fileprivate func isValidSuccessorFor(_ containmentState: _UIViewControllerContainmentState) -> Bool {
 		switch self {
-		case .DidMoveFromParent:  return (containmentState == .WillMoveFromParent)
-		case .DidMoveToParent:    return (containmentState == .WillMoveToParent)
-		case .WillMoveFromParent: return (containmentState == .WillMoveToParent   || containmentState == .DidMoveToParent)
-		case .WillMoveToParent:   return (containmentState == .WillMoveFromParent || containmentState == .DidMoveFromParent)
+		case .didMoveFromParent:  return (containmentState == .willMoveFromParent)
+		case .didMoveToParent:    return (containmentState == .willMoveToParent)
+		case .willMoveFromParent: return (containmentState == .willMoveToParent   || containmentState == .didMoveToParent)
+		case .willMoveToParent:   return (containmentState == .willMoveFromParent || containmentState == .didMoveFromParent)
 		}
 	}
 }
@@ -852,10 +855,10 @@ extension UIViewController.ContainmentState: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .DidMoveToParent:    return "DidMoveToParent"
-		case .DidMoveFromParent:  return "DidMoveFromParent"
-		case .WillMoveToParent:   return "WillMoveToParent"
-		case .WillMoveFromParent: return "WillMoveFromParent"
+		case .didMoveToParent:    return "DidMoveToParent"
+		case .didMoveFromParent:  return "DidMoveFromParent"
+		case .willMoveToParent:   return "WillMoveToParent"
+		case .willMoveFromParent: return "WillMoveFromParent"
 		}
 	}
 }

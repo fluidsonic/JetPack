@@ -1,7 +1,7 @@
 public extension Array {
 
-	@warn_unused_result
-	public func getOrNil(index: Index) -> Generator.Element? {
+	
+	public func getOrNil(_ index: Index) -> Iterator.Element? {
 		guard indices.contains(index) else {
 			return nil
 		}
@@ -10,8 +10,8 @@ public extension Array {
 	}
 
 
-	@warn_unused_result
-	public func toArray() -> [Generator.Element] {
+	
+	public func toArray() -> [Iterator.Element] {
 		return self
 	}
 }

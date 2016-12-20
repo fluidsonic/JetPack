@@ -3,14 +3,14 @@ import UIKit
 
 public extension UIBarButtonItem {
 
-	private struct AssociatedKeys {
-		private static var handlerProxy = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var handlerProxy = UInt8()
 	}
 
 	
 
 	@nonobjc
-	public convenience init(image: UIImage, style: UIBarButtonItemStyle = .Plain, handler: Closure? = nil) {
+	public convenience init(image: UIImage, style: UIBarButtonItemStyle = .plain, handler: Closure? = nil) {
 		self.init(image: image, style: style, target: nil, action: nil)
 
 		self.handler = handler
@@ -18,7 +18,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public convenience init(title: String, style: UIBarButtonItemStyle = .Plain, handler: Closure? = nil) {
+	public convenience init(title: String, style: UIBarButtonItemStyle = .plain, handler: Closure? = nil) {
 		self.init(title: title, style: style, target: nil, action: nil)
 
 		self.handler = handler
@@ -34,7 +34,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	private func ensureEventProxy() -> EventProxy {
+	fileprivate func ensureEventProxy() -> EventProxy {
 		return eventProxy ?? {
 			let eventProxy = EventProxy(item: self)
 			self.eventProxy = eventProxy
@@ -44,15 +44,15 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	private var eventProxy: EventProxy? {
+	fileprivate var eventProxy: EventProxy? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.handlerProxy) as? EventProxy }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.handlerProxy, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@nonobjc
-	public static func fixedSpaceOfWidth(width: CGFloat) -> UIBarButtonItem {
-		let item = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: nil)
+	public static func fixedSpaceOfWidth(_ width: CGFloat) -> UIBarButtonItem {
+		let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 		item.width = width
 		return item
 	}
@@ -60,7 +60,7 @@ public extension UIBarButtonItem {
 
 	@nonobjc
 	public static func flexibleSpace() -> UIBarButtonItem {
-		return UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+		return UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	}
 
 
@@ -83,10 +83,10 @@ public extension UIBarButtonItem {
 
 private final class EventProxy: NSObject {
 
-	private unowned var item: UIBarButtonItem
+	fileprivate unowned var item: UIBarButtonItem
 
 
-	private init(item: UIBarButtonItem) {
+	fileprivate init(item: UIBarButtonItem) {
 		self.item = item
 
 		super.init()
@@ -94,12 +94,12 @@ private final class EventProxy: NSObject {
 
 
 	@objc
-	private func action() {
+	fileprivate func action() {
 		handler?()
 	}
 
 
-	private var handler: Closure? {
+	fileprivate var handler: Closure? {
 		didSet {
 			if handler != nil {
 				item.target = self

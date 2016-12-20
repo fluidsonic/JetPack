@@ -1,9 +1,9 @@
 import Darwin
 
 
-@warn_unused_result
-internal func arc4random<Element: IntegerLiteralConvertible>() -> Element {
+
+internal func arc4random<Element: ExpressibleByIntegerLiteral>() -> Element {
 	var random: Element = 0
-	arc4random_buf(&random, sizeof(Element))
+	arc4random_buf(&random, MemoryLayout<Element>.size)
 	return random
 }

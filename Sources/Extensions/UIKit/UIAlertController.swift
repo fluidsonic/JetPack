@@ -5,67 +5,67 @@ public extension UIAlertController {
 
 	@nonobjc
 	public convenience init(actionSheetWithMessage message: String) {
-		self.init(title: nil, message: message.nonEmpty, preferredStyle: .ActionSheet)
+		self.init(title: nil, message: message.nonEmpty, preferredStyle: .actionSheet)
 	}
 
 
 	@nonobjc
 	public convenience init(actionSheetWithTitle title: String) {
-		self.init(title: title.nonEmpty, message: nil, preferredStyle: .ActionSheet)
+		self.init(title: title.nonEmpty, message: nil, preferredStyle: .actionSheet)
 	}
 
 
 	@nonobjc
 	public convenience init(actionSheetWithTitle title: String, message: String) {
-		self.init(title: title.nonEmpty, message: message.nonEmpty, preferredStyle: .ActionSheet)
+		self.init(title: title.nonEmpty, message: message.nonEmpty, preferredStyle: .actionSheet)
 	}
 
 
 	@nonobjc
 	public convenience init(alertWithMessage message: String) {
-		self.init(title: nil, message: message.nonEmpty, preferredStyle: .Alert)
+		self.init(title: nil, message: message.nonEmpty, preferredStyle: .alert)
 	}
 
 
 	@nonobjc
 	public convenience init(alertWithTitle title: String, message: String) {
-		self.init(title: title.nonEmpty, message: message.nonEmpty, preferredStyle: .Alert)
+		self.init(title: title.nonEmpty, message: message.nonEmpty, preferredStyle: .alert)
 	}
 
 
 	@nonobjc
-	public func addActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
-		let action = UIAlertAction(title: title, style: .Default) { _ in handler?() }
+	public func addActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .default) { _ in handler?() }
 		addAction(action)
 		return action
 	}
 
 
 	@nonobjc
-	public func addCancelAction(handler: Closure? = nil) -> UIAlertAction {
-		return addCancelActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("Cancel", value: "Cancel", table: nil), handler: handler)
+	public func addCancelAction(_ handler: Closure? = nil) -> UIAlertAction {
+		return addCancelActionWithTitle(Bundle(for: UIAlertController.self).localizedString(forKey: "Cancel", value: "Cancel", table: nil), handler: handler)
 	}
 
 
 	@nonobjc
-	public func addCancelActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
-		let action = UIAlertAction(title: title, style: .Cancel) { _ in handler?() }
+	public func addCancelActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .cancel) { _ in handler?() }
 		addAction(action)
 		return action
 	}
 
 
 	@nonobjc
-	public func addDestructiveActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
-		let action = UIAlertAction(title: title, style: .Destructive) { _ in handler?() }
+	public func addDestructiveActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .destructive) { _ in handler?() }
 		addAction(action)
 		return action
 	}
 
 
 	@nonobjc
-	public func addOkayAction(handler: Closure? = nil) -> UIAlertAction {
-		let action = addActionWithTitle(NSBundle(forClass: UIAlertController.self).localizedStringForKey("OK", value: "OK", table: nil), handler: handler)
+	public func addOkayAction(_ handler: Closure? = nil) -> UIAlertAction {
+		let action = addActionWithTitle(Bundle(for: UIAlertController.self).localizedString(forKey: "OK", value: "OK", table: nil), handler: handler)
 
 		if preferredAction == nil {
 			preferredAction = action
@@ -76,8 +76,8 @@ public extension UIAlertController {
 
 
 	@nonobjc
-	public func addPreferredActionWithTitle(title: String, handler: Closure? = nil) -> UIAlertAction {
-		let action = UIAlertAction(title: title, style: .Default) { _ in handler?() }
+	public func addPreferredActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
+		let action = UIAlertAction(title: title, style: .default) { _ in handler?() }
 		addAction(action)
 
 		preferredAction = action

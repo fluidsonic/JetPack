@@ -2,22 +2,22 @@ import UIKit
 
 
 @objc(JetPack_GuideViewController)
-public /* non-final */ class GuideViewController: ViewController {
+open /* non-final */ class GuideViewController: ViewController {
 
-	private lazy var backgroundView = BackgroundView()
-	private lazy var focusShadowView = View()
-	private var focus: Focus?
-	private var handler: Closure?
-	private var showInitialGuide: Closure?
-	private lazy var tooltipView = TooltipView()
+	fileprivate lazy var backgroundView = BackgroundView()
+	fileprivate lazy var focusShadowView = View()
+	fileprivate var focus: Focus?
+	fileprivate var handler: Closure?
+	fileprivate var showInitialGuide: Closure?
+	fileprivate lazy var tooltipView = TooltipView()
 
 
 	public override init() {
 		super.init()
 
 		modalPresentationCapturesStatusBarAppearance = true
-		modalPresentationStyle = .OverFullScreen
-		modalTransitionStyle = .CrossDissolve
+		modalPresentationStyle = .overFullScreen
+		modalTransitionStyle = .crossDissolve
 	}
 
 
@@ -26,17 +26,17 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	public var backgroundColor = UIColor(white: 0, alpha: 0.75) {
+	open var backgroundColor = UIColor(white: 0, alpha: 0.75) {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				backgroundView.backgroundColor = backgroundColor
 			}
 		}
 	}
 
 
-	public func showGuideWithMessage(message: String, action: String = "OK", focus: Focus, handler: Closure) {
-		if isViewLoaded() {
+	open func showGuideWithMessage(_ message: String, action: String = "OK", focus: Focus, handler: @escaping Closure) {
+		if isViewLoaded {
 			showInitialGuide = nil
 
 			tooltipView.buttonText = action
@@ -63,7 +63,7 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	public var padding = UIEdgeInsets(all: 15) {
+	open var padding = UIEdgeInsets(all: 15) {
 		didSet {
 			guard padding != oldValue else {
 				return
@@ -74,26 +74,26 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	public override func preferredStatusBarStyle() -> UIStatusBarStyle {
-		return .LightContent
+	open override var preferredStatusBarStyle : UIStatusBarStyle {
+		return .lightContent
 	}
 
 
-	public override func preferredStatusBarUpdateAnimation() -> UIStatusBarAnimation {
-		return .Fade
+	open override var preferredStatusBarUpdateAnimation : UIStatusBarAnimation {
+		return .fade
 	}
 
 
-	public weak var touchableView: UIView? {
+	open weak var touchableView: UIView? {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				backgroundView.nextHitTestView = touchableView
 			}
 		}
 	}
 
 
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		setupBackgroundView()
@@ -102,7 +102,7 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	private func setupBackgroundView() {
+	fileprivate func setupBackgroundView() {
 		let child = backgroundView
 		child.backgroundColor = backgroundColor
 		child.nextHitTestView = touchableView
@@ -111,7 +111,7 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	private func setupTooltipView() {
+	fileprivate func setupTooltipView() {
 		let child = tooltipView
 		child.buttonTapped = { [unowned self] in
 			self.handler?()
@@ -121,19 +121,19 @@ public /* non-final */ class GuideViewController: ViewController {
 	}
 
 
-	private func setupFocusShadowView() {
+	fileprivate func setupFocusShadowView() {
 		let child = focusShadowView
-		child.shadowColor = UIColor.blackColor()
+		child.shadowColor = UIColor.black
 		child.shadowOffset = .zero
 		child.shadowOpacity = 0.15
 		child.shadowRadius = 2
-		child.userInteractionEnabled = false
+		child.isUserInteractionEnabled = false
 
 		backgroundView.addSubview(child)
 	}
 
 
-	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+	open override func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		let viewSize = view.bounds.size
@@ -147,8 +147,8 @@ public /* non-final */ class GuideViewController: ViewController {
 
 		let focusPath: UIBezierPath
 		switch focus {
-		case let .Rectangle(frame, cornerRadius, referenceView):
-			focusPath = UIBezierPath(animatableRoundedRect: referenceView.convertRect(frame, toCoordinateSpace: view), cornerRadii: CornerRadii(all: cornerRadius))
+		case let .rectangle(frame, cornerRadius, referenceView):
+			focusPath = UIBezierPath(animatableRoundedRect: referenceView.convert(frame, to: view), cornerRadii: CornerRadii(all: cornerRadius))
 		}
 
 		backgroundView.focusPath = focusPath
@@ -161,12 +161,12 @@ public /* non-final */ class GuideViewController: ViewController {
 		if focusFrame.verticalCenter < viewSize.height / 2 {
 			tooltipViewFrame.top = focusFrame.bottom + 4
 			tooltipView.additionalHitZone = UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 20)
-			tooltipView.arrowDirection = .Up
+			tooltipView.arrowDirection = .up
 		}
 		else {
 			tooltipViewFrame.bottom = focusFrame.top - 4
 			tooltipView.additionalHitZone = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
-			tooltipView.arrowDirection = .Down
+			tooltipView.arrowDirection = .down
 		}
 
 		let minimumContentFrameLeft = padding.left
@@ -177,11 +177,11 @@ public /* non-final */ class GuideViewController: ViewController {
 		tooltipViewFrame.right = min(maximumContentFrameRight, tooltipViewFrame.right)
 
 		tooltipView.frame = tooltipViewFrame
-		tooltipView.arrowOffset = tooltipView.convertPoint(focusFrame.center, fromView: view).left
+		tooltipView.arrowOffset = tooltipView.convert(focusFrame.center, from: view).left
 	}
 
 
-	public override func viewWillAppear(animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		if let showInitialGuide = showInitialGuide {
@@ -193,7 +193,7 @@ public /* non-final */ class GuideViewController: ViewController {
 
 
 	public enum Focus {
-		case Rectangle(CGRect, cornerRadius: CGFloat, referenceView: UIView)
+		case rectangle(CGRect, cornerRadius: CGFloat, referenceView: UIView)
 	}
 }
 
@@ -201,46 +201,46 @@ public /* non-final */ class GuideViewController: ViewController {
 
 private final class BackgroundView: View {
 
-	private let mask = ShapeView()
+	fileprivate let shapeMask = ShapeView()
 
-	private weak var nextHitTestView: UIView?
+	fileprivate weak var nextHitTestView: UIView?
 
 
-	private override init() {
+	fileprivate override init() {
 		super.init()
 
-		layer.mask = mask.layer
+		layer.mask = shapeMask.layer
 	}
 
 
-	private required init?(coder: NSCoder) {
+	fileprivate required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
 
-	private var focusPath: UIBezierPath? {
+	fileprivate var focusPath: UIBezierPath? {
 		didSet {
-			mask.path = (focusPath?.invertedBezierPathInRect(bounds) ?? UIBezierPath(rect: bounds))
+			shapeMask.path = (focusPath?.invertedBezierPathInRect(bounds) ?? UIBezierPath(rect: bounds))
 		}
 	}
 
 
-	private override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-		var hitView = super.hitTest(point, withEvent: event)
-		if hitView === self, let focusPath = focusPath where focusPath.containsPoint(point) {
+	fileprivate override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+		var hitView = super.hitTest(point, with: event)
+		if hitView === self, let focusPath = focusPath, focusPath.contains(point) {
 			hitView = nil
 		}
 		if hitView == nil, let nextHitTestView = nextHitTestView {
-			hitView = nextHitTestView.hitTest(nextHitTestView.convertPoint(point, fromCoordinateSpace: self), withEvent: event)
+			hitView = nextHitTestView.hitTest(nextHitTestView.convert(point, from: self), with: event)
 		}
 
 		return hitView
 	}
 
 
-	private override func layoutSubviews() {
+	fileprivate override func layoutSubviews() {
 		super.layoutSubviews()
 
-		mask.frame = bounds
+		shapeMask.frame = bounds
 	}
 }

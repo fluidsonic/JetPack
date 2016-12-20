@@ -1,38 +1,38 @@
 import Foundation
 
 
-public extension NSCharacterSet {
+public extension CharacterSet {
 
 	@nonobjc
-	private static let _URLPathComponentAllowedCharacterSet: NSCharacterSet = {
+	fileprivate static let _URLPathComponentAllowedCharacterSet: CharacterSet = {
 		let characterSet = NSMutableCharacterSet()
-		characterSet.formUnionWithCharacterSet(NSCharacterSet.URLPathAllowedCharacterSet())
-		characterSet.removeCharactersInString("/")
+		characterSet.formUnion(with: CharacterSet.urlPathAllowed)
+		characterSet.removeCharacters(in: "/")
 
-		return characterSet.copy() as! NSCharacterSet
+		return characterSet.copy() as! CharacterSet
 	}()
 
 
 	@nonobjc
-	private static let _URLQueryParameterAllowedCharacterSet: NSCharacterSet = {
+	fileprivate static let _URLQueryParameterAllowedCharacterSet: CharacterSet = {
 		let characterSet = NSMutableCharacterSet()
-		characterSet.formUnionWithCharacterSet(NSCharacterSet.URLQueryAllowedCharacterSet())
-		characterSet.removeCharactersInString("+&=")
+		characterSet.formUnion(with: CharacterSet.urlQueryAllowed)
+		characterSet.removeCharacters(in: "+&=")
 
-		return characterSet.copy() as! NSCharacterSet
+		return characterSet.copy() as! CharacterSet
 	}()
 
 
-	@nonobjc
-	@warn_unused_result
-	public static func URLPathComponentAllowedCharacterSet() -> NSCharacterSet {
+	
+	
+	public static func URLPathComponentAllowedCharacterSet() -> CharacterSet {
 		return _URLPathComponentAllowedCharacterSet
 	}
 
 
-	@nonobjc
-	@warn_unused_result
-	public static func URLQueryParameterAllowedCharacterSet() -> NSCharacterSet {
+	
+	
+	public static func URLQueryParameterAllowedCharacterSet() -> CharacterSet {
 		return _URLQueryParameterAllowedCharacterSet
 	}
 }

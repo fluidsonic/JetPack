@@ -9,7 +9,7 @@ public struct OperatingSystem {
 	public let version: Version
 
 
-	private init() {
-		version = Version(NSProcessInfo().operatingSystemVersion)
+	fileprivate init() {
+		version = Version(ProcessInfo().operatingSystemVersion)
 	}
 }

@@ -7,7 +7,7 @@ import JetPack
 class CGSize_Tests: XCTestCase {
 
 	func testConstants() {
-		XCTAssertEqual(CGSize.max, CGSize(width: CGFloat.max, height: CGFloat.max))
+		XCTAssertEqual(CGSize.max, CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
 	}
 
 
@@ -53,10 +53,10 @@ class CGSize_Tests: XCTestCase {
 
 	func testTransform() {
 		let size = CGSize(width: 2, height: 4)
-		XCTAssertEqual(size.transform(CGAffineTransformMakeScale(2, 2)), CGSize(width: 4, height: 8))
+		XCTAssertEqual(size.transform(CGAffineTransform(scaleX: 2, y: 2)), CGSize(width: 4, height: 8))
 
 		var mutableSize = size
-		mutableSize.transformInPlace(CGAffineTransformMakeScale(2, 2))
+		mutableSize.transformInPlace(CGAffineTransform(scaleX: 2, y: 2))
 		XCTAssertEqual(mutableSize, CGSize(width: 4, height: 8))
 	}
 }

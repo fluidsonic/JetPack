@@ -4,9 +4,9 @@ import UIKit
 public extension UIBlurEffect {
 
 	@nonobjc
-	private static let customBlurEffectType: UIBlurEffect.Type? = {
+	fileprivate static let customBlurEffectType: UIBlurEffect.Type? = {
 		if #available(iOS 10, *) {
-			return NSClassFromString(["_", "UI", "Custom", "Blur", "Effect"].joinWithSeparator("")) as? UIBlurEffect.Type
+			return NSClassFromString(["_", "UI", "Custom", "Blur", "Effect"].joined(separator: "")) as? UIBlurEffect.Type
 		}
 		else {
 			// The method is available on iOS 9 but it's implementation is broken and causes an endless recursion.
@@ -16,10 +16,10 @@ public extension UIBlurEffect {
 
 
 	@nonobjc
-	public static func create(style style: UIBlurEffectStyle, tintColor: UIColor, tintAlpha: CGFloat) -> UIBlurEffect {
+	public static func create(style: UIBlurEffectStyle, tintColor: UIColor, tintAlpha: CGFloat) -> UIBlurEffect {
 		if let customBlurEffectType = customBlurEffectType {
 			let effect = customBlurEffectType.customEffectWithStyle(style)
-			if effect.dynamicType != UIBlurEffect.self {
+			if type(of: effect) != UIBlurEffect.self {
 				effect.setValue(tintColor, forKey: "colorTint")
 				effect.setValue(tintAlpha, forKey: "colorTintAlpha")
 			}
@@ -32,7 +32,7 @@ public extension UIBlurEffect {
 
 
 	@objc(JetPack_customEffectWithStyle:)
-	private dynamic class func customEffectWithStyle(style: UIBlurEffectStyle) -> UIBlurEffect {
+	fileprivate dynamic class func customEffectWithStyle(_ style: UIBlurEffectStyle) -> UIBlurEffect {
 		return UIBlurEffect(style: style)
 	}
 

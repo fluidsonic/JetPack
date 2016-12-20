@@ -4,11 +4,11 @@ import UIKit
 public extension UIPresentationController {
 
 	@nonobjc
-	private static var enableBlocking_activeCallCount = 0
+	fileprivate static var enableBlocking_activeCallCount = 0
 
 
 	@objc(JetPack_enableBlocking:)
-	private dynamic func swizzled_enableBlocking(enable: Bool) {
+	fileprivate dynamic func swizzled_enableBlocking(_ enable: Bool) {
 		UIPresentationController.enableBlocking_activeCallCount += 1
 		defer { UIPresentationController.enableBlocking_activeCallCount -= 1 }
 
@@ -17,7 +17,7 @@ public extension UIPresentationController {
 
 
 	@objc(JetPack_parent)
-	private dynamic func swizzled_parent() -> UIPresentationController? {
+	fileprivate dynamic func swizzled_parent() -> UIPresentationController? {
 		// workaround for tintColor not working correctly in modally presented view controllers
 
 		guard UIPresentationController.enableBlocking_activeCallCount <= 0 else {

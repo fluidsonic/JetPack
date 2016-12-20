@@ -31,7 +31,7 @@ public extension UIScrollView {
 
 
 	@nonobjc
-	public func setContentInset(contentInset: UIEdgeInsets, maintainingVisualContentOffset maintainsVisualContentOffset: Bool) {
+	public func setContentInset(_ contentInset: UIEdgeInsets, maintainingVisualContentOffset maintainsVisualContentOffset: Bool) {
 		let oldContentInsets = self.contentInset
 		let newContentInsets = contentInset
 		guard newContentInsets != oldContentInsets else {

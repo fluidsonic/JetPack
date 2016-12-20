@@ -1,23 +1,22 @@
 import Foundation
 
 
-public extension NSURLComponents {
+public extension URLComponents {
 
-	@nonobjc
-	public func appendQueryItem(name name: String, value: String?) {
+	public mutating func appendQueryItem(name: String, value: String?) {
 		var queryItems = self.queryItems ?? []
-		queryItems.append(NSURLQueryItem(name: name, value: value))
+		queryItems.append(URLQueryItem(name: name, value: value))
 		self.queryItems = queryItems
 	}
 
 
-	@nonobjc
-	public func firstQueryItem(named name: String) -> NSURLQueryItem? {
+	
+	public func firstQueryItem(named name: String) -> URLQueryItem? {
 		return queryItems?.firstMatching { $0.name == name }
 	}
 
 
-	@nonobjc
+	
 	public func firstValueForQueryItem(named name: String) -> String? {
 		return firstQueryItem(named: name)?.value
 	}

@@ -11,14 +11,14 @@ public extension MKMapRect {
 	}
 
 
-	@warn_unused_result
-	public func contains(point: MKMapPoint) -> Bool {
+	
+	public func contains(_ point: MKMapPoint) -> Bool {
 		return MKMapRectContainsPoint(self, point)
 	}
 
 
-	@warn_unused_result
-	public func contains(rect: MKMapRect) -> Bool {
+	
+	public func contains(_ rect: MKMapRect) -> Bool {
 		return MKMapRectContainsRect(self, rect)
 	}
 
@@ -33,19 +33,19 @@ public extension MKMapRect {
 	}
 
 
-	@warn_unused_result(mutable_variant="insetBy")
+	
 	public func insettedBy(horizontally horizontal: Double, vertically vertical: Double = 0) -> MKMapRect {
 		return MKMapRectInset(self, horizontal, vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="insetBy")
+	
 	public func insettedBy(vertically vertical: Double) -> MKMapRect {
 		return insettedBy(horizontally: 0, vertically: vertical)
 	}
 
 
-	public mutating func scaleBy(scale: Double) {
+	public mutating func scaleBy(_ scale: Double) {
 		scaleBy(horizontally: scale, vertically: scale)
 	}
 
@@ -60,19 +60,19 @@ public extension MKMapRect {
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
-	public func scaledBy(scale: Double) -> MKMapRect {
+	
+	public func scaledBy(_ scale: Double) -> MKMapRect {
 		return scaledBy(horizontally: scale, vertically: scale)
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
+	
 	public func scaledBy(horizontally horizontal: Double, vertically vertical: Double = 1) -> MKMapRect {
 		return insettedBy(horizontally: (size.width / 2) * horizontal, vertically: (size.height / 2) * vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
+	
 	public func scaledBy(vertically vertical: Double) -> MKMapRect {
 		return scaledBy(horizontally: 1, vertically: vertical)
 	}

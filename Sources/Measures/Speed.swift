@@ -7,7 +7,7 @@ private let mphPerKmh   = 1.0 / kmhPerMph
 public struct Speed: Measure {
 
 	public static let name = MeasuresStrings.Measure.speed
-	public static let rawUnit = SpeedUnit.KilometersPerHour
+	public static let rawUnit = SpeedUnit.kilometersPerHour
 
 	public var rawValue: Double
 
@@ -16,25 +16,25 @@ public struct Speed: Measure {
 		precondition(!value.isNaN, "Value must not be NaN.")
 		
 		switch unit {
-		case .KilometersPerHour: rawValue = value
-		case .Knots:             rawValue = value * kmhPerKnot
-		case .MilesPerHour:      rawValue = value * kmhPerMph
+		case .kilometersPerHour: rawValue = value
+		case .knots:             rawValue = value * kmhPerKnot
+		case .milesPerHour:      rawValue = value * kmhPerMph
 		}
 	}
 
 
 	public init(kilometersPerHour: Double) {
-		self.init(kilometersPerHour, unit: .KilometersPerHour)
+		self.init(kilometersPerHour, unit: .kilometersPerHour)
 	}
 
 
 	public init(knots: Double) {
-		self.init(knots, unit: .Knots)
+		self.init(knots, unit: .knots)
 	}
 
 
 	public init(milesPerHour: Double) {
-		self.init(milesPerHour, unit: .MilesPerHour)
+		self.init(milesPerHour, unit: .milesPerHour)
 	}
 
 
@@ -58,11 +58,11 @@ public struct Speed: Measure {
 	}
 
 
-	public func valueInUnit(unit: SpeedUnit) -> Double {
+	public func valueInUnit(_ unit: SpeedUnit) -> Double {
 		switch unit {
-		case .KilometersPerHour: return kilometersPerHour
-		case .Knots:             return knots
-		case .MilesPerHour:      return milesPerHour
+		case .kilometersPerHour: return kilometersPerHour
+		case .knots:             return knots
+		case .milesPerHour:      return milesPerHour
 		}
 	}
 }
@@ -71,9 +71,9 @@ public struct Speed: Measure {
 
 public enum SpeedUnit: Unit {
 
-	case KilometersPerHour
-	case Knots
-	case MilesPerHour
+	case kilometersPerHour
+	case knots
+	case milesPerHour
 }
 
 
@@ -81,27 +81,27 @@ extension SpeedUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .KilometersPerHour: return MeasuresStrings.Unit.KilometerPerHour.abbreviation
-		case .Knots:             return MeasuresStrings.Unit.Knot.abbreviation
-		case .MilesPerHour:      return MeasuresStrings.Unit.MilePerHour.abbreviation
+		case .kilometersPerHour: return MeasuresStrings.Unit.KilometerPerHour.abbreviation
+		case .knots:             return MeasuresStrings.Unit.Knot.abbreviation
+		case .milesPerHour:      return MeasuresStrings.Unit.MilePerHour.abbreviation
 		}
 	}
 
 
 	public var name: PluralizedString {
 		switch self {
-		case .KilometersPerHour: return MeasuresStrings.Unit.KilometerPerHour.name
-		case .Knots:             return MeasuresStrings.Unit.Knot.name
-		case .MilesPerHour:      return MeasuresStrings.Unit.MilePerHour.name
+		case .kilometersPerHour: return MeasuresStrings.Unit.KilometerPerHour.name
+		case .knots:             return MeasuresStrings.Unit.Knot.name
+		case .milesPerHour:      return MeasuresStrings.Unit.MilePerHour.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .KilometersPerHour: return nil
-		case .Knots:             return nil
-		case .MilesPerHour:      return nil
+		case .kilometersPerHour: return nil
+		case .knots:             return nil
+		case .milesPerHour:      return nil
 		}
 	}
 }

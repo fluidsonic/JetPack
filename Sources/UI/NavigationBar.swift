@@ -1,17 +1,17 @@
 import UIKit
 
 
-private let backgroundViewKey = ["_", "backgroundView"].joinWithSeparator("")
-private let navigationItemViewClassName = ["UINavigationItem", "View"].joinWithSeparator("")
-private let titleViewKey = ["_", "titleView"].joinWithSeparator("")
+private let backgroundViewKey = ["_", "backgroundView"].joined(separator: "")
+private let navigationItemViewClassName = ["UINavigationItem", "View"].joined(separator: "")
+private let titleViewKey = ["_", "titleView"].joined(separator: "")
 
 
 @objc(JetPack_NavigationBar)
-public /* non-final */ class NavigationBar: UINavigationBar {
+open /* non-final */ class NavigationBar: UINavigationBar {
 
-	private var ignoresItemChanges = 0
-	private var originalAlpha = CGFloat(1)
-	private var originalTintColor: UIColor? = nil
+	fileprivate var ignoresItemChanges = 0
+	fileprivate var originalAlpha = CGFloat(1)
+	fileprivate var originalTintColor: UIColor? = nil
 
 
 	public convenience init() {
@@ -33,7 +33,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	public override var alpha: CGFloat {
+	open override var alpha: CGFloat {
 		get { return originalAlpha }
 		set {
 			guard newValue != originalAlpha else {
@@ -48,7 +48,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 
 	public final var backgroundView: UIView? {
-		return valueForKey(backgroundViewKey) as? UIView
+		return value(forKey: backgroundViewKey) as? UIView
 	}
 
 
@@ -62,17 +62,17 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-		guard visibility != .Invisible else {
+	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+		guard visibility != .invisible else {
 			return nil
 		}
 
-		return super.hitTest(point, withEvent: event)
+		return super.hitTest(point, with: event)
 	}
 
 
-	private func isTitleView(view: UIView, checkingSubviews: Bool = true) -> Bool {
-		return view === titleView || NSStringFromClass(view.dynamicType) == navigationItemViewClassName
+	fileprivate func isTitleView(_ view: UIView, checkingSubviews: Bool = true) -> Bool {
+		return view === titleView || NSStringFromClass(type(of: view)) == navigationItemViewClassName
 	}
 
 
@@ -87,16 +87,16 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	public override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
-		guard visibility != .Invisible else {
+	open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+		guard visibility != .invisible else {
 			return false
 		}
 
-		return super.pointInside(point, withEvent: event)
+		return super.point(inside: point, with: event)
 	}
 
 
-	internal override func popNavigationItemWithTransition(transition: Int32) -> UINavigationItem {
+	internal override func popNavigationItemWithTransition(_ transition: Int32) -> UINavigationItem {
 		let item = super.popNavigationItemWithTransition(transition)
 
 		if ignoresItemChanges == 0, let navigationController = delegate as? NavigationController {
@@ -107,7 +107,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	internal override func pushNavigationItem(item: UINavigationItem, transition: Int32) {
+	internal override func pushNavigationItem(_ item: UINavigationItem, transition: Int32) {
 		super.pushNavigationItem(item, transition: transition)
 
 		if ignoresItemChanges == 0, let navigationController = delegate as? NavigationController {
@@ -116,7 +116,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	internal override func setItems(items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
+	internal override func setItems(_ items: NSArray, transition: Int32, reset: Bool, resetOwningRelationship: Bool) {
 		super.setItems(items, transition: transition, reset: reset, resetOwningRelationship: resetOwningRelationship)
 
 		if ignoresItemChanges == 0, let navigationController = delegate as? NavigationController {
@@ -125,7 +125,7 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	public override var tintColor: UIColor! {
+	open override var tintColor: UIColor! {
 		get { return super.tintColor }
 		set {
 			originalTintColor = newValue
@@ -136,11 +136,11 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 
 	public final var titleView: UIView? {
-		return valueForKey(titleViewKey) as? UIView
+		return value(forKey: titleViewKey) as? UIView
 	}
 
 
-	public internal(set) final var visibility = Visibility.Visible {
+	public internal(set) final var visibility = Visibility.visible {
 		didSet {
 			guard visibility != oldValue else {
 				return
@@ -151,13 +151,13 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	public func visibilityDidChange() {
+	open func visibilityDidChange() {
 		if let backgroundView = backgroundView {
 			switch visibility {
-			case .Hidden, .Invisible, .Visible:
+			case .hidden, .invisible, .visible:
 				backgroundView.alpha = 1
 
-			case .InvisibleBackground, .InvisibleBackgroundAndTitle:
+			case .invisibleBackground, .invisibleBackgroundAndTitle:
 				backgroundView.alpha = 0
 			}
 		}
@@ -179,12 +179,12 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 	}
 
 
-	private func updateAlpha() {
-		super.alpha = (visibility == .Invisible ? 0 : originalAlpha)
+	fileprivate func updateAlpha() {
+		super.alpha = (visibility == .invisible ? 0 : originalAlpha)
 	}
 
 
-	private func updateTintColor() {
+	fileprivate func updateTintColor() {
 		super.tintColor = overridingTintColor ?? originalTintColor
 	}
 
@@ -192,11 +192,11 @@ public /* non-final */ class NavigationBar: UINavigationBar {
 
 	@objc
 	public enum Visibility: Int {
-		case Visible
-		case Invisible
-		case InvisibleBackground
-		case InvisibleBackgroundAndTitle
-		case Hidden
+		case visible
+		case invisible
+		case invisibleBackground
+		case invisibleBackgroundAndTitle
+		case hidden
 
 
 		public func wrapped() -> Wrapper {

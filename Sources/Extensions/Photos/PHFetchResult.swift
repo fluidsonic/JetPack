@@ -1,11 +1,12 @@
 import Photos
 
 
-extension PHFetchResult: SequenceType {
+extension NSFastEnumeration {
 
-	@nonobjc
-	@warn_unused_result
-	public func generate() -> NSFastGenerator {
-		return NSFastGenerator(self)
+	public func makeIterator() -> NSFastEnumerationIterator {
+		return NSFastEnumerationIterator(self)
 	}
 }
+
+
+extension PHFetchResult: Sequence {}

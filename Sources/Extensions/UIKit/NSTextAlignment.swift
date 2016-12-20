@@ -5,11 +5,11 @@ extension NSTextAlignment: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .Center:    return "center"
-		case .Justified: return "justified"
-		case .Left:      return "left"
-		case .Natural:   return "natural"
-		case .Right:     return "right"
+		case .center:    return "center"
+		case .justified: return "justified"
+		case .left:      return "left"
+		case .natural:   return "natural"
+		case .right:     return "right"
 		}
 	}
 }

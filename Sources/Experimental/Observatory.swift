@@ -1,29 +1,31 @@
 import Foundation
 
 
-public typealias ObservatoryExit = Void -> Bool
+public typealias ObservatoryExit = (Void) -> Bool
 
 
-public class Observatory<Event> {
+open class Observatory<Event> {
 
 	public typealias Observer = (Event, ObservatoryExit) -> Void
 
-	private typealias Subscription = ObservatorySubscription<Event>
+	fileprivate typealias Subscription = ObservatorySubscription<Event>
 
-	private var subscriptions = [Subscription]()
+	fileprivate var subscriptions = [Subscription]()
 
 
 	/// Subscribes to events from this observatory and returns a closure which can be called to unsubscribe.
 	///
 	/// Getting 'expression resolves to an unused function' error when calling this method? You have to store the method's return value somewhere, even if temporary!
-	public func enter(observer observer: Observer) -> ObservatoryExit {
+	open func enter(observer: @escaping Observer) -> ObservatoryExit {
 		var subscription: Subscription?
 
-		var exitToken: dispatch_once_t = 0
+		var exitedBefore = false
 		let exit: ObservatoryExit = { [ weak self ] in
 			var exited = false
 
-			dispatch_once(&exitToken) {
+			if !exitedBefore { // TODO temporary non-threadsafe hack since we cannot use dispatch_once
+				exitedBefore = true
+
 				if let observatory = self {
 					observatory.subscriptions.removeFirstIdentical(subscription!)
 					subscription = nil
@@ -45,7 +47,7 @@ public class Observatory<Event> {
 	public init() {}
 
 
-	public func notify(event event: Event) {
+	open func notify(event: Event) {
 		let subscriptions = self.subscriptions
 		for subscription in subscriptions {
 			subscription.notify(event: event)
@@ -53,7 +55,7 @@ public class Observatory<Event> {
 	}
 
 
-	public var observerCount: Int {
+	open var observerCount: Int {
 		return subscriptions.count
 	}
 }
@@ -68,13 +70,13 @@ private class ObservatorySubscription<Event> {
 	let observer: Observer
 
 
-	init(observer: Observer, exit: ObservatoryExit) {
+	init(observer: @escaping Observer, exit: @escaping ObservatoryExit) {
 		self.exit = exit
 		self.observer = observer
 	}
 
 
-	func notify(event event: Event) {
+	func notify(event: Event) {
 		observer(event, exit)
 	}
 }

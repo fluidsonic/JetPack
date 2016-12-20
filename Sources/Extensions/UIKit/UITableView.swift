@@ -3,33 +3,33 @@ import UIKit
 
 public extension UITableView {
 
-	private struct AssociatedKeys {
-		private static var indexPathForCurrentHeightComputation = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var indexPathForCurrentHeightComputation = UInt8()
 	}
 
 
 	@nonobjc
-	public func deselectAllRowsAnimated(animated: Bool) {
+	public func deselectAllRowsAnimated(_ animated: Bool) {
 		for indexPath in indexPathsForSelectedRows ?? [] {
-			deselectRowAtIndexPath(indexPath, animated: animated)
+			deselectRow(at: indexPath, animated: animated)
 		}
 	}
 
 
 	@nonobjc
-	public var firstIndexPath: NSIndexPath? {
+	public var firstIndexPath: IndexPath? {
 		let sectionCount = numberOfSections
 		guard sectionCount > 0 else {
 			return nil
 		}
 
 		for section in 0 ..< sectionCount {
-			let rowCount = numberOfRowsInSection(section)
+			let rowCount = numberOfRows(inSection: section)
 			guard rowCount > 0 else {
 				continue
 			}
 
-			return NSIndexPath(forRow: 0, inSection: section)
+			return IndexPath(row: 0, section: section)
 		}
 
 		return nil
@@ -44,26 +44,26 @@ public extension UITableView {
 
 
 	@nonobjc
-	internal private(set) var indexPathForCurrentHeightComputation: NSIndexPath? {
-		get { return objc_getAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation) as? NSIndexPath }
+	internal fileprivate(set) var indexPathForCurrentHeightComputation: IndexPath? {
+		get { return objc_getAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation) as? IndexPath }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.indexPathForCurrentHeightComputation, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@nonobjc
-	public var lastIndexPath: NSIndexPath? {
+	public var lastIndexPath: IndexPath? {
 		let sectionCount = numberOfSections
 		guard sectionCount > 0 else {
 			return nil
 		}
 
-		for section in (0 ..< sectionCount).reverse() {
-			let rowCount = numberOfRowsInSection(section)
+		for section in (0 ..< sectionCount).reversed() {
+			let rowCount = numberOfRows(inSection: section)
 			guard rowCount > 0 else {
 				continue
 			}
 
-			return NSIndexPath(forRow: rowCount - 1, inSection: section)
+			return IndexPath(row: rowCount - 1, section: section)
 		}
 
 		return nil
@@ -71,25 +71,25 @@ public extension UITableView {
 
 
 	@objc(JetPack_floatsHeaderAndFooterViews)
-	private dynamic func redirected_headerAndFooterViewsFloat() -> Bool {
+	fileprivate dynamic func redirected_headerAndFooterViewsFloat() -> Bool {
 		// called when private function is no longer available
 		return true
 	}
 
 
 	@objc(JetPack_setFloatsHeaderAndFooterViews:)
-	private dynamic func redirected_setHeaderAndFooterViewsFloat(headerAndFooterViewsFloat: Bool) {
+	fileprivate dynamic func redirected_setHeaderAndFooterViewsFloat(_ headerAndFooterViewsFloat: Bool) {
 		// called when private function is no longer available
 	}
 
 
 	@nonobjc
-	public func scrollRowAtIndexPathToVisible(indexPath: NSIndexPath, insets: UIEdgeInsets = .zero, animated: Bool = false) -> Bool {
+	public func scrollRowAtIndexPathToVisible(_ indexPath: IndexPath, insets: UIEdgeInsets = .zero, animated: Bool = false) -> Bool {
 		let contentSize = self.contentSize
 
-		var rect = rectForRowAtIndexPath(indexPath).insetBy(insets.inverse)
-		rect.left = rect.left.clamp(min: 0, max: max(contentSize.width - rect.width, 0))
-		rect.top = rect.top.clamp(min: 0, max: max(contentSize.height - rect.height, 0))
+		var rect = rectForRow(at: indexPath).insetBy(insets.inverse)
+		rect.left = rect.left.coerced(in: 0 ... max(contentSize.width - rect.width, 0))
+		rect.top = rect.top.coerced(in: 0 ... max(contentSize.height - rect.height, 0))
 
 		guard !bounds.insetBy(contentInset).contains(rect) else {
 			return false
@@ -114,7 +114,7 @@ public extension UITableView {
 
 
 	@objc(JetPack_computeHeightForCell:atIndexPath:)
-	private dynamic func swizzled_computeHeightForCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) -> CGFloat {
+	fileprivate dynamic func swizzled_computeHeightForCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) -> CGFloat {
 		indexPathForCurrentHeightComputation = indexPath
 		let height = swizzled_computeHeightForCell(cell, atIndexPath: indexPath)
 		indexPathForCurrentHeightComputation = nil

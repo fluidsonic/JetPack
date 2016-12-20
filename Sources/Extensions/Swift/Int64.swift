@@ -1,7 +1,7 @@
 extension Int64: RandomizableIntegerType {
 
-	@warn_unused_result
-	public static func random(start start: Int64, end: Int64) -> Int64 {
+	
+	public static func random(start: Int64, end: Int64) -> Int64 {
 		precondition(start <= end)
 
 		guard start != end else {

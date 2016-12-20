@@ -5,7 +5,7 @@ import JetPack
 
 class Set_Tests: XCTestCase {
 
-	private let error = NSError(domain: "", code: 0, userInfo: nil)
+	fileprivate let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
 	func testFilterAsSet() {
@@ -50,7 +50,6 @@ class Set_Tests: XCTestCase {
 
 		XCTAssertEqual(Set<Int>().toSet(),     Set([]))
 		XCTAssertEqual(Set([3, 1, 2]).toSet(), Set([3, 1, 2]))
-
-		XCTAssertIdentical(Set([b, a]).toSet(), Set([a]))
+		XCTAssertEqual(Set([b, a]).toSet(),    Set([a]))
 	}
 }

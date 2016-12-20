@@ -2,11 +2,11 @@ import UIKit
 
 
 @objc(JetPack_TextField)
-public /* non-final */ class TextField: UITextField {
+open /* non-final */ class TextField: UITextField {
 
-	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
-	public var hitZoneFollowsCornerRadius = true
-	public var userInteractionLimitedToSubviews = false
+	open var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
+	open var hitZoneFollowsCornerRadius = true
+	open var userInteractionLimitedToSubviews = false
 	
 
 	public init() {
@@ -19,11 +19,11 @@ public /* non-final */ class TextField: UITextField {
 	}
 
 
-	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
+	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
 		switch event {
 		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
-			if let animation = super.actionForLayer(layer, forKey: "opacity") as? CABasicAnimation {
-				animation.fromValue = layer.valueForKey(event)
+			if let animation = super.action(for: layer, forKey: "opacity") as? CABasicAnimation {
+				animation.fromValue = layer.value(forKey: event)
 				animation.keyPath = event
 
 				return animation
@@ -32,37 +32,37 @@ public /* non-final */ class TextField: UITextField {
 			fallthrough
 
 		default:
-			return super.actionForLayer(layer, forKey: event)
+			return super.action(for: layer, forKey: event)
 		}
 	}
 
 
-	public var borderColor: UIColor? {
-		get { return layer.borderColor.map { UIColor(CGColor: $0) } }
-		set { layer.borderColor = newValue?.CGColor }
+	open var borderColor: UIColor? {
+		get { return layer.borderColor.map { UIColor(cgColor: $0) } }
+		set { layer.borderColor = newValue?.cgColor }
 	}
 
 
-	public var borderWidth: CGFloat {
+	open var borderWidth: CGFloat {
 		get { return layer.borderWidth }
 		set { layer.borderWidth = newValue }
 	}
 
 
-	public var cornerRadius: CGFloat {
+	open var cornerRadius: CGFloat {
 		get { return layer.cornerRadius }
 		set { layer.cornerRadius = newValue }
 	}
 
 
-	@warn_unused_result
-	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+	
+	public final override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
 	}
 
 
-	@warn_unused_result
-	public func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+	
+	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
 		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
 
@@ -81,18 +81,18 @@ public /* non-final */ class TextField: UITextField {
 
 
 	// reference implementation
-	@warn_unused_result
-	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+	
+	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		guard participatesInHitTesting else {
 			return nil
 		}
-		guard pointInside(point, withEvent: event) else {
+		guard self.point(inside: point, with: event) else {
 			return nil
 		}
 
 		var hitView: UIView?
-		for subview in subviews.reverse() {
-			hitView = subview.hitTest(convertPoint(point, toView: subview), withEvent: event)
+		for subview in subviews.reversed() {
+			hitView = subview.hitTest(convert(point, to: subview), with: event)
 			if hitView != nil {
 				break
 			}

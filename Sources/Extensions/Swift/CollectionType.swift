@@ -1,31 +1,31 @@
-public extension CollectionType {
+public extension Collection {
 
-	@warn_unused_result
-	public func lastIndexOf(@noescape predicate: Generator.Element throws -> Bool) rethrows -> Index? {
-		for index in (startIndex ..< endIndex).reverse() where try predicate(self[index]) {
+	public var nonEmpty: Self? {
+		return isEmpty ? nil : self
+	}
+}
+
+
+public extension Collection where Indices.Iterator.Element == Index {
+
+	public func lastIndexOf(predicate: (Iterator.Element) throws -> Bool) rethrows -> Index? {
+		for index in indices.reversed() where try predicate(self[index]) {
 			return index
 		}
 
 		return nil
 	}
 
-
-	public var nonEmpty: Self? {
-		return isEmpty ? nil : self
-	}
-
-
-	public subscript(safe index: Index) -> Generator.Element? {
+	public subscript(safe index: Index) -> Iterator.Element? {
 		return indices.contains(index) ? self[index] : nil
 	}
 }
 
 
-public extension CollectionType where Generator.Element: AnyObject {
+public extension Collection where Indices.Iterator.Element == Index, Iterator.Element: AnyObject {
 
-	@warn_unused_result
-	public func indexOfIdentical(element: Generator.Element) -> Index? {
-		for index in startIndex ..< endIndex where self[index] === element {
+	public func indexOfIdentical(_ element: Iterator.Element) -> Index? {
+		for index in indices where self[index] === element {
 			return index
 		}
 
@@ -34,26 +34,13 @@ public extension CollectionType where Generator.Element: AnyObject {
 }
 
 
-public extension CollectionType where Generator.Element: Equatable {
+public extension Collection where Indices.Iterator.Element == Index, Iterator.Element: Equatable {
 
-	@warn_unused_result
-	public func lastIndexOf(element: Generator.Element) -> Index? {
-		for index in (startIndex ..< endIndex).reverse() where self[index] == element {
+	public func lastIndexOf(_ element: Iterator.Element) -> Index? {
+		for index in indices.reversed() where self[index] == element {
 			return index
 		}
 
 		return nil
-	}
-}
-
-
-public extension CollectionType where Index.Distance: RandomizableIntegerType {
-
-	public var randomElement: Generator.Element? {
-		guard let index = (startIndex ..< endIndex).randomIndex else {
-			return nil
-		}
-
-		return self[index]
 	}
 }

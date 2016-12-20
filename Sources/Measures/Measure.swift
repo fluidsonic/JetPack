@@ -10,7 +10,7 @@ public protocol Measure: Comparable, CustomDebugStringConvertible, CustomStringC
 	static var rawUnit: UnitType { get }
 	var rawValue: Double { get mutating set }
 
-	func valueInUnit(unit: UnitType) -> Double
+	func valueInUnit(_ unit: UnitType) -> Double
 }
 
 
@@ -53,7 +53,7 @@ public func + <M: Measure>(a: M, b: M) -> M {
 }
 
 
-public func += <M: Measure>(inout a: M, b: M) {
+public func += <M: Measure>(a: inout M, b: M) {
 	a.rawValue += b.rawValue
 }
 
@@ -63,7 +63,7 @@ public func - <M: Measure>(a: M, b: M) -> M {
 }
 
 
-public func -= <M: Measure>(inout a: M, b: M) {
+public func -= <M: Measure>(a: inout M, b: M) {
 	a.rawValue -= b.rawValue
 }
 
@@ -73,7 +73,7 @@ public func * <M: Measure>(a: M, b: M) -> M {
 }
 
 
-public func *= <M: Measure>(inout a: M, b: M) {
+public func *= <M: Measure>(a: inout M, b: M) {
 	a.rawValue *= b.rawValue
 }
 
@@ -83,18 +83,13 @@ public func / <M: Measure>(a: M, b: M) -> M {
 }
 
 
-public func /= <M: Measure>(inout a: M, b: M) {
+public func /= <M: Measure>(a: inout M, b: M) {
 	a.rawValue /= b.rawValue
 }
 
 
 public func % <M: Measure>(a: M, b: M) -> M {
-	return M(rawValue: a.rawValue % b.rawValue)
-}
-
-
-public func %= <M: Measure>(inout a: M, b: M) {
-	a.rawValue %= b.rawValue
+	return M(rawValue: a.rawValue.truncatingRemainder(dividingBy: b.rawValue))
 }
 
 

@@ -3,8 +3,8 @@ import UIKit
 
 public extension UITextField {
 
-	private struct AssociatedKeys {
-		private static var automaticallyScrollsIntoSight = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var automaticallyScrollsIntoSight = UInt8()
 	}
 
 
@@ -17,7 +17,7 @@ public extension UITextField {
 
 
 	@objc(JetPack_scrollIntoSight)
-	private dynamic func swizzled_scrollIntoSight() {
+	fileprivate dynamic func swizzled_scrollIntoSight() {
 		if automaticallyScrollsIntoSight {
 			swizzled_scrollIntoSight()
 		}

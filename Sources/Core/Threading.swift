@@ -1,41 +1,22 @@
 import Foundation
 
 
-public func onBackgroundQueue(closure: Closure) {
-	onBackgroundQueueOfPriority(.Default, closure: closure)
+public func onBackgroundQueue(_ closure: @escaping Closure) {
+	onBackgroundQueueOfPriority(.default, closure: closure)
 }
 
 
-public func onBackgroundQueueOfPriority(priority: DispatchQueuePriority, closure: Closure) {
-	dispatch_async(dispatch_get_global_queue(priority.dispatchPriority, 0), closure)
+public func onBackgroundQueueOfPriority(_ priority: DispatchQueue.GlobalQueuePriority, closure: @escaping Closure) {
+	DispatchQueue.global(priority: priority).async(execute: closure)
 }
 
 
-public func onMainQueue(closure: Closure) {
-	dispatch_async(dispatch_get_main_queue(), closure)
+public func onMainQueue(_ closure: @escaping Closure) {
+	DispatchQueue.main.async(execute: closure)
 }
 
 
-public func onMainQueueAfterDelay(delay: NSTimeInterval, closure: Closure) {
-	let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC)))
-	dispatch_after(time, dispatch_get_main_queue(), closure)
-}
-
-
-
-public enum DispatchQueuePriority {
-	case Background
-	case Default
-	case High
-	case Low
-
-
-	private var dispatchPriority: dispatch_queue_priority_t {
-		switch self {
-		case .Background: return DISPATCH_QUEUE_PRIORITY_BACKGROUND
-		case .Default:    return DISPATCH_QUEUE_PRIORITY_DEFAULT
-		case .High:       return DISPATCH_QUEUE_PRIORITY_HIGH
-		case .Low:        return DISPATCH_QUEUE_PRIORITY_LOW
-		}
-	}
+public func onMainQueueAfterDelay(_ delay: TimeInterval, closure: @escaping Closure) {
+	let time = DispatchTime.now() + Double(Int64(delay * TimeInterval(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+	DispatchQueue.main.asyncAfter(deadline: time, execute: closure)
 }

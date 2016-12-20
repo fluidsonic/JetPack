@@ -37,9 +37,9 @@ public struct PhoneNumber {
 		case _7         = "7"
 		case _8         = "8"
 		case _9         = "9"
-		case NumberSign = "#"
-		case Plus       = "+"
-		case Star       = "*"
+		case numberSign = "#"
+		case plus       = "+"
+		case star       = "*"
 
 
 		public init?(character: Character) {
@@ -58,7 +58,7 @@ public struct PhoneNumber {
 
 		public typealias Digit = PhoneNumber.Digit
 
-		private var values: [Digit]
+		fileprivate var values: [Digit]
 
 
 		public init() {
@@ -71,7 +71,7 @@ public struct PhoneNumber {
 		}
 
 
-		public init <Sequence: SequenceType where Sequence.Generator.Element == Digit>(_ sequence: Sequence) {
+		public init <Sequence: Swift.Sequence>(_ sequence: Sequence) where Sequence.Iterator.Element == Digit {
 			values = Array(sequence)
 		}
 
@@ -112,7 +112,15 @@ extension PhoneNumber: Hashable {
 }
 
 
-extension PhoneNumber.Digits: ArrayLiteralConvertible {
+extension PhoneNumber.Digits: CustomStringConvertible {
+
+	public var description: String {
+		return string
+	}
+}
+
+
+extension PhoneNumber.Digits: ExpressibleByArrayLiteral {
 
 	public init(arrayLiteral elements: Digit...) {
 		self.init(elements)
@@ -120,10 +128,20 @@ extension PhoneNumber.Digits: ArrayLiteralConvertible {
 }
 
 
-extension PhoneNumber.Digits: CustomStringConvertible {
+extension PhoneNumber.Digits: ExpressibleByStringLiteral {
 
-	public var description: String {
-		return string
+	public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
+		self.init(value)
+	}
+
+
+	public init(stringLiteral value: StringLiteralType) {
+		self.init(value)
+	}
+
+
+	public init(unicodeScalarLiteral value: StringLiteralType) {
+		self.init(value)
 	}
 }
 
@@ -140,11 +158,12 @@ extension PhoneNumber.Digits: Hashable {
 }
 
 
-extension PhoneNumber.Digits: MutableCollectionType {
+extension PhoneNumber.Digits: RandomAccessCollection, MutableCollection {
 
-	public typealias Generator = Array<Digit>.Generator
+	public typealias Indices = Array<Digit>.Indices
 	public typealias Index = Array<Digit>.Index
-	public typealias SubSequence = Array<Digit>.SubSequence
+	public typealias Iterator = Array<Digit>.Iterator
+	public typealias SubSequence = PhoneNumber.Digits
 
 
 	public var count: Int {
@@ -157,8 +176,13 @@ extension PhoneNumber.Digits: MutableCollectionType {
 	}
 
 
-	public func generate() -> Generator {
-		return values.generate()
+	public func makeIterator() -> Iterator {
+		return values.makeIterator()
+	}
+
+
+	public func index(after index: Int) -> Int {
+		return values.index(after: index)
 	}
 
 
@@ -168,12 +192,12 @@ extension PhoneNumber.Digits: MutableCollectionType {
 
 
 	public subscript(bounds: Range<Index>) -> SubSequence {
-		get { return values[bounds] }
-		mutating set { values[bounds] = newValue }
+		get { return PhoneNumber.Digits(values[bounds]) }
+		mutating set { values[bounds] = newValue.values[newValue.indices] }
 	}
 
 
-	public subscript(position: Index) -> Generator.Element {
+	public subscript(position: Index) -> Iterator.Element {
 		get { return values[position] }
 		mutating set { values[position] = newValue }
 	}
@@ -181,32 +205,6 @@ extension PhoneNumber.Digits: MutableCollectionType {
 
 	public var startIndex: Index {
 		return values.startIndex
-	}
-}
-
-
-extension PhoneNumber.Digits: RangeReplaceableCollectionType {
-
-	public mutating func replaceRange<C: CollectionType where C.Generator.Element == Generator.Element>(subRange: Range<Index>, with newElements: C) {
-		values.replaceRange(subRange, with: newElements)
-	}
-}
-
-
-extension PhoneNumber.Digits: StringLiteralConvertible {
-
-	public init(extendedGraphemeClusterLiteral value: StringLiteralType) {
-		self.init(value)
-	}
-
-
-	public init(stringLiteral value: StringLiteralType) {
-		self.init(value)
-	}
-
-
-	public init(unicodeScalarLiteral value: StringLiteralType) {
-		self.init(value)
 	}
 }
 

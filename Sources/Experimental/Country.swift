@@ -19,11 +19,11 @@ public struct Country {
 	// TODO refactor this as a calling code can result in multiple countries
 	public init?(phoneNumber: PhoneNumber.Digits) {
 		let digitsExcludingPrefix: PhoneNumber.Digits
-		if phoneNumber.count >= 2 && phoneNumber[0] == .Plus {
-			digitsExcludingPrefix = PhoneNumber.Digits(phoneNumber.suffixFrom(1))
+		if phoneNumber.count >= 2 && phoneNumber[0] == .plus {
+			digitsExcludingPrefix = PhoneNumber.Digits(phoneNumber.suffix(from: 1))
 		}
 		else if phoneNumber.count >= 3 && phoneNumber[0] == ._0 && phoneNumber[1] == ._0 {
-			digitsExcludingPrefix = PhoneNumber.Digits(phoneNumber.suffixFrom(2))
+			digitsExcludingPrefix = PhoneNumber.Digits(phoneNumber.suffix(from: 2))
 		}
 		else {
 			return nil
@@ -38,7 +38,9 @@ public struct Country {
 				break
 			}
 
-			callingCodes.removeLast()
+			var x = [1]
+			x.removeLast()
+			callingCodes.removeLast(1)
 		}
 
 		guard let country = bestCountry else {
@@ -50,7 +52,7 @@ public struct Country {
 
 
 	public init?(isoCode2: String) {
-		guard let country = Country.allByIsoCode2[isoCode2.uppercaseString] else {
+		guard let country = Country.allByIsoCode2[isoCode2.uppercased()] else {
 			return nil
 		}
 
@@ -59,7 +61,7 @@ public struct Country {
 
 
 	public init?(isoCode3: String) {
-		guard let country = Country.allByIsoCode3[isoCode3.uppercaseString] else {
+		guard let country = Country.allByIsoCode3[isoCode3.uppercased()] else {
 			return nil
 		}
 
@@ -69,8 +71,8 @@ public struct Country {
 
 	public init(isoCode2: String, isoCode3: String, englishName: String, callingCodes: Set<PhoneNumber.Digits> = []) {
 		self.callingCodes = callingCodes
-		self.isoCode2 = isoCode2.uppercaseString
-		self.isoCode3 = isoCode3.uppercaseString
+		self.isoCode2 = isoCode2.uppercased()
+		self.isoCode3 = isoCode3.uppercased()
 		self.englishName = englishName
 	}
 }
@@ -371,7 +373,7 @@ public extension Country {
 	}()
 
 
-	private static let allByCallingCode: [Int : [PhoneNumber.Digits : Country]] = {
+	fileprivate static let allByCallingCode: [Int : [PhoneNumber.Digits : Country]] = {
 		var values = Dictionary<Int, StrongReference<Dictionary<PhoneNumber.Digits, Country>>>()
 
 		for country in all {
@@ -398,7 +400,7 @@ public extension Country {
 	}()
 
 
-	private static let allByIsoCode2: [String : Country] = {
+	fileprivate static let allByIsoCode2: [String : Country] = {
 		var values = [String : Country]()
 		for country in all {
 			values[country.isoCode2] = country
@@ -407,7 +409,7 @@ public extension Country {
 	}()
 
 
-	private static let allByIsoCode3: [String : Country] = {
+	fileprivate static let allByIsoCode3: [String : Country] = {
 		var values = [String : Country]()
 		for country in all {
 			values[country.isoCode3] = country
@@ -416,7 +418,7 @@ public extension Country {
 	}()
 
 
-	private static let maximumCallingCodeLength: Int = allByCallingCode.keys.reduce(0, combine: max)
+	fileprivate static let maximumCallingCodeLength: Int = allByCallingCode.keys.reduce(0, max)
 }
 
 

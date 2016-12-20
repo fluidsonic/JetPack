@@ -3,21 +3,21 @@ import UIKit
 
 public final class Keyboard {
 
-	private static var preloaded = false
+	fileprivate static var preloaded = false
 
-	public private(set) static var animation = Animation(duration: 0.25, timing: .Curve(UIViewAnimationCurve(rawValue: 7)!))
-	public private(set) static var frame = CGRect()
-	public private(set) static var isVisible = false
+	public fileprivate(set) static var animation = Animation(duration: 0.25, timing: .curve(UIViewAnimationCurve(rawValue: 7)!))
+	public fileprivate(set) static var frame = CGRect()
+	public fileprivate(set) static var isVisible = false
 
 	public static var eventBus = EventBus()
 
 
-	private init() {
+	fileprivate init() {
 		// static only
 	}
 
 
-	private static func didChangeFrameWithNotification(notification: NSNotification) {
+	fileprivate static func didChangeFrameWithNotification(_ notification: Notification) {
 		preloaded = true
 
 		updateFromNotification(notification)
@@ -26,7 +26,7 @@ public final class Keyboard {
 	}
 
 
-	private static func didHideWithNotification(notification: NSNotification) {
+	fileprivate static func didHideWithNotification(_ notification: Notification) {
 		preloaded = true
 
 		updateFromNotification(notification)
@@ -35,7 +35,7 @@ public final class Keyboard {
 	}
 
 
-	private static func didShowWithNotification(notification: NSNotification) {
+	fileprivate static func didShowWithNotification(_ notification: Notification) {
 		preloaded = true
 
 		updateFromNotification(notification)
@@ -44,14 +44,14 @@ public final class Keyboard {
 	}
 
 
-	@warn_unused_result
-	public static func frameInView(view: UIView) -> CGRect {
+	
+	public static func frameInView(_ view: UIView) -> CGRect {
 		guard let window = view.window ?? view as? UIWindow else {
 			return .null
 		}
 
 		let windowSize = window.bounds.size
-		var frameInWindow = window.convertRect(frame, fromWindow: nil)
+		var frameInWindow = window.convert(frame, from: nil)
 		frameInWindow.left = 0
 
 		if isVisible {
@@ -65,13 +65,13 @@ public final class Keyboard {
 			frameInWindow.top = windowSize.height
 		}
 
-		let frameInView = view.convertRect(frameInWindow, fromView: window)
+		let frameInView = view.convert(frameInWindow, from: window)
 		return frameInView
 	}
 
 
 	public static func preload() {
-		guard !preloaded, let _window = UIApplication.sharedApplication().delegate?.window, let window = _window where window.firstResponder == nil else { // why the double optional???
+		guard !preloaded, let _window = UIApplication.shared.delegate?.window, let window = _window, window.firstResponder == nil else { // why the double optional???
 			return
 		}
 
@@ -91,38 +91,38 @@ public final class Keyboard {
 	}
 
 
-	private static func subscribeToNotifications() {
-		let queue = NSOperationQueue.mainQueue()
-		let notificationCenter = NSNotificationCenter.defaultCenter()
-		notificationCenter.addObserverForName(UIKeyboardDidChangeFrameNotification,  object: nil, queue: queue, usingBlock: didChangeFrameWithNotification)
-		notificationCenter.addObserverForName(UIKeyboardDidHideNotification,         object: nil, queue: queue, usingBlock: didHideWithNotification)
-		notificationCenter.addObserverForName(UIKeyboardDidShowNotification,         object: nil, queue: queue, usingBlock: didShowWithNotification)
-		notificationCenter.addObserverForName(UIKeyboardWillChangeFrameNotification, object: nil, queue: queue, usingBlock: willChangeFrameWithNotification)
-		notificationCenter.addObserverForName(UIKeyboardWillHideNotification,        object: nil, queue: queue, usingBlock: willHideWithNotification)
-		notificationCenter.addObserverForName(UIKeyboardWillShowNotification,        object: nil, queue: queue, usingBlock: willShowWithNotification)
+	fileprivate static func subscribeToNotifications() {
+		let queue = OperationQueue.main
+		let notificationCenter = NotificationCenter.default
+		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardDidChangeFrame,  object: nil, queue: queue, using: didChangeFrameWithNotification)
+		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardDidHide,         object: nil, queue: queue, using: didHideWithNotification)
+		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardDidShow,         object: nil, queue: queue, using: didShowWithNotification)
+		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil, queue: queue, using: willChangeFrameWithNotification)
+		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardWillHide,        object: nil, queue: queue, using: willHideWithNotification)
+		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardWillShow,        object: nil, queue: queue, using: willShowWithNotification)
 	}
 
 
-	private static func updateFromNotification(notification: NSNotification) {
+	fileprivate static func updateFromNotification(_ notification: Notification) {
 		guard let userInfo = notification.userInfo else {
 			return
 		}
 
 		if let
-			rawAnimationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int, animationCurve = UIViewAnimationCurve(rawValue: rawAnimationCurve),
-			animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval
+			rawAnimationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int, let animationCurve = UIViewAnimationCurve(rawValue: rawAnimationCurve),
+			let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval
 		{
-			self.animation = Animation(duration: animationDuration, timing: .Curve(animationCurve))
+			self.animation = Animation(duration: animationDuration, timing: .curve(animationCurve))
 		}
 
 		if let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue {
-			frame = frameValue.CGRectValue()
-			isVisible = UIScreen.mainScreen().bounds.intersects(frame)
+			frame = frameValue.cgRectValue
+			isVisible = UIScreen.main.bounds.intersects(frame)
 		}
 	}
 
 
-	private static func willChangeFrameWithNotification(notification: NSNotification) {
+	fileprivate static func willChangeFrameWithNotification(_ notification: Notification) {
 		preloaded = true
 
 		updateFromNotification(notification)
@@ -131,7 +131,7 @@ public final class Keyboard {
 	}
 
 
-	private static func willHideWithNotification(notification: NSNotification) { // called after willChangeFrame
+	fileprivate static func willHideWithNotification(_ notification: Notification) { // called after willChangeFrame
 		preloaded = true
 
 		updateFromNotification(notification)
@@ -140,7 +140,7 @@ public final class Keyboard {
 	}
 
 
-	private static func willShowWithNotification(notification: NSNotification) { // called after willChangeFrame
+	fileprivate static func willShowWithNotification(_ notification: Notification) { // called after willChangeFrame
 		preloaded = true
 
 		updateFromNotification(notification)
@@ -152,14 +152,14 @@ public final class Keyboard {
 
 	public struct Event {
 
-		public struct DidChangeFrame  { private init() {} }
-		public struct DidHide         { private init() {} }
-		public struct DidShow         { private init() {} }
-		public struct WillChangeFrame { private init() {} }
-		public struct WillHide        { private init() {} }
-		public struct WillShow        { private init() {} }
+		public struct DidChangeFrame  { fileprivate init() {} }
+		public struct DidHide         { fileprivate init() {} }
+		public struct DidShow         { fileprivate init() {} }
+		public struct WillChangeFrame { fileprivate init() {} }
+		public struct WillHide        { fileprivate init() {} }
+		public struct WillShow        { fileprivate init() {} }
 
 
-		private init() {}
+		fileprivate init() {}
 	}
 }

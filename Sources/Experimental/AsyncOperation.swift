@@ -1,64 +1,64 @@
 import Foundation
 
 
-public /* non-final */ class AsyncOperation: NSOperation {
+open /* non-final */ class AsyncOperation: Operation {
 
-	private var _executing = false
-	private var _finished = false
+	fileprivate var _executing = false
+	fileprivate var _finished = false
 
 
-	public final override var asynchronous: Bool {
+	public final override var isAsynchronous: Bool {
 		return true
 	}
 
 
-	public final override var executing: Bool {
+	public final override var isExecuting: Bool {
 		return _executing
 	}
 
 
-	private func finish() {
+	fileprivate func finish() {
 		guard _executing else {
 			fatalError("Completion closure called while not executing")
 		}
 
-		willChangeValueForKey("isExecuting")
+		willChangeValue(forKey: "isExecuting")
 		_executing = false
-		didChangeValueForKey("isExecuting")
+		didChangeValue(forKey: "isExecuting")
 
-		willChangeValueForKey("isFinished")
+		willChangeValue(forKey: "isFinished")
 		_finished = true
-		didChangeValueForKey("isFinished")
+		didChangeValue(forKey: "isFinished")
 	}
 
 
-	public final override var finished: Bool {
+	public final override var isFinished: Bool {
 		return _finished
 	}
 
 
-	@available(*, unavailable, renamed="mainWithCompletion")
+	@available(*, unavailable, renamed: "mainWithCompletion")
 	public final override func main() {
 		// no-op
 	}
 
 
-	public func mainWithCompletion(completion: Closure) {
+	open func mainWithCompletion(_ completion: @escaping Closure) {
 		completion()
 	}
 
 
 	public final override func start() {
-		guard !cancelled else {
+		guard !isCancelled else {
 			return
 		}
 		guard !_executing && !_finished else {
 			fatalError("Operation is already executing or finished.")
 		}
 
-		willChangeValueForKey("isExecuting")
+		willChangeValue(forKey: "isExecuting")
 		_executing = true
-		didChangeValueForKey("isExecuting")
+		didChangeValue(forKey: "isExecuting")
 
 		mainWithCompletion { [weak self] in
 			self?.finish()

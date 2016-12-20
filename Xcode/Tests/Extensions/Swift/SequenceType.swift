@@ -5,7 +5,7 @@ import JetPack
 
 class SequenceType_Tests: XCTestCase {
 
-	private let error = NSError(domain: "", code: 0, userInfo: nil)
+	fileprivate let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
 	func testContainsIdentical() {
@@ -78,9 +78,9 @@ class SequenceType_Tests: XCTestCase {
 
 	func testToDictionary() {
 		XCTAssertEqual(AnySequence<Int>([]).toDictionary() { ($0, $0) },      [:])
-		XCTAssertEqual(AnySequence([1, 2, 3]).toDictionary({ ($0, $0 * 2) }), [1: 2, 2: 4, 3: 6])
+		XCTAssertEqual(AnySequence([1, 2, 3]).toDictionary(transform: { ($0, $0 * 2) }), [1: 2, 2: 4, 3: 6])
 
-		XCTAssertEqual(AnySequence([(1, 1), (2, 2), (1, 3)]).toDictionary({ $0 }), [2: 2, 1: 3])
+		XCTAssertEqual(AnySequence([(1, 1), (2, 2), (1, 3)]).toDictionary(transform: { $0 }), [2: 2, 1: 3])
 	}
 
 
@@ -90,7 +90,6 @@ class SequenceType_Tests: XCTestCase {
 
 		XCTAssertEqual(AnySequence<Int>([]).toSet(),   Set([]))
 		XCTAssertEqual(AnySequence([3, 1, 2]).toSet(), Set([3, 1, 2]))
-
-		XCTAssertIdentical(AnySequence([b, a]).toSet(), Set([a]))
+		XCTAssertEqual(AnySequence([b, a]).toSet(),    Set([a]))
 	}
 }

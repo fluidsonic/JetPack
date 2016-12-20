@@ -2,33 +2,33 @@ import UIKit
 
 
 @objc(JetPack_ImageView)
-public /* non-final */ class ImageView: View {
+open /* non-final */ class ImageView: View {
 
 	public typealias Session = _ImageViewSession
 	public typealias SessionListener = _ImageViewSessionListener
 	public typealias Source = _ImageViewSource
 
-	private var activityIndicatorIsVisible = false
-	private var imageLayer = ImageLayer()
-	private var isLayouting = false
-	private var isSettingImage = false
-	private var isSettingImageFromSource = false
-	private var isSettingSource = false
-	private var isSettingSourceFromImage = false
-	private var lastAppliedTintColor: UIColor?
-	private var lastLayoutedSize = CGSize()
-	private var sourceImageRetrievalCompleted = false
-	private var sourceSession: Session?
-	private var sourceSessionConfigurationIsValid = true
-	private var tintedImage: UIImage?
+	fileprivate var activityIndicatorIsVisible = false
+	fileprivate var imageLayer = ImageLayer()
+	fileprivate var isLayouting = false
+	fileprivate var isSettingImage = false
+	fileprivate var isSettingImageFromSource = false
+	fileprivate var isSettingSource = false
+	fileprivate var isSettingSourceFromImage = false
+	fileprivate var lastAppliedTintColor: UIColor?
+	fileprivate var lastLayoutedSize = CGSize()
+	fileprivate var sourceImageRetrievalCompleted = false
+	fileprivate var sourceSession: Session?
+	fileprivate var sourceSessionConfigurationIsValid = true
+	fileprivate var tintedImage: UIImage?
 
-	public var imageChanged: Closure?
+	open var imageChanged: Closure?
 
 
 	public override init() {
 		super.init()
 
-		userInteractionEnabled = false
+		isUserInteractionEnabled = false
 
 		layer.addSublayer(imageLayer)
 	}
@@ -44,10 +44,10 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private var _activityIndicator: UIActivityIndicatorView?
+	fileprivate var _activityIndicator: UIActivityIndicatorView?
 	public final var activityIndicator: UIActivityIndicatorView {
 		return _activityIndicator ?? {
-			let child = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+			let child = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 			child.hidesWhenStopped = false
 			child.alpha = 0
 			child.startAnimating()
@@ -59,7 +59,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private var activityIndicatorShouldBeVisible: Bool {
+	fileprivate var activityIndicatorShouldBeVisible: Bool {
 		guard showsActivityIndicatorWhileLoading else {
 			return false
 		}
@@ -71,7 +71,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private func computeImageLayerFrame() -> CGRect {
+	fileprivate func computeImageLayerFrame() -> CGRect {
 		guard let image = image else {
 			return .zero
 		}
@@ -89,65 +89,65 @@ public /* non-final */ class ImageView: View {
 		var imageLayerFrame = CGRect()
 
 		switch scaling {
-		case .FitIgnoringAspectRatio:
+		case .fitIgnoringAspectRatio:
 			imageLayerFrame.size = maximumImageLayerFrame.size
 
-		case .FitInside, .FitOutside:
+		case .fitInside, .fitOutside:
 			let horizontalScale = maximumImageLayerFrame.width / imageSize.width
 			let verticalScale = maximumImageLayerFrame.height / imageSize.height
-			let scale = (scaling == .FitInside ? min : max)(horizontalScale, verticalScale)
+			let scale = (scaling == .fitInside ? min : max)(horizontalScale, verticalScale)
 
 			imageLayerFrame.size = imageSize.scaleBy(scale)
 
-		case .FitHorizontally:
+		case .fitHorizontally:
 			imageLayerFrame.width = maximumImageLayerFrame.width
 			imageLayerFrame.height = imageSize.height * (imageLayerFrame.width / imageSize.width)
 
-		case .FitHorizontallyIgnoringAspectRatio:
+		case .fitHorizontallyIgnoringAspectRatio:
 			imageLayerFrame.width = maximumImageLayerFrame.width
 			imageLayerFrame.height = imageSize.height
 
-		case .FitVertically:
+		case .fitVertically:
 			imageLayerFrame.height = maximumImageLayerFrame.height
 			imageLayerFrame.width = imageSize.width * (imageLayerFrame.height / imageSize.height)
 
-		case .FitVerticallyIgnoringAspectRatio:
+		case .fitVerticallyIgnoringAspectRatio:
 			imageLayerFrame.height = maximumImageLayerFrame.height
 			imageLayerFrame.width = imageSize.width
 
-		case .None:
+		case .none:
 			imageLayerFrame.size = imageSize
 		}
 
 		switch gravity.horizontal {
-		case .Left:
+		case .left:
 			imageLayerFrame.left = maximumImageLayerFrame.left
 
-		case .Center:
+		case .center:
 			imageLayerFrame.horizontalCenter = maximumImageLayerFrame.horizontalCenter
 
-		case .Right:
+		case .right:
 			imageLayerFrame.right = maximumImageLayerFrame.right
 		}
 
 		switch gravity.vertical {
-		case .Top:
+		case .top:
 			imageLayerFrame.top = maximumImageLayerFrame.top
 
-		case .Center:
+		case .center:
 			imageLayerFrame.verticalCenter = maximumImageLayerFrame.verticalCenter
 
-		case .Bottom:
+		case .bottom:
 			imageLayerFrame.bottom = maximumImageLayerFrame.bottom
 		}
 
 		switch image.imageOrientation {
-		case .Left, .LeftMirrored, .Right, .RightMirrored:
+		case .left, .leftMirrored, .right, .rightMirrored:
 			let center = imageLayerFrame.center
 			swap(&imageLayerFrame.width, &imageLayerFrame.height)
 			imageLayerFrame.center = center
 
-		case .Down, .DownMirrored, .Up, .UpMirrored:
+		case .down, .downMirrored, .up, .upMirrored:
 			break
 		}
 
@@ -157,36 +157,36 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private func computeImageLayerTransform() -> CGAffineTransform {
+	fileprivate func computeImageLayerTransform() -> CGAffineTransform {
 		guard let image = image else {
-			return CGAffineTransformIdentity
+			return CGAffineTransform.identity
 		}
 
 		// TODO support mirrored variants
 		let transform: CGAffineTransform
 		switch image.imageOrientation {
-		case .Down:          transform = CGAffineTransformMakeRotation(.Pi)
-		case .DownMirrored:  transform = CGAffineTransformMakeRotation(.Pi)
-		case .Left:          transform = CGAffineTransformMakeRotation(-.Pi / 2)
-		case .LeftMirrored:  transform = CGAffineTransformMakeRotation(-.Pi / 2)
-		case .Right:         transform = CGAffineTransformMakeRotation(.Pi / 2)
-		case .RightMirrored: transform = CGAffineTransformMakeRotation(.Pi / 2)
-		case .Up:            transform = CGAffineTransformIdentity
-		case .UpMirrored:    transform = CGAffineTransformIdentity
+		case .down:          transform = CGAffineTransform(rotationAngle: .pi)
+		case .downMirrored:  transform = CGAffineTransform(rotationAngle: .pi)
+		case .left:          transform = CGAffineTransform(rotationAngle: -.pi / 2)
+		case .leftMirrored:  transform = CGAffineTransform(rotationAngle: -.pi / 2)
+		case .right:         transform = CGAffineTransform(rotationAngle: .pi / 2)
+		case .rightMirrored: transform = CGAffineTransform(rotationAngle: .pi / 2)
+		case .up:            transform = CGAffineTransform.identity
+		case .upMirrored:    transform = CGAffineTransform.identity
 		}
 
 		return transform
 	}
 
 
-	@available(*, unavailable, message="Use .gravity and .scaling instead.")
+	@available(*, unavailable, message: "Use .gravity and .scaling instead.")
 	public final override var contentMode: UIViewContentMode {
 		get { return super.contentMode }
 		set { super.contentMode = newValue }
 	}
 
 
-	public override func didMoveToWindow() {
+	open override func didMoveToWindow() {
 		super.didMoveToWindow()
 
 		if window != nil {
@@ -195,7 +195,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var gravity = Gravity.Center {
+	open var gravity = Gravity.center {
 		didSet {
 			guard gravity != oldValue else {
 				return
@@ -208,7 +208,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var image: UIImage? {
+	open var image: UIImage? {
 		didSet {
 			precondition(!isSettingImage, "Cannot recursively set ImageView's 'image'.")
 			precondition(!isSettingSource || isSettingImageFromSource, "Cannot recursively set ImageView's 'image' and 'source'.")
@@ -239,12 +239,12 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public override func intrinsicContentSize() -> CGSize {
+	open override var intrinsicContentSize : CGSize {
 		return sizeThatFits()
 	}
 
 
-	private func invalidateConfiguration() {
+	fileprivate func invalidateConfiguration() {
 		guard sourceSessionConfigurationIsValid else {
 			return
 		}
@@ -254,7 +254,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		isLayouting = true
 		defer { isLayouting = false }
 
@@ -274,7 +274,7 @@ public /* non-final */ class ImageView: View {
 		imageLayer.bounds = CGRect(size: imageLayerFrame.size)
 		imageLayer.position = imageLayerFrame.center
 
-		if let image = image where image.renderingMode == .AlwaysTemplate {
+		if let image = image, image.renderingMode == .alwaysTemplate {
 			if tintColor != lastAppliedTintColor {
 				lastAppliedTintColor = tintColor
 
@@ -286,7 +286,7 @@ public /* non-final */ class ImageView: View {
 		}
 
 		if let contentImage = tintedImage ?? image {
-			imageLayer.contents = contentImage.CGImage
+			imageLayer.contents = contentImage.cgImage
 			imageLayer.transform = CATransform3DMakeAffineTransform(computeImageLayerTransform())
 		}
 		else {
@@ -298,7 +298,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var optimalImageSize: CGSize {
+	open var optimalImageSize: CGSize {
 		let size = bounds.size.insetBy(padding).scaleBy(gridScaleFactor)
 		guard size.width > 0 && size.height > 0 else {
 			return .zero
@@ -308,7 +308,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var padding = UIEdgeInsets() {
+	open var padding = UIEdgeInsets() {
 		didSet {
 			if padding == oldValue {
 				return
@@ -322,7 +322,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var preferredSize: CGSize? {
+	open var preferredSize: CGSize? {
 		didSet {
 			guard preferredSize != oldValue else {
 				return
@@ -334,7 +334,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var scaling = Scaling.FitInside {
+	open var scaling = Scaling.fitInside {
 		didSet {
 			guard scaling != oldValue else {
 				return
@@ -347,7 +347,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var showsActivityIndicatorWhileLoading = true {
+	open var showsActivityIndicatorWhileLoading = true {
 		didSet {
 			guard showsActivityIndicatorWhileLoading != oldValue else {
 				return
@@ -358,7 +358,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		if let preferredSize = preferredSize {
 			return alignToGrid(preferredSize)
 		}
@@ -366,30 +366,30 @@ public /* non-final */ class ImageView: View {
 		let imageSizeThatFits: CGSize
 
 		let availableSize = maximumSize.insetBy(padding)
-		if availableSize.isPositive, let imageSize = image?.size where imageSize.isPositive {
+		if availableSize.isPositive, let imageSize = image?.size, imageSize.isPositive {
 			let imageRatio = imageSize.width / imageSize.height
 
 			switch scaling {
-			case .FitHorizontally,
-			     .FitHorizontallyIgnoringAspectRatio:
+			case .fitHorizontally,
+			     .fitHorizontallyIgnoringAspectRatio:
 
 				imageSizeThatFits = CGSize(
 					width:  availableSize.width,
 					height: availableSize.width / imageRatio
 				)
 
-			case .FitVertically,
-			     .FitVerticallyIgnoringAspectRatio:
+			case .fitVertically,
+			     .fitVerticallyIgnoringAspectRatio:
 
 				imageSizeThatFits = CGSize(
 					width:  availableSize.height * imageRatio,
 					height: availableSize.height
 				)
 
-			case .FitIgnoringAspectRatio,
-			     .FitInside,
-			     .FitOutside,
-			     .None:
+			case .fitIgnoringAspectRatio,
+			     .fitInside,
+			     .fitOutside,
+			     .none:
 				imageSizeThatFits = imageSize
 			}
 		}
@@ -404,12 +404,12 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public var source: Source? {
+	open var source: Source? {
 		didSet {
 			precondition(!isSettingSource, "Cannot recursively set ImageView's 'source'.")
 			precondition(!isSettingSource || isSettingSourceFromImage, "Cannot recursively set ImageView's 'source' and 'image'.")
 
-			if let source = source, oldSource = oldValue where source.equals(oldSource) {
+			if let source = source, let oldSource = oldValue, source.equals(oldSource) {
 				if sourceImageRetrievalCompleted && image == nil {
 					stopSourceSession()
 					startOrUpdateSourceSession()
@@ -446,7 +446,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private func startOrUpdateSourceSession() {
+	fileprivate func startOrUpdateSourceSession() {
 		guard !sourceSessionConfigurationIsValid && window != nil && (isLayouting || !needsLayout), let source = source else {
 			return
 		}
@@ -464,7 +464,7 @@ public /* non-final */ class ImageView: View {
 		else {
 			if let sourceSession = source.createSession() {
 				let listener = ClosureSessionListener { [weak self] image in
-					precondition(NSThread.isMainThread(), "ImageView.SessionListener.sessionDidRetrieveImage(_:) must be called on the main thread.")
+					precondition(Thread.isMainThread, "ImageView.SessionListener.sessionDidRetrieveImage(_:) must be called on the main thread.")
 
 					guard let imageView = self else {
 						return
@@ -507,7 +507,7 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	private func stopSourceSession() {
+	fileprivate func stopSourceSession() {
 		guard let sourceSession = sourceSession else {
 			return
 		}
@@ -519,14 +519,14 @@ public /* non-final */ class ImageView: View {
 	}
 
 
-	public override func tintColorDidChange() {
+	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
 		setNeedsLayout()
 	}
 
 
-	private func updateActivityIndicatorAnimated(animated: Bool) {
+	fileprivate func updateActivityIndicatorAnimated(_ animated: Bool) {
 		if activityIndicatorShouldBeVisible {
 			guard !activityIndicatorIsVisible else {
 				return
@@ -564,38 +564,38 @@ public /* non-final */ class ImageView: View {
 
 
 	public enum Gravity {
-		case BottomCenter
-		case BottomLeft
-		case BottomRight
-		case Center
-		case CenterLeft
-		case CenterRight
-		case TopCenter
-		case TopLeft
-		case TopRight
+		case bottomCenter
+		case bottomLeft
+		case bottomRight
+		case center
+		case centerLeft
+		case centerRight
+		case topCenter
+		case topLeft
+		case topRight
 
 
 		public init(horizontal: Horizontal, vertical: Vertical) {
 			switch vertical {
-			case .Bottom:
+			case .bottom:
 				switch horizontal {
-					case .Left:   self = .BottomLeft
-					case .Center: self = .BottomCenter
-					case .Right:  self = .BottomRight
+					case .left:   self = .bottomLeft
+					case .center: self = .bottomCenter
+					case .right:  self = .bottomRight
 				}
 
-			case .Center:
+			case .center:
 				switch horizontal {
-					case .Left:   self = .CenterLeft
-					case .Center: self = .Center
-					case .Right:  self = .CenterRight
+					case .left:   self = .centerLeft
+					case .center: self = .center
+					case .right:  self = .centerRight
 				}
 
-			case .Top:
+			case .top:
 				switch horizontal {
-				case .Left:   self = .TopLeft
-				case .Center: self = .TopCenter
-				case .Right:  self = .TopRight
+				case .left:   self = .topLeft
+				case .center: self = .topCenter
+				case .right:  self = .topRight
 				}
 			}
 		}
@@ -603,73 +603,73 @@ public /* non-final */ class ImageView: View {
 
 		public var horizontal: Horizontal {
 			switch self {
-			case .BottomLeft, .CenterLeft, .TopLeft:
-				return .Left
+			case .bottomLeft, .centerLeft, .topLeft:
+				return .left
 
-			case .BottomCenter, .Center, .TopCenter:
-				return .Center
+			case .bottomCenter, .center, .topCenter:
+				return .center
 
-			case .BottomRight, .CenterRight, .TopRight:
-				return .Right
+			case .bottomRight, .centerRight, .topRight:
+				return .right
 			}
 		}
 
 
 		public var vertical: Vertical {
 			switch self {
-			case .BottomCenter, .BottomLeft, .BottomRight:
-				return .Bottom
+			case .bottomCenter, .bottomLeft, .bottomRight:
+				return .bottom
 
-			case .Center, .CenterLeft, .CenterRight:
-				return .Center
+			case .center, .centerLeft, .centerRight:
+				return .center
 
-			case .TopCenter, .TopLeft, .TopRight:
-				return .Top
+			case .topCenter, .topLeft, .topRight:
+				return .top
 			}
 		}
 
 
 
 		public enum Horizontal {
-			case Center
-			case Left
-			case Right
+			case center
+			case left
+			case right
 		}
 
 
 		public enum Vertical {
-			case Bottom
-			case Center
-			case Top
+			case bottom
+			case center
+			case top
 		}
 	}
 
 
 	public enum Scaling {
-		case FitHorizontally
-		case FitHorizontallyIgnoringAspectRatio
-		case FitIgnoringAspectRatio
-		case FitInside
-		case FitOutside
-		case FitVertically
-		case FitVerticallyIgnoringAspectRatio
-		case None
+		case fitHorizontally
+		case fitHorizontallyIgnoringAspectRatio
+		case fitIgnoringAspectRatio
+		case fitInside
+		case fitOutside
+		case fitVertically
+		case fitVerticallyIgnoringAspectRatio
+		case none
 	}
 }
 
 
 public protocol _ImageViewSession: class {
 
-	func imageViewDidChangeConfiguration  (imageView: ImageView)
-	func startRetrievingImageForImageView (imageView: ImageView, listener: ImageView.SessionListener)
+	func imageViewDidChangeConfiguration  (_ imageView: ImageView)
+	func startRetrievingImageForImageView (_ imageView: ImageView, listener: ImageView.SessionListener)
 	func stopRetrievingImage              ()
 }
 
 
 public protocol _ImageViewSessionListener {
 
-	func sessionDidFailToRetrieveImageWithFailure (failure: Failure)
-	func sessionDidRetrieveImage                  (image: UIImage)
+	func sessionDidFailToRetrieveImageWithFailure (_ failure: Failure)
+	func sessionDidRetrieveImage                  (_ image: UIImage)
 }
 
 
@@ -678,13 +678,13 @@ public protocol _ImageViewSource {
 	var staticImage: UIImage? { get }
 
 	func createSession () -> ImageView.Session?
-	func equals        (source: ImageView.Source) -> Bool
+	func equals        (_ source: ImageView.Source) -> Bool
 }
 
 
 extension _ImageViewSource where Self: Equatable {
 
-	public func equals(source: ImageView.Source) -> Bool {
+	public func equals(_ source: ImageView.Source) -> Bool {
 		guard let source = source as? Self else {
 			return false
 		}
@@ -697,20 +697,20 @@ extension _ImageViewSource where Self: Equatable {
 
 private struct ClosureSessionListener: ImageView.SessionListener {
 
-	private let didRetrieveImage: UIImage -> Void
+	fileprivate let didRetrieveImage: (UIImage) -> Void
 
 
-	private init(didRetrieveImage: UIImage -> Void) {
+	fileprivate init(didRetrieveImage: @escaping (UIImage) -> Void) {
 		self.didRetrieveImage = didRetrieveImage
 	}
 
 
-	private func sessionDidFailToRetrieveImageWithFailure(failure: Failure) {
+	fileprivate func sessionDidFailToRetrieveImageWithFailure(_ failure: Failure) {
 		// TODO support this case
 	}
 
 
-	private func sessionDidRetrieveImage(image: UIImage) {
+	fileprivate func sessionDidRetrieveImage(_ image: UIImage) {
 		didRetrieveImage(image)
 	}
 }
@@ -719,7 +719,7 @@ private struct ClosureSessionListener: ImageView.SessionListener {
 
 private final class ImageLayer: Layer {
 
-	private override func actionForKey(event: String) -> CAAction? {
+	fileprivate override func action(forKey event: String) -> CAAction? {
 		return nil
 	}
 }

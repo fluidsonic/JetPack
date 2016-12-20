@@ -10,17 +10,17 @@ public extension ImageView {
 
 		public var considersOptimalImageSize = true
 		public var isTemplate: Bool
-		public var url: NSURL
+		public var url: URL
 
 
-		public init(url: NSURL, isTemplate: Bool = false) {
+		public init(url: URL, isTemplate: Bool = false) {
 			self.isTemplate = isTemplate
 			self.url = url
 		}
 
 
-		public static func cachedImageForUrl(url: NSURL) -> UIImage? {
-			return ImageCache.sharedInstance.imageForKey(url)
+		public static func cachedImageForUrl(_ url: URL) -> UIImage? {
+			return ImageCache.sharedInstance.imageForKey(url as AnyObject)
 		}
 
 
@@ -44,33 +44,33 @@ public func == (a: ImageView.UrlSource, b: ImageView.UrlSource) -> Bool {
 
 private final class UrlSourceSession: ImageView.Session {
 
-	private let source: ImageView.UrlSource
-	private var stopLoading: Closure?
+	fileprivate let source: ImageView.UrlSource
+	fileprivate var stopLoading: Closure?
 
 
-	private init(source: ImageView.UrlSource) {
+	fileprivate init(source: ImageView.UrlSource) {
 		self.source = source
 	}
 
 
-	private func imageViewDidChangeConfiguration(imageView: ImageView) {
+	fileprivate func imageViewDidChangeConfiguration(_ imageView: ImageView) {
 		// ignore
 	}
 
 
-	private func startRetrievingImageForImageView(imageView: ImageView, listener: ImageView.SessionListener) {
+	fileprivate func startRetrievingImageForImageView(_ imageView: ImageView, listener: ImageView.SessionListener) {
 		precondition(stopLoading == nil)
 
 		func completion(image sourceImage: UIImage) {
 			var image = sourceImage
 			if self.source.isTemplate {
-				image = image.imageWithRenderingMode(.AlwaysTemplate)
+				image = image.withRenderingMode(.alwaysTemplate)
 			}
 
 			listener.sessionDidRetrieveImage(image)
 		}
 
-		if source.url.fileURL && source.considersOptimalImageSize {
+		if source.url.isFileURL && source.considersOptimalImageSize {
 			let optimalImageSize = imageView.optimalImageSize
 			stopLoading = ImageFileLoader.forUrl(source.url, size: max(optimalImageSize.width, optimalImageSize.height)).load(completion)
 		}
@@ -80,7 +80,7 @@ private final class UrlSourceSession: ImageView.Session {
 	}
 
 
-	private func stopRetrievingImage() {
+	fileprivate func stopRetrievingImage() {
 		guard let stopLoading = stopLoading else {
 			return
 		}
@@ -95,56 +95,56 @@ private final class UrlSourceSession: ImageView.Session {
 
 private final class ImageCache {
 
-	private let cache = NSCache()
+	fileprivate let cache = NSCache<AnyObject, AnyObject>()
 
 
-	private init() {}
+	fileprivate init() {}
 
 
-	private func costForImage(image: UIImage) -> Int {
-		guard let cgImage = image.CGImage else {
+	fileprivate func costForImage(_ image: UIImage) -> Int {
+		guard let cgImage = image.cgImage else {
 			return 0
 		}
 
 		// TODO does CGImageGetHeight() include the scale?
-		return CGImageGetBytesPerRow(cgImage) * CGImageGetHeight(cgImage)
+		return cgImage.bytesPerRow * cgImage.height
 	}
 
 
-	private func imageForKey(key: AnyObject) -> UIImage? {
-		return cache.objectForKey(key) as? UIImage
+	fileprivate func imageForKey(_ key: AnyObject) -> UIImage? {
+		return cache.object(forKey: key) as? UIImage
 	}
 
 
-	private func setImage(image: UIImage, forKey key: AnyObject) {
+	fileprivate func setImage(_ image: UIImage, forKey key: AnyObject) {
 		cache.setObject(image, forKey: key, cost: costForImage(image))
 	}
 
 
-	private static let sharedInstance = ImageCache()
+	fileprivate static let sharedInstance = ImageCache()
 }
 
 
 
 private final class ImageDownloader {
 
-	private typealias Completion = UIImage -> Void
+	fileprivate typealias Completion = (UIImage) -> Void
 
-	private static var downloaders = [NSURL : ImageDownloader]()
+	fileprivate static var downloaders = [URL : ImageDownloader]()
 
-	private var completions = [Int : Completion]()
-	private var image: UIImage?
-	private var nextId = 0
-	private var task: NSURLSessionDataTask?
-	private let url: NSURL
+	fileprivate var completions = [Int : Completion]()
+	fileprivate var image: UIImage?
+	fileprivate var nextId = 0
+	fileprivate var task: URLSessionDataTask?
+	fileprivate let url: URL
 
 
-	private init(url: NSURL) {
+	fileprivate init(url: URL) {
 		self.url = url
 	}
 
 
-	private func cancelCompletionWithId(id: Int) {
+	fileprivate func cancelCompletionWithId(_ id: Int) {
 		completions[id] = nil
 
 		if completions.isEmpty {
@@ -157,7 +157,7 @@ private final class ImageDownloader {
 	}
 
 
-	private func cancelDownload() {
+	fileprivate func cancelDownload() {
 		precondition(completions.isEmpty)
 
 		task?.cancel()
@@ -165,13 +165,13 @@ private final class ImageDownloader {
 	}
 
 
-	private func download(completion: Completion) -> CancelClosure {
+	fileprivate func download(_ completion: @escaping Completion) -> CancelClosure {
 		if let image = image {
 			completion(image)
 			return {}
 		}
 
-		if let image = ImageCache.sharedInstance.imageForKey(url) {
+		if let image = ImageCache.sharedInstance.imageForKey(url as AnyObject) {
 			self.image = image
 
 			runAllCompletions()
@@ -194,7 +194,7 @@ private final class ImageDownloader {
 	}
 
 
-	private static func forUrl(url: NSURL) -> ImageDownloader {
+	fileprivate static func forUrl(_ url: URL) -> ImageDownloader {
 		if let downloader = downloaders[url] {
 			return downloader
 		}
@@ -206,14 +206,14 @@ private final class ImageDownloader {
 	}
 
 
-	private func runAllCompletions() {
+	fileprivate func runAllCompletions() {
 		guard let image = image else {
 			fatalError("Cannot run completions unless an image was successfully loaded")
 		}
 
 		// careful: a completion might get removed while we're calling another one so don't copy the dictionary
 		while let (id, completion) = self.completions.first {
-			self.completions.removeValueForKey(id)
+			self.completions.removeValue(forKey: id)
 			completion(image)
 		}
 
@@ -221,7 +221,7 @@ private final class ImageDownloader {
 	}
 
 
-	private func startDownload() {
+	fileprivate func startDownload() {
 		precondition(image == nil)
 		precondition(!completions.isEmpty)
 
@@ -230,7 +230,7 @@ private final class ImageDownloader {
 		}
 
 		let url = self.url
-		let task = NSURLSession.sharedSession().dataTaskWithURL(url) { data, response, error in
+		let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
 			guard let data = data, let image = UIImage(data: data) else {
 				onMainQueue {
 					self.task = nil
@@ -256,11 +256,11 @@ private final class ImageDownloader {
 				self.task = nil
 				self.image = image
 
-				ImageCache.sharedInstance.setImage(image, forKey: url)
+				ImageCache.sharedInstance.setImage(image, forKey: url as AnyObject)
 				
 				self.runAllCompletions()
 			}
-		}
+		}) 
 		
 		self.task = task
 		task.resume()
@@ -271,24 +271,24 @@ private final class ImageDownloader {
 
 private final class ImageFileLoader {
 
-	private typealias Completion = UIImage -> Void
+	fileprivate typealias Completion = (UIImage) -> Void
 
-	private static var loaders = [Query : ImageFileLoader]()
-	private static let operationQueue = NSOperationQueue()
+	fileprivate static var loaders = [Query : ImageFileLoader]()
+	fileprivate static let operationQueue = OperationQueue()
 
-	private var completions = [Int : Completion]()
-	private var image: UIImage?
-	private var nextId = 0
-	private var operation: NSOperation?
-	private let query: Query
+	fileprivate var completions = [Int : Completion]()
+	fileprivate var image: UIImage?
+	fileprivate var nextId = 0
+	fileprivate var operation: Operation?
+	fileprivate let query: Query
 
 
-	private init(query: Query) {
+	fileprivate init(query: Query) {
 		self.query = query
 	}
 
 
-	private func cancelCompletionWithId(id: Int) {
+	fileprivate func cancelCompletionWithId(_ id: Int) {
 		completions[id] = nil
 
 		if completions.isEmpty {
@@ -301,7 +301,7 @@ private final class ImageFileLoader {
 	}
 
 
-	private func cancelOperation() {
+	fileprivate func cancelOperation() {
 		precondition(completions.isEmpty)
 
 		operation?.cancel()
@@ -309,7 +309,7 @@ private final class ImageFileLoader {
 	}
 
 
-	private func load(completion: Completion) -> CancelClosure {
+	fileprivate func load(_ completion: @escaping Completion) -> CancelClosure {
 		if let image = image {
 			completion(image)
 			return {}
@@ -338,7 +338,7 @@ private final class ImageFileLoader {
 	}
 
 
-	private static func forUrl(url: NSURL, size: CGFloat) -> ImageFileLoader {
+	fileprivate static func forUrl(_ url: URL, size: CGFloat) -> ImageFileLoader {
 		let query = Query(url: url, size: size)
 
 		if let loader = loaders[query] {
@@ -352,14 +352,14 @@ private final class ImageFileLoader {
 	}
 
 
-	private func runAllCompletions() {
+	fileprivate func runAllCompletions() {
 		guard let image = image else {
 			fatalError("Cannot run completions unless an image was successfully loaded")
 		}
 
 		// careful: a completion might get removed while we're calling another one so don't copy the dictionary
 		while let (id, completion) = self.completions.first {
-			self.completions.removeValueForKey(id)
+			self.completions.removeValue(forKey: id)
 			completion(image)
 		}
 
@@ -367,7 +367,7 @@ private final class ImageFileLoader {
 	}
 
 
-	private func startOperation() {
+	fileprivate func startOperation() {
 		precondition(image == nil)
 		precondition(!completions.isEmpty)
 
@@ -379,7 +379,7 @@ private final class ImageFileLoader {
 		let size = query.size
 		let url = query.url
 
-		let operation = NSBlockOperation() {
+		let operation = BlockOperation() {
 			var image: UIImage?
 			defer {
 				onMainQueue {
@@ -395,23 +395,23 @@ private final class ImageFileLoader {
 				}
 			}
 
-			guard let source = CGImageSourceCreateWithURL(url, nil) else {
+			guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
 				log("Cannot load image '\(url)': Cannot create image source")
 				return
 			}
 
-			let options: [NSObject : AnyObject] = [
-				kCGImageSourceCreateThumbnailFromImageAlways: kCFBooleanTrue,
-				kCGImageSourceCreateThumbnailWithTransform:   kCFBooleanTrue,
-				kCGImageSourceThumbnailMaxPixelSize:          size
+			let options: [AnyHashable: Any] = [
+				kCGImageSourceCreateThumbnailFromImageAlways as AnyHashable: kCFBooleanTrue,
+				kCGImageSourceCreateThumbnailWithTransform as AnyHashable:   kCFBooleanTrue,
+				kCGImageSourceThumbnailMaxPixelSize as AnyHashable:          size
 			]
 
-			guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, options) else {
+			guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary?) else {
 				log("Cannot load image '\(url)': Cannot create thumbnail from image source")
 				return
 			}
 
-			image = UIImage(CGImage: cgImage)
+			image = UIImage(cgImage: cgImage)
 			image?.inflate()
 		}
 		
@@ -421,29 +421,29 @@ private final class ImageFileLoader {
 
 
 
-	private final class Query: NSObject {
+	fileprivate final class Query: NSObject {
 
-		private let size: CGFloat
-		private let url:  NSURL
+		fileprivate let size: CGFloat
+		fileprivate let url:  URL
 
 
-		private init(url: NSURL, size: CGFloat) {
+		fileprivate init(url: URL, size: CGFloat) {
 			self.size = size
 			self.url = url
 		}
 
 
-		private override func copy() -> AnyObject {
+		fileprivate override func copy() -> Any {
 			return self
 		}
 
 
-		private override var hash: Int {
+		fileprivate override var hash: Int {
 			return url.hashValue ^ size.hashValue
 		}
 
 
-		private override func isEqual(object: AnyObject?) -> Bool {
+		fileprivate override func isEqual(_ object: Any?) -> Bool {
 			guard let query = object as? Query else {
 				return false
 			}

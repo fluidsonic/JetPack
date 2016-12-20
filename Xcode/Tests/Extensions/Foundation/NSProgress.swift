@@ -9,7 +9,7 @@ class NSProgress_Tests: XCTestCase {
 	func testFractionCompletedHandler() {
 		var _fractionCompleted: Double?
 
-		let progress = NSProgress(totalUnitCount: 100)
+		let progress = Progress(totalUnitCount: 100)
 		progress.fractionCompletedHandler = { fractionCompleted in
 			guard _fractionCompleted == nil else {
 				XCTFail("fractionCompletedHandler called too often")
@@ -30,10 +30,10 @@ class NSProgress_Tests: XCTestCase {
 
 
 	func testFractionCompletedHandlerDeinit() {
-		var progressWithHandler: NSProgress? = NSProgress()
+		var progressWithHandler: Progress? = Progress()
 		progressWithHandler?.fractionCompletedHandler = { _ in }
 		progressWithHandler = nil
 
-		_ = NSProgress()
+		_ = Progress()
 	}
 }

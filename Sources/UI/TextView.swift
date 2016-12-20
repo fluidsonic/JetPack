@@ -2,10 +2,10 @@ import UIKit
 
 
 @objc(JetPack_TextView)
-public /* non-final */ class TextView: UITextView {
+open /* non-final */ class TextView: UITextView {
 
-	private var changeObserver: NSObjectProtocol?
-	private var placeholderLabel: Label?
+	fileprivate var changeObserver: NSObjectProtocol?
+	fileprivate var placeholderLabel: Label?
 
 
 	public init() {
@@ -24,12 +24,12 @@ public /* non-final */ class TextView: UITextView {
 
 	deinit {
 		if let changeObserver = changeObserver {
-			NSNotificationCenter.defaultCenter().removeObserver(changeObserver)
+			NotificationCenter.default.removeObserver(changeObserver)
 		}
 	}
 
 
-	public override var attributedText: NSAttributedString? {
+	open override var attributedText: NSAttributedString? {
 		get { return super.attributedText }
 		set {
 			guard newValue != attributedText else {
@@ -45,10 +45,10 @@ public /* non-final */ class TextView: UITextView {
 	}
 
 
-	public override var font: UIFont? {
+	open override var font: UIFont? {
 		get { return super.font }
 		set {
-			guard let newValue = newValue where newValue != font else {
+			guard let newValue = newValue, newValue != font else {
 				return
 			}
 
@@ -60,14 +60,14 @@ public /* non-final */ class TextView: UITextView {
 	}
 
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		super.layoutSubviews()
 
 		updatePlaceholderLabel()
 	}
 
 
-	public var placeholder = "" {
+	open var placeholder = "" {
 		didSet {
 			guard placeholder != oldValue else {
 				return
@@ -80,21 +80,21 @@ public /* non-final */ class TextView: UITextView {
 	}
 
 
-	public var placeholderTextColor = UIColor(rgb: 0xC7C7CD) {
+	open var placeholderTextColor = UIColor(rgb: 0xC7C7CD) {
 		didSet {
 			placeholderLabel?.textColor = placeholderTextColor
 		}
 	}
 
 
-	private func subscribeToChangeNotifications() {
-		changeObserver = NSNotificationCenter.defaultCenter().addObserverForName(UITextViewTextDidChangeNotification, object: self, queue: nil) { _ in
+	fileprivate func subscribeToChangeNotifications() {
+		changeObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextViewTextDidChange, object: self, queue: nil) { _ in
 			self.updatePlaceholderLabel()
 		}
 	}
 
 
-	public override var text: String? {
+	open override var text: String? {
 		get { return super.text }
 		set {
 			guard newValue != text else {
@@ -110,7 +110,7 @@ public /* non-final */ class TextView: UITextView {
 	}
 
 
-	public override var textContainerInset: UIEdgeInsets {
+	open override var textContainerInset: UIEdgeInsets {
 		get { return super.textContainerInset }
 		set {
 			guard newValue != textContainerInset else {
@@ -124,7 +124,7 @@ public /* non-final */ class TextView: UITextView {
 	}
 
 
-	private func updatePlaceholderLabel() {
+	fileprivate func updatePlaceholderLabel() {
 		if text?.nonEmpty != nil || placeholder.isEmpty {
 			placeholderLabel?.removeFromSuperview()
 		}
@@ -144,7 +144,7 @@ public /* non-final */ class TextView: UITextView {
 				}()
 
 			if placeholderLabel.superview == nil {
-				insertSubview(placeholderLabel, atIndex: 0)
+				insertSubview(placeholderLabel, at: 0)
 			}
 
 			var insets = textContainerInset

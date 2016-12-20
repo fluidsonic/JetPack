@@ -6,8 +6,8 @@ import Foundation
 // http://cldr.unicode.org/index/downloads
 internal struct PluralRulesParser {
 
-	public func parse(xml data: NSData) throws -> [PluralRuleSet] {
-		let xml = try AEXMLDocument(xmlData: data)
+	public func parse(xml data: Data) throws -> [PluralRuleSet] {
+		let xml = try AEXMLDocument(xml: data)
 		return try xml["supplementalData"]["plurals"].all?
 			.filter { $0.attributes["type"] == "cardinal" }
 			.flatMap { $0["pluralRules"].all ?? [] }
@@ -15,15 +15,15 @@ internal struct PluralRulesParser {
 	}
 
 
-	private func parseRule(xml xml: AEXMLElement) throws -> PluralRule {
+	private func parseRule(xml: AEXMLElement) throws -> PluralRule {
 		guard let category = xml.attributes["count"] else {
 			throw Error(message: "Plural rule node is missing attribute 'count'.")
 		}
 
-		let tokens = try xml.stringValue
-			.componentsSeparatedByString("@")[0]
-			.stringByTrimmingCharactersInSet(.whitespaceCharacterSet())
-			.componentsSeparatedByCharactersInSet(.whitespaceCharacterSet())
+		let tokens = try xml.string
+			.components(separatedBy: "@")[0]
+			.trimmingCharacters(in: .whitespaces)
+			.components(separatedBy: .whitespaces)
 			.map(parseRuleToken)
 
 		var expressionParser = ExpressionParser(tokens: tokens)
@@ -33,8 +33,8 @@ internal struct PluralRulesParser {
 	}
 
 
-	private func parseRuleSet(xml xml: AEXMLElement) throws -> PluralRuleSet {
-		guard let locales = xml.attributes["locales"]?.componentsSeparatedByCharactersInSet(.whitespaceCharacterSet()) where !locales.isEmpty else {
+	private func parseRuleSet(xml: AEXMLElement) throws -> PluralRuleSet {
+		guard let locales = xml.attributes["locales"]?.components(separatedBy: .whitespaces), !locales.isEmpty else {
 			throw Error(message: "Plural rule set node is missing attribute 'locales'.")
 		}
 
@@ -46,7 +46,7 @@ internal struct PluralRulesParser {
 	}
 
 
-	private func parseRuleToken(string: String) throws -> RuleToken {
+	private func parseRuleToken(_ string: String) throws -> RuleToken {
 		switch string {
 		case "f", "i", "n", "t", "v": return .variable(string)
 		case "%":                     return .modulus
@@ -56,8 +56,8 @@ internal struct PluralRulesParser {
 		case "or":                    return .or
 
 		default:
-			if string.containsString(",") {
-				let values = try string.componentsSeparatedByString(",").map { (component: String) -> PluralRule.Value in
+			if string.contains(",") {
+				let values = try string.components(separatedBy: ",").map { (component: String) -> PluralRule.Value in
 					guard let value = try parseRuleValue(component) else {
 						throw Error(message: "Invalid plural rule value '\(component)' in value list '\(string)' in expression.")
 					}
@@ -76,16 +76,16 @@ internal struct PluralRulesParser {
 	}
 
 
-	private func parseRuleValue(string: String) throws -> PluralRule.Value? {
-		if !string.isEmpty && string.rangeOfCharacterFromSet(NSCharacterSet.decimalDigitCharacterSet().invertedSet) == nil {
+	private func parseRuleValue(_ string: String) throws -> PluralRule.Value? {
+		if !string.isEmpty && string.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
 			guard let number = Int(string) else {
 				throw Error(message: "Invalid plural rule value '\(string)' in expression.")
 			}
 
 			return .number(number)
 		}
-		else if string.containsString("..") {
-			let components = string.componentsSeparatedByString("..")
+		else if string.contains("..") {
+			let components = string.components(separatedBy: "..")
 			guard components.count == 2 else {
 				throw Error(message: "Invalid plural rule value range '\(string)' in expression.")
 			}
@@ -104,7 +104,7 @@ internal struct PluralRulesParser {
 
 
 
-	internal struct Error: ErrorType {
+	internal struct Error: Swift.Error {
 
 		internal var message: String
 
@@ -122,7 +122,7 @@ internal struct PluralRulesParser {
 		private let tokens: [RuleToken]
 
 
-		private init(tokens: [RuleToken]) {
+		fileprivate init(tokens: [RuleToken]) {
 			self.tokens = tokens
 		}
 
@@ -143,7 +143,7 @@ internal struct PluralRulesParser {
 		}
 
 
-		private func operatorForToken(token: RuleToken) -> PluralRule.BinaryOperator? {
+		private func operatorForToken(_ token: RuleToken) -> PluralRule.BinaryOperator? {
 			switch token {
 			case .and:      return .and
 			case .equal:    return .equal
@@ -155,7 +155,7 @@ internal struct PluralRulesParser {
 		}
 
 
-		private mutating func parse() throws -> PluralRule.Expression {
+		fileprivate mutating func parse() throws -> PluralRule.Expression {
 			return try parseExpression()
 		}
 
@@ -165,7 +165,7 @@ internal struct PluralRulesParser {
 		}
 
 
-		private mutating func parseOperation(left left: PluralRule.Expression, precedenceOfPreviousOperator: Int = 0) throws -> PluralRule.Expression {
+		private mutating func parseOperation(left: PluralRule.Expression, precedenceOfPreviousOperator: Int = 0) throws -> PluralRule.Expression {
 			var left = left
 
 			while let currentToken = currentToken {
@@ -181,7 +181,7 @@ internal struct PluralRulesParser {
 				consumeCurrentToken()
 
 				var right = try parseValueOrVariable()
-				if let nextToken = self.currentToken, nextOp = operatorForToken(nextToken) where tokenPrecedence < precedenceForOperator(nextOp) {
+				if let nextToken = self.currentToken, let nextOp = operatorForToken(nextToken), tokenPrecedence < precedenceForOperator(nextOp) {
 					right = try parseOperation(left: right, precedenceOfPreviousOperator: tokenPrecedence + 1)
 				}
 
@@ -205,7 +205,7 @@ internal struct PluralRulesParser {
 		}
 
 
-		private func precedenceForOperator(op: PluralRule.BinaryOperator) -> Int {
+		private func precedenceForOperator(_ op: PluralRule.BinaryOperator) -> Int {
 			switch op {
 			case .and:      return 60
 			case .or:       return 40

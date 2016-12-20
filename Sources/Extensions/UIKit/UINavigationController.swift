@@ -3,29 +3,29 @@ import UIKit
 
 public extension UINavigationController {
 
-	private struct AssociatedKeys {
-		private static var lastKnownNavigationBarBottom = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var lastKnownNavigationBarBottom = UInt8()
 	}
 	
 
 
-	public override func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
+	open override func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return addTopAndBottomBarsToDecorationInsets(innerDecorationInsets)
 	}
 
 
-	public override func computeOuterDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
+	open override func computeOuterDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return addTopAndBottomBarsToDecorationInsets(outerDecorationInsets)
 	}
 
 
 	@nonobjc
-	private func addTopAndBottomBarsToDecorationInsets(decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
+	fileprivate func addTopAndBottomBarsToDecorationInsets(_ decorationInsets: UIEdgeInsets) -> UIEdgeInsets {
 		var adjustedDecorationInsets = decorationInsets
 
-		if !toolbarHidden, let toolbar = toolbar {
+		if !isToolbarHidden, let toolbar = toolbar {
 			let toolbarHeight = view.bounds.height - toolbar.frame.top
-			if toolbar.translucent {
+			if toolbar.isTranslucent {
 				adjustedDecorationInsets.bottom = max(toolbarHeight, adjustedDecorationInsets.bottom)
 			}
 			else {
@@ -33,9 +33,9 @@ public extension UINavigationController {
 			}
 		}
 
-		if !navigationBarHidden {
+		if !isNavigationBarHidden {
 			let navigationBarHeight = navigationBar.frame.bottom
-			if navigationBar.translucent {
+			if navigationBar.isTranslucent {
 				adjustedDecorationInsets.top = max(navigationBarHeight, adjustedDecorationInsets.top)
 			}
 			else {
@@ -62,7 +62,7 @@ public extension UINavigationController {
 
 
 	@nonobjc
-	private var lastKnownNavigationBarBottom: CGFloat {
+	fileprivate var lastKnownNavigationBarBottom: CGFloat {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.lastKnownNavigationBarBottom) as? CGFloat ?? 0 }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.lastKnownNavigationBarBottom, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
@@ -70,25 +70,25 @@ public extension UINavigationController {
 
 	@nonobjc
 	public func popViewController() {
-		popViewControllerAnimated(true)
+		self.popViewController(animated: true)
 	}
 
 
 	@nonobjc
-	public func pushViewController(viewController: UIViewController) {
+	public func pushViewController(_ viewController: UIViewController) {
 		pushViewController(viewController, animated: true)
 	}
 
 
 	@objc(JetPack_setNavigationBarHidden:)
-	private dynamic func swizzled_setNavigationBarHidden(navigationBarHidden: Bool) {
+	fileprivate dynamic func swizzled_setNavigationBarHidden(_ navigationBarHidden: Bool) {
 		setNavigationBarHidden(navigationBarHidden, animated: false)
 	}
 
 
 	@objc(JetPack_setNavigationBarHidden:animated:)
-	private dynamic func swizzled_setNavigationBarHidden(navigationBarHidden: Bool, animated: Bool) {
-		guard navigationBarHidden != self.navigationBarHidden else {
+	fileprivate dynamic func swizzled_setNavigationBarHidden(_ navigationBarHidden: Bool, animated: Bool) {
+		guard navigationBarHidden != self.isNavigationBarHidden else {
 			return
 		}
 
@@ -96,24 +96,24 @@ public extension UINavigationController {
 
 		lastKnownNavigationBarBottom = navigationBar.frame.bottom
 
-		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? Animation(duration: NSTimeInterval(UINavigationControllerHideShowBarDuration), timing: .EaseInEaseOut) : nil)
+		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? Animation(duration: TimeInterval(UINavigationControllerHideShowBarDuration), timing: .easeInEaseOut) : nil)
 	}
 
 
 	@objc(JetPack_willTransitionToTraitCollection:withTransitionCoordinator:)
-	private dynamic func swizzled_willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+	fileprivate dynamic func swizzled_willTransitionToTraitCollection(_ newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		swizzled_willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
 
-		coordinator.animateAlongsideTransition { _ in
+		coordinator.animate(alongsideTransition: { _ in
 			self.checkNavigationBarFrame()
-		}
+		})
 	}
 
 
 	@nonobjc
 	internal static func UINavigationController_setUp() {
-		swizzleMethodInType(self, fromSelector: Selector("setNavigationBarHidden:"),                                      toSelector: #selector(swizzled_setNavigationBarHidden(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(setNavigationBarHidden(_:animated:)),                           toSelector: #selector(swizzled_setNavigationBarHidden(_:animated:)))
-		swizzleMethodInType(self, fromSelector: #selector(willTransitionToTraitCollection(_:withTransitionCoordinator:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
+		swizzleMethodInType(self, fromSelector: Selector("setNavigationBarHidden:"),            toSelector: #selector(swizzled_setNavigationBarHidden(_:)))
+		swizzleMethodInType(self, fromSelector: #selector(setNavigationBarHidden(_:animated:)), toSelector: #selector(swizzled_setNavigationBarHidden(_:animated:)))
+		swizzleMethodInType(self, fromSelector: #selector(willTransition(to:with:)),            toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 }

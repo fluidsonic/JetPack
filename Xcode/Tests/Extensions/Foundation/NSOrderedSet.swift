@@ -7,7 +7,9 @@ import JetPack
 class NSOrderedSet_Tests: XCTestCase {
 
 	func testInit() {
-		XCTAssertEqual(NSOrderedSet(elements: ["a", "b", "c"]).array as! [String], ["a", "b", "c"])
+		let elements = ["a", "b", "c"]
+		
+		XCTAssertEqual(NSOrderedSet(elements: elements).array as! [String], elements)
 	}
 
 

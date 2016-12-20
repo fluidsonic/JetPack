@@ -3,15 +3,15 @@ import WebKit
 
 
 @objc(JetPack_WebViewController)
-public /* non-final */ class WebViewController: ViewController {
+open /* non-final */ class WebViewController: ViewController {
 
-	private lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+	fileprivate lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
-	private var initialLoadingCompleted = false
+	fileprivate var initialLoadingCompleted = false
 
-	public let configuration: WKWebViewConfiguration
-	public var initialUrl: NSURL?
-	public var opensLinksExternally = false
+	open let configuration: WKWebViewConfiguration
+	open var initialUrl: URL?
+	open var opensLinksExternally = false
 
 
 	public init(configuration: WKWebViewConfiguration = WKWebViewConfiguration()) {
@@ -27,47 +27,47 @@ public /* non-final */ class WebViewController: ViewController {
 
 
 	deinit {
-		if isViewLoaded() {
+		if isViewLoaded {
 			webView.removeObserver(self, forKeyPath: "loading", context: nil)
 			webView.removeObserver(self, forKeyPath: "title", context: nil)
 		}
 	}
 
 
-	public var animatesInitialLoading = false {
+	open var animatesInitialLoading = false {
 		didSet {
 			guard animatesInitialLoading != oldValue else {
 				return
 			}
 
-			if !animatesInitialLoading && isViewLoaded() {
+			if !animatesInitialLoading && isViewLoaded {
 				webView.alpha = 1
-				webView.userInteractionEnabled = true
+				webView.isUserInteractionEnabled = true
 			}
 		}
 	}
 
 
-	private func createWebView() -> WKWebView {
+	fileprivate func createWebView() -> WKWebView {
 		let child = WKWebView(frame: .zero, configuration: configuration)
 		child.navigationDelegate = self
-		child.UIDelegate = self
+		child.uiDelegate = self
 
 		return child
 	}
 
 
-	public func handleEmailLink(link: NSURL) -> Bool {
+	open func handleEmailLink(_ link: URL) -> Bool {
 		guard opensLinksExternally else {
 			return false
 		}
 
-		UIApplication.sharedApplication().openURL(link)
+		UIApplication.shared.openURL(link)
 		return true
 	}
 
 
-	public func handleLink(link: NSURL, newWindowRequested: Bool) -> Bool {
+	open func handleLink(_ link: URL, newWindowRequested: Bool) -> Bool {
 		guard let scheme = link.scheme else {
 			return handleUnknownLink(link)
 		}
@@ -81,38 +81,38 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public func handlePhoneLink(link: NSURL) -> Bool {
+	open func handlePhoneLink(_ link: URL) -> Bool {
 		guard opensLinksExternally else {
 			return false
 		}
 
-		UIApplication.sharedApplication().openURL(link)
+		UIApplication.shared.openURL(link)
 		return true
 	}
 
 
-	public func handleUnknownLink(link: NSURL) -> Bool {
+	open func handleUnknownLink(_ link: URL) -> Bool {
 		guard opensLinksExternally else {
 			return false
 		}
 
-		UIApplication.sharedApplication().openURL(link)
+		UIApplication.shared.openURL(link)
 		return true
 	}
 
 
-	public func handleWebLink(link: NSURL, newWindowRequested: Bool) -> Bool {
+	open func handleWebLink(_ link: URL, newWindowRequested: Bool) -> Bool {
 		guard opensLinksExternally else {
 			return false
 		}
 
-		UIApplication.sharedApplication().openURL(link)
+		UIApplication.shared.openURL(link)
 		return true
 	}
 
 
-	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-		if object === webView, let keyPath = keyPath {
+	open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		if object as? AnyObject === webView, let keyPath = keyPath {
 			switch keyPath {
 			case "loading", "title":
 				if updatesTitleFromDocument {
@@ -126,21 +126,21 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	private func setUp() {
-		view.backgroundColor = .whiteColor()
+	fileprivate func setUp() {
+		view.backgroundColor = .white
 
 		setUpWebView()
 		setUpActivityIndicator()
 	}
 
 
-	private func setUpActivityIndicator() {
+	fileprivate func setUpActivityIndicator() {
 		let child = activityIndicator
 		child.startAnimating()
 	}
 
 
-	private func setUpWebView() {
+	fileprivate func setUpWebView() {
 		webView.addObserver(self, forKeyPath: "loading", options: [], context: nil)
 		webView.addObserver(self, forKeyPath: "title", options: [], context: nil)
 
@@ -152,25 +152,25 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	private func updateTitleFromDocument() {
-		title = webView.title?.nonEmpty ?? (webView.loading ? "Loading…" : "") // FIXME l10n
+	fileprivate func updateTitleFromDocument() {
+		title = webView.title?.nonEmpty ?? (webView.isLoading ? "Loading…" : "") // FIXME l10n
 	}
 
 
-	public var updatesTitleFromDocument = false {
+	open var updatesTitleFromDocument = false {
 		didSet {
 			guard updatesTitleFromDocument != oldValue else {
 				return
 			}
 
-			if updatesTitleFromDocument && isViewLoaded() {
+			if updatesTitleFromDocument && isViewLoaded {
 				updateTitleFromDocument()
 			}
 		}
 	}
 
 
-	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+	open override func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		let bounds = view.bounds
@@ -204,27 +204,27 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		setUp()
 	}
 
 
-	public override func viewWillAppear(animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		if let initialUrl = initialUrl {
 			self.initialUrl = nil
 
-			if webView.URL == nil && !webView.loading {
-				let navigation = webView.loadRequest(NSURLRequest(URL: initialUrl))
+			if webView.url == nil && !webView.isLoading {
+				let navigation = webView.load(URLRequest(url: initialUrl))
 				if navigation != nil {
 					initialLoadingCompleted = false
 
 					if animatesInitialLoading {
 						webView.alpha = 0
-						webView.userInteractionEnabled = false
+						webView.isUserInteractionEnabled = false
 
 						view.addSubview(activityIndicator)
 					}
@@ -234,30 +234,30 @@ public /* non-final */ class WebViewController: ViewController {
 	}
 
 
-	public private(set) lazy var webView: WKWebView = self.createWebView()
+	open fileprivate(set) lazy var webView: WKWebView = self.createWebView()
 }
 
 
 extension WebViewController: WKNavigationDelegate {
 
-	public func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: WKNavigationActionPolicy -> Void) {
-		if navigationAction.navigationType == .LinkActivated, let url = navigationAction.request.URL {
-			decisionHandler(handleLink(url, newWindowRequested: navigationAction.targetFrame == nil) ? .Cancel : .Allow)
+	open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+		if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {
+			decisionHandler(handleLink(url, newWindowRequested: navigationAction.targetFrame == nil) ? .cancel : .allow)
 			return
 		}
 
-		decisionHandler(.Allow)
+		decisionHandler(.allow)
 	}
 
 
-	public func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation) {
+	open func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
 		if !initialLoadingCompleted {
 			initialLoadingCompleted = true
 
 			if animatesInitialLoading {
 				Animation(duration: 0.5).runWithCompletion { complete in
 					webView.alpha = 1
-					webView.userInteractionEnabled = true
+					webView.isUserInteractionEnabled = true
 
 					activityIndicator.alpha = 0
 

@@ -35,7 +35,6 @@ internal struct PluralRule {
 	internal enum Value {
 
 		case number(Int)
-		case numberRange(ClosedInterval<Int>)
+		case numberRange(ClosedRange<Int>)
 	}
-
 }

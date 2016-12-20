@@ -73,8 +73,8 @@ internal class SwiftCodeGenerator {
 
 
 	private func generate(for ruleSet: PluralRuleSet) -> Function {
-		let functionName = "resolve_" + ruleSet.locales.joinWithSeparator("$")
-		var functionCode = "private func \(functionName)(f f: NSNumber, fMod: Int, i: NSNumber, iMod: Int, n: NSNumber, nMod: Int, t: NSNumber, v: Int) -> NSLocale.PluralCategory {\n"
+		let functionName = "resolve_" + ruleSet.locales.joined(separator: "$")
+		var functionCode = "private func \(functionName)(f: NSNumber, fMod: Int, i: NSNumber, iMod: Int, n: NSNumber, nMod: Int, t: NSNumber, v: Int) -> Locale.PluralCategory {\n"
 		if !ruleSet.rules.isEmpty {
 			for rule in ruleSet.rules {
 				functionCode += generate(for: rule)
@@ -102,9 +102,9 @@ internal class SwiftCodeGenerator {
 		}
 
 		var code = "import Foundation\n\n\n"
-		code += "internal extension NSLocale {\n\n"
+		code += "internal extension Locale {\n\n"
 		code += "\tinternal static let pluralCategoryResolversByLocaleIdentifier: [String : PluralCategoryResolver] = [\n"
-		for (locale, functionName) in functionNameByLocale.sort({ $0.0 < $0.1 }) {
+		for (locale, functionName) in functionNameByLocale.sorted(by: { $0.0 < $0.1 }) {
 			code += "\t\t\""
 			code += locale
 			code += "\": "
@@ -112,7 +112,7 @@ internal class SwiftCodeGenerator {
 			code += ",\n"
 		}
 		code += "\t]\n}\n\n\n"
-		code += functionCodes.joinWithSeparator("\n\n")
+		code += functionCodes.joined(separator: "\n\n")
 
 		return code
 	}
@@ -121,12 +121,12 @@ internal class SwiftCodeGenerator {
 	private func generate(for value: PluralRule.Value) -> String {
 		switch value {
 		case let .number(value):      return String(value)
-		case let .numberRange(value): return String(value)
+		case let .numberRange(value): return String(describing: value)
 		}
 	}
 
 
-	private func isLogicalExpression(expression: PluralRule.Expression) -> Bool {
+	private func isLogicalExpression(_ expression: PluralRule.Expression) -> Bool {
 		guard case let .binaryOperation(_, op, _) = expression else {
 			return false
 		}
@@ -138,7 +138,7 @@ internal class SwiftCodeGenerator {
 
 	private struct Function {
 
-		private var code: String
-		private var name: String
+		fileprivate var code: String
+		fileprivate var name: String
 	}
 }

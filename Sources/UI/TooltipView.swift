@@ -2,14 +2,14 @@ import UIKit
 
 
 @objc(JetPack_TooltipView)
-public /* non-final */ class TooltipView: View {
+open /* non-final */ class TooltipView: View {
 
-	private let arrowSize = CGSize(width: 12, height: 8)
-	private let backgroundCornerRadius = CGFloat(3)
-	private let backgroundView = ShapeView()
-	private let button = Button()
-	private let label = Label()
-	private let separator = View()
+	fileprivate let arrowSize = CGSize(width: 12, height: 8)
+	fileprivate let backgroundCornerRadius = CGFloat(3)
+	fileprivate let backgroundView = ShapeView()
+	fileprivate let button = Button()
+	fileprivate let label = Label()
+	fileprivate let separator = View()
 
 
 	public override init() {
@@ -24,7 +24,7 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public var arrowDirection = ArrowDirection.Up {
+	open var arrowDirection = ArrowDirection.up {
 		didSet {
 			guard arrowDirection != oldValue else {
 				return
@@ -35,7 +35,7 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public var arrowOffset = CGFloat(0) {
+	open var arrowOffset = CGFloat(0) {
 		didSet {
 			guard arrowOffset != oldValue else {
 				return
@@ -46,10 +46,10 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public var buttonTapped: Closure?
+	open var buttonTapped: Closure?
 
 
-	public var buttonText: String {
+	open var buttonText: String {
 		get { return button.textLabel.text ?? "" }
 		set {
 			guard newValue != buttonText else {
@@ -63,7 +63,7 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public var labelText: String {
+	open var labelText: String {
 		get { return label.text ?? "" }
 		set {
 			guard newValue != labelText else {
@@ -77,33 +77,33 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		super.layoutSubviews()
 
 		let viewSize = bounds.size
-		let innerTop = (arrowDirection == .Up ? arrowSize.height : 0)
-		let innerBottom = viewSize.height - (arrowDirection == .Down ? arrowSize.height : 0)
+		let innerTop = (arrowDirection == .up ? arrowSize.height : 0)
+		let innerBottom = viewSize.height - (arrowDirection == .down ? arrowSize.height : 0)
 
 		var right = viewSize.width - padding.right
 
-		let arrowOffset = self.arrowOffset.clamp(min: backgroundCornerRadius + (arrowSize.width / 2), max: viewSize.width - backgroundCornerRadius - (arrowSize.width / 2))
+		let arrowOffset = self.arrowOffset.coerced(in: (backgroundCornerRadius + (arrowSize.width / 2)) ... (viewSize.width - backgroundCornerRadius - (arrowSize.width / 2)))
 
 		let backgroundPath = UIBezierPath()
-		backgroundPath.moveToPoint(CGPoint(left: arrowOffset - (arrowSize.width / 2), top: innerTop))
-		backgroundPath.addLineToPoint(CGPoint(left: arrowOffset, top: (arrowDirection == .Up ? 0 : innerTop)))
-		backgroundPath.addLineToPoint(CGPoint(left: arrowOffset + (arrowSize.width / 2), top: innerTop))
-		backgroundPath.addLineToPoint(CGPoint(left: viewSize.width - backgroundCornerRadius, top: innerTop))
-		backgroundPath.addRoundedCorner(direction: .RightDown, radius: backgroundCornerRadius)
-		backgroundPath.addLineToPoint(CGPoint(left: viewSize.width, top: innerBottom - backgroundCornerRadius))
-		backgroundPath.addRoundedCorner(direction: .DownLeft, radius: backgroundCornerRadius)
-		backgroundPath.addLineToPoint(CGPoint(left: arrowOffset + (arrowSize.width / 2), top: innerBottom))
-		backgroundPath.addLineToPoint(CGPoint(left: arrowOffset, top: (arrowDirection == .Down ? viewSize.height : innerBottom)))
-		backgroundPath.addLineToPoint(CGPoint(left: arrowOffset - (arrowSize.width / 2), top: innerBottom))
-		backgroundPath.addLineToPoint(CGPoint(left: backgroundCornerRadius, top: innerBottom))
-		backgroundPath.addRoundedCorner(direction: .LeftUp, radius: backgroundCornerRadius)
-		backgroundPath.addLineToPoint(CGPoint(left: 0, top: innerTop + backgroundCornerRadius))
-		backgroundPath.addRoundedCorner(direction: .UpRight, radius: backgroundCornerRadius)
-		backgroundPath.closePath()
+		backgroundPath.move(to: CGPoint(left: arrowOffset - (arrowSize.width / 2), top: innerTop))
+		backgroundPath.addLine(to: CGPoint(left: arrowOffset, top: (arrowDirection == .up ? 0 : innerTop)))
+		backgroundPath.addLine(to: CGPoint(left: arrowOffset + (arrowSize.width / 2), top: innerTop))
+		backgroundPath.addLine(to: CGPoint(left: viewSize.width - backgroundCornerRadius, top: innerTop))
+		backgroundPath.addRoundedCorner(direction: .rightDown, radius: backgroundCornerRadius)
+		backgroundPath.addLine(to: CGPoint(left: viewSize.width, top: innerBottom - backgroundCornerRadius))
+		backgroundPath.addRoundedCorner(direction: .downLeft, radius: backgroundCornerRadius)
+		backgroundPath.addLine(to: CGPoint(left: arrowOffset + (arrowSize.width / 2), top: innerBottom))
+		backgroundPath.addLine(to: CGPoint(left: arrowOffset, top: (arrowDirection == .down ? viewSize.height : innerBottom)))
+		backgroundPath.addLine(to: CGPoint(left: arrowOffset - (arrowSize.width / 2), top: innerBottom))
+		backgroundPath.addLine(to: CGPoint(left: backgroundCornerRadius, top: innerBottom))
+		backgroundPath.addRoundedCorner(direction: .leftUp, radius: backgroundCornerRadius)
+		backgroundPath.addLine(to: CGPoint(left: 0, top: innerTop + backgroundCornerRadius))
+		backgroundPath.addRoundedCorner(direction: .upRight, radius: backgroundCornerRadius)
+		backgroundPath.close()
 
 		backgroundView.frame = CGRect(size: viewSize)
 		backgroundView.path = backgroundPath
@@ -136,7 +136,7 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public var padding = UIEdgeInsets(all: 12) {
+	open var padding = UIEdgeInsets(all: 12) {
 		didSet {
 			guard padding != oldValue else {
 				return
@@ -147,7 +147,7 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	public var separatorPadding = UIEdgeInsets(all: 10) {
+	open var separatorPadding = UIEdgeInsets(all: 10) {
 		didSet {
 			guard separatorPadding != oldValue else {
 				return
@@ -158,7 +158,7 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	private func setup() {
+	fileprivate func setup() {
 		clipsToBounds = false
 
 		setupBackgroundView()
@@ -168,11 +168,11 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	private func setupBackgroundView() {
+	fileprivate func setupBackgroundView() {
 		let child = backgroundView
 		child.clipsToBounds = false
-		child.fillColor = .whiteColor()
-		child.shadowColor = .blackColor()
+		child.fillColor = .white
+		child.shadowColor = .black
 		child.shadowOffset = .zero
 		child.shadowOpacity = 0.15
 		child.shadowRadius = 2
@@ -181,9 +181,9 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	private func setupButton() {
+	fileprivate func setupButton() {
 		let child = button
-		child.textLabel.font = UIFont.boldSystemFontOfSize(UIFont.smallSystemFontSize() * 1.1)
+		child.textLabel.font = UIFont.boldSystemFont(ofSize: UIFont.smallSystemFontSize * 1.1)
 		child.tapped = { [unowned self] in
 			self.buttonTapped?()
 		}
@@ -192,27 +192,27 @@ public /* non-final */ class TooltipView: View {
 	}
 
 
-	private func setupLabel() {
+	fileprivate func setupLabel() {
 		let child = label
 		child.alpha = 0.87
-		child.font = UIFont.systemFontOfSize(UIFont.smallSystemFontSize() * 1.1)
+		child.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize * 1.1)
 		child.maximumNumberOfLines = nil
-		child.textColor = .blackColor()
+		child.textColor = .black
 
 		addSubview(child)
 	}
 
 
-	private func setupSeparator() {
+	fileprivate func setupSeparator() {
 		let child = separator
 		child.alpha = 0.12
-		child.backgroundColor = .blackColor()
+		child.backgroundColor = .black
 
 		addSubview(child)
 	}
 
 
-	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		let horizontalPadding = padding.left + separatorPadding.left + separatorPadding.right + padding.right
 		let verticalPadding = padding.top + padding.bottom
 
@@ -236,7 +236,7 @@ public /* non-final */ class TooltipView: View {
 	
 	
 	public enum ArrowDirection {
-		case Up
-		case Down
+		case up
+		case down
 	}
 }

@@ -3,39 +3,39 @@ import UIKit
 private let dummyView = UIView()
 
 
-public extension UIView {
+extension UIView {
 
 	@nonobjc
-	@warn_unused_result
-	public final func alignToGrid(rect: CGRect) -> CGRect {
+	
+	public final func alignToGrid(_ rect: CGRect) -> CGRect {
 		return CGRect(origin: alignToGrid(rect.origin), size: alignToGrid(rect.size))
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func alignToGrid(point: CGPoint) -> CGPoint {
+	
+	public final func alignToGrid(_ point: CGPoint) -> CGPoint {
 		return CGPoint(left: roundToGrid(point.left), top: roundToGrid(point.top))
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func alignToGrid(size: CGSize) -> CGSize {
+	
+	public final func alignToGrid(_ size: CGSize) -> CGSize {
 		return CGSize(width: ceilToGrid(size.width), height: ceilToGrid(size.height))
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func ceilToGrid(value: CGFloat) -> CGFloat {
+	
+	public final func ceilToGrid(_ value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return ceil(value * scale) / scale
 	}
 
 
 	@nonobjc
-	public static func defaultActionForLayer(layer: CALayer, forKey key: String) -> CAAction? {
+	public static func defaultActionForLayer(_ layer: CALayer, forKey key: String) -> CAAction? {
 		guard key != "delegate" else {
 			return nil
 		}
@@ -46,49 +46,49 @@ public extension UIView {
 		layer.delegate = dummyView
 		defer { layer.delegate = layerDelegate }
 
-		return layer.actionForKey(key)
+		return layer.action(forKey: key)
 	}
 
 
 	@nonobjc
 	public final var delegateViewController: UIViewController? {
 		// this or private API…
-		return nextResponder() as? UIViewController
+		return next as? UIViewController
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func floorToGrid(value: CGFloat) -> CGFloat {
+	
+	public final func floorToGrid(_ value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return floor(value * scale) / scale
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public func frameWhenApplyingTransform(transform: CGAffineTransform) -> CGRect {
+	
+	public func frameWhenApplyingTransform(_ transform: CGAffineTransform) -> CGRect {
 		return untransformedFrame.transform(transform, anchorPoint: layer.anchorPoint)
 	}
 
 
 	@nonobjc
 	public final var gridScaleFactor: CGFloat {
-		return max(contentScaleFactor, (window?.screen.scale ?? UIScreen.mainScreen().scale))
+		return max(contentScaleFactor, (window?.screen.scale ?? UIScreen.main.scale))
 	}
 
 
 	@nonobjc
-	@warn_unused_result
+	
 	public final func heightThatFits() -> CGFloat {
 		return sizeThatFitsSize(.max).height
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func heightThatFitsWidth(maximumWidth: CGFloat) -> CGFloat {
-		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .max)).height
+	
+	public final func heightThatFitsWidth(_ maximumWidth: CGFloat) -> CGFloat {
+		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .greatestFiniteMagnitude)).height
 	}
 
 
@@ -100,24 +100,24 @@ public extension UIView {
 
 	@nonobjc
 	public var participatesInHitTesting: Bool {
-		return (!hidden && userInteractionEnabled && alpha >= 0.01)
+		return (!isHidden && isUserInteractionEnabled && alpha >= 0.01)
 	}
 
 
 	@nonobjc
-	public func pixelsForPoints(points: CGFloat) -> CGFloat {
+	public func pixelsForPoints(_ points: CGFloat) -> CGFloat {
 		return points * gridScaleFactor
 	}
 
 
 	@nonobjc
-	public func pointsForPixels(pixels: CGFloat) -> CGFloat {
+	public func pointsForPixels(_ pixels: CGFloat) -> CGFloat {
 		return pixels / gridScaleFactor
 	}
 
 
 	@nonobjc
-	public func recursivelyFindSuperviewOfType <ViewType: UIView>(type: ViewType.Type) -> ViewType? {
+	public func recursivelyFindSuperviewOfType <ViewType: UIView>(_ type: ViewType.Type) -> ViewType? {
 		var view = self
 		while let superview = view.superview {
 			if let superview = superview as? ViewType {
@@ -133,51 +133,51 @@ public extension UIView {
 
 	@nonobjc
 	public func removeAllSubviews() {
-		for subview in subviews.reverse() {
+		for subview in subviews.reversed() {
 			subview.removeFromSuperview()
 		}
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func roundToGrid(value: CGFloat) -> CGFloat {
+	
+	public final func roundToGrid(_ value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return round(value * scale) / scale
 	}
 
 
 	@nonobjc
-	@warn_unused_result
+	
 	public final func sizeThatFits() -> CGSize {
 		return sizeThatFitsSize(.max)
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func sizeThatFitsHeight(maximumHeight: CGFloat, allowsTruncation: Bool = false) -> CGSize {
-		return sizeThatFitsSize(CGSize(width: .max, height: maximumHeight), allowsTruncation: allowsTruncation)
+	
+	public final func sizeThatFitsHeight(_ maximumHeight: CGFloat, allowsTruncation: Bool = false) -> CGSize {
+		return sizeThatFitsSize(CGSize(width: .greatestFiniteMagnitude, height: maximumHeight), allowsTruncation: allowsTruncation)
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func sizeThatFitsWidth(maximumWidth: CGFloat, allowsTruncation: Bool = false) -> CGSize {
-		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .max), allowsTruncation: allowsTruncation)
+	
+	public final func sizeThatFitsWidth(_ maximumWidth: CGFloat, allowsTruncation: Bool = false) -> CGSize {
+		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .greatestFiniteMagnitude), allowsTruncation: allowsTruncation)
 	}
 
 
 	@objc(JetPack_sizeThatFitsSize:)
-	@warn_unused_result
-	public func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	
+	public func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		return sizeThatFits(maximumSize)
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func sizeThatFitsSize(maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
+	
+	public final func sizeThatFitsSize(_ maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
 		var fittingSize = sizeThatFitsSize(maximumSize)
 		if allowsTruncation {
 			fittingSize = fittingSize.constrainTo(maximumSize)
@@ -188,13 +188,13 @@ public extension UIView {
 
 
 	@objc(JetPack_subviewDidInvalidateIntrinsicContentSize:)
-	public func subviewDidInvalidateIntrinsicContentSize(view: UIView) {
+	open func subviewDidInvalidateIntrinsicContentSize(_ view: UIView) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_didChangeFromWindow:toWindow:)
-	private dynamic func swizzled_didChangeWindow(from from: UIWindow?, to: UIWindow?) {
+	fileprivate dynamic func swizzled_didChangeWindow(from: UIWindow?, to: UIWindow?) {
 		swizzled_didChangeWindow(from: from, to: to)
 
 		delegateViewController?.viewDidMoveToWindow()
@@ -202,7 +202,7 @@ public extension UIView {
 
 
 	@objc(JetPack_invalidateIntrinsicContentSize)
-	private dynamic func swizzled_invalidateIntrinsicContentSize() {
+	fileprivate dynamic func swizzled_invalidateIntrinsicContentSize() {
 		swizzled_invalidateIntrinsicContentSize()
 
 		if let superview = superview {
@@ -240,16 +240,16 @@ public extension UIView {
 
 
 	@nonobjc
-	@warn_unused_result
+	
 	public final func widthThatFits() -> CGFloat {
 		return sizeThatFitsSize(.max).width
 	}
 
 
 	@nonobjc
-	@warn_unused_result
-	public final func widthThatFitsHeight(maximumHeight: CGFloat) -> CGFloat {
-		return sizeThatFitsSize(CGSize(width: .max, height: maximumHeight)).width
+	
+	public final func widthThatFitsHeight(_ maximumHeight: CGFloat) -> CGFloat {
+		return sizeThatFitsSize(CGSize(width: .greatestFiniteMagnitude, height: maximumHeight)).width
 	}
 }
 
@@ -259,10 +259,10 @@ extension UIViewAnimationCurve: CustomStringConvertible {
 
 	public var description: String {
 		switch self.rawValue {
-		case EaseIn.rawValue:    return "UIViewAnimationCurve.EaseIn"
-		case EaseInOut.rawValue: return "UIViewAnimationCurve.EaseInOut"
-		case EaseOut.rawValue:   return "UIViewAnimationCurve.EaseOut"
-		case Linear.rawValue:    return "UIViewAnimationCurve.Linear"
+		case UIViewAnimationCurve.easeIn.rawValue:    return "UIViewAnimationCurve.EaseIn"
+		case UIViewAnimationCurve.easeInOut.rawValue: return "UIViewAnimationCurve.EaseInOut"
+		case UIViewAnimationCurve.easeOut.rawValue:   return "UIViewAnimationCurve.EaseOut"
+		case UIViewAnimationCurve.linear.rawValue:    return "UIViewAnimationCurve.Linear"
 		default:                 return "UIViewAnimationCurve(\(rawValue))"
 		}
 	}
@@ -287,66 +287,66 @@ extension UIViewAnimationOptions: CustomStringConvertible {
 
 	public var description: String {
 		var options = [String]()
-		if contains(.AllowAnimatedContent) {
+		if contains(.allowAnimatedContent) {
 			options.append("AllowAnimatedContent")
 		}
-		if contains(.AllowUserInteraction) {
+		if contains(.allowUserInteraction) {
 			options.append("AllowUserInteraction")
 		}
-		if contains(.Autoreverse) {
+		if contains(.autoreverse) {
 			options.append("Autoreverse")
 		}
-		if contains(.BeginFromCurrentState) {
+		if contains(.beginFromCurrentState) {
 			options.append("BeginFromCurrentState")
 		}
 		switch curve.rawValue {
-		case UIViewAnimationCurve.EaseIn.rawValue:    options.append("CurveEaseIn")
-		case UIViewAnimationCurve.EaseInOut.rawValue: options.append("CurveEaseInOut")
-		case UIViewAnimationCurve.EaseOut.rawValue:   options.append("CurveEaseOut")
-		case UIViewAnimationCurve.Linear.rawValue:    options.append("CurveLinear")
+		case UIViewAnimationCurve.easeIn.rawValue:    options.append("CurveEaseIn")
+		case UIViewAnimationCurve.easeInOut.rawValue: options.append("CurveEaseInOut")
+		case UIViewAnimationCurve.easeOut.rawValue:   options.append("CurveEaseOut")
+		case UIViewAnimationCurve.linear.rawValue:    options.append("CurveLinear")
 		default:                                      options.append("Curve(\(curve.rawValue))")
 		}
-		if contains(.LayoutSubviews) {
+		if contains(.layoutSubviews) {
 			options.append("LayoutSubviews")
 		}
-		if contains(.OverrideInheritedCurve) {
+		if contains(.overrideInheritedCurve) {
 			options.append("OverrideInheritedCurve")
 		}
-		if contains(.OverrideInheritedDuration) {
+		if contains(.overrideInheritedDuration) {
 			options.append("OverrideInheritedDuration")
 		}
-		if contains(.OverrideInheritedOptions) {
+		if contains(.overrideInheritedOptions) {
 			options.append("OverrideInheritedOptions")
 		}
-		if contains(.Repeat) {
+		if contains(.repeat) {
 			options.append("Repeat")
 		}
-		if contains(.ShowHideTransitionViews) {
+		if contains(.showHideTransitionViews) {
 			options.append("ShowHideTransitionViews")
 		}
-		if contains(.TransitionCurlUp) {
+		if contains(.transitionCurlUp) {
 			options.append("TransitionCurlUp")
 		}
-		if contains(.TransitionCurlDown) {
+		if contains(.transitionCurlDown) {
 			options.append("TransitionCurlDown")
 		}
-		if contains(.TransitionCrossDissolve) {
+		if contains(.transitionCrossDissolve) {
 			options.append("TransitionCrossDissolve")
 		}
-		if contains(.TransitionFlipFromBottom) {
+		if contains(.transitionFlipFromBottom) {
 			options.append("TransitionFlipFromBottom")
 		}
-		if contains(.TransitionFlipFromLeft) {
+		if contains(.transitionFlipFromLeft) {
 			options.append("TransitionFlipFromLeft")
 		}
-		if contains(.TransitionFlipFromRight) {
+		if contains(.transitionFlipFromRight) {
 			options.append("TransitionFlipFromRight")
 		}
-		if contains(.TransitionFlipFromTop) {
+		if contains(.transitionFlipFromTop) {
 			options.append("TransitionFlipFromTop")
 		}
 
-		return "UIViewAnimationOptions(\(options.joinWithSeparator(", ")))"
+		return "UIViewAnimationOptions(\(options.joined(separator: ", ")))"
 	}
 }
 
@@ -355,9 +355,9 @@ extension UIViewTintAdjustmentMode: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .Automatic: return "UIViewTintAdjustmentMode.Automatic"
-		case .Dimmed:    return "UIViewTintAdjustmentMode.Dimmed"
-		case .Normal:    return "UIViewTintAdjustmentMode.Normal"
+		case .automatic: return "UIViewTintAdjustmentMode.Automatic"
+		case .dimmed:    return "UIViewTintAdjustmentMode.Dimmed"
+		case .normal:    return "UIViewTintAdjustmentMode.Normal"
 		}
 	}
 }

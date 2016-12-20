@@ -8,19 +8,19 @@ import Foundation
 #endif
 
 
-public func log(@autoclosure messageClosure: Void throws -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) rethrows {
+public func log(_ messageClosure: @autoclosure (Void) throws -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) rethrows {
 	if !logEnabled {
 		return
 	}
 
 	let message = try messageClosure()
-	let fileName = (file.stringValue as NSString).lastPathComponent
+	let fileName = (String(describing: file) as NSString).lastPathComponent
 
-	logWithoutContext("\(message) \t\t\t// \(fileName):\(line) in \(function.stringValue)")
+	logWithoutContext("\(message) \t\t\t// \(fileName):\(line) in \(String(describing: function))")
 }
 
 
-public func logWithoutContext(@autoclosure messageClosure: Void throws -> String) rethrows {
+public func logWithoutContext(_ messageClosure: @autoclosure (Void) throws -> String) rethrows {
 	if !logEnabled {
 		return
 	}

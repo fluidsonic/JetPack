@@ -5,13 +5,12 @@ import JetPack
 
 class Dictionary_Tests: XCTestCase {
 
-	private let error = NSError(domain: "", code: 0, userInfo: nil)
+	fileprivate let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
 	func testFilterAsDictionary() {
 		let dictionary = [0: 1, 1: 0, 2: 2]
 		XCTAssertEqual(dictionary.filterAsDictionary { key, value in key == 0 || value == 0 }, [0: 1, 1: 0])
-		XCTAssertEqual(dictionary.filterAsDictionary { $0.key == 0 || $0.value == 0 },         [0: 1, 1: 0])
 		XCTAssertEqual(dictionary.filterAsDictionary { $0 == 0 || $1 == 0 },                   [0: 1, 1: 0])
 
 		do {
@@ -32,10 +31,6 @@ class Dictionary_Tests: XCTestCase {
 		XCTAssertEqual(mutableDictionary, [0: 1, 1: 0])
 
 		mutableDictionary = dictionary
-		mutableDictionary.filterInPlace { $0.key == 0 || $0.value == 0 }
-		XCTAssertEqual(mutableDictionary, [0: 1, 1: 0])
-
-		mutableDictionary = dictionary
 		mutableDictionary.filterInPlace { $0 == 0 || $1 == 0 }
 		XCTAssertEqual(mutableDictionary, [0: 1, 1: 0])
 
@@ -53,7 +48,6 @@ class Dictionary_Tests: XCTestCase {
 	func testMapAsDictionary() {
 		let dictionary = [0: 1, 1: 0, 2: 2]
 		XCTAssertEqual(dictionary.mapAsDictionary { key, value in (key / 2, value * 2) }, [0: 0, 1: 4])
-		XCTAssertEqual(dictionary.mapAsDictionary { ($0.key / 2, $0.value * 2) },         [0: 0, 1: 4])
 		XCTAssertEqual(dictionary.mapAsDictionary { ($0 / 2, $1 * 2) },                   [0: 0, 1: 4])
 
 		do {

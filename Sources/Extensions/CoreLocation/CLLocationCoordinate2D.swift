@@ -3,9 +3,9 @@ import CoreLocation
 
 public extension CLLocationCoordinate2D {
 
-	@warn_unused_result
-	public func distanceTo(coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
-		return CLLocation(coordinate: self).distanceFromLocation(CLLocation(coordinate: coordinate))
+	
+	public func distanceTo(_ coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
+		return CLLocation(coordinate: self).distance(from: CLLocation(coordinate: coordinate))
 	}
 }
 

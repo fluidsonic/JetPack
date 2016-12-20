@@ -1,7 +1,7 @@
 public struct Time: Measure {
 
 	public static let name = MeasuresStrings.Measure.time
-	public static let rawUnit = TimeUnit.Seconds
+	public static let rawUnit = TimeUnit.seconds
 
 	public var rawValue: Double
 
@@ -10,27 +10,27 @@ public struct Time: Measure {
 		precondition(!value.isNaN, "Value must not be NaN.")
 		
 		switch unit {
-		case .Seconds: rawValue = value
-		case .Minutes: rawValue = value * 60
-		case .Hours:   rawValue = value * 60 * 60
+		case .seconds: rawValue = value
+		case .minutes: rawValue = value * 60
+		case .hours:   rawValue = value * 60 * 60
 		}
 	}
 
 
 	public init(hours: Double, minutes: Double = 0, seconds: Double = 0) {
-		self.init(hours, unit: .Hours)
+		self.init(hours, unit: .hours)
 		self += Time(minutes: seconds, seconds: seconds)
 	}
 
 
 	public init(minutes: Double, seconds: Double = 0) {
-		self.init(minutes, unit: .Minutes)
+		self.init(minutes, unit: .minutes)
 		self += Time(seconds: seconds)
 	}
 
 
 	public init(seconds: Double) {
-		self.init(seconds, unit: .Seconds)
+		self.init(seconds, unit: .seconds)
 	}
 
 
@@ -54,11 +54,11 @@ public struct Time: Measure {
 	}
 
 
-	public func valueInUnit(unit: TimeUnit) -> Double {
+	public func valueInUnit(_ unit: TimeUnit) -> Double {
 		switch unit {
-		case .Seconds: return seconds
-		case .Minutes: return minutes
-		case .Hours:   return hours
+		case .seconds: return seconds
+		case .minutes: return minutes
+		case .hours:   return hours
 		}
 	}
 }
@@ -67,9 +67,9 @@ public struct Time: Measure {
 
 public enum TimeUnit: Unit {
 
-	case Seconds
-	case Minutes
-	case Hours
+	case seconds
+	case minutes
+	case hours
 }
 
 
@@ -77,27 +77,27 @@ extension TimeUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Hours:   return MeasuresStrings.Unit.Hour.abbreviation
-		case .Minutes: return MeasuresStrings.Unit.Minute.abbreviation
-		case .Seconds: return MeasuresStrings.Unit.Second.abbreviation
+		case .hours:   return MeasuresStrings.Unit.Hour.abbreviation
+		case .minutes: return MeasuresStrings.Unit.Minute.abbreviation
+		case .seconds: return MeasuresStrings.Unit.Second.abbreviation
 		}
 	}
 
 
 	public var name: PluralizedString {
 		switch self {
-		case .Hours:   return MeasuresStrings.Unit.Hour.name
-		case .Minutes: return MeasuresStrings.Unit.Minute.name
-		case .Seconds: return MeasuresStrings.Unit.Second.name
+		case .hours:   return MeasuresStrings.Unit.Hour.name
+		case .minutes: return MeasuresStrings.Unit.Minute.name
+		case .seconds: return MeasuresStrings.Unit.Second.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .Hours:   return nil
-		case .Minutes: return nil
-		case .Seconds: return nil
+		case .hours:   return nil
+		case .minutes: return nil
+		case .seconds: return nil
 		}
 	}
 }

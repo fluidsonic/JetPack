@@ -2,16 +2,16 @@ import Foundation
 import ObjectiveC
 
 
-public extension NSProgress {
+public extension Progress {
 
-	private struct AssociatedKeys {
-		private static var observer = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var observer = UInt8()
 	}
 
 
 
 	@nonobjc
-	public var fractionCompletedHandler: (Double -> Void)? {
+	public var fractionCompletedHandler: ((Double) -> Void)? {
 		get {
 			return observer?.fractionCompletedHandler
 		}
@@ -27,7 +27,7 @@ public extension NSProgress {
 
 
 	@nonobjc
-	private var observer: Observer? {
+	fileprivate var observer: Observer? {
 		get {
 			return objc_getAssociatedObject(self, &AssociatedKeys.observer) as! Observer?
 		}
@@ -41,11 +41,11 @@ public extension NSProgress {
 
 private final class Observer: NSObject {
 
-	private let fractionCompletedHandler: Double -> Void
-	private let progress: Unmanaged<NSProgress>
+	fileprivate let fractionCompletedHandler: (Double) -> Void
+	fileprivate let progress: Unmanaged<Progress>
 
 
-	private init(progress: NSProgress, fractionCompletedHandler: Double -> Void) {
+	fileprivate init(progress: Progress, fractionCompletedHandler: @escaping (Double) -> Void) {
 		self.fractionCompletedHandler = fractionCompletedHandler
 		self.progress = Unmanaged.passUnretained(progress)
 
@@ -60,7 +60,7 @@ private final class Observer: NSObject {
 	}
 
 
-	private override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+	fileprivate override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 		fractionCompletedHandler(progress.takeUnretainedValue().fractionCompleted)
 	}
 }

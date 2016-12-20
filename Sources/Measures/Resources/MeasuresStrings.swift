@@ -284,23 +284,23 @@ internal enum MeasuresStrings {
 
 
 
-private let __bundle: NSBundle = {
+private let __bundle: Bundle = {
 	class Dummy {}
 
-	return NSBundle(forClass: Dummy.self)
+	return Bundle(for: Dummy.self)
 }()
 
 
-private let __defaultFormatter: NSNumberFormatter = {
-	let formatter = NSNumberFormatter()
-	formatter.locale = NSLocale.autoupdatingCurrentLocale()
-	formatter.numberStyle = .DecimalStyle
+private let __defaultFormatter: NumberFormatter = {
+	let formatter = NumberFormatter()
+	formatter.locale = Locale.autoupdatingCurrent
+	formatter.numberStyle = .decimal
 
 	return formatter
 }()
 
 
-private func __keySuffixForPluralCategory(category: NSLocale.PluralCategory) -> String {
+private func __keySuffix(`for` category: Locale.PluralCategory) -> String {
 	switch category {
 	case .few:   return "$few"
 	case .many:  return "$many"
@@ -312,12 +312,12 @@ private func __keySuffixForPluralCategory(category: NSLocale.PluralCategory) -> 
 }
 
 
-private func __string(key: String, parameters: [String : String]? = nil) -> String {
+private func __string(_ key: String, parameters: [String : String]? = nil) -> String {
 	return __tryString(key).map { __substituteTemplateParameters(template: $0, parameters: parameters) } ?? key
 }
 
 
-private func __string(key: String, pluralCategory: NSLocale.PluralCategory, parameters: [String : String]?) -> String {
+private func __string(_ key: String, pluralCategory: Locale.PluralCategory, parameters: [String : String]?) -> String {
 	guard let template = __tryString(key, pluralCategory: pluralCategory) else {
 		return key
 	}
@@ -326,12 +326,12 @@ private func __string(key: String, pluralCategory: NSLocale.PluralCategory, para
 }
 
 
-private func __string(key: String, number: NSNumber, formatter: NSNumberFormatter, parameters: [String : String]?) -> String {
-	return __string(key, pluralCategory: NSLocale.currentLocale().pluralCategoryForNumber(number, formatter: formatter), parameters: parameters)
+private func __string(_ key: String, number: NSNumber, formatter: NumberFormatter, parameters: [String : String]?) -> String {
+	return __string(key, pluralCategory: Locale.current.pluralCategoryForNumber(number, formatter: formatter), parameters: parameters)
 }
 
 
-private func __substituteTemplateParameters(template template: String, parameters: [String : String]?) -> String {
+private func __substituteTemplateParameters(template: String, parameters: [String : String]?) -> String {
 	guard let parameters = parameters else {
 		return template
 	}
@@ -345,7 +345,7 @@ private func __substituteTemplateParameters(template template: String, parameter
 }
 
 
-private func __substituteTemplateParameters(template template: String, onCharacter: (Character) -> Void, onParameter: (String) -> Void) -> Bool {
+private func __substituteTemplateParameters(template: String, onCharacter: (Character) -> Void, onParameter: (String) -> Void) -> Bool {
 	var currentParameter = ""
 	var isParsingParameter = false
 	var isAwaitingClosingCurlyBracket = false
@@ -405,8 +405,8 @@ private func __substituteTemplateParameters(template template: String, onCharact
 }
 
 
-private func __tryString(key: String) -> String? {
-	let value = __bundle.localizedStringForKey(key, value: "\u{0}", table: "MeasuresLocalizable")
+private func __tryString(_ key: String) -> String? {
+	let value = __bundle.localizedString(forKey: key, value: "\u{0}", table: "MeasuresLocalizable")
 	guard value != "\u{0}" else {
 		return nil
 	}
@@ -415,26 +415,26 @@ private func __tryString(key: String) -> String? {
 }
 
 
-private func __tryString(key: String, pluralCategory: NSLocale.PluralCategory) -> String? {
-	let keySuffix = __keySuffixForPluralCategory(pluralCategory)
+private func __tryString(_ key: String, pluralCategory: Locale.PluralCategory) -> String? {
+	let keySuffix = __keySuffix(for: pluralCategory)
 	return __tryString("\(key)\(keySuffix)") ?? __tryString("\(key)$other")
 }
 
 
 
-private struct __PluralizedString: PluralizedString {
+fileprivate struct __PluralizedString: PluralizedString {
 
 	private var key: String
 	private var parameters: [String : String]?
 
 
-	private init(_ key: String, parameters: [String : String]? = nil) {
+	fileprivate init(_ key: String, parameters: [String : String]? = nil) {
 		self.key = key
 		self.parameters = parameters
 	}
 
 
-	private func forPluralCategory(pluralCategory: NSLocale.PluralCategory) -> String {
+	fileprivate func forPluralCategory(_ pluralCategory: Locale.PluralCategory) -> String {
 		return __string(key, pluralCategory: pluralCategory, parameters: parameters)
 	}
 }

@@ -22,7 +22,6 @@
 		4956ED1A1C94552800A33C45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498683331BE405D6001DCBC7 /* LaunchScreen.storyboard */; };
 		498683361BE405D6001DCBC7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683311BE405D6001DCBC7 /* AppDelegate.swift */; };
 		498683381BE405D6001DCBC7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 498683331BE405D6001DCBC7 /* LaunchScreen.storyboard */; };
-		498683451BE418B8001DCBC7 /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683441BE418B8001DCBC7 /* CGFloat.swift */; };
 		4986834A1BE41ECF001DCBC7 /* CGMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683461BE41ECF001DCBC7 /* CGMath.swift */; };
 		4986834B1BE41ECF001DCBC7 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683471BE41ECF001DCBC7 /* CGPoint.swift */; };
 		4986834C1BE41ECF001DCBC7 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683481BE41ECF001DCBC7 /* CGRect.swift */; };
@@ -93,14 +92,11 @@
 		49CDDE561C94520300FB7DEF /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CCD1BE588C2001FDCE8 /* String.swift */; };
 		49CDDE591C94520300FB7DEF /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC01BE588C2001FDCE8 /* Dictionary.swift */; };
 		49CDDE5B1C94520300FB7DEF /* CollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CBF1BE588C2001FDCE8 /* CollectionType.swift */; };
-		49CDDE5D1C94520300FB7DEF /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC11BE588C2001FDCE8 /* Double.swift */; };
 		49CDDE5E1C94520300FB7DEF /* Any.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CBE1BE588C2001FDCE8 /* Any.swift */; };
 		49CDDE601C94520300FB7DEF /* IntegerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC71BE588C2001FDCE8 /* IntegerType.swift */; };
 		49CDDE611C94520300FB7DEF /* SequenceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CCB1BE588C2001FDCE8 /* SequenceType.swift */; };
 		49CDDE641C94520300FB7DEF /* Set.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CCC1BE588C2001FDCE8 /* Set.swift */; };
 		49CDDE671C94520300FB7DEF /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CE61BE5A475001FDCE8 /* Support.swift */; };
-		49CDDE681C94520300FB7DEF /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC21BE588C2001FDCE8 /* Float.swift */; };
-		49CDDE691C94520300FB7DEF /* Range.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC91BE588C2001FDCE8 /* Range.swift */; };
 		49CDDE6B1C94520300FB7DEF /* FloatingPointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC31BE588C2001FDCE8 /* FloatingPointType.swift */; };
 		49CDDE791C9453B900FB7DEF /* String+Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDDE781C9453B900FB7DEF /* String+Foundation.swift */; };
 		49FFFEFDE891773B6164B27A /* Pods_Extensions_CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 855157B64E27B7F8B0A6AB68 /* Pods_Extensions_CoreGraphics.framework */; };
@@ -146,7 +142,6 @@
 		498683321BE405D6001DCBC7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		498683331BE405D6001DCBC7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4986833C1BE410D0001DCBC7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		498683441BE418B8001DCBC7 /* CGFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloat.swift; sourceTree = "<group>"; };
 		498683461BE41ECF001DCBC7 /* CGMath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGMath.swift; sourceTree = "<group>"; };
 		498683471BE41ECF001DCBC7 /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		498683481BE41ECF001DCBC7 /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
@@ -165,11 +160,8 @@
 		49A72CBE1BE588C2001FDCE8 /* Any.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Any.swift; sourceTree = "<group>"; };
 		49A72CBF1BE588C2001FDCE8 /* CollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionType.swift; sourceTree = "<group>"; };
 		49A72CC01BE588C2001FDCE8 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
-		49A72CC11BE588C2001FDCE8 /* Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
-		49A72CC21BE588C2001FDCE8 /* Float.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Float.swift; sourceTree = "<group>"; };
 		49A72CC31BE588C2001FDCE8 /* FloatingPointType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPointType.swift; sourceTree = "<group>"; };
 		49A72CC71BE588C2001FDCE8 /* IntegerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerType.swift; sourceTree = "<group>"; };
-		49A72CC91BE588C2001FDCE8 /* Range.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Range.swift; sourceTree = "<group>"; };
 		49A72CCA1BE588C2001FDCE8 /* RangeReplaceableCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeReplaceableCollectionType.swift; sourceTree = "<group>"; };
 		49A72CCB1BE588C2001FDCE8 /* SequenceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceType.swift; sourceTree = "<group>"; };
 		49A72CCC1BE588C2001FDCE8 /* Set.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Set.swift; sourceTree = "<group>"; };
@@ -504,7 +496,6 @@
 		498683431BE418B8001DCBC7 /* CoreGraphics */ = {
 			isa = PBXGroup;
 			children = (
-				498683441BE418B8001DCBC7 /* CGFloat.swift */,
 				498683461BE41ECF001DCBC7 /* CGMath.swift */,
 				498683471BE41ECF001DCBC7 /* CGPoint.swift */,
 				498683481BE41ECF001DCBC7 /* CGRect.swift */,
@@ -539,11 +530,8 @@
 				499EEC3D1CF4C9A0008991A3 /* Array.swift */,
 				49A72CBF1BE588C2001FDCE8 /* CollectionType.swift */,
 				49A72CC01BE588C2001FDCE8 /* Dictionary.swift */,
-				49A72CC11BE588C2001FDCE8 /* Double.swift */,
-				49A72CC21BE588C2001FDCE8 /* Float.swift */,
 				49A72CC31BE588C2001FDCE8 /* FloatingPointType.swift */,
 				49A72CC71BE588C2001FDCE8 /* IntegerType.swift */,
-				49A72CC91BE588C2001FDCE8 /* Range.swift */,
 				49A72CCA1BE588C2001FDCE8 /* RangeReplaceableCollectionType.swift */,
 				49A72CCB1BE588C2001FDCE8 /* SequenceType.swift */,
 				49A72CCC1BE588C2001FDCE8 /* Set.swift */,
@@ -973,60 +961,60 @@
 				ORGANIZATIONNAME = JetPack;
 				TargetAttributes = {
 					4956ED031C94551600A33C45 = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					4956ED121C94552800A33C45 = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					4986830C1BE404F7001DCBC7 = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					498683201BE404F7001DCBC7 = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDD561C943BD700FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDD671C94406B00FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDD771C94411D00FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDD881C9442A700FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDD981C94433C00FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDDA81C94464400FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDDB91C94465D00FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDDCA1C94467000FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDDDB1C94474800FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDDED1C94474900FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDDFF1C94474B00FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDE111C94488400FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDE241C9451F300FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					49CDDE4E1C94520300FB7DEF = {
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 				};
 			};
@@ -2051,7 +2039,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				498683451BE418B8001DCBC7 /* CGFloat.swift in Sources */,
 				4986834B1BE41ECF001DCBC7 /* CGPoint.swift in Sources */,
 				4986834D1BE41ECF001DCBC7 /* CGSize.swift in Sources */,
 				49A72CE71BE5A475001FDCE8 /* Support.swift in Sources */,
@@ -2184,15 +2171,12 @@
 				49CDDE561C94520300FB7DEF /* String.swift in Sources */,
 				49CDDE591C94520300FB7DEF /* Dictionary.swift in Sources */,
 				49CDDE5B1C94520300FB7DEF /* CollectionType.swift in Sources */,
-				49CDDE5D1C94520300FB7DEF /* Double.swift in Sources */,
 				499EEC3E1CF4C9A0008991A3 /* Array.swift in Sources */,
 				49CDDE5E1C94520300FB7DEF /* Any.swift in Sources */,
 				49CDDE601C94520300FB7DEF /* IntegerType.swift in Sources */,
 				49CDDE611C94520300FB7DEF /* SequenceType.swift in Sources */,
 				49CDDE641C94520300FB7DEF /* Set.swift in Sources */,
 				49CDDE671C94520300FB7DEF /* Support.swift in Sources */,
-				49CDDE681C94520300FB7DEF /* Float.swift in Sources */,
-				49CDDE691C94520300FB7DEF /* Range.swift in Sources */,
 				49CDDE6B1C94520300FB7DEF /* FloatingPointType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2209,7 +2193,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2223,7 +2207,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2237,7 +2221,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2251,7 +2235,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2351,7 +2335,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2365,7 +2349,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2378,7 +2362,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2390,7 +2374,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2403,7 +2387,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2417,7 +2401,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2431,7 +2415,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2445,7 +2429,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2459,7 +2443,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2473,7 +2457,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2487,7 +2471,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2501,7 +2485,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2515,7 +2499,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2529,7 +2513,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2543,7 +2527,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2557,7 +2541,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2571,7 +2555,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2585,7 +2569,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2599,7 +2583,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2613,7 +2597,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2627,7 +2611,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2641,7 +2625,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2655,7 +2639,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2669,7 +2653,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2683,7 +2667,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2697,7 +2681,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2711,7 +2695,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2725,7 +2709,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2738,7 +2722,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2750,7 +2734,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2762,7 +2746,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2774,7 +2758,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

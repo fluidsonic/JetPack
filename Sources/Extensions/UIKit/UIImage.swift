@@ -8,25 +8,25 @@ public extension UIImage {
 		guard size.isPositive else {
 			fatalError("\(#function) requires a positive size")
 		}
-		guard let context = CGBitmapContextCreate(nil, Int(ceil(size.width)), Int(ceil(size.height)), 8, 0, CGColorSpaceCreateDeviceRGB(), CGImageAlphaInfo.PremultipliedLast.rawValue) else {
+		guard let context = CGContext(data: nil, width: Int(ceil(size.width)), height: Int(ceil(size.height)), bitsPerComponent: 8, bytesPerRow: 0, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
 			fatalError("\(#function) could not create context")
 		}
-		guard let cgimage = CGBitmapContextCreateImage(context) else {
+		guard let cgimage = context.makeImage() else {
 			fatalError("\(#function) could not create image from context")
 		}
 
-		self.init(CGImage: cgimage, scale: 1, orientation: .Up)
+		self.init(cgImage: cgimage, scale: 1, orientation: .up)
 	}
 
 
 	@nonobjc
-	public convenience init?(named name: String, inBundle bundle: NSBundle) {
-		self.init(named: name, inBundle: bundle, compatibleWithTraitCollection: nil)
+	public convenience init?(named name: String, inBundle bundle: Bundle) {
+		self.init(named: name, in: bundle, compatibleWith: nil)
 	}
 
 
 	@nonobjc
-	public static func fromColor(color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
+	public static func fromColor(_ color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
 		let frame = CGRect(size: size)
 
 		UIGraphicsBeginImageContextWithOptions(frame.size, false, scale)
@@ -37,8 +37,8 @@ public extension UIImage {
 
 		defer { UIGraphicsEndImageContext() }
 
-		CGContextSetFillColorWithColor(context, color.CGColor)
-		CGContextFillRect(context, frame)
+		context.setFillColor(color.cgColor)
+		context.fill(frame)
 
 		guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
 			fatalError("Cannot create image from image context.")
@@ -50,30 +50,30 @@ public extension UIImage {
 
 	@nonobjc
 	public var hasAlphaChannel: Bool {
-		guard let cgImage = CGImage else {
+		guard let cgImage = cgImage else {
 			return false // TODO support CIImage
 		}
 
-		let info = CGImageGetAlphaInfo(cgImage)
+		let info = cgImage.alphaInfo
 		switch info {
-		case .First, .Last, .Only, .PremultipliedFirst, .PremultipliedLast:
+		case .first, .last, .alphaOnly, .premultipliedFirst, .premultipliedLast:
 			return true
 
-		case .None, .NoneSkipFirst, .NoneSkipLast:
+		case .none, .noneSkipFirst, .noneSkipLast:
 			return false
 		}
 	}
 
 
 	@nonobjc
-	public func imageConstrainedToSize(maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .High) -> UIImage {
+	public func imageConstrainedToSize(_ maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .high) -> UIImage {
 		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
 
-		guard let cgImage = self.CGImage else {
+		guard let cgImage = self.cgImage else {
 			return self // TODO support CIImage
 		}
 
-		let currentSize = CGSize(width: CGImageGetWidth(cgImage), height: CGImageGetHeight(cgImage))
+		let currentSize = CGSize(width: cgImage.width, height: cgImage.height)
 		let horizontalScale = orientedMaximumSize.width / currentSize.width
 		let verticalScale = orientedMaximumSize.height / currentSize.height
 		let scale = min(horizontalScale, verticalScale)
@@ -87,28 +87,28 @@ public extension UIImage {
 		}
 
 		// TODO handle nil color space
-		guard let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(cgImage), 0, CGImageGetColorSpace(cgImage)!, CGImageGetBitmapInfo(cgImage).rawValue) else {
+		guard let context = CGContext(data: nil, width: Int(targetSize.width), height: Int(targetSize.height), bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: 0, space: cgImage.colorSpace!, bitmapInfo: cgImage.bitmapInfo.rawValue) else {
 			return self // TODO when can this happen?
 		}
 
-		CGContextSetInterpolationQuality(context, interpolationQuality)
-		CGContextDrawImage(context, CGRect(size: targetSize), cgImage)
+		context.interpolationQuality = interpolationQuality
+		context.draw(cgImage, in: CGRect(size: targetSize))
 
-		let newCoreImage = CGBitmapContextCreateImage(context)!
-		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
+		let newCoreImage = context.makeImage()!
+		let newImage = UIImage(cgImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
 
 		return newImage
 	}
 
 
 	@nonobjc
-	public func imageCroppedToSize(maximumSize: CGSize) -> UIImage {
+	public func imageCroppedToSize(_ maximumSize: CGSize) -> UIImage {
 		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
-		guard let cgImage = self.CGImage else {
+		guard let cgImage = self.cgImage else {
 			return self
 		}
 
-		let currentSize = CGSize(width: CGImageGetWidth(cgImage), height: CGImageGetHeight(cgImage))
+		let currentSize = CGSize(width: cgImage.width, height: cgImage.height)
 
 		let targetSize = CGSize(
 			width:  min(currentSize.width, orientedMaximumSize.width),
@@ -120,7 +120,7 @@ public extension UIImage {
 		}
 
 		// TODO handle nil color space
-		guard let context = CGBitmapContextCreate(nil, Int(targetSize.width), Int(targetSize.height), CGImageGetBitsPerComponent(cgImage), 0, CGImageGetColorSpace(cgImage)!, CGImageGetBitmapInfo(cgImage).rawValue) else {
+		guard let context = CGContext(data: nil, width: Int(targetSize.width), height: Int(targetSize.height), bitsPerComponent: cgImage.bitsPerComponent, bytesPerRow: 0, space: cgImage.colorSpace!, bitmapInfo: cgImage.bitmapInfo.rawValue) else {
 			return self // TODO when can this happen?
 		}
 
@@ -130,27 +130,27 @@ public extension UIImage {
 			width:  currentSize.width,
 			height: currentSize.height
 		)
-		CGContextDrawImage(context, drawFrame, cgImage)
+		context.draw(cgImage, in: drawFrame)
 
-		let newCoreImage = CGBitmapContextCreateImage(context)!
-		let newImage = UIImage(CGImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
+		let newCoreImage = context.makeImage()!
+		let newImage = UIImage(cgImage: newCoreImage, scale: self.scale, orientation: self.imageOrientation)
 
 		return newImage
 	}
 
 
 	@nonobjc
-	public func imageWithAlpha(alpha: CGFloat) -> UIImage {
+	public func imageWithAlpha(_ alpha: CGFloat) -> UIImage {
 		guard alpha <= 0 else {
 			return self
 		}
 
-		return imageWithBlendMode(.SourceIn, destinationColor: UIColor(white: 0, alpha: alpha))
+		return imageWithBlendMode(.sourceIn, destinationColor: UIColor(white: 0, alpha: alpha))
 	}
 
 
 	@nonobjc
-	private func imageWithBlendMode(blendMode: CGBlendMode, color: UIColor, colorIsDestination: Bool) -> UIImage {
+	fileprivate func imageWithBlendMode(_ blendMode: CGBlendMode, color: UIColor, colorIsDestination: Bool) -> UIImage {
 		let frame = CGRect(size: size)
 
 		UIGraphicsBeginImageContextWithOptions(frame.size, !hasAlphaChannel, scale)
@@ -159,10 +159,10 @@ public extension UIImage {
 			color.set()
 			UIRectFill(frame)
 
-			drawInRect(frame, blendMode: blendMode, alpha: 1)
+			draw(in: frame, blendMode: blendMode, alpha: 1)
 		}
 		else {
-			drawInRect(frame)
+			draw(in: frame)
 
 			color.set()
 			UIRectFillUsingBlendMode(frame, blendMode)
@@ -175,10 +175,10 @@ public extension UIImage {
 		UIGraphicsEndImageContext()
 
 		if image.capInsets != capInsets {
-			image = image.resizableImageWithCapInsets(capInsets)
+			image = image.resizableImage(withCapInsets: capInsets)
 		}
 		if image.renderingMode != renderingMode {
-			image = image.imageWithRenderingMode(renderingMode)
+			image = image.withRenderingMode(renderingMode)
 		}
 
 		return image
@@ -186,26 +186,26 @@ public extension UIImage {
 
 
 	@nonobjc
-	public func imageWithBlendMode(blendMode: CGBlendMode, destinationColor: UIColor) -> UIImage {
+	public func imageWithBlendMode(_ blendMode: CGBlendMode, destinationColor: UIColor) -> UIImage {
 		return imageWithBlendMode(blendMode, color: destinationColor, colorIsDestination: true)
 	}
 
 
 	@nonobjc
-	public func imageWithBlendMode(blendMode: CGBlendMode, sourceColor: UIColor) -> UIImage {
+	public func imageWithBlendMode(_ blendMode: CGBlendMode, sourceColor: UIColor) -> UIImage {
 		return imageWithBlendMode(blendMode, color: sourceColor, colorIsDestination: false)
 	}
 
 
 	@nonobjc
-	public func imageWithHueFromColor(color: UIColor) -> UIImage {
-		return imageWithBlendMode(.Hue, sourceColor: color)
+	public func imageWithHueFromColor(_ color: UIColor) -> UIImage {
+		return imageWithBlendMode(.hue, sourceColor: color)
 	}
 
 
 	@nonobjc
-	public func imageWithColor(color: UIColor) -> UIImage {
-		return imageWithBlendMode(.SourceIn, sourceColor: color)
+	public func imageWithColor(_ color: UIColor) -> UIImage {
+		return imageWithBlendMode(.sourceIn, sourceColor: color)
 	}
 
 
@@ -217,17 +217,17 @@ public extension UIImage {
 	*/
 	@nonobjc
 	public func inflate() {
-		guard let cgImage = CGImage, let dataProvider = CGImageGetDataProvider(cgImage) else {
+		guard let cgImage = cgImage, let dataProvider = cgImage.dataProvider else {
 			return
 		}
 
-		CGDataProviderCopyData(dataProvider)
+		dataProvider.data
 	}
 
 
 	@nonobjc
 	public func luminocityImage() -> UIImage {
-		return imageWithBlendMode(.Luminosity, destinationColor: .whiteColor())
+		return imageWithBlendMode(.luminosity, destinationColor: .white)
 	}
 }
 
@@ -237,14 +237,14 @@ public extension UIImageOrientation {
 
 	public init?(CGImageOrientation: Int) {
 		switch CGImageOrientation {
-		case 1: self = .Up
-		case 2: self = .UpMirrored
-		case 3: self = .Down
-		case 4: self = .DownMirrored
-		case 5: self = .LeftMirrored
-		case 6: self = .Right
-		case 7: self = .RightMirrored
-		case 8: self = .Left
+		case 1: self = .up
+		case 2: self = .upMirrored
+		case 3: self = .down
+		case 4: self = .downMirrored
+		case 5: self = .leftMirrored
+		case 6: self = .right
+		case 7: self = .rightMirrored
+		case 8: self = .left
 		default: return nil
 		}
 	}
@@ -252,10 +252,10 @@ public extension UIImageOrientation {
 
 	public var isLandscape: Bool {
 		switch self {
-		case .Left, .LeftMirrored, .Right, .RightMirrored:
+		case .left, .leftMirrored, .right, .rightMirrored:
 			return true
 
-		case .Down, .DownMirrored, .Up, .UpMirrored:
+		case .down, .downMirrored, .up, .upMirrored:
 			return false
 		}
 	}

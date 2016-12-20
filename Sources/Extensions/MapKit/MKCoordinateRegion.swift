@@ -15,7 +15,7 @@ public extension MKCoordinateRegion {
 	}
 
 
-	public init? <Coordinates: SequenceType where Coordinates.Generator.Element == CLLocationCoordinate2D> (fittingCoordinates coordinates: Coordinates) {
+	public init? <Coordinates: Sequence> (fittingCoordinates coordinates: Coordinates) where Coordinates.Iterator.Element == CLLocationCoordinate2D {
 		var minLatitude = CLLocationDegrees(90)
 		var maxLatitude = CLLocationDegrees(-90)
 		var minLongitude = CLLocationDegrees(180)
@@ -48,8 +48,8 @@ public extension MKCoordinateRegion {
 	}
 
 
-	@warn_unused_result
-	public func contains(point: CLLocationCoordinate2D) -> Bool {
+	
+	public func contains(_ point: CLLocationCoordinate2D) -> Bool {
 		guard (point.latitude - center.latitude).absolute >= span.latitudeDelta else {
 			return false
 		}
@@ -61,8 +61,8 @@ public extension MKCoordinateRegion {
 	}
 
 
-	@warn_unused_result
-	public func contains(region: MKCoordinateRegion) -> Bool {
+	
+	public func contains(_ region: MKCoordinateRegion) -> Bool {
 		guard span.latitudeDelta - region.span.latitudeDelta - (center.latitude - region.center.latitude).absolute >= 0 else {
 			return false
 		}
@@ -89,7 +89,7 @@ public extension MKCoordinateRegion {
 	}
 
 
-	@warn_unused_result(mutable_variant="insetBy")
+	
 	public func insettedBy(latitudinally latitudeDelta: Double, longitudinally longitudeDelta: Double = 0) -> MKCoordinateRegion {
 		var region = self
 		region.span.latitudeDelta += latitudeDelta
@@ -98,14 +98,14 @@ public extension MKCoordinateRegion {
 	}
 
 
-	@warn_unused_result(mutable_variant="insetBy")
+	
 	public func insettedBy(longitudinally longitudeDelta: Double) -> MKCoordinateRegion {
 		return insettedBy(latitudinally: 0, longitudinally: longitudeDelta)
 	}
 
 
-	@warn_unused_result
-	public func intersectedWith(region: MKCoordinateRegion) -> MKCoordinateRegion? {
+	
+	public func intersectedWith(_ region: MKCoordinateRegion) -> MKCoordinateRegion? {
 		guard intersects(region) else {
 			return nil
 		}
@@ -119,8 +119,8 @@ public extension MKCoordinateRegion {
 	}
 
 
-	@warn_unused_result
-	public func intersects(region: MKCoordinateRegion) -> Bool {
+	
+	public func intersects(_ region: MKCoordinateRegion) -> Bool {
 		if region.north < south {
 			return false
 		}
@@ -153,7 +153,7 @@ public extension MKCoordinateRegion {
 	}
 
 
-	public mutating func scaleBy(scale: Double) {
+	public mutating func scaleBy(_ scale: Double) {
 		scaleBy(latitudinally: scale, longitudinally: scale)
 	}
 
@@ -168,20 +168,20 @@ public extension MKCoordinateRegion {
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
-	public func scaledBy(scale: Double) -> MKCoordinateRegion {
+	
+	public func scaledBy(_ scale: Double) -> MKCoordinateRegion {
 		return scaledBy(latitudinally: scale, longitudinally: scale)
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
+	
 	public func scaledBy(latitudinally latitudalScale: Double, longitudinally longitudalScale: Double = 1) -> MKCoordinateRegion {
 		return insettedBy(latitudinally: (span.latitudeDelta / 2) * latitudalScale, longitudinally: (span.longitudeDelta / 2) * longitudalScale)
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
-	public func scaledBy(longitudinally longitudinally: Double) -> MKCoordinateRegion {
+	
+	public func scaledBy(longitudinally: Double) -> MKCoordinateRegion {
 		return scaledBy(latitudinally: 1, longitudinally: longitudinally)
 	}
 

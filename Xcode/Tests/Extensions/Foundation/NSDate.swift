@@ -7,8 +7,8 @@ import JetPack
 class NSDate_Tests: XCTestCase {
 
 	func testComparable() {
-		let earlierDate = NSDate(timeIntervalSince1970: 0)
-		let laterDate = NSDate(timeIntervalSince1970: 1)
+		let earlierDate = Date(timeIntervalSince1970: 0)
+		let laterDate = Date(timeIntervalSince1970: 1)
 
 		XCTAssertTrue (earlierDate <  laterDate)
 		XCTAssertTrue (earlierDate <= laterDate)

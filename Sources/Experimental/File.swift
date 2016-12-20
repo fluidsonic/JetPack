@@ -3,14 +3,14 @@ import Foundation
 
 public struct File {
 
-	private init() {} // static for now
+	fileprivate init() {} // static for now
 
 
-	@warn_unused_result
-	public static func createTemporary(namePrefix: String = "", nameSuffix: String = "") -> NSURL? {
-		let pathTemplate: NSString = (NSTemporaryDirectory() as NSString).stringByAppendingPathComponent("\(namePrefix)XXXXXXXXXX\(nameSuffix)")
+	
+	public static func createTemporary(_ namePrefix: String = "", nameSuffix: String = "") -> URL? {
+		let pathTemplate: NSString = (NSTemporaryDirectory() as NSString).appendingPathComponent("\(namePrefix)XXXXXXXXXX\(nameSuffix)") as NSString
 		
-		let path = UnsafeMutablePointer<Int8>.alloc(Int(PATH_MAX))
+		let path = UnsafeMutablePointer<Int8>.allocate(capacity: Int(PATH_MAX))
 		pathTemplate.getFileSystemRepresentation(path, maxLength: Int(PATH_MAX))
 		
 		let fileDescriptor: Int32
@@ -28,10 +28,10 @@ public struct File {
 
 		close(fileDescriptor)
 
-		let fileUrl = NSURL(fileURLWithFileSystemRepresentation: path, isDirectory: false, relativeToURL: nil)
+		let fileUrl = URL(fileURLWithFileSystemRepresentation: path, isDirectory: false, relativeTo: nil)
 		
-		path.dealloc(Int(PATH_MAX))
-		path.destroy()
+		path.deallocate(capacity: Int(PATH_MAX))
+		path.deinitialize()
 		
 		return fileUrl
 	}

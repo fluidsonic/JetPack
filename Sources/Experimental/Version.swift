@@ -22,7 +22,7 @@ public struct Version {
 
 public extension Version {
 
-	public init(_ version: NSOperatingSystemVersion) {
+	public init(_ version: OperatingSystemVersion) {
 		self.init(major: version.majorVersion, minor: version.minorVersion, patch: version.patchVersion)
 	}
 }

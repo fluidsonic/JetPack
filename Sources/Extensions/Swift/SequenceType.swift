@@ -1,7 +1,7 @@
-public extension SequenceType {
+public extension Sequence {
 
-	@warn_unused_result
-	public func associated <Key: Hashable, Value>(@noescape elementSelector: Generator.Element throws -> (Key, Value)) rethrows -> [Key : Value] {
+	
+	public func associated <Key: Hashable, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		var dictionary = [Key : Value]()
 		for element in self {
 			let (key, value) = try elementSelector(element)
@@ -12,14 +12,14 @@ public extension SequenceType {
 	}
 
 
-	@warn_unused_result
-	public func associated <Key: Hashable> (@noescape by keySelector: Generator.Element throws -> Key) rethrows -> [Key : Generator.Element] {
+	
+	public func associated <Key: Hashable> (by keySelector: (Iterator.Element) throws -> Key) rethrows -> [Key : Iterator.Element] {
 		return try associated { (try keySelector($0), $0) }
 	}
 
 
-	@warn_unused_result
-	public func countMatching(@noescape predicate: Generator.Element throws -> Bool) rethrows -> Int {
+	
+	public func countMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Int {
 		var count = 0
 		for element in self where try predicate(element) {
 			count += 1
@@ -29,8 +29,8 @@ public extension SequenceType {
 	}
 
 
-	@warn_unused_result
-	public func firstMatching(@noescape predicate: Generator.Element throws -> Bool) rethrows -> Generator.Element? {
+	
+	public func firstMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Iterator.Element? {
 		for element in self where try predicate(element) {
 			return element
 		}
@@ -39,15 +39,15 @@ public extension SequenceType {
 	}
 
 
-	@warn_unused_result
-	public func joinWithSeparator(separator: String, lastSeparator: String, @noescape transform: Generator.Element throws -> String) rethrows -> String {
+	
+	public func joinWithSeparator(_ separator: String, lastSeparator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
 		guard lastSeparator != separator else {
 			return try joinWithSeparator(separator, transform: transform)
 		}
 
 		var isFirstElement = true
 		var joinedString = ""
-		var previousElement: Generator.Element?
+		var previousElement: Iterator.Element?
 
 		for element in self {
 			if let previousElement = previousElement {
@@ -76,14 +76,14 @@ public extension SequenceType {
 	}
 
 
-	@warn_unused_result
-	public func joinWithSeparator(separator: String, @noescape transform: Generator.Element throws -> String) rethrows -> String {
-		return try lazy.map(transform).joinWithSeparator(separator)
+	
+	public func joinWithSeparator(_ separator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
+		return try lazy.map(transform).joined(separator: separator)
 	}
 
 
-	@warn_unused_result
-	public func mapNotNil<T>(@noescape transform: (Generator.Element) throws -> T?) rethrows -> [T] {
+	
+	public func mapNotNil<T>(transform: (Iterator.Element) throws -> T?) rethrows -> [T] {
 		var result = [T]()
 		for element in self {
 			guard let mappedElement = try transform(element) else {
@@ -97,10 +97,10 @@ public extension SequenceType {
 	}
 
 
-	@warn_unused_result
-	public func separate(@noescape isLeftElement: Generator.Element throws -> Bool) rethrows -> ([Generator.Element], [Generator.Element]) {
-		var left = Array<Generator.Element>()
-		var right = Array<Generator.Element>()
+	
+	public func separate(isLeftElement: (Iterator.Element) throws -> Bool) rethrows -> ([Iterator.Element], [Iterator.Element]) {
+		var left = Array<Iterator.Element>()
+		var right = Array<Iterator.Element>()
 
 		for element in self {
 			if try isLeftElement(element) {
@@ -115,23 +115,23 @@ public extension SequenceType {
 	}
 
 
-	@warn_unused_result
-	public func toArray() -> [Generator.Element] {
-		return Array<Generator.Element>(self)
+	
+	public func toArray() -> [Iterator.Element] {
+		return Array<Iterator.Element>(self)
 	}
 
-	@warn_unused_result @available(*, deprecated=1, renamed="associated")
-	public func toDictionary <Key: Hashable, Value>(@noescape transform: Generator.Element throws -> (Key, Value)) rethrows -> [Key : Value] {
-		return try associated(transform)
+	@available(*, deprecated: 1, renamed: "associated")
+	public func toDictionary <Key: Hashable, Value>(transform: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+		return try associated(elementSelector: transform)
 	}
 }
 
 
 
-public extension SequenceType where Generator.Element: AnyObject {
+public extension Sequence where Iterator.Element: AnyObject {
 
-	@warn_unused_result
-	public func containsIdentical(element: Generator.Element) -> Bool {
+	
+	public func containsIdentical(_ element: Iterator.Element) -> Bool {
 		for existingElement in self where existingElement === element {
 			return true
 		}
@@ -142,31 +142,31 @@ public extension SequenceType where Generator.Element: AnyObject {
 
 
 
-public extension SequenceType where Generator.Element: Hashable {
+public extension Sequence where Iterator.Element: Hashable {
 
-	@warn_unused_result
-	public func toSet() -> Set<Generator.Element> {
+	
+	public func toSet() -> Set<Iterator.Element> {
 		return Set(self)
 	}
 }
 
 
 
-public extension SequenceType where Generator.Element == String {
+public extension Sequence where Iterator.Element == String {
 
-	@warn_unused_result
-	public func joinWithSeparator(separator: String, lastSeparator: String) -> String {
+	
+	public func joinWithSeparator(_ separator: String, lastSeparator: String) -> String {
 		return joinWithSeparator(separator, lastSeparator: lastSeparator, transform: identity)
 	}
 }
 
 
 
-public extension SequenceType where Generator.Element: _Optional {
+public extension Sequence where Iterator.Element: _Optional {
 
-	@warn_unused_result
-	public func filterNonNil() -> [Generator.Element.Wrapped] {
-		var result = Array<Generator.Element.Wrapped>()
+	
+	public func filterNonNil() -> [Iterator.Element.Wrapped] {
+		var result = Array<Iterator.Element.Wrapped>()
 		for element in self {
 			guard let element = element.value else {
 				continue

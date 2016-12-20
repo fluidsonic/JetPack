@@ -9,9 +9,14 @@
 /* Begin PBXBuildFile section */
 		494A086A1D4E393F00E1BD91 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 494A08691D4E393F00E1BD91 /* main.m */; };
 		494A08901D4E55A800E1BD91 /* cli in Copy Executables */ = {isa = PBXBuildFile; fileRef = 494A085E1D4E386B00E1BD91 /* cli */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		496233161D4E56AD000D93F4 /* AEXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 496233131D4E56AD000D93F4 /* AEXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		496233171D4E56AD000D93F4 /* JetPack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 496233141D4E56AD000D93F4 /* JetPack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		496233181D4E56AD000D93F4 /* PluralRulesGenerator.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 496233151D4E56AD000D93F4 /* PluralRulesGenerator.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49D45F291E095B9D00859A41 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D45F281E095B9D00859A41 /* AEXML.framework */; };
+		49D45F2D1E095C0300859A41 /* PluralRulesGenerator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D45F2C1E095C0300859A41 /* PluralRulesGenerator.framework */; };
+		49D45F2F1E095C4700859A41 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D45F281E095B9D00859A41 /* AEXML.framework */; };
+		49D45F301E095C4900859A41 /* PluralRulesGenerator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D45F2C1E095C0300859A41 /* PluralRulesGenerator.framework */; };
+		49D45F311E095C5100859A41 /* AEXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 49D45F281E095B9D00859A41 /* AEXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49D45F321E095C5400859A41 /* PluralRulesGenerator.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 49D45F2C1E095C0300859A41 /* PluralRulesGenerator.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49D45F331E095DF600859A41 /* Pods_cli.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B949E4784D9219FA8CC7B91D /* Pods_cli.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		49D45F341E095DFB00859A41 /* Pods_cli_bundle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6039687072AC6C6CE19CF683 /* Pods_cli_bundle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B751ABC5614EEFFE811A3C39 /* Pods_cli.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B949E4784D9219FA8CC7B91D /* Pods_cli.framework */; };
 		B91C167AB389FA889D223164 /* Pods_cli_bundle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6039687072AC6C6CE19CF683 /* Pods_cli_bundle.framework */; };
 /* End PBXBuildFile section */
@@ -44,9 +49,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				496233161D4E56AD000D93F4 /* AEXML.framework in Copy Frameworks */,
-				496233171D4E56AD000D93F4 /* JetPack.framework in Copy Frameworks */,
-				496233181D4E56AD000D93F4 /* PluralRulesGenerator.framework in Copy Frameworks */,
+				49D45F341E095DFB00859A41 /* Pods_cli_bundle.framework in Copy Frameworks */,
+				49D45F331E095DF600859A41 /* Pods_cli.framework in Copy Frameworks */,
+				49D45F321E095C5400859A41 /* PluralRulesGenerator.framework in Copy Frameworks */,
+				49D45F311E095C5100859A41 /* AEXML.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,9 +64,8 @@
 		494A085E1D4E386B00E1BD91 /* cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cli; sourceTree = BUILT_PRODUCTS_DIR; };
 		494A08691D4E393F00E1BD91 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		494A08811D4E54ED00E1BD91 /* cli.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cli.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		496233131D4E56AD000D93F4 /* AEXML.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AEXML.framework; path = "/Users/marc/Library/Developer/Xcode/DerivedData/PluralRulesGenerator-evdnrwgjfourzeckizsjgktneocn/Build/Products/Debug/AEXML/AEXML.framework"; sourceTree = "<absolute>"; };
-		496233141D4E56AD000D93F4 /* JetPack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = JetPack.framework; path = "/Users/marc/Library/Developer/Xcode/DerivedData/PluralRulesGenerator-evdnrwgjfourzeckizsjgktneocn/Build/Products/Debug/JetPack/JetPack.framework"; sourceTree = "<absolute>"; };
-		496233151D4E56AD000D93F4 /* PluralRulesGenerator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = PluralRulesGenerator.framework; path = "/Users/marc/Library/Developer/Xcode/DerivedData/PluralRulesGenerator-evdnrwgjfourzeckizsjgktneocn/Build/Products/Debug/PluralRulesGenerator/PluralRulesGenerator.framework"; sourceTree = "<absolute>"; };
+		49D45F281E095B9D00859A41 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = "../../../../../../../Library/Developer/Xcode/DerivedData/PluralRulesGenerator-bcspjsigtmzwmofkqwhdgtgetzur/Build/Products/Debug/AEXML/AEXML.framework"; sourceTree = "<group>"; };
+		49D45F2C1E095C0300859A41 /* PluralRulesGenerator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PluralRulesGenerator.framework; path = "../../../../../../../Library/Developer/Xcode/DerivedData/PluralRulesGenerator-bcspjsigtmzwmofkqwhdgtgetzur/Build/Products/Debug/PluralRulesGenerator/PluralRulesGenerator.framework"; sourceTree = "<group>"; };
 		6039687072AC6C6CE19CF683 /* Pods_cli_bundle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_cli_bundle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C050F6ECC2C3E11F80E0B04 /* Pods-cli-bundle.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cli-bundle.release.xcconfig"; path = "Pods/Target Support Files/Pods-cli-bundle/Pods-cli-bundle.release.xcconfig"; sourceTree = "<group>"; };
 		9666670F0825363F39E21A14 /* Pods-cli.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cli.debug.xcconfig"; path = "Pods/Target Support Files/Pods-cli/Pods-cli.debug.xcconfig"; sourceTree = "<group>"; };
@@ -73,6 +78,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49D45F291E095B9D00859A41 /* AEXML.framework in Frameworks */,
+				49D45F2D1E095C0300859A41 /* PluralRulesGenerator.framework in Frameworks */,
 				B751ABC5614EEFFE811A3C39 /* Pods_cli.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -81,6 +88,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49D45F2F1E095C4700859A41 /* AEXML.framework in Frameworks */,
+				49D45F301E095C4900859A41 /* PluralRulesGenerator.framework in Frameworks */,
 				B91C167AB389FA889D223164 /* Pods_cli_bundle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,9 +100,8 @@
 		0049B7AC072BF95616BA2143 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				496233131D4E56AD000D93F4 /* AEXML.framework */,
-				496233141D4E56AD000D93F4 /* JetPack.framework */,
-				496233151D4E56AD000D93F4 /* PluralRulesGenerator.framework */,
+				49D45F281E095B9D00859A41 /* AEXML.framework */,
+				49D45F2C1E095C0300859A41 /* PluralRulesGenerator.framework */,
 				6039687072AC6C6CE19CF683 /* Pods_cli_bundle.framework */,
 				B949E4784D9219FA8CC7B91D /* Pods_cli.framework */,
 			);
@@ -357,6 +365,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -394,6 +403,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

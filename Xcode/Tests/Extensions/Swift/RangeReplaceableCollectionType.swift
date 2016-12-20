@@ -5,7 +5,7 @@ import JetPack
 
 class RangeReplaceableCollectionType_Tests: XCTestCase {
 
-	private let error = NSError(domain: "", code: 0, userInfo: nil)
+	fileprivate let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
 	func testRemoveFirstEqual() {

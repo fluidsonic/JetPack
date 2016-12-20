@@ -11,7 +11,7 @@ public extension UIWindow {
 
 
 	@objc(JetPack_layoutIfNeeded)
-	private dynamic func swizzled_layoutIfNeeded() {
+	fileprivate dynamic func swizzled_layoutIfNeeded() {
 		guard UINavigationBar.isSettingPromptCount <= 0 else {
 			// work around http://stackoverflow.com/questions/22115821/uinavigationitem-prompt-issue
 			return

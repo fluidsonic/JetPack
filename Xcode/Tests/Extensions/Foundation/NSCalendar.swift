@@ -6,11 +6,11 @@ import JetPack
 
 class NSCalendar_Tests: XCTestCase {
 
-	private let calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
+	fileprivate let calendar = Calendar(identifier: Calendar.Identifier.gregorian)
 
 
-	private func dateWithYear(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) -> NSDate {
-		let components = NSDateComponents()
+	fileprivate func dateWithYear(_ year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) -> Date {
+		var components = DateComponents()
 		components.year = year
 		components.month = month
 		components.day = day
@@ -18,7 +18,7 @@ class NSCalendar_Tests: XCTestCase {
 		components.minute = minute
 		components.second = second
 
-		return calendar.dateFromComponents(components)!
+		return calendar.date(from: components)!
 	}
 
 

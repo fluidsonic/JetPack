@@ -2,12 +2,12 @@ import UIKit
 
 
 @objc(JetPack_ViewController)
-public /* non-final */ class ViewController: UIViewController {
+open /* non-final */ class ViewController: UIViewController {
 
-	public typealias SeguePreparation = (segue: UIStoryboardSegue) -> Void
+	public typealias SeguePreparation = (_ segue: UIStoryboardSegue) -> Void
 
-	private var viewLayoutAnimation: Animation?
-	private var seguePreparation: SeguePreparation?
+	fileprivate var viewLayoutAnimation: Animation?
+	fileprivate var seguePreparation: SeguePreparation?
 
 
 	public init() {
@@ -23,31 +23,31 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public func decorationInsetsDidChangeWithAnimation(animation: Animation?) {
+	open func decorationInsetsDidChangeWithAnimation(_ animation: Animation?) {
 		for childViewController in childViewControllers {
 			childViewController.invalidateDecorationInsetsWithAnimation(animation)
 		}
 	}
 
 
-	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
-	public final override func decorationInsetsDidChangeWithAnimation(animationWrapper: Animation.Wrapper?) {
+	@available(*, unavailable, message: "override viewDidLayoutSubviewsWithAnimation(_:) instead")
+	public final override func decorationInsetsDidChangeWithAnimation(_ animationWrapper: Animation.Wrapper?) {
 		decorationInsetsDidChangeWithAnimation(animationWrapper?.animation)
 	}
 
 
-	public override func dismissViewController(animated animated: Bool = true, completion: Closure? = nil) {
-		super.dismissViewControllerAnimated(animated, completion: completion)
+	open override func dismissViewController(animated: Bool = true, completion: Closure? = nil) {
+		super.dismiss(animated: animated, completion: completion)
 	}
 
 
-	@available(*, unavailable, renamed="dismissViewController")
-	public final override func dismissViewControllerAnimated(flag: Bool, completion: Closure?) {
+	@available(*, unavailable, renamed: "dismissViewController")
+	public final override func dismiss(animated flag: Bool, completion: Closure?) {
 		presentedViewController?.dismissViewController(completion: completion)
 	}
 
 
-	public override class func initialize() {
+	open override class func initialize() {
 		guard self == ViewController.self else {
 			return
 		}
@@ -56,49 +56,49 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public override func loadView() {
+	open override func loadView() {
 		view = View()
-		view.frame = UIScreen.mainScreen().bounds // required or else UISplitViewController's overlay animation gets broken
+		view.frame = UIScreen.main.bounds // required or else UISplitViewController's overlay animation gets broken
 	}
 
 
 	@objc
-	private static func overridesPreferredInterfaceOrientationForPresentation() -> Bool {
+	fileprivate static func overridesPreferredInterfaceOrientationForPresentation() -> Bool {
 		// UIKit will behave differently if we override preferredInterfaceOrientationForPresentation.
 		// Let's pretend we don't since we're just re-implementing the default behavior.
-		return overridesSelector(#selector(preferredInterfaceOrientationForPresentation), ofBaseClass: ViewController.self)
+		return overridesSelector(#selector(getter: preferredInterfaceOrientationForPresentation), ofBaseClass: ViewController.self)
 	}
 
 
-	public func performSegueWithIdentifier(identifier: String, sender: AnyObject? = nil, preparation: SeguePreparation?) {
+	open func performSegueWithIdentifier(_ identifier: String, sender: AnyObject? = nil, preparation: SeguePreparation?) {
 		seguePreparation = preparation
 		defer { seguePreparation = nil }
 
-		performSegueWithIdentifier(identifier, sender: sender)
+		performSegue(withIdentifier: identifier, sender: sender)
 	}
 
 
-	public override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+	open override var preferredInterfaceOrientationForPresentation : UIInterfaceOrientation {
 		return ViewController.defaultPreferredInterfaceOrientationForPresentation()
 	}
 
 
-	@available(*, unavailable, message="override prepareForSegue(_:sender:preparation:) instead")
-	public final override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+	@available(*, unavailable, message: "override prepareForSegue(_:sender:preparation:) instead")
+	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		let preparation = seguePreparation
 		seguePreparation = nil
 
-		prepareForSegue(segue, sender: sender, preparation: preparation)
+		prepareForSegue(segue, sender: sender as AnyObject?, preparation: preparation)
 	}
 
 
-	public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?, preparation: SeguePreparation?) {
-		preparation?(segue: segue)
+	open func prepareForSegue(_ segue: UIStoryboardSegue, sender: AnyObject?, preparation: SeguePreparation?) {
+		preparation?(segue)
 	}
 
 
-	public final func setViewNeedsLayout(animation animation: Animation? = nil) {
-		guard isViewLoaded() else {
+	public final func setViewNeedsLayout(animation: Animation? = nil) {
+		guard isViewLoaded else {
 			return
 		}
 
@@ -107,12 +107,12 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+	open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
 		return ViewController.defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle)
 	}
 
 
-	@available(*, unavailable, message="override viewDidLayoutSubviewsWithAnimation(_:) instead")
+	@available(*, unavailable, message: "override viewDidLayoutSubviewsWithAnimation(_:) instead")
 	public final override func viewDidLayoutSubviews() {
 		let animation = decorationInsetsAnimation?.animation ?? viewLayoutAnimation
 		viewLayoutAnimation = nil
@@ -123,7 +123,7 @@ public /* non-final */ class ViewController: UIViewController {
 	}
 
 
-	public func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+	open func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
 		// override in subclasses
 	}
 }

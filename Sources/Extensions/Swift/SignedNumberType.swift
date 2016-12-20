@@ -1,4 +1,4 @@
-public extension SignedNumberType {
+public extension SignedNumber {
 
 	var sign: Self {
 		if self == 0 {

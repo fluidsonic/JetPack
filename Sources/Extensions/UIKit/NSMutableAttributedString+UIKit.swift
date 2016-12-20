@@ -4,11 +4,11 @@ import UIKit
 public extension NSMutableAttributedString {
 
 	@nonobjc
-	private func _appendString(string: String,
+	fileprivate func _appendString(_ string: String,
 	                           maintainingPrecedingAttributes: Bool = false,
 	                           font: UIFont?,
 	                           foregroundColor: UIColor?,
-	                           link: NSURL?,
+	                           link: URL?,
 	                           paragraphStyle: NSParagraphStyle?)
 	{
 		var attributes = [String : AnyObject]()
@@ -19,7 +19,7 @@ public extension NSMutableAttributedString {
 			attributes[NSForegroundColorAttributeName] = foregroundColor
 		}
 		if let link = link {
-			attributes[NSLinkAttributeName] = link
+			attributes[NSLinkAttributeName] = link as AnyObject?
 		}
 		if let paragraphStyle = paragraphStyle {
 			attributes[NSParagraphStyleAttributeName] = paragraphStyle
@@ -30,11 +30,11 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(string: String,
+	public func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         font: UIFont?,
 	                         foregroundColor: UIColor? = nil,
-	                         link: NSURL? = nil,
+	                         link: URL? = nil,
 	                         paragraphStyle: NSParagraphStyle? = nil)
 	{
 		_appendString(string, maintainingPrecedingAttributes: maintainingPrecedingAttributes, font: font, foregroundColor: foregroundColor, link: link, paragraphStyle: paragraphStyle)
@@ -42,10 +42,10 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(string: String,
+	public func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         foregroundColor: UIColor?,
-	                         link: NSURL? = nil,
+	                         link: URL? = nil,
 	                         paragraphStyle: NSParagraphStyle? = nil)
 	{
 		_appendString(string, maintainingPrecedingAttributes: maintainingPrecedingAttributes, font: nil, foregroundColor: foregroundColor, link: link, paragraphStyle: paragraphStyle)
@@ -53,9 +53,9 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(string: String,
+	public func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
-	                         link: NSURL?,
+	                         link: URL?,
 	                         paragraphStyle: NSParagraphStyle? = nil)
 	{
 		_appendString(string, maintainingPrecedingAttributes: maintainingPrecedingAttributes, font: nil, foregroundColor: nil, link: link, paragraphStyle: paragraphStyle)
@@ -63,7 +63,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(string: String,
+	public func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         paragraphStyle: NSParagraphStyle?)
 	{

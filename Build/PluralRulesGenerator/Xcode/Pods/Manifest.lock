@@ -1,7 +1,7 @@
 PODS:
-  - AEXML (3.0.0)
+  - AEXML (4.0.1)
   - PluralRulesGenerator (0.0.1):
-    - AEXML (~> 3.0.0)
+    - AEXML (~> 4.0.1)
 
 DEPENDENCIES:
   - PluralRulesGenerator (from `..`)
@@ -11,9 +11,9 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  AEXML: 716fb0a8decba4a3517324a71fee3685b30233d2
-  PluralRulesGenerator: 22373e74d8de6b701cb0675f48318e883e42afdb
+  AEXML: 905e50474c0a261d335aa8be4ee32d22d69b6fd5
+  PluralRulesGenerator: 3dfd633bf220401f1cffdae631886a7580676baf
 
 PODFILE CHECKSUM: 4eb9a653e3e1cb47c00b06638bcc62654cff1aa0
 
-COCOAPODS: 1.1.0.beta.1
+COCOAPODS: 1.2.0.beta.1

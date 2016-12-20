@@ -3,8 +3,8 @@ import Darwin
 
 extension UInt: RandomizableIntegerType {
 
-	@warn_unused_result
-	public static func random(start start: UInt, end: UInt) -> UInt {
+	
+	public static func random(start: UInt, end: UInt) -> UInt {
 		#if arch(arm) || arch(i386)
 			switch __WORDSIZE {
 			case 32: return UInt(UInt32.random(start: UInt32(start), end: UInt32(end)))

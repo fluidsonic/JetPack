@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_Window)
-public /* non-final */ class Window: _Window {
+open /* non-final */ class Window: _Window {
 
 	public override convenience init() {
 		self.init(workaroundForSubclassing: ())
@@ -13,12 +13,12 @@ public /* non-final */ class Window: _Window {
 		super.init()
 
 		if bounds.isEmpty {
-			frame = UIScreen.mainScreen().bounds
+			frame = UIScreen.main.bounds
 		}
 	}
 
 
-	@available(*, unavailable, message="You must use init() since init(frame:) does no longer set-up the window properly in multitasking environments. In any case you can still set the frame manually after creating the window.")
+	@available(*, unavailable, message: "You must use init() since init(frame:) does no longer set-up the window properly in multitasking environments. In any case you can still set the frame manually after creating the window.")
 	public dynamic override init(frame: CGRect) {
 		// not supposed to be called
 		super.init(frame: frame)
@@ -30,7 +30,7 @@ public /* non-final */ class Window: _Window {
 	}
 
 
-	public override class func initialize() {
+	open override class func initialize() {
 		guard self == Window.self else {
 			return
 		}
@@ -39,7 +39,7 @@ public /* non-final */ class Window: _Window {
 	}
 
 
-	public override var rootViewController: UIViewController? {
+	open override var rootViewController: UIViewController? {
 		get { return super.rootViewController }
 		set {
 			guard newValue !== rootViewController else {
@@ -62,15 +62,15 @@ extension Window: _NonSystemWindow {}
 
 // fix to make init() the designated initializers of Window
 @objc(_JetPack_Window)
-public /* non-final */ class _Window: UIWindow {
+open /* non-final */ class _Window: UIWindow {
 
-	private dynamic init() {
+	fileprivate dynamic init() {
 		// not supposed to be called
-		super.init(frame: UIScreen.mainScreen().bounds)
+		super.init(frame: UIScreen.main.bounds)
 	}
 
 
-	private dynamic override init(frame: CGRect) {
+	fileprivate dynamic override init(frame: CGRect) {
 		// not supposed to be called
 		super.init(frame: frame)
 	}
@@ -81,7 +81,7 @@ public /* non-final */ class _Window: UIWindow {
 	}
 
 
-	public override class func initialize() {
+	open override class func initialize() {
 		guard self == _Window.self else {
 			return
 		}

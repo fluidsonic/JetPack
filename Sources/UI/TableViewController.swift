@@ -2,9 +2,9 @@ import UIKit
 
 
 @objc(JetPack_TableViewController)
-public /* non-final */ class TableViewController: ViewController {
+open /* non-final */ class TableViewController: ViewController {
 
-	private let style: UITableViewStyle
+	fileprivate let style: UITableViewStyle
 
 
 	public init(style: UITableViewStyle) {
@@ -19,13 +19,13 @@ public /* non-final */ class TableViewController: ViewController {
 	}
 
 
-	public var automaticallyAdjustsTableViewInsets = true
+	open var automaticallyAdjustsTableViewInsets = true
 
 
-	public var clearsSelectionOnViewWillAppear = true
+	open var clearsSelectionOnViewWillAppear = true
 
 
-	private func createTableView() -> UITableView {
+	fileprivate func createTableView() -> UITableView {
 		let child = UITableView(frame: .zero, style: style)
 		child.estimatedRowHeight = 44
 		child.dataSource = self
@@ -35,19 +35,19 @@ public /* non-final */ class TableViewController: ViewController {
 	}
 
 
-	public override func setEditing(editing: Bool, animated: Bool) {
+	open override func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
-		if isViewLoaded() {
+		if isViewLoaded {
 			tableView.setEditing(editing, animated: animated)
 		}
 	}
 
 
-	public private(set) lazy var tableView: UITableView = self.createTableView()
+	open fileprivate(set) lazy var tableView: UITableView = self.createTableView()
 
 
-	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+	open override func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		animation.runAlways {
@@ -56,24 +56,24 @@ public /* non-final */ class TableViewController: ViewController {
 				tableView.scrollIndicatorInsets = outerDecorationInsets
 			}
 
-			tableView.editing = editing
+			tableView.isEditing = isEditing
 			tableView.frame = CGRect(size: view.bounds.size)
 		}
 	}
 
 
-	public override func viewWillAppear(animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		if clearsSelectionOnViewWillAppear, let indexPaths = tableView.indexPathsForSelectedRows {
 			for indexPath in indexPaths {
-				tableView.deselectRowAtIndexPath(indexPath, animated: animated)
+				tableView.deselectRow(at: indexPath, animated: animated)
 			}
 		}
 	}
 
 
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.addSubview(tableView)
@@ -83,12 +83,12 @@ public /* non-final */ class TableViewController: ViewController {
 
 extension TableViewController: UITableViewDataSource {
 
-	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+	open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		fatalError("override tableView(_:cellForRowAtIndexPath:) without calling super")
 	}
 
 
-	public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 0
 	}
 }

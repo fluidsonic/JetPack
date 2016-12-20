@@ -1,12 +1,10 @@
 import Foundation
 
 
-public extension NSCalendar {
+public extension Calendar {
 
-	@nonobjc
-	@warn_unused_result
-	public func dateByAdding(seconds seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, toDate date: NSDate) -> NSDate? {
-		let components = NSDateComponents()
+	public func dateByAdding(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, toDate date: Date) -> Date? {
+		var components = DateComponents()
 
 		if let years = years {
 			components.year = years
@@ -27,22 +25,19 @@ public extension NSCalendar {
 			components.second = seconds
 		}
 
-		return dateByAddingComponents(components, toDate: date, options: [])
+		return self.date(byAdding: components, to: date)
 	}
 
 
-	@nonobjc
-	@warn_unused_result
-	public func firstDateOfWeek(date: NSDate) -> NSDate? {
-		var firstDateOfWeek: NSDate?
-		rangeOfUnit(.WeekOfYear, startDate: &firstDateOfWeek, interval: nil, forDate: date)
-		return firstDateOfWeek
-	}
-
-
-	@nonobjc
-	@warn_unused_result
-	public func dateBySubtracting(seconds seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, fromDate date: NSDate) -> NSDate? {
+	public func dateBySubtracting(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, fromDate date: Date) -> Date? {
 		return dateByAdding(seconds: seconds.map(-), minutes: minutes.map(-), hours: hours.map(-), days: days.map(-), months: months.map(-), years: years.map(-), toDate: date)
+	}
+
+
+	public func firstDateOfWeek(_ date: Date) -> Date? {
+		let calendar = self as NSCalendar
+		var firstDateOfWeek: NSDate?
+		_ = calendar.range(of: .weekOfYear, start: &firstDateOfWeek, interval: nil, for: date)
+		return firstDateOfWeek as Date?
 	}
 }

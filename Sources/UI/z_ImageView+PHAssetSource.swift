@@ -40,24 +40,24 @@ public func == (a: ImageView.PHAssetSource, b: ImageView.PHAssetSource) -> Bool 
 
 private final class PHAssetSourceSession: ImageView.Session {
 
-	private var lastRequestedContentMode = PHImageContentMode.Default
-	private var lastRequestedSize = CGSize()
-	private var listener: ImageView.SessionListener?
-	private var requestId: PHImageRequestID?
-	private let source: ImageView.PHAssetSource
+	fileprivate var lastRequestedContentMode: PHImageContentMode?
+	fileprivate var lastRequestedSize = CGSize()
+	fileprivate var listener: ImageView.SessionListener?
+	fileprivate var requestId: PHImageRequestID?
+	fileprivate let source: ImageView.PHAssetSource
 
 
-	private init(source: ImageView.PHAssetSource) {
+	fileprivate init(source: ImageView.PHAssetSource) {
 		self.source = source
 	}
 
 
-	private func imageViewDidChangeConfiguration(imageView: ImageView) {
+	fileprivate func imageViewDidChangeConfiguration(_ imageView: ImageView) {
 		startOrRestartRequestForImageView(imageView)
 	}
 
 
-	private func startOrRestartRequestForImageView(imageView: ImageView) {
+	fileprivate func startOrRestartRequestForImageView(_ imageView: ImageView) {
 		let optimalSize = imageView.optimalImageSize
 		var size = self.lastRequestedSize
 		size.width = max(size.width, optimalSize.width)
@@ -65,11 +65,11 @@ private final class PHAssetSourceSession: ImageView.Session {
 
 		let contentMode: PHImageContentMode
 		switch imageView.scaling {
-		case .FitInside, .None:
-			contentMode = .AspectFit
+		case .fitInside, .none:
+			contentMode = .aspectFit
 
-		case .FitHorizontally, .FitHorizontallyIgnoringAspectRatio, .FitIgnoringAspectRatio, .FitOutside, .FitVertically, .FitVerticallyIgnoringAspectRatio:
-			contentMode = .AspectFill
+		case .fitHorizontally, .fitHorizontallyIgnoringAspectRatio, .fitIgnoringAspectRatio, .fitOutside, .fitVertically, .fitVerticallyIgnoringAspectRatio:
+			contentMode = .aspectFill
 		}
 
 		guard contentMode != lastRequestedContentMode || size != lastRequestedSize else {
@@ -81,21 +81,21 @@ private final class PHAssetSourceSession: ImageView.Session {
 	}
 
 
-	private func startRequestWithSize(size: CGSize, contentMode: PHImageContentMode) {
+	fileprivate func startRequestWithSize(_ size: CGSize, contentMode: PHImageContentMode) {
 		precondition(self.requestId == nil)
 
 		self.lastRequestedContentMode = contentMode
 		self.lastRequestedSize = size
 
-		let manager = PHImageManager.defaultManager()
+		let manager = PHImageManager.default()
 		let options = PHImageRequestOptions()
-		options.deliveryMode = .Opportunistic
-		options.networkAccessAllowed = true
-		options.resizeMode = .Exact
-		options.synchronous = false
-		options.version = .Current
+		options.deliveryMode = .opportunistic
+		options.isNetworkAccessAllowed = true
+		options.resizeMode = .exact
+		options.isSynchronous = false
+		options.version = .current
 
-		requestId = manager.requestImageForAsset(source.asset, targetSize: size, contentMode: contentMode, options: options) { image, _ in
+		requestId = manager.requestImage(for: source.asset, targetSize: size, contentMode: contentMode, options: options) { image, _ in
 			guard let image = image else {
 				return
 			}
@@ -110,7 +110,7 @@ private final class PHAssetSourceSession: ImageView.Session {
 	}
 
 
-	private func startRetrievingImageForImageView(imageView: ImageView, listener: ImageView.SessionListener) {
+	fileprivate func startRetrievingImageForImageView(_ imageView: ImageView, listener: ImageView.SessionListener) {
 		precondition(self.listener == nil)
 
 		self.listener = listener
@@ -119,19 +119,19 @@ private final class PHAssetSourceSession: ImageView.Session {
 	}
 
 
-	private func stopRetrievingImage() {
+	fileprivate func stopRetrievingImage() {
 		listener = nil
 
 		stopRequest()
 	}
 
 
-	private func stopRequest() {
+	fileprivate func stopRequest() {
 		guard let requestId = requestId else {
 			return
 		}
 
-		PHImageManager.defaultManager().cancelImageRequest(requestId)
+		PHImageManager.default().cancelImageRequest(requestId)
 		self.requestId = nil
 	}
 }

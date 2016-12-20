@@ -1,9 +1,9 @@
 import Foundation
 
 
-public extension NSUserDefaults {
+public extension UserDefaults {
 
-	public func dateForKey(defaultName: String) -> NSDate? {
-		return objectForKey(defaultName) as? NSDate
+	public func dateForKey(_ defaultName: String) -> Date? {
+		return object(forKey: defaultName) as? Date
 	}
 }

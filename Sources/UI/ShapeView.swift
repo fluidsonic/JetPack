@@ -2,20 +2,20 @@ import UIKit
 
 
 @objc(JetPack_ShapeView)
-public /* non-final */ class ShapeView: View {
+open /* non-final */ class ShapeView: View {
 
-	private var originalFillColor: UIColor?
-	private var originalStrokeColor: UIColor?
+	fileprivate var originalFillColor: UIColor?
+	fileprivate var originalStrokeColor: UIColor?
 
 
 	public override init() {
 		super.init()
 
 		if let layerFillColor = shapeLayer.fillColor {
-			fillColor = UIColor(CGColor: layerFillColor)
+			fillColor = UIColor(cgColor: layerFillColor)
 		}
 		if let layerStrokeColor = shapeLayer.strokeColor {
-			strokeColor = UIColor(CGColor: layerStrokeColor)
+			strokeColor = UIColor(cgColor: layerStrokeColor)
 		}
 	}
 
@@ -24,18 +24,18 @@ public /* non-final */ class ShapeView: View {
 		super.init(coder: coder)
 
 		if let layerFillColor = shapeLayer.fillColor {
-			fillColor = UIColor(CGColor: layerFillColor)
+			fillColor = UIColor(cgColor: layerFillColor)
 		}
 		if let layerStrokeColor = shapeLayer.strokeColor {
-			strokeColor = UIColor(CGColor: layerStrokeColor)
+			strokeColor = UIColor(cgColor: layerStrokeColor)
 		}
 	}
 
 
-	public override func actionForLayer(layer: CALayer, forKey event: String) -> CAAction? {
+	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
 		switch event {
 		case "fillColor", "path", "strokeColor":
-			if let animation = super.actionForLayer(layer, forKey: "opacity") as? CABasicAnimation {
+			if let animation = super.action(for: layer, forKey: "opacity") as? CABasicAnimation {
 				animation.fromValue = shapeLayer.path
 				animation.keyPath = event
 
@@ -45,12 +45,12 @@ public /* non-final */ class ShapeView: View {
 			fallthrough
 
 		default:
-			return super.actionForLayer(layer, forKey: event)
+			return super.action(for: layer, forKey: event)
 		}
 	}
 
 
-	public var fillColor: UIColor? {
+	open var fillColor: UIColor? {
 		get { return originalFillColor }
 		set {
 			guard newValue != originalFillColor else {
@@ -59,24 +59,24 @@ public /* non-final */ class ShapeView: View {
 
 			originalFillColor = newValue
 
-			shapeLayer.fillColor = newValue?.tintedWithColor(tintColor).CGColor
+			shapeLayer.fillColor = newValue?.tintedWithColor(tintColor).cgColor
 		}
 	}
 
 
-	@warn_unused_result
-	public final override class func layerClass() -> AnyObject.Type {
+	
+	public final override class var layerClass : AnyObject.Type {
 		return CAShapeLayer.self
 	}
 
 
-	public var path: UIBezierPath? {
+	open var path: UIBezierPath? {
 		get {
 			guard let layerPath = shapeLayer.path else {
 				return nil
 			}
 
-			return UIBezierPath(CGPath: layerPath)
+			return UIBezierPath(cgPath: layerPath)
 		}
 		set {
 			let shapeLayer = self.shapeLayer
@@ -89,15 +89,15 @@ public /* non-final */ class ShapeView: View {
 			shapeLayer.fillRule = path.usesEvenOddFillRule ? kCAFillRuleEvenOdd : kCAFillRuleNonZero
 
 			switch path.lineCapStyle {
-			case .Butt:   shapeLayer.lineCap = kCALineCapButt
-			case .Round:  shapeLayer.lineCap = kCALineCapRound
-			case .Square: shapeLayer.lineCap = kCALineCapSquare
+			case .butt:   shapeLayer.lineCap = kCALineCapButt
+			case .round:  shapeLayer.lineCap = kCALineCapRound
+			case .square: shapeLayer.lineCap = kCALineCapSquare
 			}
 
 			var dashPatternCount = 0
 			path.getLineDash(nil, count: &dashPatternCount, phase: nil)
 
-			var dashPattern = [CGFloat](count: dashPatternCount, repeatedValue: 0)
+			var dashPattern = [CGFloat](repeating: 0, count: dashPatternCount)
 			var dashPhase = CGFloat(0)
 			path.getLineDash(&dashPattern, count: nil, phase: &dashPhase)
 
@@ -105,22 +105,22 @@ public /* non-final */ class ShapeView: View {
 			shapeLayer.lineDashPhase = dashPhase
 
 			switch path.lineJoinStyle {
-			case .Bevel: shapeLayer.lineJoin = kCALineJoinBevel
-			case .Miter: shapeLayer.lineJoin = kCALineJoinMiter
-			case .Round: shapeLayer.lineJoin = kCALineJoinRound
+			case .bevel: shapeLayer.lineJoin = kCALineJoinBevel
+			case .miter: shapeLayer.lineJoin = kCALineJoinMiter
+			case .round: shapeLayer.lineJoin = kCALineJoinRound
 			}
 
 			shapeLayer.lineWidth = path.lineWidth
 			shapeLayer.miterLimit = path.miterLimit
-			shapeLayer.path = path.CGPath
+			shapeLayer.path = path.cgPath
 		}
 	}
 
 
-	public private(set) final lazy var shapeLayer: CAShapeLayer = self.layer as! CAShapeLayer
+	public fileprivate(set) final lazy var shapeLayer: CAShapeLayer = self.layer as! CAShapeLayer
 
 
-	public var strokeEnd: CGFloat {
+	open var strokeEnd: CGFloat {
 		get {
 			return shapeLayer.strokeEnd
 		}
@@ -130,7 +130,7 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	public var strokeColor: UIColor? {
+	open var strokeColor: UIColor? {
 		get { return originalStrokeColor }
 		set {
 			guard newValue != originalStrokeColor else {
@@ -139,12 +139,12 @@ public /* non-final */ class ShapeView: View {
 
 			originalStrokeColor = newValue
 
-			shapeLayer.strokeColor = newValue?.tintedWithColor(tintColor).CGColor
+			shapeLayer.strokeColor = newValue?.tintedWithColor(tintColor).cgColor
 		}
 	}
 
 
-	public var strokeStart: CGFloat {
+	open var strokeStart: CGFloat {
 		get {
 			return shapeLayer.strokeStart
 		}
@@ -154,15 +154,15 @@ public /* non-final */ class ShapeView: View {
 	}
 
 
-	public override func tintColorDidChange() {
+	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		if let originalFillColor = originalFillColor where originalFillColor.tintAlpha != nil {
-			shapeLayer.fillColor = originalFillColor.tintedWithColor(tintColor).CGColor
+		if let originalFillColor = originalFillColor, originalFillColor.tintAlpha != nil {
+			shapeLayer.fillColor = originalFillColor.tintedWithColor(tintColor).cgColor
 		}
 
-		if let originalStrokeColor = originalStrokeColor where originalStrokeColor.tintAlpha != nil {
-			shapeLayer.strokeColor = originalStrokeColor.tintedWithColor(tintColor).CGColor
+		if let originalStrokeColor = originalStrokeColor, originalStrokeColor.tintAlpha != nil {
+			shapeLayer.strokeColor = originalStrokeColor.tintedWithColor(tintColor).cgColor
 		}
 	}
 }

@@ -2,9 +2,9 @@ import UIKit
 
 
 @objc(JetPack_TableViewCell)
-public /* non-final */ class TableViewCell: UITableViewCell {
+open /* non-final */ class TableViewCell: UITableViewCell {
 
-	private var defaultContentHeight = CGFloat(0)
+	fileprivate var defaultContentHeight = CGFloat(0)
 
 
 	public required override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -17,7 +17,7 @@ public /* non-final */ class TableViewCell: UITableViewCell {
 	}
 
 
-	internal override func contentHeightThatFitsWidth(width: CGFloat, defaultHeight: CGFloat) -> CGFloat {
+	internal override func contentHeightThatFitsWidth(_ width: CGFloat, defaultHeight: CGFloat) -> CGFloat {
 		defaultContentHeight = defaultHeight
 		let contentHeight = contentHeightThatFitsWidth(width)
 		defaultContentHeight = 0
@@ -26,12 +26,12 @@ public /* non-final */ class TableViewCell: UITableViewCell {
 	}
 
 
-	public func contentHeightThatFitsWidth(width: CGFloat) -> CGFloat {
+	open func contentHeightThatFitsWidth(_ width: CGFloat) -> CGFloat {
 		return defaultContentHeight
 	}
 
 
-	public var minimumHeight = CGFloat(44) {
+	open var minimumHeight = CGFloat(44) {
 		didSet {
 			guard minimumHeight != oldValue else {
 				return
@@ -43,13 +43,13 @@ public /* non-final */ class TableViewCell: UITableViewCell {
 
 
 	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentHeightThatFitsWidth(_:) instead.
-	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
+	public final override func sizeThatFits(_ maximumSize: CGSize) -> CGSize {
 		return self.sizeThatFitsSize(maximumSize)
 	}
 
 
 	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentHeightThatFitsWidth(_:) instead.
-	public final override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	public final override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		var sizeThatFits = super.improvedSizeThatFitsSize(maximumSize)
 		sizeThatFits.height = max(sizeThatFits.height, minimumHeight)
 		return sizeThatFits

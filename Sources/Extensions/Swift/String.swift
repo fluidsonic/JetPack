@@ -12,8 +12,8 @@ public extension String {
 	}
 
 
-	@warn_unused_result
-	public func trimmedToLength(length: Int, truncationString: String = "") -> String {
+	
+	public func trimmedToLength(_ length: Int, truncationString: String = "") -> String {
 		if length <= 0 {
 			return ""
 		}
@@ -31,11 +31,11 @@ public extension String {
 			return truncationString
 		}
 
-		return self[startIndex ..< startIndex.advancedBy(usableLength)] + truncationString
+		return self[startIndex ..< characters.index(startIndex, offsetBy: usableLength)] + truncationString
 	}
 
 
 	public var whitespaceTrimmed: String {
-		return stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+		return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 	}
 }

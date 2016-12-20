@@ -1,7 +1,7 @@
 import ObjectiveC
 
 
-private func class_getInstanceMethodIgnoringSupertypes(clazz: AnyClass, _ name: Selector) -> Method {
+private func class_getInstanceMethodIgnoringSupertypes(_ clazz: AnyClass, _ name: Selector) -> Method? {
 	let method = class_getInstanceMethod(clazz, name)
 
 	if let superclass = class_getSuperclass(clazz) {
@@ -11,11 +11,11 @@ private func class_getInstanceMethodIgnoringSupertypes(clazz: AnyClass, _ name: 
 		}
 	}
 
-	return method
+	return method!
 }
 
 
-internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toType: AnyClass) {
+internal func copyMethodWithSelector(_ selector: Selector, fromType: AnyClass, toType: AnyClass) {
 	precondition(fromType != toType)
 
 	let fromMethod = class_getInstanceMethodIgnoringSupertypes(fromType, selector)
@@ -45,7 +45,7 @@ internal func copyMethodWithSelector(selector: Selector, fromType: AnyClass, toT
 }
 
 
-internal func copyMethodInType(type: AnyClass, includingSupertypes: Bool = false, fromSelector: Selector, toSelector: Selector) {
+internal func copyMethodInType(_ type: AnyClass, includingSupertypes: Bool = false, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = (includingSupertypes ? class_getInstanceMethod : class_getInstanceMethodIgnoringSupertypes)(type, fromSelector)
@@ -75,19 +75,19 @@ internal func copyMethodInType(type: AnyClass, includingSupertypes: Bool = false
 }
 
 
-public func identity<T>(element: T) -> T {
+public func identity<T>(_ element: T) -> T {
 	return element
 }
 
 
-public func lazyPlaceholder<T>(file: StaticString = #file, line: UInt = #line) -> T {
+public func lazyPlaceholder<T>(_ file: StaticString = #file, line: UInt = #line) -> T {
 	fatalError("Lazy variable accessed before being initialized.", file: file, line: line)
 }
 
 
-@warn_unused_result
-public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Result) -> Parameters -> Result {
-	func cast<From,To>(instance: From) -> To {
+
+public func makeEscapable<Parameters,Result>(_ closure: (Parameters) -> Result) -> (Parameters) -> Result {
+	func cast<From,To>(_ instance: From) -> To {
 		return (instance as Any) as! To
 	}
 
@@ -95,25 +95,25 @@ public func makeEscapable<Parameters,Result>(@noescape closure: Parameters -> Re
 }
 
 
-@warn_unused_result
-public func not<Parameter>(closure: Parameter -> Bool) -> Parameter -> Bool {
+
+public func not<Parameter>(_ closure: @escaping (Parameter) -> Bool) -> (Parameter) -> Bool {
 	return { !closure($0) }
 }
 
 
-@warn_unused_result
-public func not<Parameter>(closure: Parameter throws -> Bool) -> Parameter throws -> Bool {
+
+public func not<Parameter>(_ closure: @escaping (Parameter) throws -> Bool) -> (Parameter) throws -> Bool {
 	return { !(try closure($0)) }
 }
 
 
-public func obfuscatedSelector(parts: String...) -> Selector {
-	return Selector(parts.joinWithSeparator(""))
+public func obfuscatedSelector(_ parts: String...) -> Selector {
+	return Selector(parts.joined(separator: ""))
 }
 
 
-@warn_unused_result
-public func optionalMax<Element: Comparable>(elements: Element? ...) -> Element? {
+
+public func optionalMax<Element: Comparable>(_ elements: Element? ...) -> Element? {
 	var maximumElement: Element?
 
 	for element in elements {
@@ -133,8 +133,8 @@ public func optionalMax<Element: Comparable>(elements: Element? ...) -> Element?
 }
 
 
-@warn_unused_result
-public func optionalMin<Element: Comparable>(elements: Element? ...) -> Element? {
+
+public func optionalMin<Element: Comparable>(_ elements: Element? ...) -> Element? {
 	var minimumElement: Element?
 
 	for element in elements {
@@ -154,13 +154,13 @@ public func optionalMin<Element: Comparable>(elements: Element? ...) -> Element?
 }
 
 
-@warn_unused_result
-public func pointerOf(object: AnyObject) -> COpaquePointer {
+
+public func pointerOf(_ object: AnyObject) -> UnsafeMutableRawPointer {
 	return Unmanaged<AnyObject>.passUnretained(object).toOpaque()
 }
 
 
-public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector, inType toType: AnyClass? = nil) {
+public func redirectMethodInType(_ type: AnyClass, fromSelector: Selector, toSelector: Selector, inType toType: AnyClass? = nil) {
 	let actualToType: AnyClass = toType ?? type
 
 	precondition(fromSelector != toSelector || type != actualToType)
@@ -179,7 +179,7 @@ public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelec
 
 	let fromMethodTypePointer = method_getTypeEncoding(fromMethod)
 	let toMethodTypePointer = method_getTypeEncoding(toMethod)
-	guard fromMethodTypePointer != nil && toMethodTypePointer != nil, let fromMethodType = String.fromCString(fromMethodTypePointer), toMethodType = String.fromCString(toMethodTypePointer) else {
+	guard fromMethodTypePointer != nil && toMethodTypePointer != nil, let fromMethodType = String(validatingUTF8: fromMethodTypePointer!), let toMethodType = String(validatingUTF8: toMethodTypePointer!) else {
 		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since their type encodings could not be accessed.")
 		return
 	}
@@ -192,7 +192,7 @@ public func redirectMethodInType(type: AnyClass, fromSelector: Selector, toSelec
 }
 
 
-public func swizzleMethodInType(type: AnyClass, fromSelector: Selector, toSelector: Selector) {
+public func swizzleMethodInType(_ type: AnyClass, fromSelector: Selector, toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector)
@@ -209,7 +209,7 @@ public func swizzleMethodInType(type: AnyClass, fromSelector: Selector, toSelect
 
 	let fromTypePointer = method_getTypeEncoding(fromMethod)
 	let toTypePointer = method_getTypeEncoding(toMethod)
-	guard fromTypePointer != nil && toTypePointer != nil, let fromType = String.fromCString(fromTypePointer), toType = String.fromCString(toTypePointer) else {
+	guard fromTypePointer != nil && toTypePointer != nil, let fromType = String(validatingUTF8: fromTypePointer!), let toType = String(validatingUTF8: toTypePointer!) else {
 		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since their type encodings could not be accessed.")
 		return
 	}
@@ -222,7 +222,7 @@ public func swizzleMethodInType(type: AnyClass, fromSelector: Selector, toSelect
 }
 
 
-public func synchronized<ReturnType>(object: AnyObject, @noescape closure: Void throws -> ReturnType) rethrows -> ReturnType {
+public func synchronized<ReturnType>(_ object: AnyObject, closure: (Void) throws -> ReturnType) rethrows -> ReturnType {
 	objc_sync_enter(object)
 	defer {
 		objc_sync_exit(object)

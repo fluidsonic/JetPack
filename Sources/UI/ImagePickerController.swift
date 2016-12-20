@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ImagePickerController)
-public /* non-final */ class ImagePickerController: _ImagePickerController {
+open /* non-final */ class ImagePickerController: _ImagePickerController {
 
 	public override init() {
 		super.init()
@@ -14,15 +14,15 @@ public /* non-final */ class ImagePickerController: _ImagePickerController {
 	}
 
 
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		// fixes a bug where the screen is transparent unless Photos permission was given
-		view.backgroundColor = .whiteColor()
+		view.backgroundColor = .white
 	}
 
 
-	public override class func initialize() {
+	open override class func initialize() {
 		guard self == ImagePickerController.self else {
 			return
 		}
@@ -35,15 +35,15 @@ public /* non-final */ class ImagePickerController: _ImagePickerController {
 
 // fix to make init() the designated initializers of ImagePickerController
 @objc(_JetPack_ImagePickerController)
-public /* non-final */ class _ImagePickerController: UIImagePickerController {
+open /* non-final */ class _ImagePickerController: UIImagePickerController {
 
-	private dynamic init() {
+	fileprivate dynamic init() {
 		// not supposed to be called
 		super.init(nibName: nil, bundle: nil)
 	}
 
 
-	private dynamic override init(nibName: String?, bundle: NSBundle?) {
+	fileprivate dynamic override init(nibName: String?, bundle: Bundle?) {
 		// not supposed to be called
 		super.init(nibName: nibName, bundle: bundle)
 	}
@@ -54,7 +54,7 @@ public /* non-final */ class _ImagePickerController: UIImagePickerController {
 	}
 
 
-	public override class func initialize() {
+	open override class func initialize() {
 		guard self == _ImagePickerController.self else {
 			return
 		}

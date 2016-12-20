@@ -4,13 +4,13 @@ import Foundation
 public extension NSOrderedSet {
 
 	@nonobjc
-	public convenience init<S: SequenceType where S.Generator.Element: AnyObject>(elements: S) {
+	public convenience init<S: Sequence>(elements: S) {
 		self.init(array: Array(elements))
 	}
 
 
 	@nonobjc
-	public var indices: Range<Int> {
+	public var indices: CountableRange<Int> {
 		return 0 ..< count
 	}
 
@@ -22,7 +22,7 @@ public extension NSOrderedSet {
 
 
 	@nonobjc
-	public subscript(safe index: Int) -> Generator.Element? {
+	public subscript(safe index: Int) -> Iterator.Element? {
 		return indices.contains(index) ? self[index] : nil
 	}
 }

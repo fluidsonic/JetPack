@@ -1,8 +1,8 @@
 public struct Result<ValueType> {
 
-	private typealias ResultType = _Result<ValueType,Failure>
+	fileprivate typealias ResultType = _Result<ValueType,Failure>
 
-	private let result: ResultType
+	fileprivate let result: ResultType
 
 
 	private init(result: ResultType) {
@@ -19,7 +19,7 @@ public struct Result<ValueType> {
 
 
 	@warn_unused_result
-	public static func Failure(error: ErrorType) -> Result<ValueType> {
+	public static func Failure(_ error: Error) -> Result<ValueType> {
 		return .init(result: .Failure(error.asFailure()))
 	}
 
@@ -50,7 +50,7 @@ public struct Result<ValueType> {
 
 
 	@warn_unused_result
-	public static func Success(value: ValueType) -> Result<ValueType> {
+	public static func Success(_ value: ValueType) -> Result<ValueType> {
 		return .init(result: .Success(value))
 	}
 
@@ -79,8 +79,8 @@ extension Result: CustomStringConvertible {
 
 	public var description: String {
 		switch result {
-		case let .Failure(failure): return String(failure)
-		case let .Success(value):   return String(value)
+		case let .Failure(failure): return String(describing: failure)
+		case let .Success(value):   return String(describing: value)
 		}
 	}
 }

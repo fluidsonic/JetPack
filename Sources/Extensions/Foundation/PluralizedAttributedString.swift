@@ -3,13 +3,13 @@ import Foundation
 
 public protocol PluralizedAttributedString {
 
-	func forPluralCategory(pluralCategory: NSLocale.PluralCategory) -> NSAttributedString
+	func forPluralCategory(_ pluralCategory: Locale.PluralCategory) -> NSAttributedString
 }
 
 
 public extension PluralizedAttributedString {
 
-	public func forNumber(number: NSNumber, formatter: NSNumberFormatter = NSLocale.defaultDecimalFormatterForResolvingPluralCategory, locale: NSLocale = NSLocale.currentLocale()) -> NSAttributedString {
+	public func forNumber(_ number: NSNumber, formatter: NumberFormatter = Locale.defaultDecimalFormatterForResolvingPluralCategory, locale: Locale = Locale.current) -> NSAttributedString {
 		return forPluralCategory(locale.pluralCategoryForNumber(number, formatter: formatter))
 	}
 }

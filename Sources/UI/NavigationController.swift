@@ -1,7 +1,7 @@
 import UIKit
 
 
-public /* non-final */ class NavigationController: UINavigationController {
+open /* non-final */ class NavigationController: UINavigationController {
 
 	@nonobjc
 	public init(navigationBarClass: NavigationBar.Type?, toolbarClass: UIToolbar.Type?) {
@@ -26,23 +26,23 @@ public /* non-final */ class NavigationController: UINavigationController {
 	}
 
 
-	public override var childViewControllerForNavigationBarVisibility: UIViewController? {
+	open override var childViewControllerForNavigationBarVisibility: UIViewController? {
 		return topViewController?.childViewControllerForNavigationBarVisibility ?? topViewController
 	}
 
 
-	public override func dismissViewController(animated animated: Bool = true, completion: Closure? = nil) {
-		super.dismissViewControllerAnimated(animated, completion: completion)
+	open override func dismissViewController(animated: Bool = true, completion: Closure? = nil) {
+		super.dismiss(animated: animated, completion: completion)
 	}
 
 
-	@available(*, unavailable, renamed="dismissViewController")
-	public final override func dismissViewControllerAnimated(flag: Bool, completion: Closure?) {
+	@available(*, unavailable, renamed: "dismissViewController")
+	public final override func dismiss(animated flag: Bool, completion: Closure?) {
 		presentedViewController?.dismissViewController(completion: completion)
 	}
 
 
-	public override class func initialize() {
+	open override class func initialize() {
 		guard self == NavigationController.self else {
 			return
 		}
@@ -54,35 +54,35 @@ public /* non-final */ class NavigationController: UINavigationController {
 
 
 	@nonobjc
-	public override var navigationBar: NavigationBar {
+	open override var navigationBar: NavigationBar {
 		return super.navigationBar as! NavigationBar
 	}
 
 
 	@objc
-	private static func overridesPreferredInterfaceOrientationForPresentation() -> Bool {
+	fileprivate static func overridesPreferredInterfaceOrientationForPresentation() -> Bool {
 		// UIKit will behave differently if we override preferredInterfaceOrientationForPresentation.
 		// Let's pretend we don't since we're just re-implementing the default behavior.
-		return overridesSelector(#selector(preferredInterfaceOrientationForPresentation), ofBaseClass: NavigationController.self)
+		return overridesSelector(#selector(getter: preferredInterfaceOrientationForPresentation), ofBaseClass: NavigationController.self)
 	}
 
 
-	public override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
-		return topViewController?.preferredInterfaceOrientationForPresentation() ?? ViewController.defaultPreferredInterfaceOrientationForPresentation()
+	open override var preferredInterfaceOrientationForPresentation : UIInterfaceOrientation {
+		return topViewController?.preferredInterfaceOrientationForPresentation ?? ViewController.defaultPreferredInterfaceOrientationForPresentation()
 	}
 
 
-	public override func shouldAutorotate() -> Bool {
-		return topViewController?.shouldAutorotate() ?? false
+	open override var shouldAutorotate : Bool {
+		return topViewController?.shouldAutorotate ?? false
 	}
 
 
-	public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-		return topViewController?.supportedInterfaceOrientations() ?? ViewController.defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle)
+	open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+		return topViewController?.supportedInterfaceOrientations ?? ViewController.defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle)
 	}
 
 
-	internal final func updateNavigationBarStyleForTopViewController(animation animation: Animation? = Animation()) {
+	internal final func updateNavigationBarStyleForTopViewController(animation: Animation? = Animation()) {
 		guard let topViewController = topViewController else {
 			return
 		}
@@ -93,7 +93,7 @@ public /* non-final */ class NavigationController: UINavigationController {
 		let preferredVisibility = childForPreferredStyle.preferredNavigationBarVisibility
 
 		navigationBar.beginIgnoringItemChanges()
-		setNavigationBarHidden(preferredVisibility == .Hidden, animated: animation != nil && appearState == .DidAppear)
+		setNavigationBarHidden(preferredVisibility == .hidden, animated: animation != nil && appearState == .didAppear)
 		navigationBar.endIgnoringItemChanges()
 
 		if navigationBar.topItem == topViewController.navigationItem {

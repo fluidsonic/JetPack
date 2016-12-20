@@ -1,21 +1,10 @@
 import Foundation
 
 
-public extension NSDate {
+public extension Date {
 
 	@nonobjc
 	public var iso8859: String {
-		return NSDateFormatter.iso8859Formatter.stringFromDate(self)
+		return DateFormatter.iso8859Formatter.string(from: self)
 	}
-}
-
-
-extension NSDate: Comparable {}
-
-public func < (a: NSDate, b: NSDate) -> Bool {
-	return a.compare(b) == NSComparisonResult.OrderedAscending
-}
-
-public func == (a: NSDate, b: NSDate) -> Bool {
-	return a.isEqualToDate(b)
 }

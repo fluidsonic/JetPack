@@ -37,25 +37,25 @@ public func == (a: ImageView.AVAssetSource, b: ImageView.AVAssetSource) -> Bool 
 
 private final class AVAssetSourceSession: ImageView.Session {
 
-	private let generator: AVAssetImageGenerator
-	private var lastRequestedSize = CGSize()
-	private var listener: ImageView.SessionListener?
-	private var loading = false
+	fileprivate let generator: AVAssetImageGenerator
+	fileprivate var lastRequestedSize = CGSize()
+	fileprivate var listener: ImageView.SessionListener?
+	fileprivate var loading = false
 
 
-	private init(asset: AVAsset, videoComposition: AVVideoComposition?) {
+	fileprivate init(asset: AVAsset, videoComposition: AVVideoComposition?) {
 		generator = AVAssetImageGenerator(asset: asset)
 		generator.appliesPreferredTrackTransform = true
 		generator.videoComposition = videoComposition
 	}
 
 
-	private func imageViewDidChangeConfiguration(imageView: ImageView) {
+	fileprivate func imageViewDidChangeConfiguration(_ imageView: ImageView) {
 		startOrRestartRequestForImageView(imageView)
 	}
 
 
-	private func startOrRestartRequestForImageView(imageView: ImageView) {
+	fileprivate func startOrRestartRequestForImageView(_ imageView: ImageView) {
 		let optimalSize = imageView.optimalImageSize
 		var size = self.lastRequestedSize
 		size.width = max(size.width, optimalSize.width, size.height, optimalSize.height)
@@ -70,7 +70,7 @@ private final class AVAssetSourceSession: ImageView.Session {
 	}
 
 
-	private func startRequestWithSize(size: CGSize) {
+	fileprivate func startRequestWithSize(_ size: CGSize) {
 		precondition(!loading)
 
 		self.lastRequestedSize = size
@@ -78,14 +78,14 @@ private final class AVAssetSourceSession: ImageView.Session {
 		generator.maximumSize = size
 		loading = true
 
-		let times = [NSValue(CMTime: CMTimeMakeWithSeconds(0, 1000))]
+		let times = [NSValue(time: CMTimeMakeWithSeconds(0, 1000))]
 
-		generator.generateCGImagesAsynchronouslyForTimes(times) { _, cgImage, _, _, _ in
+		generator.generateCGImagesAsynchronously(forTimes: times) { _, cgImage, _, _, _ in
 			guard let cgImage = cgImage else {
 				return
 			}
 
-			let image = UIImage(CGImage: cgImage)
+			let image = UIImage(cgImage: cgImage)
 			let imageSize = image.size.scaleBy(image.scale)
 
 			self.lastRequestedSize.width = max(self.lastRequestedSize.width, imageSize.width)
@@ -98,7 +98,7 @@ private final class AVAssetSourceSession: ImageView.Session {
 	}
 
 
-	private func startRetrievingImageForImageView(imageView: ImageView, listener: ImageView.SessionListener) {
+	fileprivate func startRetrievingImageForImageView(_ imageView: ImageView, listener: ImageView.SessionListener) {
 		precondition(self.listener == nil)
 
 		self.listener = listener
@@ -107,14 +107,14 @@ private final class AVAssetSourceSession: ImageView.Session {
 	}
 
 
-	private func stopRetrievingImage() {
+	fileprivate func stopRetrievingImage() {
 		listener = nil
 
 		stopRequest()
 	}
 
 
-	private func stopRequest() {
+	fileprivate func stopRequest() {
 		guard loading else {
 			return
 		}

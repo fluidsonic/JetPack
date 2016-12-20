@@ -2,14 +2,14 @@ import QuartzCore
 
 
 @objc(JetPack_Layer)
-public /* non-final */ class Layer: CALayer {
+open /* non-final */ class Layer: CALayer {
 
 	public override init() {
 		super.init()
 	}
 
 
-	public required override init(layer: AnyObject) {
+	public required override init(layer: Any) {
 		super.init(layer: layer)
 	}
 
@@ -19,7 +19,7 @@ public /* non-final */ class Layer: CALayer {
 	}
 
 
-	public override var bounds: CGRect {
+	open override var bounds: CGRect {
 		get { return super.bounds }
 		set {
 			let oldValue = super.bounds

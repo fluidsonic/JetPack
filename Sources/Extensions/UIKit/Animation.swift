@@ -3,14 +3,14 @@ import UIKit
 
 public struct Animation {
 
-	public typealias Completion = (finished: Bool) -> Void
-	public typealias CompletionRegistration = Completion -> Void
+	public typealias Completion = (_ finished: Bool) -> Void
+	public typealias CompletionRegistration = (@escaping Completion) -> Void
 
 	public var allowsUserInteraction = false
 	public var autoreverses = false
 	public var beginsFromCurrentState = false
-	public var delay = NSTimeInterval(0)
-	public var duration: NSTimeInterval
+	public var delay = TimeInterval(0)
+	public var duration: TimeInterval
 	public var layoutsSubviews = false
 	public var overridesInheritedDuration = false
 	public var overridesInheritedOptions = false
@@ -19,19 +19,19 @@ public struct Animation {
 	public var timing: Timing
 
 
-	public init(duration: NSTimeInterval = 0.3, timing: Timing = .Spring(initialVelocity: 0, damping: 1)) {
+	public init(duration: TimeInterval = 0.3, timing: Timing = .spring(initialVelocity: 0, damping: 1)) {
 		self.duration = duration
 		self.timing = timing
 	}
 
 
-	public static func ignore(@noescape changes: Closure) {
+	public static func ignore(_ changes: Closure) {
 		UIView.performWithoutAnimation(makeEscapable(changes))
 	}
 
 
 	// @available(*, deprecated=1, message="Use optionalAnimation.runAlways { … }") // not enough replacements yet
-	public static func run(animation: Animation?, @noescape changes: Void -> Void) {
+	public static func run(_ animation: Animation?, changes: (Void) -> Void) {
 		if let animation = animation {
 			animation.run(changes)
 		}
@@ -41,13 +41,13 @@ public struct Animation {
 	}
 
 
-	public func run(@noescape changes: Void -> Void) {
+	public func run(_ changes: (Void) -> Void) {
 		runWithCompletion { _ in changes() }
 	}
 
 
 	// @available(*, deprecated=1, message="Use optionalAnimation.runAlwaysWithCompletion { … }") // not enough replacements yet
-	public static func runWithCompletion(animation: Animation?, @noescape changes: (complete: CompletionRegistration) -> Void) {
+	public static func runWithCompletion(_ animation: Animation?, changes: (_ complete: CompletionRegistration) -> Void) {
 		if let animation = animation {
 			animation.runWithCompletion(changes)
 		}
@@ -59,39 +59,39 @@ public struct Animation {
 			}
 
 			for completion in completions {
-				completion(finished: true)
+				completion(true)
 			}
 		}
 	}
 
 
-	public func runWithCompletion(@noescape changes: (complete: CompletionRegistration) -> Void) {
+	public func runWithCompletion(_ changes: (_ complete: CompletionRegistration) -> Void) {
 		var completions = [Completion]()
 
 		var options = UIViewAnimationOptions()
 		if allowsUserInteraction {
-			options.insert(.AllowUserInteraction)
+			options.insert(.allowUserInteraction)
 		}
 		if autoreverses {
-			options.insert(.Autoreverse)
+			options.insert(.autoreverse)
 		}
 		if beginsFromCurrentState {
-			options.insert(.BeginFromCurrentState)
+			options.insert(.beginFromCurrentState)
 		}
 		if layoutsSubviews {
-			options.insert(.LayoutSubviews)
+			options.insert(.layoutSubviews)
 		}
 		if overridesInheritedDuration {
-			options.insert(.OverrideInheritedDuration)
+			options.insert(.overrideInheritedDuration)
 		}
 		if overridesInheritedOptions {
-			options.insert(.OverrideInheritedOptions)
+			options.insert(.overrideInheritedOptions)
 		}
 		if overridesInheritedTiming {
-			options.insert(.OverrideInheritedCurve)
+			options.insert(.overrideInheritedCurve)
 		}
 		if repeats {
-			options.insert(.Repeat)
+			options.insert(.repeat)
 		}
 
 
@@ -104,29 +104,29 @@ public struct Animation {
 		}
 
 
-		func completion(finished: Bool) {
+		func completion(_ finished: Bool) {
 			for completion in completions {
-				completion(finished: finished)
+				completion(finished)
 			}
 		}
 
 		let curveOptions: UIViewAnimationOptions?
 
 		switch timing {
-		case .EaseIn:           curveOptions = .CurveEaseIn
-		case .EaseInEaseOut:    curveOptions = .CurveEaseInOut
-		case .EaseOut:          curveOptions = .CurveEaseOut
-		case .Linear:           curveOptions = .CurveLinear
-		case let .Curve(curve): curveOptions = UIViewAnimationOptions(curve: curve)
+		case .easeIn:           curveOptions = .curveEaseIn
+		case .easeInEaseOut:    curveOptions = UIViewAnimationOptions()
+		case .easeOut:          curveOptions = .curveEaseOut
+		case .linear:           curveOptions = .curveLinear
+		case let .curve(curve): curveOptions = UIViewAnimationOptions(curve: curve)
 
-		case let .Spring(initialVelocity, damping):
+		case let .spring(initialVelocity, damping):
 			curveOptions = nil
-			UIView.animateWithDuration(duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity, options: options, animations: performChanges, completion: completion)
+			UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity, options: options, animations: performChanges, completion: completion)
 		}
 
 		if let curveOptions = curveOptions {
 			options.insert(curveOptions)
-			UIView.animateWithDuration(duration, delay: delay, options: options, animations: performChanges, completion: completion)
+			UIView.animate(withDuration: duration, delay: delay, options: options, animations: performChanges, completion: completion)
 		}
 	}
 
@@ -138,12 +138,12 @@ public struct Animation {
 
 
 	public enum Timing {
-		case EaseIn
-		case EaseInEaseOut
-		case EaseOut
-		case Linear
-		case Curve(UIViewAnimationCurve)
-		case Spring(initialVelocity: CGFloat, damping: CGFloat)
+		case easeIn
+		case easeInEaseOut
+		case easeOut
+		case linear
+		case curve(UIViewAnimationCurve)
+		case spring(initialVelocity: CGFloat, damping: CGFloat)
 	}
 
 
@@ -173,7 +173,7 @@ extension Animation: CustomStringConvertible {
 		var description = "Animation(duration: "
 		description += String(duration)
 		description += ", timing: "
-		description += String(timing)
+		description += String(describing: timing)
 		if allowsUserInteraction {
 			description += ", allowsUserInteraction: true"
 		}
@@ -213,12 +213,12 @@ extension Animation.Timing: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .EaseIn:                               return "Timing.EaseIn"
-		case .EaseInEaseOut:                        return "Timing.EaseInEaseOut"
-		case .EaseOut:                              return "Timing.EaseOut"
-		case .Linear:                               return "Timing.Linear"
-		case let .Curve(curve):                     return "Timing.Curve(\(curve))"
-		case let .Spring(initialVelocity, damping): return "Timing.Spring(initialVelocity: \(initialVelocity), damping: \(damping))"
+		case .easeIn:                               return "Timing.EaseIn"
+		case .easeInEaseOut:                        return "Timing.EaseInEaseOut"
+		case .easeOut:                              return "Timing.EaseOut"
+		case .linear:                               return "Timing.Linear"
+		case let .curve(curve):                     return "Timing.Curve(\(curve))"
+		case let .spring(initialVelocity, damping): return "Timing.Spring(initialVelocity: \(initialVelocity), damping: \(damping))"
 		}
 	}
 }
@@ -227,7 +227,7 @@ extension Animation.Timing: CustomStringConvertible {
 
 extension _Optional where Wrapped == Animation {
 
-	public func runAlways(@noescape changes: Void -> Void) {
+	public func runAlways(_ changes: (Void) -> Void) {
 		if let animation = value {
 			animation.run(changes)
 		}
@@ -237,7 +237,7 @@ extension _Optional where Wrapped == Animation {
 	}
 
 
-	public func runAlwaysWithCompletion(@noescape changes: (complete: Animation.CompletionRegistration) -> Void) {
+	public func runAlwaysWithCompletion(_ changes: (_ complete: Animation.CompletionRegistration) -> Void) {
 		if let animation = value {
 			animation.runWithCompletion(changes)
 		}
@@ -249,7 +249,7 @@ extension _Optional where Wrapped == Animation {
 			}
 
 			for completion in completions {
-				completion(finished: true)
+				completion(true)
 			}
 		}
 	}

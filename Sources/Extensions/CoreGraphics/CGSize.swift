@@ -3,7 +3,7 @@ import CoreGraphics
 
 public extension CGSize {
 
-	public static let max = CGSize(square: .max)
+	public static let max = CGSize(square: .greatestFiniteMagnitude)
 
 
 	public init(square length: CGFloat) {
@@ -21,7 +21,7 @@ public extension CGSize {
 	}
 
 
-	@warn_unused_result
+	
 	public func coerced(atLeast minimum: CGSize) -> CGSize {
 		return CGSize(
 			width:  width.coerced(atLeast: minimum.width),
@@ -30,7 +30,7 @@ public extension CGSize {
 	}
 
 
-	@warn_unused_result
+	
 	public func coerced(atMost maximum: CGSize) -> CGSize {
 		return CGSize(
 			width:  width.coerced(atMost: maximum.width),
@@ -39,19 +39,19 @@ public extension CGSize {
 	}
 
 
-	@warn_unused_result
+	
 	public func coerced(atLeast minimum: CGSize, atMost maximum: CGSize) -> CGSize {
 		return coerced(atMost: maximum).coerced(atLeast: minimum)
 	}
 
 
-	public mutating func constrainInPlace(constrain: CGSize) {
+	public mutating func constrainInPlace(_ constrain: CGSize) {
 		self = coerced(atMost: constrain)
 	}
 
 
-	@available(*, deprecated=1, renamed="coerced(atMost:)")
-	public func constrainTo(constrain: CGSize) -> CGSize {
+	@available(*, deprecated: 1, renamed: "coerced(atMost:)")
+	public func constrainTo(_ constrain: CGSize) -> CGSize {
 		return coerced(atMost: constrain)
 	}
 
@@ -72,38 +72,38 @@ public extension CGSize {
 
 
 	public var rounded: CGSize {
-		return CGSize(width: width.rounded, height: height.rounded)
+		return CGSize(width: width.rounded(), height: height.rounded())
 	}
 
 
 	public var roundedDown: CGSize {
-		return CGSize(width: width.roundedDown, height: height.roundedDown)
+		return CGSize(width: width.rounded(.down), height: height.rounded(.down))
 	}
 
 
 	public var roundedUp: CGSize {
-		return CGSize(width: width.roundedUp, height: height.roundedUp)
+		return CGSize(width: width.rounded(.up), height: height.rounded(.up))
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleInPlace")
-	public func scaleBy(scale: CGFloat) -> CGSize {
+	
+	public func scaleBy(_ scale: CGFloat) -> CGSize {
 		return CGSize(width: width * scale, height: height * scale)
 	}
 
 
-	public mutating func scaleInPlace(scale: CGFloat) {
+	public mutating func scaleInPlace(_ scale: CGFloat) {
 		self = scaleBy(scale)
 	}
 
 
-	@warn_unused_result(mutable_variant="transformInPlace")
-	public func transform(transform: CGAffineTransform) -> CGSize {
-		return CGSizeApplyAffineTransform(self, transform)
+	
+	public func transform(_ transform: CGAffineTransform) -> CGSize {
+		return self.applying(transform)
 	}
 
 
-	public mutating func transformInPlace(transform: CGAffineTransform) {
+	public mutating func transformInPlace(_ transform: CGAffineTransform) {
 		self = self.transform(transform)
 	}
 }

@@ -1,16 +1,16 @@
-public extension HalfOpenInterval {
+public extension Range {
 
-	public func subtracting(intervalToSubtract: HalfOpenInterval<Bound>) -> [HalfOpenInterval<Bound>] {
-		guard intervalToSubtract.start < end && intervalToSubtract.end > start else {
+	public func subtracting(_ rangeToSubtract: Range<Bound>) -> [Range<Bound>] {
+		guard rangeToSubtract.lowerBound < upperBound && rangeToSubtract.upperBound > lowerBound else {
 			return [self]
 		}
 
-		var result = Array<HalfOpenInterval<Bound>>()
-		if intervalToSubtract.start > start {
-			result.append(start ..< intervalToSubtract.start)
+		var result = [Range<Bound>]()
+		if rangeToSubtract.lowerBound > lowerBound {
+			result.append(lowerBound ..< rangeToSubtract.lowerBound)
 		}
-		if intervalToSubtract.end < end {
-			result.append(intervalToSubtract.end ..< end)
+		if rangeToSubtract.upperBound < upperBound {
+			result.append(rangeToSubtract.upperBound ..< upperBound)
 		}
 
 		return result

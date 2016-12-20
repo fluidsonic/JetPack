@@ -2,31 +2,31 @@ import UIKit
 
 
 @objc(JetPack_Label)
-public /* non-final */ class Label: View {
+open /* non-final */ class Label: View {
 
-	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
-	private lazy var renderingLayer: LabelLayer = self.layer as! LabelLayer
+	fileprivate lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
+	fileprivate lazy var renderingLayer: LabelLayer = self.layer as! LabelLayer
 
-	private var attributedTextUsesTintColor = false
-	private var cachedSizeThatFits: SizeThatFitsResult?
-	private let layoutManager = LayoutManager()
-	private let linkTapRecognizer = UITapGestureRecognizer()
-	private let textContainer = NSTextContainer()
-	private let textStorage = NSTextStorage()
+	fileprivate var attributedTextUsesTintColor = false
+	fileprivate var cachedSizeThatFits: SizeThatFitsResult?
+	fileprivate let layoutManager = LayoutManager()
+	fileprivate let linkTapRecognizer = UITapGestureRecognizer()
+	fileprivate let textContainer = NSTextContainer()
+	fileprivate let textStorage = NSTextStorage()
 
-	public private(set) var lastDrawnFinalizedText: NSAttributedString?
-	public private(set) var lastUsedFinalTextColor: CGColor?
+	open fileprivate(set) var lastDrawnFinalizedText: NSAttributedString?
+	open fileprivate(set) var lastUsedFinalTextColor: CGColor?
 
-	public var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because actually we outset
-	public var linkTapped: (NSURL -> Void)?
+	open var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because actually we outset
+	open var linkTapped: ((URL) -> Void)?
 
 
 	public override init() {
 		super.init()
 
 		additionalHitZone = additionalLinkHitZone
-		contentMode = .Redraw
-		opaque = false
+		contentMode = .redraw
+		isOpaque = false
 
 		layoutManager.addTextContainer(textContainer)
 		textStorage.addLayoutManager(layoutManager)
@@ -41,7 +41,7 @@ public /* non-final */ class Label: View {
 
 
 	@NSCopying
-	public var attributedText = NSAttributedString() {
+	open var attributedText = NSAttributedString() {
 		didSet {
 			guard attributedText != oldValue else {
 				return
@@ -53,7 +53,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func didMoveToWindow() {
+	open override func didMoveToWindow() {
 		super.didMoveToWindow()
 
 		guard let window = window else {
@@ -64,8 +64,8 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func drawLayer(layer: CALayer, inContext context: CGContext) {
-		super.drawLayer(layer, inContext: context)
+	open override func draw(_ layer: CALayer, in context: CGContext) {
+		super.draw(layer, in: context)
 
 		guard let layer = layer as? LabelLayer else {
 			return
@@ -85,19 +85,19 @@ public /* non-final */ class Label: View {
 		updateTextContainer(forSize: textContainerSize)
 
 		let textContainerOrigin = originForTextContainer()
-		let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
-		layoutManager.drawBackgroundForGlyphRange(glyphRange, atPoint: textContainerOrigin)
-		layoutManager.drawGlyphsForGlyphRange(glyphRange, atPoint: textContainerOrigin)
+		let glyphRange = layoutManager.glyphRange(for: textContainer)
+		layoutManager.drawBackground(forGlyphRange: glyphRange, at: textContainerOrigin)
+		layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: textContainerOrigin)
 	}
 
 
-	public override func drawRect(rect: CGRect) {
+	open override func draw(_ rect: CGRect) {
 		// Although we use drawLayer(_:inContext:) we still need to implement this method.
 		// UIKit checks for its presence when it decides whether a call to setNeedsDisplay() is forwarded to its layer.
 	}
 
 
-	public var font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody) {
+	open var font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body) {
 		didSet {
 			guard font != oldValue else {
 				return
@@ -109,12 +109,12 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func finalTextColorDidChange() {
+	fileprivate func finalTextColorDidChange() {
 		setNeedsUpdateFinalizedText()
 	}
 
 
-	private func finalizeText() -> NSAttributedString {
+	fileprivate func finalizeText() -> NSAttributedString {
 		let finalTextColor = renderingLayer.finalTextColor // can change due to animation
 		if finalTextColor != lastUsedFinalTextColor {
 			lastUsedFinalTextColor = finalTextColor
@@ -125,23 +125,23 @@ public /* non-final */ class Label: View {
 
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = horizontalAlignment
-		paragraphStyle.lineBreakMode = .ByWordWrapping
+		paragraphStyle.lineBreakMode = .byWordWrapping
 		paragraphStyle.lineHeightMultiple = lineHeightMultiple
 
 		var defaultAttributes = [
 			NSFontAttributeName: font,
-			NSForegroundColorAttributeName: UIColor(CGColor: finalTextColor),
+			NSForegroundColorAttributeName: UIColor(cgColor: finalTextColor),
 			NSParagraphStyleAttributeName: paragraphStyle
 		]
 
 		if let kerning = kerning {
 			let kerningValue: CGFloat
 			switch kerning {
-			case let .Absolute(value): kerningValue = value
-			case let .Relative(value): kerningValue = font.pointSize * value
+			case let .absolute(value): kerningValue = value
+			case let .relative(value): kerningValue = font.pointSize * value
 			}
 
-			defaultAttributes[NSKernAttributeName] = kerningValue
+			defaultAttributes[NSKernAttributeName] = kerningValue as NSObject?
 		}
 
 		let attributedText = self.attributedText
@@ -150,19 +150,19 @@ public /* non-final */ class Label: View {
 
 		var attributedTextUsesTintColor = false
 		var hasLinks = false
-		let tintColor = self.tintColor
+		let tintColor = self.tintColor!
 
-		attributedText.enumerateAttributesInRange(NSRange(forString: attributedText.string), options: [.LongestEffectiveRangeNotRequired]) { attributes, range, _ in
+		attributedText.enumerateAttributes(in: NSRange(forString: attributedText.string), options: [.longestEffectiveRangeNotRequired]) { attributes, range, _ in
 			var finalAttributes = attributes
 			if !hasLinks && attributes[NSLinkAttributeName] != nil {
 				hasLinks = true
 			}
 
-			if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor where backgroundColor.tintAlpha != nil {
+			if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor, backgroundColor.tintAlpha != nil {
 				finalAttributes[NSBackgroundColorAttributeName] = backgroundColor.tintedWithColor(tintColor)
 				attributedTextUsesTintColor = true
 			}
-			if let foregroundColor = attributes[NSForegroundColorAttributeName] as? UIColor where foregroundColor.tintAlpha != nil {
+			if let foregroundColor = attributes[NSForegroundColorAttributeName] as? UIColor, foregroundColor.tintAlpha != nil {
 				finalAttributes[NSForegroundColorAttributeName] = foregroundColor.tintedWithColor(tintColor)
 				attributedTextUsesTintColor = true
 			}
@@ -173,9 +173,9 @@ public /* non-final */ class Label: View {
 		if let textTransform = textTransform {
 			let transform: (String) -> String
 			switch textTransform {
-			case .Capitalize: transform = { $0.localizedCapitalizedString } // TODO this isn't 100% reliable when applying to segments instead of to the whole string
-			case .Lowercase:  transform = { $0.localizedLowercaseString }
-			case .Uppercase:  transform = { $0.localizedUppercaseString }
+			case .capitalize: transform = { $0.localizedCapitalized } // TODO this isn't 100% reliable when applying to segments instead of to the whole string
+			case .lowercase:  transform = { $0.localizedLowercase }
+			case .uppercase:  transform = { $0.localizedUppercase }
 			}
 
 			finalizedText.transformStringSegments(transform)
@@ -183,7 +183,7 @@ public /* non-final */ class Label: View {
 
 		finalizedText.endEditing()
 		textStorage.setAttributedString(finalizedText)
-		linkTapRecognizer.enabled = hasLinks
+		linkTapRecognizer.isEnabled = hasLinks
 
 		self.attributedTextUsesTintColor = attributedTextUsesTintColor
 
@@ -195,15 +195,15 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private var _finalizedText: NSAttributedString?
+	fileprivate var _finalizedText: NSAttributedString?
 	public final var finalizedText: NSAttributedString {
 		return finalizeText()
 	}
 
 
 	@objc
-	private func handleLinkTapRecognizer() {
-		guard let link = linkAtPoint(linkTapRecognizer.locationInView(self)) else {
+	fileprivate func handleLinkTapRecognizer() {
+		guard let link = linkAtPoint(linkTapRecognizer.location(in: self)) else {
 			return
 		}
 
@@ -211,7 +211,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var horizontalAlignment = NSTextAlignment.Natural {
+	open var horizontalAlignment = NSTextAlignment.natural {
 		didSet {
 			guard horizontalAlignment != oldValue else {
 				return
@@ -222,14 +222,14 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func invalidateIntrinsicContentSize() {
+	open override func invalidateIntrinsicContentSize() {
 		cachedSizeThatFits = nil
 
 		super.invalidateIntrinsicContentSize()
 	}
 
 
-	public var kerning: Kerning? {
+	open var kerning: Kerning? {
 		didSet {
 			guard kerning != oldValue else {
 				return
@@ -241,18 +241,18 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private var labelLayer: LabelLayer {
+	fileprivate var labelLayer: LabelLayer {
 		return layer as! LabelLayer
 	}
 
 
-	@warn_unused_result
-	public final override class func layerClass() -> AnyObject.Type {
+	
+	public final override class var layerClass : AnyObject.Type {
 		return LabelLayer.self
 	}
 
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		super.layoutSubviews()
 
 		if finalizedText != lastDrawnFinalizedText {
@@ -261,7 +261,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var lineBreakMode = NSLineBreakMode.ByTruncatingTail {
+	open var lineBreakMode = NSLineBreakMode.byTruncatingTail {
 		didSet {
 			guard lineBreakMode != oldValue else {
 				return
@@ -273,7 +273,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var lineHeightMultiple = CGFloat(1) {
+	open var lineHeightMultiple = CGFloat(1) {
 		didSet {
 			guard lineHeightMultiple != oldValue else {
 				return
@@ -285,7 +285,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func linkAtPoint(point: CGPoint) -> Link? {
+	fileprivate func linkAtPoint(_ point: CGPoint) -> Link? {
 		let additionalLinkHitZone = self.additionalLinkHitZone
 
 		var bestLink: Link?
@@ -313,8 +313,8 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private var _links: [Link]?
-	private var links: [Link] {
+	fileprivate var _links: [Link]?
+	fileprivate var links: [Link] {
 		if let links = _links {
 			return links
 		}
@@ -325,8 +325,8 @@ public /* non-final */ class Label: View {
 		let textContainerOrigin = originForTextContainer()
 
 		var links = [Link]()
-		finalizedText.enumerateAttribute(NSLinkAttributeName, inRange: NSRange(forString: finalizedText.string), options: []) { url, range, _ in
-			guard let url = url as? NSURL else {
+		finalizedText.enumerateAttribute(NSLinkAttributeName, in: NSRange(forString: finalizedText.string), options: []) { url, range, _ in
+			guard let url = url as? URL else {
 				return
 			}
 
@@ -334,10 +334,10 @@ public /* non-final */ class Label: View {
 		}
 
 		links = links.map { link in
-			let glyphRange = layoutManager.glyphRangeForCharacterRange(link.range, actualCharacterRange: nil)
+			let glyphRange = layoutManager.glyphRange(forCharacterRange: link.range, actualCharacterRange: nil)
 
 			var frames = [CGRect]()
-			layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSRange(location: NSNotFound, length: 0), inTextContainer: textContainer) { frame, _ in
+			layoutManager.enumerateEnclosingRects(forGlyphRange: glyphRange, withinSelectedGlyphRange: NSRange(location: NSNotFound, length: 0), in: textContainer) { frame, _ in
 				frames.append(frame.offsetBy(dx: textContainerOrigin.x, dy: textContainerOrigin.y))
 			}
 
@@ -349,7 +349,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var maximumNumberOfLines: Int? = 1 {
+	open var maximumNumberOfLines: Int? = 1 {
 		didSet {
 			if let maximumNumberOfLines = maximumNumberOfLines {
 				precondition(maximumNumberOfLines > 0, "Label.maximumNumberOfLines must be either larger than zero or nil.")
@@ -365,9 +365,9 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var minimumScaleFactor = CGFloat(1) {
+	open var minimumScaleFactor = CGFloat(1) {
 		didSet {
-			minimumScaleFactor = minimumScaleFactor.clamp(min: 0, max: 1)
+			minimumScaleFactor = minimumScaleFactor.coerced(in: 0 ... 1)
 
 			guard minimumScaleFactor != oldValue else {
 				return
@@ -379,8 +379,8 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private var _numberOfLines: Int?
-	public var numberOfLines: Int {
+	fileprivate var _numberOfLines: Int?
+	open var numberOfLines: Int {
 		if let numberOfLines = _numberOfLines {
 			return numberOfLines
 		}
@@ -393,7 +393,7 @@ public /* non-final */ class Label: View {
 
 		while (glyphIndex < numberOfGlyphs) {
 			var lineRange = NSRange()
-			layoutManager.lineFragmentRectForGlyphAtIndex(glyphIndex, effectiveRange: &lineRange)
+			layoutManager.lineFragmentRect(forGlyphAt: glyphIndex, effectiveRange: &lineRange)
 
 			glyphIndex = NSMaxRange(lineRange)
 
@@ -405,24 +405,24 @@ public /* non-final */ class Label: View {
 	}
 
 
-	@warn_unused_result
-	private func originForTextContainer() -> CGPoint {
+	
+	fileprivate func originForTextContainer() -> CGPoint {
 		let padding = self.padding
 		let bounds = self.bounds
 
-		var textFrame = layoutManager.usedRectForTextContainer(textContainer)
+		var textFrame = layoutManager.usedRect(for: textContainer)
 
 		var textContainerOrigin = CGPoint()
 		textContainerOrigin.left = padding.left
 
 		switch verticalAlignment {
-		case .Bottom:
+		case .bottom:
 			textContainerOrigin.top = bounds.height - padding.bottom - textFrame.height
 
-		case .Center:
+		case .center:
 			textContainerOrigin.top = padding.top + ((bounds.height - padding.top - padding.bottom - textFrame.height) / 2)
 
-		case .Top:
+		case .top:
 			textContainerOrigin.top = padding.top
 		}
 
@@ -430,7 +430,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var padding = UIEdgeInsets.zero {
+	open var padding = UIEdgeInsets.zero {
 		didSet {
 			guard padding != oldValue else {
 				return
@@ -442,7 +442,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+	open override func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		guard super.pointInside(point, withEvent: event, additionalHitZone: additionalHitZone) else {
 			return false
 		}
@@ -454,7 +454,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func setNeedsUpdateFinalizedText() {
+	fileprivate func setNeedsUpdateFinalizedText() {
 		guard _finalizedText != nil else {
 			return
 		}
@@ -465,17 +465,17 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func setUpLinkTapRecognizer() {
+	fileprivate func setUpLinkTapRecognizer() {
 		let recognizer = linkTapRecognizer
-		recognizer.enabled = false
+		recognizer.isEnabled = false
 		recognizer.addTarget(self, action: #selector(handleLinkTapRecognizer))
 
 		addGestureRecognizer(recognizer)
 	}
 
 
-	@warn_unused_result
-	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	
+	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		assert(maximumSize.isPositive)
 
 		let maximumSize = maximumSize.coerced(atLeast: .zero)
@@ -492,7 +492,7 @@ public /* non-final */ class Label: View {
 
 		updateTextContainer(forSize: maximumSize.insetBy(padding))
 
-		let textSize = alignToGrid(layoutManager.usedRectForTextContainer(textContainer).size)
+		let textSize = alignToGrid(layoutManager.usedRect(for: textContainer).size)
 
 		let sizeThatFits = textSize.insetBy(padding.inverse)
 		cachedSizeThatFits = SizeThatFitsResult(maximumSize: maximumSize, sizeThatFits: sizeThatFits)
@@ -501,13 +501,13 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var text: String {
+	open var text: String {
 		get { return attributedText.string }
 		set { attributedText = NSAttributedString(string: newValue) }
 	}
 
 
-	public var textColor = UIColor.darkTextColor() {
+	open var textColor = UIColor.darkText {
 		didSet {
 			guard textColor != oldValue else {
 				return
@@ -518,12 +518,12 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private var textContainerSize: CGSize {
+	fileprivate var textContainerSize: CGSize {
 		return bounds.size.insetBy(padding)
 	}
 
 
-	public var textTransform: TextTransform? {
+	open var textTransform: TextTransform? {
 		didSet {
 			guard textTransform != oldValue else {
 				return
@@ -534,7 +534,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func tintColorDidChange() {
+	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
 		updateFinalTextColor()
@@ -545,8 +545,8 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func updateFinalTextColor() {
-		let finalTextColor = textColor.tintedWithColor(tintColor).CGColor
+	fileprivate func updateFinalTextColor() {
+		let finalTextColor = textColor.tintedWithColor(tintColor).cgColor
 		if finalTextColor != lastUsedFinalTextColor {
 			setNeedsUpdateFinalizedText()
 		}
@@ -558,7 +558,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	private func updateTextContainer(forSize size: CGSize) {
+	fileprivate func updateTextContainer(forSize size: CGSize) {
 		textContainer.lineFragmentPadding = 0
 		textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
 		textContainer.lineBreakMode = lineBreakMode
@@ -567,10 +567,10 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public var userInteractionLimitedToLinks = true
+	open var userInteractionLimitedToLinks = true
 
 
-	public var verticalAlignment = VerticalAlignment.Center {
+	open var verticalAlignment = VerticalAlignment.center {
 		didSet {
 			guard verticalAlignment != oldValue else {
 				return
@@ -582,7 +582,7 @@ public /* non-final */ class Label: View {
 	}
 
 
-	public override func willResizeToSize(newSize: CGSize) {
+	open override func willResizeToSize(_ newSize: CGSize) {
 		super.willResizeToSize(newSize)
 
 		_numberOfLines = nil
@@ -590,45 +590,45 @@ public /* non-final */ class Label: View {
 
 
 
-	private final class DelegateProxy: NSObject {
+	fileprivate final class DelegateProxy: NSObject {
 
-		private unowned var label: Label
+		fileprivate unowned var label: Label
 
 
-		private init(label: Label) {
+		fileprivate init(label: Label) {
 			self.label = label
 		}
 	}
 
 
 
-	private final class LabelLayer: Layer {
+	fileprivate final class LabelLayer: Layer {
 
 		@objc @NSManaged
-		private dynamic var finalTextColor: CGColor
+		fileprivate dynamic var finalTextColor: CGColor
 
 
-		private override init() {
+		fileprivate override init() {
 			super.init()
 
-			finalTextColor = UIColor.darkTextColor().CGColor
+			finalTextColor = UIColor.darkText.cgColor
 		}
 
 
-		private required init(layer: AnyObject) {
+		fileprivate required init(layer: Any) {
 			super.init(layer: layer)
 		}
 
 
-		private required init?(coder: NSCoder) {
+		fileprivate required init?(coder: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
 		}
 
 
-		private override func actionForKey(key: String) -> CAAction? {
+		fileprivate override func action(forKey key: String) -> CAAction? {
 			switch key {
 			case "finalTextColor":
-				if let animation = super.actionForKey("backgroundColor") as? CABasicAnimation {
+				if let animation = super.action(forKey: "backgroundColor") as? CABasicAnimation {
 					animation.fromValue = finalTextColor
 					animation.keyPath = key
 
@@ -638,30 +638,30 @@ public /* non-final */ class Label: View {
 				fallthrough
 
 			default:
-				return super.actionForKey(key)
+				return super.action(forKey: key)
 			}
 		}
 
 
-		private override class func needsDisplayForKey(key: String) -> Bool {
+		fileprivate override class func needsDisplay(forKey key: String) -> Bool {
 			switch key {
 			case "finalTextColor": return true
-			default: return super.needsDisplayForKey(key)
+			default: return super.needsDisplay(forKey: key)
 			}
 		}
 	}
 
 
 
-	private final class LayoutManager: NSLayoutManager {
+	fileprivate final class LayoutManager: NSLayoutManager {
 
 		@objc(JetPack_linkAttributes)
-		private dynamic class var linkAttributes: [NSObject : AnyObject] {
+		fileprivate dynamic class var linkAttributes: [AnyHashable: Any] {
 			return [:]
 		}
 
 
-		private override class func initialize() {
+		fileprivate override class func initialize() {
 			guard self == LayoutManager.self else {
 				return
 			}
@@ -674,45 +674,45 @@ public /* non-final */ class Label: View {
 
 
 
-	private struct Link {
+	fileprivate struct Link {
 
-		private var range: NSRange
-		private var frames: [CGRect]
-		private var url: NSURL
+		fileprivate var range: NSRange
+		fileprivate var frames: [CGRect]
+		fileprivate var url: URL
 	}
 
 
 
 	public enum Kerning: Equatable {
 
-		case Absolute(CGFloat)
-		case Relative(CGFloat)
+		case absolute(CGFloat)
+		case relative(CGFloat)
 	}
 
 
 
-	private struct SizeThatFitsResult {
+	fileprivate struct SizeThatFitsResult {
 
-		private var maximumSize: CGSize
-		private var sizeThatFits: CGSize
+		fileprivate var maximumSize: CGSize
+		fileprivate var sizeThatFits: CGSize
 	}
 
 
 
 	public enum TextTransform {
 
-		case Capitalize
-		case Lowercase
-		case Uppercase
+		case capitalize
+		case lowercase
+		case uppercase
 	}
 	
 	
 	
 	public enum VerticalAlignment {
 
-		case Bottom
-		case Center
-		case Top
+		case bottom
+		case center
+		case top
 	}
 }
 
@@ -720,16 +720,16 @@ public /* non-final */ class Label: View {
 extension Label.DelegateProxy: UIGestureRecognizerDelegate {
 
 	@objc
-	private func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-		return label.linkAtPoint(touch.locationInView(label)) != nil
+	fileprivate func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		return label.linkAtPoint(touch.location(in: label)) != nil
 	}
 }
 
 
 public func == (a: Label.Kerning, b: Label.Kerning) -> Bool {
 	switch (a, b) {
-	case let (.Absolute(a), .Absolute(b)): return a == b
-	case let (.Relative(a), .Relative(b)): return a == b
+	case let (.absolute(a), .absolute(b)): return a == b
+	case let (.relative(a), .relative(b)): return a == b
 	default:                               return false
 	}
 }

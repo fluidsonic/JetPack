@@ -5,7 +5,7 @@ import JetPack
 
 class CollectionType_Tests: XCTestCase {
 
-	private let error = NSError(domain: "", code: 0, userInfo: nil)
+	fileprivate let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
 	func testIndexOfIdentical() {
@@ -28,11 +28,5 @@ class CollectionType_Tests: XCTestCase {
 		catch let error as NSError {
 			XCTAssertEqual(error, self.error)
 		}
-	}
-
-
-	func testRandomElement() {
-		XCTAssertEqual([String]().randomElement, nil)
-		XCTAssertEqual([true].randomElement, true)
 	}
 }

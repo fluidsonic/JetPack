@@ -2,9 +2,9 @@ import UIKit
 
 
 @objc(JetPack_CollectionViewController)
-public /* non-final */ class CollectionViewController: ViewController {
+open /* non-final */ class CollectionViewController: ViewController {
 
-	private var lastLayoutedSize = CGSize()
+	fileprivate var lastLayoutedSize = CGSize()
 
 	internal let collectionViewLayout: UICollectionViewLayout
 
@@ -21,16 +21,16 @@ public /* non-final */ class CollectionViewController: ViewController {
 	}
 
 
-	public var automaticallyAdjustsCollectionViewInsets = true
+	open var automaticallyAdjustsCollectionViewInsets = true
 
 
-	public var clearsSelectionOnViewWillAppear = true
+	open var clearsSelectionOnViewWillAppear = true
 
 
-	public private(set) lazy var collectionView: UICollectionView = self.createCollectionView()
+	open fileprivate(set) lazy var collectionView: UICollectionView = self.createCollectionView()
 
 
-	private func createCollectionView() -> UICollectionView {
+	fileprivate func createCollectionView() -> UICollectionView {
 		let child = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
 		child.dataSource = self
 		child.delegate = self
@@ -39,7 +39,7 @@ public /* non-final */ class CollectionViewController: ViewController {
 	}
 
 
-	public override func viewDidLayoutSubviewsWithAnimation(animation: Animation?) {
+	open override func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		let bounds = view.bounds
@@ -60,18 +60,18 @@ public /* non-final */ class CollectionViewController: ViewController {
 	}
 
 
-	public override func viewWillAppear(animated: Bool) {
+	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		if clearsSelectionOnViewWillAppear, let indexPaths = collectionView.indexPathsForSelectedItems() {
+		if clearsSelectionOnViewWillAppear, let indexPaths = collectionView.indexPathsForSelectedItems {
 			for indexPath in indexPaths {
-				collectionView.deselectItemAtIndexPath(indexPath, animated: animated)
+				collectionView.deselectItem(at: indexPath, animated: animated)
 			}
 		}
 	}
 
 
-	public override func viewDidLoad() {
+	open override func viewDidLoad() {
 		super.viewDidLoad()
 
 		view.addSubview(collectionView)
@@ -81,12 +81,12 @@ public /* non-final */ class CollectionViewController: ViewController {
 
 extension CollectionViewController: UICollectionViewDataSource {
 
-	public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+	open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		fatalError("override collectionView(_:cellForItemAtIndexPath:) without calling super")
 	}
 
 
-	public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return 0
 	}
 }

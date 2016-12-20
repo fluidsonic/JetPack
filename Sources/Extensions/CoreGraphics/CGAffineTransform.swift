@@ -3,47 +3,44 @@ import CoreGraphics
 
 public extension CGAffineTransform {
 
-	public static let identity = CGAffineTransformIdentity
-
-
 	public init(horizontalScale: CGFloat, verticalScale: CGFloat = 1) {
-		self = CGAffineTransformMakeScale(horizontalScale, verticalScale)
+		self = CGAffineTransform(scaleX: horizontalScale, y: verticalScale)
 	}
 
 
 	public init(verticalScale: CGFloat) {
-		self = CGAffineTransformMakeScale(1, verticalScale)
+		self = CGAffineTransform(scaleX: 1, y: verticalScale)
 	}
 
 
 	public init(horizontalTranslation: CGFloat, verticalTranslation: CGFloat = 0) {
-		self = CGAffineTransformMakeTranslation(horizontalTranslation, verticalTranslation)
+		self = CGAffineTransform(translationX: horizontalTranslation, y: verticalTranslation)
 	}
 
 
 	public init(verticalTranslation: CGFloat) {
-		self = CGAffineTransformMakeTranslation(0, verticalTranslation)
+		self = CGAffineTransform(translationX: 0, y: verticalTranslation)
 	}
 
 
 	public init(rotation angle: CGFloat) {
-		self = CGAffineTransformMakeRotation(angle)
+		self = CGAffineTransform(rotationAngle: angle)
 	}
 
 
 	public init(scale: CGFloat) {
-		self = CGAffineTransformMakeScale(scale, scale)
+		self = CGAffineTransform(scaleX: scale, y: scale)
 	}
 
 
-	public mutating func concatenateWith(transform: CGAffineTransform) {
+	public mutating func concatenateWith(_ transform: CGAffineTransform) {
 		self = concatenatedWith(transform)
 	}
 
 
-	@warn_unused_result(mutable_variant="concatenateWith")
-	public func concatenatedWith(transform: CGAffineTransform) -> CGAffineTransform {
-		return CGAffineTransformConcat(self, transform)
+	
+	public func concatenatedWith(_ transform: CGAffineTransform) -> CGAffineTransform {
+		return self.concatenating(transform)
 	}
 
 
@@ -57,19 +54,8 @@ public extension CGAffineTransform {
 	}
 
 
-	public mutating func inverse() {
-		self = inverted()
-	}
-
-
-	@warn_unused_result(mutable_variant="invert")
-	public func inverted() -> CGAffineTransform {
-		return CGAffineTransformInvert(self)
-	}
-
-
 	public var isIdentity: Bool {
-		return CGAffineTransformIsIdentity(self)
+		return self.isIdentity
 	}
 
 
@@ -78,18 +64,18 @@ public extension CGAffineTransform {
 	}
 
 
-	public mutating func rotateBy(angle: CGFloat) {
+	public mutating func rotateBy(_ angle: CGFloat) {
 		self = rotatedBy(angle)
 	}
 
 
-	@warn_unused_result(mutable_variant="rotateBy")
-	public func rotatedBy(angle: CGFloat) -> CGAffineTransform {
-		return CGAffineTransformRotate(self, angle)
+	
+	public func rotatedBy(_ angle: CGFloat) -> CGAffineTransform {
+		return self.rotated(by: angle)
 	}
 
 
-	public mutating func scaleBy(scale: CGFloat) {
+	public mutating func scaleBy(_ scale: CGFloat) {
 		scaleBy(horizontally: scale, vertically: scale)
 	}
 
@@ -104,19 +90,19 @@ public extension CGAffineTransform {
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
-	public func scaledBy(scale: CGFloat) -> CGAffineTransform {
+	
+	public func scaledBy(_ scale: CGFloat) -> CGAffineTransform {
 		return scaledBy(horizontally: scale, vertically: scale)
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
+	
 	public func scaledBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) -> CGAffineTransform {
-		return CGAffineTransformScale(self, horizontal, vertical)
+		return self.scaledBy(x: horizontal, y: vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="scaleBy")
+	
 	public func scaledBy(vertically vertical: CGFloat) -> CGAffineTransform {
 		return scaledBy(horizontally: 1, vertically: vertical)
 	}
@@ -132,13 +118,13 @@ public extension CGAffineTransform {
 	}
 
 
-	@warn_unused_result(mutable_variant="translateBy")
+	
 	public func translatedBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) -> CGAffineTransform {
-		return CGAffineTransformTranslate(self, horizontal, vertical)
+		return self.translatedBy(x: horizontal, y: vertical)
 	}
 
 
-	@warn_unused_result(mutable_variant="translateBy")
+	
 	public func translatedBy(vertically vertical: CGFloat) -> CGAffineTransform {
 		return translatedBy(horizontally: 0, vertically: vertical)
 	}
@@ -173,32 +159,32 @@ extension CGAffineTransform: CustomStringConvertible {
 		if horizontalScale != 1 {
 			if !description.isEmpty { description += ", " }
 			description += "horizontalScale: "
-			description += String(horizontalScale)
+			description += String(describing: horizontalScale)
 		}
 
 		if verticalScale != 1 {
 			if !description.isEmpty { description += ", " }
 			description += "verticalScale: "
-			description += String(verticalScale)
+			description += String(describing: verticalScale)
 		}
 
 		if rotation != 0 {
 			if !description.isEmpty { description += ", " }
 			description += "rotation: "
-			description += String(rotation / .Pi)
-			description += " * .Pi"
+			description += String(describing: rotation / .pi)
+			description += " * .pi"
 		}
 
 		if horizontalTranslation != 0 {
 			if !description.isEmpty { description += ", " }
 			description += "horizontalTranslation: "
-			description += String(horizontalTranslation)
+			description += String(describing: horizontalTranslation)
 		}
 
 		if verticalTranslation != 0 {
 			if !description.isEmpty { description += ", " }
 			description += "verticalTranslation: "
-			description += String(verticalTranslation)
+			description += String(describing: verticalTranslation)
 		}
 
 		guard !description.isEmpty else {
@@ -210,19 +196,11 @@ extension CGAffineTransform: CustomStringConvertible {
 }
 
 
-extension CGAffineTransform: Equatable {}
-
-
-public func == (a: CGAffineTransform, b: CGAffineTransform) -> Bool {
-	return CGAffineTransformEqualToTransform(a, b)
-}
-
-
 public func * (a: CGAffineTransform, b: CGAffineTransform) -> CGAffineTransform {
 	return a.concatenatedWith(b)
 }
 
 
-public func *= (inout a: CGAffineTransform, b: CGAffineTransform) {
+public func *= (a: inout CGAffineTransform, b: CGAffineTransform) {
 	a.concatenateWith(b)
 }

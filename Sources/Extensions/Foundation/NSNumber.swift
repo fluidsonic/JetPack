@@ -10,21 +10,21 @@ public extension NSNumber {
 
 
 	@nonobjc
-	internal func modulo(divisor: Int) -> Int {
+	internal func modulo(_ divisor: Int) -> Int {
 		if let decimal = self as? NSDecimalNumber {
-			return decimal.modulo(NSDecimalNumber(long: divisor)).longValue
+			return decimal.modulo(NSDecimalNumber(value: divisor)).intValue
 		}
 
 		switch CFNumberGetType(self) {
-		case .CGFloatType, .DoubleType, .Float32Type, .Float64Type, .FloatType:
-			return Int(doubleValue % Double(divisor))
+		case .cgFloatType, .doubleType, .float32Type, .float64Type, .floatType:
+			return Int(doubleValue.truncatingRemainder(dividingBy: Double(divisor)))
 
 		default:
 			if isNegative {
-				return Int(longLongValue % Int64(divisor))
+				return Int(int64Value % Int64(divisor))
 			}
 			else {
-				let remainder = Int(unsignedLongLongValue % UInt64(abs(divisor)))
+				let remainder = Int(uint64Value % UInt64(abs(divisor)))
 				return divisor < 0 ? -remainder : remainder
 			}
 		}
@@ -36,5 +36,5 @@ extension NSNumber: Comparable {}
 
 
 public func < (a: NSNumber, b: NSNumber) -> Bool {
-	return a.compare(b) == .OrderedAscending
+	return a.compare(b) == .orderedAscending
 }

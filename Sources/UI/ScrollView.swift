@@ -2,16 +2,16 @@ import UIKit
 
 
 @objc(JetPack_ScrollView)
-public /* non-final */ class ScrollView: UIScrollView {
+open /* non-final */ class ScrollView: UIScrollView {
 
-	private var delegateRespondsToViewForZooming = false
+	fileprivate var delegateRespondsToViewForZooming = false
 
-	private weak var newDelegate: ScrollViewDelegate?
+	fileprivate weak var newDelegate: ScrollViewDelegate?
 
-	public var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
-	public var centersViewForZooming = true
-	public var hitZoneFollowsCornerRadius = true
-	public var userInteractionLimitedToSubviews = false
+	open var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
+	open var centersViewForZooming = true
+	open var hitZoneFollowsCornerRadius = true
+	open var userInteractionLimitedToSubviews = false
 
 
 	public init() {
@@ -24,18 +24,18 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	private func centerViewForZooming() {
+	fileprivate func centerViewForZooming() {
 		guard centersViewForZooming && delegateRespondsToViewForZooming else {
 			return
 		}
 
-		guard let viewForZooming = delegate?.viewForZoomingInScrollView?(self) where viewForZooming.superview === self else {
+		guard let viewForZooming = delegate?.viewForZooming?(in: self), viewForZooming.superview === self else {
 			return
 		}
 
 		let availableSize = bounds.size.insetBy(self.contentInset)
 
-		var viewForZoomingFrame = viewForZooming.convertRect(viewForZooming.bounds, toView: self)
+		var viewForZoomingFrame = viewForZooming.convert(viewForZooming.bounds, to: self)
 		if viewForZoomingFrame.width < availableSize.width {
 			viewForZoomingFrame.left = (availableSize.width - viewForZoomingFrame.width) / 2
 		}
@@ -54,13 +54,13 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	public var cornerRadius: CGFloat {
+	open var cornerRadius: CGFloat {
 		get { return layer.cornerRadius }
 		set { layer.cornerRadius = newValue }
 	}
 
 
-	public override var contentInset: UIEdgeInsets {
+	open override var contentInset: UIEdgeInsets {
 		get { return super.contentInset }
 		set {
 			guard newValue != contentInset else {
@@ -74,7 +74,7 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	public override var contentOffset: CGPoint {
+	open override var contentOffset: CGPoint {
 		get { return super.contentOffset }
 		set {
 			guard newValue != contentOffset else {
@@ -88,7 +88,7 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	public override var contentSize: CGSize {
+	open override var contentSize: CGSize {
 		get { return super.contentSize }
 		set {
 			guard newValue != contentSize else {
@@ -102,40 +102,40 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	private func defaultShouldReceiveTouch(touch: UITouch) -> Bool {
+	fileprivate func defaultShouldReceiveTouch(_ touch: UITouch) -> Bool {
 		return true
 	}
 
 
-	public override weak var delegate: UIScrollViewDelegate? {
+	open override weak var delegate: UIScrollViewDelegate? {
 		get { return super.delegate }
 		set {
 			super.delegate = newValue
 
-			delegateRespondsToViewForZooming = super.delegate?.respondsToSelector(#selector(UIScrollViewDelegate.viewForZoomingInScrollView(_:))) ?? false
+			delegateRespondsToViewForZooming = super.delegate?.responds(to: #selector(UIScrollViewDelegate.viewForZooming(`in`:))) ?? false
 			newDelegate = super.delegate as? ScrollViewDelegate
 		}
 	}
 
 
-	public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+	open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
 		return newDelegate?.scrollView(self, shouldReceiveTouch: touch) ?? defaultShouldReceiveTouch(touch)
 	}
 
 
 	// reference implementation
-	@warn_unused_result
-	public override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+	
+	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		guard participatesInHitTesting else {
 			return nil
 		}
-		guard pointInside(point, withEvent: event) else {
+		guard self.point(inside: point, with: event) else {
 			return nil
 		}
 
 		var hitView: UIView?
-		for subview in subviews.reverse() {
-			hitView = subview.hitTest(convertPoint(point, toView: subview), withEvent: event)
+		for subview in subviews.reversed() {
+			hitView = subview.hitTest(convert(point, to: subview), with: event)
 			if hitView != nil {
 				break
 			}
@@ -149,21 +149,21 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		super.layoutSubviews()
 
 		centerViewForZooming()
 	}
 
 
-	@warn_unused_result
-	public final override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+	
+	public final override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
 	}
 
 
-	@warn_unused_result
-	public func pointInside(point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+	
+	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
 		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
 
@@ -181,16 +181,16 @@ public /* non-final */ class ScrollView: UIScrollView {
 	}
 
 
-	@warn_unused_result
-	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	
+	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		return bounds.size
 	}
 
 
 	// Override `sizeThatFitsSize(_:)` instead!
-	@available(*, unavailable, renamed="sizeThatFitsSize")
-	@warn_unused_result
-	public final override func sizeThatFits(maximumSize: CGSize) -> CGSize {
+	@available(*, unavailable, renamed: "sizeThatFitsSize")
+	
+	public final override func sizeThatFits(_ maximumSize: CGSize) -> CGSize {
 		return sizeThatFitsSize(maximumSize)
 	}
 }
@@ -198,13 +198,13 @@ public /* non-final */ class ScrollView: UIScrollView {
 
 public protocol ScrollViewDelegate: UIScrollViewDelegate {
 
-	func scrollView(scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool
+	func scrollView(_ scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool
 }
 
 
 public extension ScrollViewDelegate {
 
-	public func scrollView(scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool {
+	public func scrollView(_ scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool {
 		return scrollView.defaultShouldReceiveTouch(touch)
 	}
 }

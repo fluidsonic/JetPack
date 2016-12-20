@@ -48,8 +48,8 @@ public extension CGRect {
 	}
 
 
-	@warn_unused_result
-	public func centeredAt(center: CGPoint) -> CGRect {
+	
+	public func centeredAt(_ center: CGPoint) -> CGRect {
 		var rect = self
 		rect.center = center
 		return rect
@@ -68,9 +68,9 @@ public extension CGRect {
 	}
 
 
-	@warn_unused_result
-	public func contains(point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
-		if (!CGRectContainsPoint(self, point)) {
+	
+	public func contains(_ point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
+		if (!self.contains(point)) {
 			// full rect misses, so does any rounded rect
 			return false
 		}
@@ -128,17 +128,17 @@ public extension CGRect {
 	}
 
 
-	@warn_unused_result
-	public func displacementTo(point: CGPoint) -> CGPoint {
+	
+	public func displacementTo(_ point: CGPoint) -> CGPoint {
 		return CGPoint(
-			left: point.left.clamp(min: left, max: right),
-			top:  point.top.clamp(min: top, max: bottom)
+			left: point.left.coerced(in: left ... right),
+			top:  point.top.coerced(in: top ... bottom)
 		).displacementTo(point)
 	}
 
 
-	@warn_unused_result
-	public func distanceTo(point: CGPoint) -> CGFloat {
+	
+	public func distanceTo(_ point: CGPoint) -> CGFloat {
 		let displacement = displacementTo(point)
 		return sqrt((displacement.x * displacement.x) + (displacement.y * displacement.y))
 	}
@@ -156,8 +156,8 @@ public extension CGRect {
 	}
 
 
-	@warn_unused_result
-	public func interpolateTo(destination: CGRect, fraction: CGFloat) -> CGRect {
+	
+	public func interpolateTo(_ destination: CGRect, fraction: CGFloat) -> CGRect {
 		return CGRect(
 			left:   left + ((destination.left - left) * fraction),
 			top:    top + ((destination.top - top) * fraction),
@@ -208,8 +208,8 @@ public extension CGRect {
 	}
 
 
-	@warn_unused_result(mutable_variant="transformInPlace")
-	public func transform(transform: CGAffineTransform, anchorPoint: CGPoint = .zero) -> CGRect {
+	
+	public func transform(_ transform: CGAffineTransform, anchorPoint: CGPoint = .zero) -> CGRect {
 		if anchorPoint != .zero {
 			let anchorLeft = left + (width * anchorPoint.left)
 			let anchorTop = top + (height * anchorPoint.top)
@@ -217,15 +217,15 @@ public extension CGRect {
 			let t1 = CGAffineTransform(horizontalTranslation: anchorLeft, verticalTranslation: anchorTop)
 			let t2 = CGAffineTransform(horizontalTranslation: -anchorLeft, verticalTranslation: -anchorTop)
 
-			return CGRectApplyAffineTransform(self, t2 * transform * t1)
+			return self.applying(t2 * transform * t1)
 		}
 		else {
-			return CGRectApplyAffineTransform(self, transform)
+			return self.applying(transform)
 		}
 	}
 
 
-	public mutating func transformInPlace(transform: CGAffineTransform, anchorPoint: CGPoint = .zero) {
+	public mutating func transformInPlace(_ transform: CGAffineTransform, anchorPoint: CGPoint = .zero) {
 		self = self.transform(transform, anchorPoint: anchorPoint)
 	}
 

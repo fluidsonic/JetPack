@@ -1,11 +1,11 @@
-public extension Range where Element.Distance: RandomizableIntegerType {
+public extension Range where Bound: RandomizableIntegerType {
 
-	public var randomIndex: Element? {
-		let distance = startIndex.distanceTo(endIndex) - 1
+	public var randomIndex: Bound? {
+		let distance = upperBound - lowerBound
 		if distance < 0 {
 			return nil
 		}
 
-		return startIndex.advancedBy(Element.Distance.random(start: 0, end: distance))
+		return lowerBound + Bound.random(start: 0, end: distance)
 	}
 }

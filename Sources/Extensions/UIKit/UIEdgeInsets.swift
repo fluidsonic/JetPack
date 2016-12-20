@@ -3,9 +3,6 @@ import UIKit
 
 public extension UIEdgeInsets {
 
-	public static let zero = UIEdgeInsets()
-
-
 	public init(all: CGFloat) {
 		self.init(top: all, left: all, bottom: all, right: all)
 	}
@@ -56,13 +53,13 @@ public extension UIEdgeInsets {
 	}
 
 
-	@warn_unused_result(mutable_variant="increaseInPlace")
-	public func increaseBy(insets: UIEdgeInsets) -> UIEdgeInsets {
+	
+	public func increaseBy(_ insets: UIEdgeInsets) -> UIEdgeInsets {
 		return UIEdgeInsets(top: top + insets.top, left: left + insets.left, bottom: bottom + insets.bottom, right: right + insets.right)
 	}
 
 
-	public mutating func increaseInPlace(insets: UIEdgeInsets) {
+	public mutating func increaseInPlace(_ insets: UIEdgeInsets) {
 		self = increaseBy(insets)
 	}
 
@@ -81,8 +78,8 @@ public extension UIEdgeInsets {
 
 public extension CGRect {
 
-	@warn_unused_result(mutable_variant="insetInPlace")
-	public func insetBy(insets: UIEdgeInsets) -> CGRect {
+	
+	public func insetBy(_ insets: UIEdgeInsets) -> CGRect {
 		return CGRect(
 			left:   left + insets.left,
 			top:    top + insets.top,
@@ -92,7 +89,7 @@ public extension CGRect {
 	}
 
 
-	public mutating func insetInPlace(insets: UIEdgeInsets) {
+	public mutating func insetInPlace(_ insets: UIEdgeInsets) {
 		self = insetBy(insets)
 	}
 }
@@ -101,8 +98,8 @@ public extension CGRect {
 
 public extension CGSize {
 
-	@warn_unused_result(mutable_variant="insetInPlace")
-	public func insetBy(insets: UIEdgeInsets) -> CGSize {
+	
+	public func insetBy(_ insets: UIEdgeInsets) -> CGSize {
 		return CGSize(
 			width:  width - insets.left - insets.right,
 			height: height - insets.top - insets.bottom
@@ -110,7 +107,7 @@ public extension CGSize {
 	}
 
 
-	public mutating func insetInPlace(insets: UIEdgeInsets) {
+	public mutating func insetInPlace(_ insets: UIEdgeInsets) {
 		self = insetBy(insets)
 	}
 }

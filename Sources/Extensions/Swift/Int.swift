@@ -3,8 +3,8 @@ import Darwin
 
 extension Int: RandomizableIntegerType {
 
-	@warn_unused_result
-	public static func random(start start: Int, end: Int) -> Int {
+	
+	public static func random(start: Int, end: Int) -> Int {
 		#if arch(arm) || arch(i386)
 			switch __WORDSIZE {
 			case 32: return Int(Int32.random(start: Int32(start), end: Int32(end)))

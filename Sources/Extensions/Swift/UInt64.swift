@@ -1,7 +1,7 @@
 extension UInt64: RandomizableIntegerType {
 
-	@warn_unused_result
-	public static func random(start start: UInt64, end: UInt64) -> UInt64 {
+	
+	public static func random(start: UInt64, end: UInt64) -> UInt64 {
 		precondition(start <= end)
 
 		let u = end - start

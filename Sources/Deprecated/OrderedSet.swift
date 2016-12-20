@@ -5,8 +5,8 @@ public struct OrderedSet<T: Hashable> {
 
 	public typealias Element = T
 
-	private var elements: Set<T>
-	private var orderedElements = [T]()
+	fileprivate var elements: Set<T>
+	fileprivate var orderedElements = [T]()
 
 
 	public init() {
@@ -34,7 +34,7 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public init<S: SequenceType where S.Generator.Element == T>(_ sequence: S) {
+	public init<S: Sequence>(_ sequence: S) where S.Iterator.Element == T {
 		self.init()
 
 		union(sequence)
@@ -47,7 +47,7 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func add(element: T) -> Bool {
+	public mutating func add(_ element: T) -> Bool {
 		if elements.contains(element) {
 			return false
 		}
@@ -64,12 +64,12 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func contains(element: T) -> Bool {
+	public func contains(_ element: T) -> Bool {
 		return elements.contains(element)
 	}
 
 
-	public func contains(matches: (T) -> Bool) -> Bool {
+	public func contains(_ matches: (T) -> Bool) -> Bool {
 		for element in orderedElements {
 			if matches(element) {
 				return true
@@ -85,8 +85,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	@warn_unused_result
-	public func filterAsOrderedSet(@noescape includeElement: T throws -> Bool) rethrows -> OrderedSet<T> {
+	
+	public func filterAsOrderedSet(includeElement: (T) throws -> Bool) rethrows -> OrderedSet<T> {
 		var filteredElements = OrderedSet<T>()
 		for element in orderedElements where try includeElement(element) {
 			filteredElements.add(element)
@@ -96,7 +96,7 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func filterInPlace(@noescape includeElement: T throws -> Bool) rethrows {
+	public mutating func filterInPlace(includeElement: (T) throws -> Bool) rethrows {
 		var excludes = [T]()
 		for element in elements where !(try includeElement(element)) {
 			excludes.append(element)
@@ -111,7 +111,7 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func indexOf(element: T) -> Int? {
+	public func indexOf(_ element: T) -> Int? {
 		if elements.contains(element) {
 			var index = 0
 			for existingElement in orderedElements {
@@ -127,17 +127,17 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func intersect(set: OrderedSet<T>) {
+	public mutating func intersect(_ set: OrderedSet<T>) {
 		filterInPlace { set.contains($0) }
 	}
 
 
-	public func intersected(set: OrderedSet<T>) -> OrderedSet<T> {
+	public func intersected(_ set: OrderedSet<T>) -> OrderedSet<T> {
 		return filterAsOrderedSet { set.contains($0) }
 	}
 
 
-	public func intersects(set: OrderedSet<T>) -> Bool {
+	public func intersects(_ set: OrderedSet<T>) -> Bool {
 		return contains { set.contains($0) }
 	}
 
@@ -147,8 +147,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func isSubsetOf(set: OrderedSet<T>) -> Bool {
-		return elements.isSubsetOf(set)
+	public func isSubsetOf(_ set: OrderedSet<T>) -> Bool {
+		return elements.isSubset(of: set)
 	}
 
 
@@ -157,8 +157,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	@warn_unused_result
-	public func mapAsOrderedSet<U: Hashable>(@noescape transform: T throws -> U) rethrows -> OrderedSet<U> {
+	
+	public func mapAsOrderedSet<U: Hashable>(transform: (T) throws -> U) rethrows -> OrderedSet<U> {
 		var newSet = OrderedSet<U>(minimumCapacity: count)
 		for element in orderedElements {
 			newSet.add(try transform(element))
@@ -168,8 +168,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func member(element: T) -> T? {
-		if let index = elements.indexOf(element) {
+	public func member(_ element: T) -> T? {
+		if let index = elements.index(of: element) {
 			return elements[index]
 		}
 
@@ -177,14 +177,14 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func minus<S: SequenceType where S.Generator.Element == T>(sequence: S) {
+	public mutating func minus<S: Sequence>(_ sequence: S) where S.Iterator.Element == T {
 		for element in sequence {
 			remove(element)
 		}
 	}
 
 
-	public func minused<S: SequenceType where S.Generator.Element == T>(sequence: S) -> OrderedSet<T> {
+	public func minused<S: Sequence>(_ sequence: S) -> OrderedSet<T> where S.Iterator.Element == T {
 		var copy = self
 		copy.minus(sequence)
 
@@ -192,7 +192,7 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func move(fromIndex fromIndex: Int, toIndex: Int) {
+	public mutating func move(fromIndex: Int, toIndex: Int) {
 		precondition(fromIndex >= startIndex && fromIndex < endIndex, "fromIndex outside range \(startIndex) ..< \(endIndex)")
 		precondition(toIndex >= startIndex && toIndex < endIndex, "toIndex outside range \(startIndex) ..< \(endIndex)")
 
@@ -200,23 +200,23 @@ public struct OrderedSet<T: Hashable> {
 			return
 		}
 
-		orderedElements.insert(orderedElements.removeAtIndex(fromIndex), atIndex: toIndex)
+		orderedElements.insert(orderedElements.remove(at: fromIndex), at: toIndex)
 	}
 
 
-	public mutating func removeAtIndex(index: Int) -> T {
+	public mutating func removeAtIndex(_ index: Int) -> T {
 		let element = orderedElements[index]
-		orderedElements.removeAtIndex(index)
+		orderedElements.remove(at: index)
 
 		return elements.remove(element)!
 	}
 
 
-	public mutating func remove(element: T) -> T? {
+	public mutating func remove(_ element: T) -> T? {
 		var removedElementToReturn: T?
 		if let index = indexOf(element) {
 			if let removedElement = elements.remove(element) {
-				orderedElements.removeAtIndex(index)
+				orderedElements.remove(at: index)
 				removedElementToReturn = removedElement
 			}
 		}
@@ -230,13 +230,13 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func removeAll(keepCapacity keepCapacity: Bool) {
-		elements.removeAll(keepCapacity: keepCapacity)
-		orderedElements.removeAll(keepCapacity: keepCapacity)
+	public mutating func removeAll(keepCapacity: Bool) {
+		elements.removeAll(keepingCapacity: keepCapacity)
+		orderedElements.removeAll(keepingCapacity: keepCapacity)
 	}
 
 
-	public mutating func replace(element: T) -> T? {
+	public mutating func replace(_ element: T) -> T? {
 		var replacedElementToReturn: T?
 		if let index = indexOf(element) {
 			if let replacedElement = elements.remove(element) {
@@ -250,14 +250,14 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func union<S: SequenceType where S.Generator.Element == T>(sequence: S) {
+	public mutating func union<S: Sequence>(_ sequence: S) where S.Iterator.Element == T {
 		for element in sequence {
 			add(element)
 		}
 	}
 
 
-	public func unioned<S: SequenceType where S.Generator.Element == T>(sequence: S) -> OrderedSet<T> {
+	public func unioned<S: Sequence>(_ sequence: S) -> OrderedSet<T> where S.Iterator.Element == T {
 		var copy = self
 		copy.union(sequence)
 
@@ -276,7 +276,7 @@ public struct OrderedSet<T: Hashable> {
 }
 
 
-extension OrderedSet: ArrayLiteralConvertible {
+extension OrderedSet: ExpressibleByArrayLiteral {
 
 	public init(arrayLiteral elements: T...) {
 		self.init(elements)
@@ -284,10 +284,15 @@ extension OrderedSet: ArrayLiteralConvertible {
 }
 
 
-extension OrderedSet: CollectionType {
+extension OrderedSet: Collection {
 
 	public var endIndex: Int {
 		return orderedElements.endIndex
+	}
+
+
+	public func index(after index: Int) -> Int {
+		return orderedElements.index(after: index)
 	}
 
 
@@ -350,13 +355,13 @@ extension OrderedSet: Hashable {
 }
 
 
-extension OrderedSet: SequenceType {
+extension OrderedSet: Sequence {
 
-	public typealias Generator = IndexingGenerator<[T]>
+	public typealias Iterator = IndexingIterator<[T]>
 
 
-	public func generate() -> Generator {
-		return orderedElements.generate()
+	public func makeIterator() -> Iterator {
+		return orderedElements.makeIterator()
 	}
 }
 

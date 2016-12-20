@@ -69,7 +69,7 @@ class CGRect_Tests: XCTestCase {
 
 
 	func testDistance() {
-		XCTAssertEqualWithAccuracy(CGRect(x: 0, y: 0, width: 1, height: 2).distanceTo(CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: .Epsilon)
+		XCTAssertEqualWithAccuracy(CGRect(x: 0, y: 0, width: 1, height: 2).distanceTo(CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: CGFloat(FLT_EPSILON))
 	}
 
 
@@ -181,10 +181,10 @@ class CGRect_Tests: XCTestCase {
 
 	func testTransform() {
 		let rect = CGRect(x: 1, y: 2, width: 3, height: 4)
-		XCTAssertEqual(rect.transform(CGAffineTransformMakeTranslation(1, 2)), CGRect(x: 2, y: 4, width: 3, height: 4))
+		XCTAssertEqual(rect.transform(CGAffineTransform(translationX: 1, y: 2)), CGRect(x: 2, y: 4, width: 3, height: 4))
 
 		var mutableRect = rect
-		mutableRect.transformInPlace(CGAffineTransformMakeTranslation(1, 2))
+		mutableRect.transformInPlace(CGAffineTransform(translationX: 1, y: 2))
 		XCTAssertEqual(mutableRect, CGRect(x: 2, y: 4, width: 3, height: 4))
 	}
 }

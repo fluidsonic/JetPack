@@ -1,32 +1,32 @@
 import UIKit
 
 
-public extension UITabBarController {
+extension UITabBarController {
 
-	private struct AssociatedKeys {
-		private static var lastKnownTabBarTop = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var lastKnownTabBarTop = UInt8()
 	}
 	
 
 
-	public override func computeInnerDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
+	open override func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return addTabBarToDecorationInsets(innerDecorationInsets, forChildViewController: childViewController)
 	}
 
 
-	public override func computeOuterDecorationInsetsForChildViewController(childViewController: UIViewController) -> UIEdgeInsets {
+	open override func computeOuterDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return addTabBarToDecorationInsets(outerDecorationInsets, forChildViewController: childViewController)
 	}
 
 
 	@nonobjc
-	private func addTabBarToDecorationInsets(decorationInsets: UIEdgeInsets, forChildViewController childViewController: UIViewController) -> UIEdgeInsets {
+	fileprivate func addTabBarToDecorationInsets(_ decorationInsets: UIEdgeInsets, forChildViewController childViewController: UIViewController) -> UIEdgeInsets {
 		guard tabBarAffectsDecorationInsetsForChildViewController(childViewController) else {
 			return decorationInsets
 		}
 
 		var adjustedDecorationInsets = decorationInsets
-		if !tabBar.hidden && tabBar.translucent {
+		if !tabBar.isHidden && tabBar.isTranslucent {
 			adjustedDecorationInsets.bottom = max(view.bounds.height - tabBar.frame.top, adjustedDecorationInsets.bottom)
 		}
 
@@ -46,15 +46,15 @@ public extension UITabBarController {
 
 
 	@nonobjc
-	private var lastKnownTabBarTop: CGFloat {
+	fileprivate var lastKnownTabBarTop: CGFloat {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.lastKnownTabBarTop) as? CGFloat ?? 0 }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.lastKnownTabBarTop, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
 	@nonobjc
-	private func tabBarAffectsDecorationInsetsForChildViewController(childViewController: UIViewController) -> Bool {
-		guard !tabBar.hidden && tabBar.translucent else {
+	fileprivate func tabBarAffectsDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> Bool {
+		guard !tabBar.isHidden && tabBar.isTranslucent else {
 			return false
 		}
 		guard let navigationController = childViewController as? UINavigationController else {
@@ -73,16 +73,16 @@ public extension UITabBarController {
 
 	@nonobjc
 	internal static func UITabBarController_setUp() {
-		swizzleMethodInType(self, fromSelector: #selector(willTransitionToTraitCollection(_:withTransitionCoordinator:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
+		swizzleMethodInType(self, fromSelector: #selector(willTransition(to:with:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 
 
 	@objc(JetPack_willTransitionToTraitCollection:withTransitionCoordinator:)
-	private dynamic func swizzled_willTransitionToTraitCollection(newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+	fileprivate dynamic func swizzled_willTransitionToTraitCollection(_ newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		swizzled_willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
 
-		coordinator.animateAlongsideTransition { _ in
+		coordinator.animate(alongsideTransition: { _ in
 			self.checkTabBarFrame()
-		}
+		})
 	}
 }

@@ -1,18 +1,18 @@
 public struct TypeInstanceDictionary {
 
-	private var instances = [ObjectIdentifier : Any]()
+	fileprivate var instances = [ObjectIdentifier : Any]()
 
 
 	public init() {}
 
 
 	// Be very careful to not call this method with an Optional or an ImplicitlyUnwrappedOptional type. Use `as` in this case to convert the instance type to a non-optional first.
-	public mutating func assign<T>(instance: T) {
+	public mutating func assign<T>(_ instance: T) {
 		assign(instance, toType: T.self)
 	}
 	
 
-	public mutating func assign<T>(instance: T, toType type: T.Type) {
+	public mutating func assign<T>(_ instance: T, toType type: T.Type) {
 		let id = ObjectIdentifier(type)
 		if let existingInstance = instances[id] {
 			fatalError("Cannot assign instance \(instance) to type \(type) because instance \(existingInstance) is already assigned")
@@ -28,7 +28,7 @@ public struct TypeInstanceDictionary {
 	}
 
 
-	public func get<T>(type: T.Type) -> T? {
+	public func get<T>(_ type: T.Type) -> T? {
 		let id = ObjectIdentifier(type)
 		return instances[id] as! T?
 	}
@@ -40,7 +40,7 @@ public struct TypeInstanceDictionary {
 	}
 
 
-	public func require<T>(type: T.Type) -> T {
+	public func require<T>(_ type: T.Type) -> T {
 		guard let instance = get(type) else {
 			fatalError("No instance was assigned to type \(type).")
 		}
@@ -50,15 +50,15 @@ public struct TypeInstanceDictionary {
 
 
 	// Be very careful to not call this method with an Optional or an ImplicitlyUnwrappedOptional type. Use `as` in this case to convert the instance type to a non-optional first.
-	public mutating func unassign<T>(type: T.Type) -> T? {
+	public mutating func unassign<T>(_ type: T.Type) -> T? {
 		let id = ObjectIdentifier(type)
-		return instances.removeValueForKey(id) as! T?
+		return instances.removeValue(forKey: id) as! T?
 	}
 }
 
 
-prefix operator <? {}
-prefix operator <! {}
+prefix operator <?
+prefix operator <!
 
 public prefix func <? <T>(dictionary: TypeInstanceDictionary) -> T? {
 	return dictionary.get()

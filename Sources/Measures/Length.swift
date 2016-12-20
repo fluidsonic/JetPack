@@ -13,7 +13,7 @@ private let milesPerMeter       = 1.0 / metersPerMile
 public struct Length: Measure {
 
 	public static let name = MeasuresStrings.Measure.length
-	public static let rawUnit = LengthUnit.Meters
+	public static let rawUnit = LengthUnit.meters
 
 	public var rawValue: Double
 
@@ -22,43 +22,43 @@ public struct Length: Measure {
 		precondition(!value.isNaN, "Value must not be NaN.")
 
 		switch unit {
-		case .Centimeters: rawValue = value * metersPerCentimeter
-		case .Feet:        rawValue = value * metersPerFoot
-		case .Inches:      rawValue = value * metersPerInch
-		case .Kilometers:  rawValue = value * metersPerKilometer
-		case .Meters:      rawValue = value
-		case .Miles:       rawValue = value * metersPerMile
+		case .centimeters: rawValue = value * metersPerCentimeter
+		case .feet:        rawValue = value * metersPerFoot
+		case .inches:      rawValue = value * metersPerInch
+		case .kilometers:  rawValue = value * metersPerKilometer
+		case .meters:      rawValue = value
+		case .miles:       rawValue = value * metersPerMile
 		}
 	}
 
 
 	public init(centimeters: Double) {
-		self.init(centimeters, unit: .Centimeters)
+		self.init(centimeters, unit: .centimeters)
 	}
 
 
 	public init(feet: Double) {
-		self.init(feet, unit: .Feet)
+		self.init(feet, unit: .feet)
 	}
 
 
 	public init(inches: Double) {
-		self.init(inches, unit: .Inches)
+		self.init(inches, unit: .inches)
 	}
 
 
 	public init(kilometers: Double) {
-		self.init(kilometers, unit: .Kilometers)
+		self.init(kilometers, unit: .kilometers)
 	}
 
 
 	public init(meters: Double) {
-		self.init(meters, unit: .Meters)
+		self.init(meters, unit: .meters)
 	}
 
 
 	public init(miles: Double) {
-		self.init(miles, unit: .Miles)
+		self.init(miles, unit: .miles)
 	}
 
 
@@ -97,14 +97,14 @@ public struct Length: Measure {
 	}
 
 
-	public func valueInUnit(unit: LengthUnit) -> Double {
+	public func valueInUnit(_ unit: LengthUnit) -> Double {
 		switch unit {
-		case .Centimeters: return centimeters
-		case .Feet:        return feet
-		case .Inches:      return inches
-		case .Kilometers:  return kilometers
-		case .Meters:      return meters
-		case .Miles:       return miles
+		case .centimeters: return centimeters
+		case .feet:        return feet
+		case .inches:      return inches
+		case .kilometers:  return kilometers
+		case .meters:      return meters
+		case .miles:       return miles
 		}
 	}
 }
@@ -113,12 +113,12 @@ public struct Length: Measure {
 
 public enum LengthUnit: Unit {
 
-	case Centimeters
-	case Feet
-	case Inches
-	case Kilometers
-	case Meters
-	case Miles
+	case centimeters
+	case feet
+	case inches
+	case kilometers
+	case meters
+	case miles
 }
 
 
@@ -126,36 +126,36 @@ extension LengthUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Centimeters: return MeasuresStrings.Unit.Centimeter.abbreviation
-		case .Feet:        return MeasuresStrings.Unit.Foot.abbreviation
-		case .Inches:      return MeasuresStrings.Unit.Inch.abbreviation
-		case .Kilometers:  return MeasuresStrings.Unit.Kilometer.abbreviation
-		case .Meters:      return MeasuresStrings.Unit.Meter.abbreviation
-		case .Miles:       return MeasuresStrings.Unit.Mile.abbreviation
+		case .centimeters: return MeasuresStrings.Unit.Centimeter.abbreviation
+		case .feet:        return MeasuresStrings.Unit.Foot.abbreviation
+		case .inches:      return MeasuresStrings.Unit.Inch.abbreviation
+		case .kilometers:  return MeasuresStrings.Unit.Kilometer.abbreviation
+		case .meters:      return MeasuresStrings.Unit.Meter.abbreviation
+		case .miles:       return MeasuresStrings.Unit.Mile.abbreviation
 		}
 	}
 
 
 	public var name: PluralizedString {
 		switch self {
-		case .Centimeters: return MeasuresStrings.Unit.Centimeter.name
-		case .Feet:        return MeasuresStrings.Unit.Foot.name
-		case .Inches:      return MeasuresStrings.Unit.Inch.name
-		case .Kilometers:  return MeasuresStrings.Unit.Kilometer.name
-		case .Meters:      return MeasuresStrings.Unit.Meter.name
-		case .Miles:       return MeasuresStrings.Unit.Mile.name
+		case .centimeters: return MeasuresStrings.Unit.Centimeter.name
+		case .feet:        return MeasuresStrings.Unit.Foot.name
+		case .inches:      return MeasuresStrings.Unit.Inch.name
+		case .kilometers:  return MeasuresStrings.Unit.Kilometer.name
+		case .meters:      return MeasuresStrings.Unit.Meter.name
+		case .miles:       return MeasuresStrings.Unit.Mile.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .Centimeters: return nil
-		case .Feet:        return "′"
-		case .Inches:      return "″"
-		case .Kilometers:  return nil
-		case .Meters:      return nil
-		case .Miles:       return nil
+		case .centimeters: return nil
+		case .feet:        return "′"
+		case .inches:      return "″"
+		case .kilometers:  return nil
+		case .meters:      return nil
+		case .miles:       return nil
 		}
 	}
 }

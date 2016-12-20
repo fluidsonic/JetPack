@@ -3,14 +3,14 @@ import UIKit
 
 public extension UIControl {
 
-	private struct AssociatedKeys {
-		private static var eventHandler = UInt8()
+	fileprivate struct AssociatedKeys {
+		fileprivate static var eventHandler = UInt8()
 	}
 
 
 
 	@nonobjc
-	private func ensureEventHandler() -> EventHandler {
+	fileprivate func ensureEventHandler() -> EventHandler {
 		return eventHandler ?? {
 			let eventHandler = EventHandler(control: self)
 			self.eventHandler = eventHandler
@@ -20,7 +20,7 @@ public extension UIControl {
 
 
 	@nonobjc
-	private var eventHandler: EventHandler? {
+	fileprivate var eventHandler: EventHandler? {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.eventHandler) as? EventHandler }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.eventHandler, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
@@ -58,10 +58,10 @@ public extension UIControl {
 
 private final class EventHandler: NSObject {
 
-	private unowned var control: UIControl
+	fileprivate unowned var control: UIControl
 
 
-	private init(control: UIControl) {
+	fileprivate init(control: UIControl) {
 		self.control = control
 
 		super.init()
@@ -69,45 +69,45 @@ private final class EventHandler: NSObject {
 
 
 	@objc
-	private func controlTapped() {
+	fileprivate func controlTapped() {
 		tapped?()
 	}
 
 
 	@objc
-	private func controlValueChanged() {
+	fileprivate func controlValueChanged() {
 		valueChanged?()
 	}
 
 
-	private var tapped: Closure? {
+	fileprivate var tapped: Closure? {
 		didSet {
 			if tapped != nil {
 				if oldValue == nil {
-					control.addTarget(self, action: #selector(controlTapped), forControlEvents: .TouchUpInside)
+					control.addTarget(self, action: #selector(controlTapped), for: .touchUpInside)
 				}
 			}
 			else {
 				if oldValue != nil {
-					control.removeTarget(self, action: #selector(controlTapped), forControlEvents: .TouchUpInside)
+					control.removeTarget(self, action: #selector(controlTapped), for: .touchUpInside)
 				}
 			}
 		}
 	}
 
 
-	private var valueChanged: Closure? {
+	fileprivate var valueChanged: Closure? {
 		didSet {
 			if valueChanged != nil {
 				if oldValue == nil {
-					control.addTarget(self, action: #selector(controlValueChanged), forControlEvents: .EditingChanged)
-					control.addTarget(self, action: #selector(controlValueChanged), forControlEvents: .ValueChanged)
+					control.addTarget(self, action: #selector(controlValueChanged), for: .editingChanged)
+					control.addTarget(self, action: #selector(controlValueChanged), for: .valueChanged)
 				}
 			}
 			else {
 				if oldValue != nil {
-					control.removeTarget(self, action: #selector(controlValueChanged), forControlEvents: .EditingChanged)
-					control.removeTarget(self, action: #selector(controlValueChanged), forControlEvents: .TouchUpInside)
+					control.removeTarget(self, action: #selector(controlValueChanged), for: .editingChanged)
+					control.removeTarget(self, action: #selector(controlValueChanged), for: .touchUpInside)
 				}
 			}
 		}

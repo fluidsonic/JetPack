@@ -1,7 +1,7 @@
 import UIKit
 
 
-public /* non-final */ class SearchBar: UISearchBar {
+open /* non-final */ class SearchBar: UISearchBar {
 
 	public init() {
 		super.init(frame: .zero)
@@ -13,7 +13,7 @@ public /* non-final */ class SearchBar: UISearchBar {
 	}
 
 
-	public var automaticallyDisablesCancelButton = true {
+	open var automaticallyDisablesCancelButton = true {
 		didSet {
 			guard automaticallyDisablesCancelButton != oldValue else{
 				return

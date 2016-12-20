@@ -1,7 +1,7 @@
 import Foundation
 
 
-public protocol Failure: CustomDebugStringConvertible, CustomStringConvertible, ErrorType {
+public protocol Failure: CustomDebugStringConvertible, CustomStringConvertible, Error {
 
 	var cause: Failure? { get }
 	var developerMessage: String { get }
@@ -22,9 +22,9 @@ public extension Failure {
 	}
 
 
-	private func debugDescriptionForErrorTypeInstance(instance: ErrorType) -> String {
-		var debugDescription = String(reflecting: instance.dynamicType)
-		if let displayStyle = Mirror(reflecting: instance).displayStyle where displayStyle == .Enum {
+	fileprivate func debugDescriptionForErrorTypeInstance(_ instance: Error) -> String {
+		var debugDescription = String(reflecting: type(of: instance))
+		if let displayStyle = Mirror(reflecting: instance).displayStyle, displayStyle == .enum {
 			debugDescription += ".Case#\(instance._code)" // Too bad we don't get the case's name yet. At least we have the index!
 		}
 
@@ -65,14 +65,14 @@ public extension Failure {
 }
 
 
-public extension ErrorType {
+public extension Error {
 
 	public func asFailure() -> Failure {
 		return asFailureWithDefaultUserMessage("An unknown error occurred.")
 	}
 
 
-	public func asFailureWithDefaultUserMessage(defaultUserMessage: String) -> Failure {
+	public func asFailureWithDefaultUserMessage(_ defaultUserMessage: String) -> Failure {
 		if let failure = self as? Failure {
 			return failure
 		}
@@ -110,22 +110,22 @@ public extension ErrorType {
 
 private struct FailureForErrorType: Failure {
 
-	private let defaultUserMessage: String
-	private let error: ErrorType
+	fileprivate let defaultUserMessage: String
+	fileprivate let error: Error
 
 
-	private init(error: ErrorType, defaultUserMessage: String) {
+	fileprivate init(error: Error, defaultUserMessage: String) {
 		self.defaultUserMessage = defaultUserMessage
 		self.error = error
 	}
 
 
-	private var debugDescription: String {
+	fileprivate var debugDescription: String {
 		return debugDescriptionForErrorTypeInstance(error)
 	}
 
 
-	private var developerMessage: String {
+	fileprivate var developerMessage: String {
 		guard let stringConvertible = error as? CustomDebugStringConvertible else {
 			return userMessage
 		}
@@ -134,7 +134,7 @@ private struct FailureForErrorType: Failure {
 	}
 
 
-	private var userMessage: String {
+	fileprivate var userMessage: String {
 		guard let stringConvertible = error as? CustomStringConvertible else {
 			return defaultUserMessage
 		}
@@ -147,11 +147,11 @@ private struct FailureForErrorType: Failure {
 
 private class FailureForNSError: NSError, Failure {
 
-	private let defaultUserMessage: String
-	private let error: NSError
+	fileprivate let defaultUserMessage: String
+	fileprivate let error: NSError
 
 
-	private init(error: NSError, defaultUserMessage: String) {
+	fileprivate init(error: NSError, defaultUserMessage: String) {
 		self.defaultUserMessage = defaultUserMessage
 		self.error = error
 
@@ -164,23 +164,23 @@ private class FailureForNSError: NSError, Failure {
 	}
 
 
-	private var cause: Failure? {
+	fileprivate var cause: Failure? {
 		let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError
 		return underlyingError?.asFailure()
 	}
 
 
-	private override var debugDescription: String {
+	fileprivate override var debugDescription: String {
 		let error = self.error as NSError
 
 		var debugDescription = ""
-		debugDescription += String(reflecting: error.dynamicType)
+		debugDescription += String(reflecting: type(of: error))
 		debugDescription += "(domain: "
 		debugDescription += error.domain.isEmpty ? "<empty>" : String(reflecting: error.domain)
 		debugDescription += ", code: "
 		debugDescription += String(error.code)
 
-		if let localizedDescription = error.userInfo[NSLocalizedDescriptionKey] as? String where !localizedDescription.isEmpty {
+		if let localizedDescription = error.userInfo[NSLocalizedDescriptionKey] as? String, !localizedDescription.isEmpty {
 			debugDescription += ", message: "
 			debugDescription += String(reflecting: localizedDescription)
 		}
@@ -203,15 +203,15 @@ private class FailureForNSError: NSError, Failure {
 	}
 
 
-	private var developerMessage: String {
+	fileprivate var developerMessage: String {
 		let error = self.error as NSError
 		return error.description
 	}
 
 
-	private var userMessage: String {
+	fileprivate var userMessage: String {
 		let error = self.error as NSError
-		guard let localizedDescription = error.userInfo[NSLocalizedDescriptionKey] as? String where !localizedDescription.isEmpty else {
+		guard let localizedDescription = error.userInfo[NSLocalizedDescriptionKey] as? String, !localizedDescription.isEmpty else {
 			return defaultUserMessage
 		}
 		

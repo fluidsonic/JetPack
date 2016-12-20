@@ -4,12 +4,12 @@ import Foundation
 public extension NSDecimalNumber {
 
 	@nonobjc
-	internal func modulo(divisor: NSDecimalNumber) -> NSDecimalNumber {
-		let roundingMode: NSRoundingMode = (isNegative != divisor.isNegative) ? .RoundUp : .RoundDown
+	internal func modulo(_ divisor: NSDecimalNumber) -> NSDecimalNumber {
+		let roundingMode: NSDecimalNumber.RoundingMode = (isNegative != divisor.isNegative) ? .up : .down
 		let roundingHandler = NSDecimalNumberHandler(roundingMode: roundingMode, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
-		let quotient = decimalNumberByDividingBy(divisor, withBehavior: roundingHandler)
-		let subtract = quotient.decimalNumberByMultiplyingBy(divisor)
-		let remainder = decimalNumberBySubtracting(subtract)
+		let quotient = dividing(by: divisor, withBehavior: roundingHandler)
+		let subtract = quotient.multiplying(by: divisor)
+		let remainder = subtracting(subtract)
 
 		return divisor.isNegative ? remainder.negate() : remainder
 	}
@@ -21,6 +21,6 @@ public extension NSDecimalNumber {
 
 	@nonobjc
 	internal func negate() -> NSDecimalNumber {
-		return decimalNumberByMultiplyingBy(.minusOne)
+		return multiplying(by: .minusOne)
 	}
 }

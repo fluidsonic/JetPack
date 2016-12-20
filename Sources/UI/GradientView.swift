@@ -2,12 +2,12 @@ import UIKit
 
 
 @objc(JetPack_GradientView)
-public/* non-final */ class GradientView: View {
+open/* non-final */ class GradientView: View {
 
 	public override init() {
 		super.init()
 
-		userInteractionEnabled = false
+		isUserInteractionEnabled = false
 	}
 
 
@@ -16,39 +16,39 @@ public/* non-final */ class GradientView: View {
 	}
 
 
-	public var colors: [UIColor] {
+	open var colors: [UIColor] {
 		get {
-			let cgColors = gradientLayer.colors as? [CGColorRef]
-			return cgColors?.map { UIColor(CGColor: $0) } ?? []
+			let cgColors = gradientLayer.colors as? [CGColor]
+			return cgColors?.map { UIColor(cgColor: $0) } ?? []
 		}
 		set {
-			gradientLayer.colors = newValue.map { $0.CGColor }
+			gradientLayer.colors = newValue.map { $0.cgColor }
 		}
 	}
 
 
-	public var endPoint: CGPoint {
+	open var endPoint: CGPoint {
 		get { return gradientLayer.endPoint }
 		set { gradientLayer.endPoint = newValue }
 	}
 
 
-	public private(set) final lazy var gradientLayer: CAGradientLayer = self.layer as! CAGradientLayer
+	public fileprivate(set) final lazy var gradientLayer: CAGradientLayer = self.layer as! CAGradientLayer
 
 
-	@warn_unused_result
-	public final override class func layerClass() -> AnyClass {
+	
+	public final override class var layerClass : AnyClass {
 		return CAGradientLayer.self
 	}
 
 
-	public var locations: [CGFloat] {
+	open var locations: [CGFloat] {
 		get { return gradientLayer.locations?.map { $0 as CGFloat } ?? [] }
-		set { gradientLayer.locations = newValue }
+		set { gradientLayer.locations = newValue as [NSNumber]? }
 	}
 
 
-	public var startPoint: CGPoint {
+	open var startPoint: CGPoint {
 		get { return gradientLayer.startPoint }
 		set { gradientLayer.startPoint = newValue }
 	}

@@ -6,7 +6,7 @@ public final class CommandLineInterface: NSObject {
 	private override init() {}
 
 
-	public static func run(arguments arguments: [String]) -> Int32 {
+	public static func run(arguments: [String]) -> Int32 {
 		guard arguments.count == 3 else {
 			print("Usage: \(arguments.first ?? "cli") <input file> <output file>")
 			return 1
@@ -15,7 +15,7 @@ public final class CommandLineInterface: NSObject {
 		let inputFile = arguments[1]
 		let outputFile = arguments[2]
 
-		guard let inputData = NSData(contentsOfFile: inputFile) else {
+		guard let inputData = try? Data(contentsOf: URL(fileURLWithPath: inputFile)) else {
 			print("Cannot open input file '\(inputFile)'.")
 			return 1
 		}
@@ -25,16 +25,16 @@ public final class CommandLineInterface: NSObject {
 			let ruleSets = try parser.parse(xml: inputData)
 			let swiftCode = SwiftCodeGenerator().generate(for: ruleSets)
 
-			guard let outputData = swiftCode.dataUsingEncoding(NSUTF8StringEncoding) else {
+			guard let outputData = swiftCode.data(using: .utf8) else {
 				print("Cannot encode output as UTF8.")
 				return 1
 			}
 
-			try outputData.writeToFile(outputFile, options: .AtomicWrite)
+			try outputData.write(to: URL(fileURLWithPath: outputFile), options: .atomicWrite)
 			return 0
 		}
 		catch let error {
-			print(String(error))
+			print(String(describing: error))
 			return 1
 		}
 	}

@@ -1,11 +1,11 @@
-private let degreesPerRadian = 180.0 / .Pi
-private let radiansPerDegree = .Pi / 180.0
+private let degreesPerRadian = 180.0 / .pi
+private let radiansPerDegree = .pi / 180.0
 
 
 public struct Angle: Measure {
 
 	public static let name = MeasuresStrings.Measure.angle
-	public static let rawUnit = AngleUnit.Degrees
+	public static let rawUnit = AngleUnit.degrees
 
 	public var rawValue: Double
 
@@ -14,19 +14,19 @@ public struct Angle: Measure {
 		precondition(!value.isNaN, "Value must not be NaN.")
 
 		switch unit {
-		case .Degrees: rawValue = value
-		case .Radians: rawValue = value * degreesPerRadian
+		case .degrees: rawValue = value
+		case .radians: rawValue = value * degreesPerRadian
 		}
 	}
 
 
 	public init(degrees: Double) {
-		self.init(degrees, unit: .Degrees)
+		self.init(degrees, unit: .degrees)
 	}
 
 
 	public init(radians: Double) {
-		self.init(radians, unit: .Radians)
+		self.init(radians, unit: .radians)
 	}
 
 
@@ -45,10 +45,10 @@ public struct Angle: Measure {
 	}
 
 
-	public func valueInUnit(unit: AngleUnit) -> Double {
+	public func valueInUnit(_ unit: AngleUnit) -> Double {
 		switch unit {
-		case .Degrees: return degrees
-		case .Radians: return radians
+		case .degrees: return degrees
+		case .radians: return radians
 		}
 	}
 }
@@ -57,8 +57,8 @@ public struct Angle: Measure {
 
 public enum AngleUnit: Unit {
 
-	case Degrees
-	case Radians
+	case degrees
+	case radians
 }
 
 
@@ -66,24 +66,24 @@ extension AngleUnit {
 
 	public var abbreviation: String {
 		switch self {
-		case .Degrees: return MeasuresStrings.Unit.Degree.abbreviation
-		case .Radians: return MeasuresStrings.Unit.Radian.abbreviation
+		case .degrees: return MeasuresStrings.Unit.Degree.abbreviation
+		case .radians: return MeasuresStrings.Unit.Radian.abbreviation
 		}
 	}
 
 
 	public var name: PluralizedString {
 		switch self {
-		case .Degrees: return MeasuresStrings.Unit.Degree.name
-		case .Radians: return MeasuresStrings.Unit.Radian.name
+		case .degrees: return MeasuresStrings.Unit.Degree.name
+		case .radians: return MeasuresStrings.Unit.Radian.name
 		}
 	}
 
 
 	public var symbol: String? {
 		switch self {
-		case .Degrees: return "°"
-		case .Radians: return "㎭"
+		case .degrees: return "°"
+		case .radians: return "㎭"
 		}
 	}
 }

@@ -12,10 +12,10 @@ public extension UIResponder {
 			temporaryFirstResponder = nil
 		}
 
-		let application = UIApplication.sharedApplication()
+		let application = UIApplication.shared
 
 		temporaryFirstResponder = nil
-		application.sendAction(#selector(determineFirstResponder), to: nil, from: nil, forEvent: nil)
+		application.sendAction(#selector(determineFirstResponder), to: nil, from: nil, for: nil)
 
 		guard let firstResponder = temporaryFirstResponder else {
 			// there is no first responder at all
@@ -34,7 +34,7 @@ public extension UIResponder {
 				return firstResponder
 			}
 
-			nextResponder = responder.nextResponder()
+			nextResponder = responder.next
 		}
 
 		// first responder is not in this responder's subchain
@@ -43,7 +43,7 @@ public extension UIResponder {
 
 
 	@objc(JetPack_determineFirstResponder)
-	private func determineFirstResponder() {
+	fileprivate func determineFirstResponder() {
 		temporaryFirstResponder = self
 	}
 }

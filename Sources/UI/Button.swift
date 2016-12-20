@@ -2,18 +2,18 @@ import UIKit
 
 
 @objc(JetPack_Button)
-public class Button: View {
+open class Button: View {
 
-	private var _activityIndicator: UIActivityIndicatorView?
-	private var _imageView: ImageView?
-	private var _textLabel: Label?
+	fileprivate var _activityIndicator: UIActivityIndicatorView?
+	fileprivate var _imageView: ImageView?
+	fileprivate var _textLabel: Label?
 
-	private var defaultAlpha = CGFloat(1)
-	private var defaultBackgroundColor: UIColor?
-	private var defaultBorderColor: UIColor?
+	fileprivate var defaultAlpha = CGFloat(1)
+	fileprivate var defaultBackgroundColor: UIColor?
+	fileprivate var defaultBorderColor: UIColor?
 
-	public var tapped: Closure?
-	public var touchTolerance = CGFloat(75)
+	open var tapped: Closure?
+	open var touchTolerance = CGFloat(75)
 
 
 	public override init() {
@@ -29,7 +29,7 @@ public class Button: View {
 	public final var activityIndicator: UIActivityIndicatorView {
 		get {
 			return _activityIndicator ?? {
-				let child = UIActivityIndicatorView(activityIndicatorStyle: .White)
+				let child = UIActivityIndicatorView(activityIndicatorStyle: .white)
 				child.hidesWhenStopped = false
 
 				_activityIndicator = child
@@ -40,10 +40,10 @@ public class Button: View {
 	}
 
 
-	public override var alpha: CGFloat {
+	open override var alpha: CGFloat {
 		get { return defaultAlpha }
 		set {
-			let newAlpha = newValue.clamp(min: 0, max: 1)
+			let newAlpha = newValue.coerced(in: 0 ... 1)
 			guard newAlpha != defaultAlpha else {
 				return
 			}
@@ -55,7 +55,7 @@ public class Button: View {
 	}
 
 
-	public var arrangement = Arrangement.ImageLeft {
+	open var arrangement = Arrangement.imageLeft {
 		didSet {
 			guard arrangement != oldValue else {
 				return
@@ -66,7 +66,7 @@ public class Button: View {
 	}
 
 
-	public override var backgroundColor: UIColor? {
+	open override var backgroundColor: UIColor? {
 		get { return defaultBackgroundColor }
 		set {
 			guard newValue != defaultBackgroundColor else {
@@ -80,7 +80,7 @@ public class Button: View {
 	}
 
 
-	public override var borderColor: UIColor? {
+	open override var borderColor: UIColor? {
 		get { return defaultBorderColor }
 		set {
 			guard newValue != defaultBorderColor else {
@@ -94,11 +94,11 @@ public class Button: View {
 	}
 
 
-	public override func didMoveToWindow() {
+	open override func didMoveToWindow() {
 		super.didMoveToWindow()
 
 		if window != nil {
-			if let activityIndicator = _activityIndicator where activityIndicator.superview === self {
+			if let activityIndicator = _activityIndicator, activityIndicator.superview === self {
 				activityIndicator.startAnimating()
 			}
 		}
@@ -108,7 +108,7 @@ public class Button: View {
 	}
 
 
-	public var disabledAlpha: CGFloat? {
+	open var disabledAlpha: CGFloat? {
 		didSet {
 			guard disabledAlpha != oldValue else {
 				return
@@ -119,7 +119,7 @@ public class Button: View {
 	}
 
 
-	public var disabledBackgroundColor: UIColor? {
+	open var disabledBackgroundColor: UIColor? {
 		didSet {
 			guard disabledBackgroundColor != oldValue else {
 				return
@@ -130,9 +130,9 @@ public class Button: View {
 	}
 
 
-	public var enabled = true {
+	open var enabled = true {
 		didSet {
-			userInteractionEnabled = enabled
+			isUserInteractionEnabled = enabled
 
 			guard enabled != oldValue else {
 				return
@@ -144,7 +144,7 @@ public class Button: View {
 	}
 
 
-	public var highlighted = false {
+	open var highlighted = false {
 		didSet {
 			guard highlighted != oldValue else {
 				return
@@ -163,7 +163,7 @@ public class Button: View {
 	}
 
 
-	public var highlightedAlpha: CGFloat? = 0.5 {
+	open var highlightedAlpha: CGFloat? = 0.5 {
 		didSet {
 			guard highlightedAlpha != oldValue else {
 				return
@@ -174,7 +174,7 @@ public class Button: View {
 	}
 
 
-	public var highlightedBackgroundColor: UIColor? {
+	open var highlightedBackgroundColor: UIColor? {
 		didSet {
 			guard highlightedBackgroundColor != oldValue else {
 				return
@@ -185,7 +185,7 @@ public class Button: View {
 	}
 
 
-	public var highlightedBorderColor: UIColor? {
+	open var highlightedBorderColor: UIColor? {
 		didSet {
 			guard highlightedBorderColor != oldValue else {
 				return
@@ -196,7 +196,7 @@ public class Button: View {
 	}
 
 
-	public var horizontalAlignment = HorizontalAlignment.Center {
+	open var horizontalAlignment = HorizontalAlignment.center {
 		didSet {
 			guard horizontalAlignment != oldValue else {
 				return
@@ -207,7 +207,7 @@ public class Button: View {
 	}
 
 
-	public var imageOffset = UIOffset() {
+	open var imageOffset = UIOffset() {
 		didSet {
 			guard imageOffset != oldValue else {
 				return
@@ -230,18 +230,18 @@ public class Button: View {
 	}
 
 
-	private func imageViewDidChangeSource() {
+	fileprivate func imageViewDidChangeSource() {
 		setNeedsLayout()
 		invalidateIntrinsicContentSize()
 	}
 
 
-	public override func intrinsicContentSize() -> CGSize {
+	open override var intrinsicContentSize : CGSize {
 		return sizeThatFits()
 	}
 
 
-	private func layoutForSize(size: CGSize) -> Layout {
+	fileprivate func layoutForSize(_ size: CGSize) -> Layout {
 		if size.isEmpty {
 			return Layout()
 		}
@@ -278,22 +278,22 @@ public class Button: View {
 		var horizontalAlignment = self.horizontalAlignment
 		var verticalAlignment = self.verticalAlignment
 
-		let isVerticalArrangement = (arrangement == .ImageBottom || arrangement == .ImageTop)
+		let isVerticalArrangement = (arrangement == .imageBottom || arrangement == .imageTop)
 		if isVerticalArrangement {
 			// step 2: measure sizes
 
 			if let imageView = imageView {
-				if numberOfElements == 1 && verticalAlignment == .Fill && horizontalAlignment == .Fill {
+				if numberOfElements == 1 && verticalAlignment == .fill && horizontalAlignment == .fill {
 					imageViewFrame.size = remainingSize
 				}
 				else {
 					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
 
 					if numberOfElements == 1 {
-						if verticalAlignment == .Fill {
+						if verticalAlignment == .fill {
 							imageViewFrame.height = remainingSize.height
 						}
-						else if horizontalAlignment == .Fill {
+						else if horizontalAlignment == .fill {
 							imageViewFrame.width = remainingSize.width
 						}
 					}
@@ -316,7 +316,7 @@ public class Button: View {
 			var top = CGFloat(0)
 			let bottom = size.height
 
-			if arrangement == .ImageBottom {
+			if arrangement == .imageBottom {
 				if wantsText {
 					textLabelFrame.top = top
 					top = textLabelFrame.bottom
@@ -337,29 +337,29 @@ public class Button: View {
 
 			// step 4: adjust vertical positions
 
-			if verticalAlignment == .Fill && numberOfElements < 2 {
-				verticalAlignment = .Center
+			if verticalAlignment == .fill && numberOfElements < 2 {
+				verticalAlignment = .center
 			}
 
 			switch verticalAlignment {
-			case .Fill:
-				if arrangement == .ImageBottom {
+			case .fill:
+				if arrangement == .imageBottom {
 					imageViewFrame.bottom = bottom
 				}
 				else {
 					textLabelFrame.bottom = bottom
 				}
 
-			case .Top:
+			case .top:
 				break // already top
 
 
-			case .Bottom:
+			case .bottom:
 				let verticalOffset = remainingSize.height
 				textLabelFrame.top += verticalOffset
 				imageViewFrame.top += verticalOffset
 
-			case .Center:
+			case .center:
 				let verticalOffset = remainingSize.height / 2
 				textLabelFrame.top += verticalOffset
 				imageViewFrame.top += verticalOffset
@@ -369,26 +369,26 @@ public class Button: View {
 
 			if wantsImage || wantsActivityIndicator {
 				switch horizontalAlignment {
-				case .Right:
+				case .right:
 					imageViewFrame.right = size.width
 
-				case .Left:
+				case .left:
 					imageViewFrame.left = 0
 
-				case .Center, .Fill:
+				case .center, .fill:
 					imageViewFrame.horizontalCenter = size.width / 2
 				}
 			}
 
 			if wantsText {
 				switch horizontalAlignment {
-				case .Right:
+				case .right:
 					textLabelFrame.right = size.width
 
-				case .Left:
+				case .left:
 					textLabelFrame.left = 0
 
-				case .Center, .Fill:
+				case .center, .fill:
 					textLabelFrame.horizontalCenter = size.width / 2
 				}
 			}
@@ -397,17 +397,17 @@ public class Button: View {
 			// step 2: measure sizes
 
 			if let imageView = imageView {
-				if numberOfElements == 1 && verticalAlignment == .Fill && horizontalAlignment == .Fill {
+				if numberOfElements == 1 && verticalAlignment == .fill && horizontalAlignment == .fill {
 					imageViewFrame.size = remainingSize
 				}
 				else {
 					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
 
 					if numberOfElements == 1 {
-						if verticalAlignment == .Fill {
+						if verticalAlignment == .fill {
 							imageViewFrame.height = remainingSize.height
 						}
-						else if horizontalAlignment == .Fill {
+						else if horizontalAlignment == .fill {
 							imageViewFrame.width = remainingSize.width
 						}
 					}
@@ -430,7 +430,7 @@ public class Button: View {
 			var left = CGFloat(0)
 			let right = size.width
 
-			if arrangement == .ImageRight {
+			if arrangement == .imageRight {
 				if wantsText {
 					textLabelFrame.left = left
 					left = textLabelFrame.right
@@ -451,28 +451,28 @@ public class Button: View {
 
 			// step 4: adjust horizontal positions
 
-			if horizontalAlignment == .Fill && numberOfElements < 2 {
-				horizontalAlignment = .Center
+			if horizontalAlignment == .fill && numberOfElements < 2 {
+				horizontalAlignment = .center
 			}
 
 			switch horizontalAlignment {
-			case .Fill:
-				if arrangement == .ImageRight {
+			case .fill:
+				if arrangement == .imageRight {
 					imageViewFrame.right = right
 				}
 				else {
 					textLabelFrame.right = right
 				}
 
-			case .Left:
+			case .left:
 				break // already left
 
-			case .Right:
+			case .right:
 				let horizontalOffset = remainingSize.width
 				textLabelFrame.left += horizontalOffset
 				imageViewFrame.left += horizontalOffset
 
-			case .Center:
+			case .center:
 				let horizontalOffset = remainingSize.width / 2
 				textLabelFrame.left += horizontalOffset
 				imageViewFrame.left += horizontalOffset
@@ -482,26 +482,26 @@ public class Button: View {
 
 			if wantsImage || wantsActivityIndicator {
 				switch verticalAlignment {
-				case .Bottom:
+				case .bottom:
 					imageViewFrame.bottom = size.height
 
-				case .Top:
+				case .top:
 					imageViewFrame.top = 0
 
-				case .Center, .Fill:
+				case .center, .fill:
 					imageViewFrame.verticalCenter = size.height / 2
 				}
 			}
 
 			if wantsText {
 				switch verticalAlignment {
-				case .Bottom:
+				case .bottom:
 					textLabelFrame.bottom = size.height
 
-				case .Top:
+				case .top:
 					textLabelFrame.top = 0
 
-				case .Center, .Fill:
+				case .center, .fill:
 					textLabelFrame.verticalCenter = size.height / 2
 				}
 			}
@@ -529,23 +529,23 @@ public class Button: View {
 	}
 
 
-	public override func layoutSubviews() {
+	open override func layoutSubviews() {
 		let layout = layoutForSize(bounds.size)
 
 		var subviewIndex = subviews.count
-		if let imageView = _imageView, index = subviews.indexOfIdentical(imageView) {
+		if let imageView = _imageView, let index = subviews.indexOfIdentical(imageView) {
 			subviewIndex = min(subviewIndex, index)
 		}
-		if let textLabel = _textLabel, index = subviews.indexOfIdentical(textLabel) {
+		if let textLabel = _textLabel, let index = subviews.indexOfIdentical(textLabel) {
 			subviewIndex = min(subviewIndex, index)
 		}
-		if let activityIndicator = _activityIndicator, index = subviews.indexOfIdentical(activityIndicator) {
+		if let activityIndicator = _activityIndicator, let index = subviews.indexOfIdentical(activityIndicator) {
 			subviewIndex = min(subviewIndex, index)
 		}
 
 		if let imageViewFrame = layout.imageViewFrame {
 			if imageView.superview == nil {
-				insertSubview(imageView, atIndex: subviewIndex)
+				insertSubview(imageView, at: subviewIndex)
 			}
 			subviewIndex += 1
 
@@ -558,7 +558,7 @@ public class Button: View {
 
 		if let textLabelFrame = layout.textLabelFrame {
 			if textLabel.superview == nil {
-				insertSubview(textLabel, atIndex: subviewIndex)
+				insertSubview(textLabel, at: subviewIndex)
 			}
 			subviewIndex += 1
 
@@ -571,7 +571,7 @@ public class Button: View {
 
 		if let activityIndicatorFrame = layout.activityIndicatorFrame {
 			if activityIndicator.superview == nil {
-				insertSubview(activityIndicator, atIndex: subviewIndex)
+				insertSubview(activityIndicator, at: subviewIndex)
 
 				activityIndicator.startAnimating()
 			}
@@ -587,7 +587,7 @@ public class Button: View {
 	}
 
 
-	public var showsActivityIndicatorAsImage = false {
+	open var showsActivityIndicatorAsImage = false {
 		didSet {
 			guard showsActivityIndicatorAsImage != oldValue else {
 				return
@@ -598,7 +598,7 @@ public class Button: View {
 	}
 
 
-	public override func sizeThatFitsSize(maximumSize: CGSize) -> CGSize {
+	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		if maximumSize.isEmpty {
 			return .zero
 		}
@@ -616,7 +616,7 @@ public class Button: View {
 		var remainingSize = maximumSize
 
 		switch arrangement {
-		case .ImageBottom, .ImageTop: // vertical
+		case .imageBottom, .imageTop: // vertical
 			if let imageView = imageView {
 				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
 
@@ -639,7 +639,7 @@ public class Button: View {
 				fittingSize.width = max(fittingSize.width, textLabelSize.width)
 			}
 
-		case .ImageLeft, .ImageRight: // horizontal
+		case .imageLeft, .imageRight: // horizontal
 			if let imageView = imageView {
 				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
 
@@ -667,7 +667,7 @@ public class Button: View {
 	}
 
 
-	public override func subviewDidInvalidateIntrinsicContentSize(view: UIView) {
+	open override func subviewDidInvalidateIntrinsicContentSize(_ view: UIView) {
 		setNeedsLayout()
 		invalidateIntrinsicContentSize()
 	}
@@ -677,7 +677,7 @@ public class Button: View {
 		get {
 			return _textLabel ?? {
 				let child = ButtonLabel(button: self)
-				child.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+				child.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
 				child.textColor = .tintColor()
 
 				_textLabel = child
@@ -688,13 +688,13 @@ public class Button: View {
 	}
 
 
-	private func textLabelDidChangeAttributedText() {
+	fileprivate func textLabelDidChangeAttributedText() {
 		setNeedsLayout()
 		invalidateIntrinsicContentSize()
 	}
 
 
-	public var textOffset = UIOffset() {
+	open var textOffset = UIOffset() {
 		didSet {
 			guard textOffset != oldValue else {
 				return
@@ -705,7 +705,7 @@ public class Button: View {
 	}
 
 
-	public override func tintColorDidChange() {
+	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
 		updateBackgroundColor()
@@ -713,13 +713,13 @@ public class Button: View {
 	}
 
 
-	public func touchIsAcceptableForTap(touch: UITouch, event: UIEvent?) -> Bool {
-		return pointInside(touch.locationInView(self), withEvent: event, additionalHitZone: additionalHitZone.increaseBy(UIEdgeInsets(all: touchTolerance)))
+	open func touchIsAcceptableForTap(_ touch: UITouch, event: UIEvent?) -> Bool {
+		return pointInside(touch.location(in: self), withEvent: event, additionalHitZone: additionalHitZone.increaseBy(UIEdgeInsets(all: touchTolerance)))
 	}
 
 
-	public override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-		if let touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+	open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if let touch = touches.first, touchIsAcceptableForTap(touch, event: event) {
 			highlighted = true
 		}
 		else {
@@ -728,22 +728,22 @@ public class Button: View {
 	}
 
 
-	public override func touchesCancelled(touches: Set<UITouch>, withEvent event: UIEvent?) {
+	open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
 		highlighted = false
 	}
 
 
-	public override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+	open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		highlighted = false
 
-		if enabled, let tapped = tapped, touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+		if enabled, let tapped = tapped, let touch = touches.first, touchIsAcceptableForTap(touch, event: event) {
 			tapped()
 		}
 	}
 
 
-	public override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-		if let touch = touches.first where touchIsAcceptableForTap(touch, event: event) {
+	open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if let touch = touches.first, touchIsAcceptableForTap(touch, event: event) {
 			highlighted = true
 		}
 		else {
@@ -752,7 +752,7 @@ public class Button: View {
 	}
 	
 
-	private func updateAlpha() {
+	fileprivate func updateAlpha() {
 		let alpha: CGFloat
 		if !enabled, let disabledAlpha = disabledAlpha {
 			alpha = disabledAlpha
@@ -768,7 +768,7 @@ public class Button: View {
 	}
 
 
-	private func updateBackgroundColor() {
+	fileprivate func updateBackgroundColor() {
 		let backgroundColor: UIColor?
 		if !enabled, let disabledBackgroundColor = disabledBackgroundColor {
 			backgroundColor = disabledBackgroundColor
@@ -784,7 +784,7 @@ public class Button: View {
 	}
 
 
-	private func updateBorderColor() {
+	fileprivate func updateBorderColor() {
 		let borderColor: UIColor?
 		if highlighted, let highlightedBorderColor = highlightedBorderColor {
 			borderColor = highlightedBorderColor
@@ -797,7 +797,7 @@ public class Button: View {
 	}
 
 
-	public var verticalAlignment = VerticalAlignment.Center {
+	open var verticalAlignment = VerticalAlignment.center {
 		didSet {
 			guard verticalAlignment != oldValue else {
 				return
@@ -810,26 +810,26 @@ public class Button: View {
 
 
 	public enum Arrangement {
-		case ImageBottom
-		case ImageLeft
-		case ImageRight
-		case ImageTop
+		case imageBottom
+		case imageLeft
+		case imageRight
+		case imageTop
 	}
 
 
 	public enum HorizontalAlignment {
-		case Center
-		case Fill
-		case Left
-		case Right
+		case center
+		case fill
+		case left
+		case right
 	}
 
 
 	public enum VerticalAlignment {
-		case Bottom
-		case Center
-		case Fill
-		case Top
+		case bottom
+		case center
+		case fill
+		case top
 	}
 }
 
@@ -837,31 +837,31 @@ public class Button: View {
 
 private struct Layout {
 
-	private var activityIndicatorFrame: CGRect?
-	private var imageViewFrame: CGRect?
-	private var textLabelFrame: CGRect?
+	fileprivate var activityIndicatorFrame: CGRect?
+	fileprivate var imageViewFrame: CGRect?
+	fileprivate var textLabelFrame: CGRect?
 }
 
 
 
 private final class ButtonImageView: ImageView {
 
-	private weak var button: Button?
+	fileprivate weak var button: Button?
 
 
-	private init(button: Button) {
+	fileprivate init(button: Button) {
 		self.button = button
 
 		super.init()
 	}
 
 
-	private required init?(coder: NSCoder) {
+	fileprivate required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
 
-	private override var source: Source? {
+	fileprivate override var source: Source? {
 		didSet {
 			button?.imageViewDidChangeSource()
 		}
@@ -872,17 +872,17 @@ private final class ButtonImageView: ImageView {
 
 private final class ButtonLabel: Label {
 
-	private weak var button: Button?
+	fileprivate weak var button: Button?
 
 
-	private init(button: Button) {
+	fileprivate init(button: Button) {
 		self.button = button
 
 		super.init()
 	}
 
 
-	private override var attributedText: NSAttributedString {
+	fileprivate override var attributedText: NSAttributedString {
 		didSet {
 		guard attributedText != oldValue else {
 			return
@@ -893,7 +893,7 @@ private final class ButtonLabel: Label {
 	}
 
 
-	private required init?(coder: NSCoder) {
+	fileprivate required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 }

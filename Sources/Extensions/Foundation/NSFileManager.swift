@@ -1,19 +1,19 @@
 import Foundation
 
 
-public extension NSFileManager {
+public extension FileManager {
 
 	@nonobjc
-	public func asyncRemoveItem(item: NSURL, handler: (Result<Void> -> Void)? = nil) {
+	public func asyncRemoveItem(_ item: URL, handler: ((Result<Void>) -> Void)? = nil) {
 		asyncWithHandler(handler, errorMessage: "Cannot remove item '\(item)'") {
-			return try self.removeItemAtURL(item)
+			return try self.removeItem(at: item)
 		}
 	}
 
 
 	@nonobjc
-	private func asyncWithHandler <ValueType> (handler: (Result<ValueType> -> Void)?, @autoclosure(escaping) errorMessage: Void -> String, action: Void throws -> ValueType) {
-		onBackgroundQueueOfPriority(.Low) {
+	fileprivate func asyncWithHandler <ValueType> (_ handler: ((Result<ValueType>) -> Void)?, errorMessage: @autoclosure @escaping (Void) -> String, action: @escaping (Void) throws -> ValueType) {
+		onBackgroundQueueOfPriority(.low) {
 			do {
 				let value = try action()
 				handler?(.Success(value))
@@ -26,17 +26,17 @@ public extension NSFileManager {
 
 
 	@nonobjc
-	public func itemExistsAtURL(url: NSURL) -> Bool {
-		guard url.fileURL, let path = url.path else {
+	public func itemExistsAtURL(_ url: URL) -> Bool {
+		guard url.isFileURL, let path = url.path.nonEmpty else {
 			return false
 		}
 
-		return fileExistsAtPath(path)
+		return fileExists(atPath: path)
 	}
 
 
 	@nonobjc
-	private func reportError <ValueType> (error: ErrorType, @autoclosure withMessage message: Void -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line, toHandler handler: (Result<ValueType> -> Void)?) {
+	fileprivate func reportError <ValueType> (_ error: Error, withMessage message: @autoclosure (Void) -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line, toHandler handler: ((Result<ValueType>) -> Void)?) {
 		guard let handler = handler else {
 			log("'\(message())': \(error)", function: function, file: file, line: line)
 			return

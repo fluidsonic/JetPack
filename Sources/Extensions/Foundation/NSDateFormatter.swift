@@ -1,12 +1,12 @@
 import Foundation
 
 
-public extension NSDateFormatter {
+public extension DateFormatter {
 
 	@nonobjc
-	public static let iso8859Formatter: NSDateFormatter = {
-		let formatter = NSDateFormatter()
-		formatter.locale = NSLocale.englishUnitedStatesComputer
+	public static let iso8859Formatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.locale = Locale.englishUnitedStatesComputer
 		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 		return formatter
 	}()

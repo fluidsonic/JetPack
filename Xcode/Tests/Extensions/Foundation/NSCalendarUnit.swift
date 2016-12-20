@@ -7,7 +7,7 @@ import JetPack
 class NSCalendarUnit_Tests: XCTestCase {
 
 	func testShortcutProperties() {
-		let all: NSCalendarUnit  = [.Era, .Year, .Month, .Day, .Hour, .Minute, .Second, .Weekday, .WeekdayOrdinal, .WeekOfMonth, .WeekOfYear, .YearForWeekOfYear, .Nanosecond, .Calendar, .TimeZone]
-		XCTAssertEqual(NSCalendarUnit.All, all)
+		let all: NSCalendar.Unit  = [.era, .year, .month, .day, .hour, .minute, .second, .weekday, .weekdayOrdinal, .weekOfMonth, .weekOfYear, .yearForWeekOfYear, .nanosecond, .calendar, .timeZone]
+		XCTAssertEqual(NSCalendar.Unit.All, all)
 	}
 }

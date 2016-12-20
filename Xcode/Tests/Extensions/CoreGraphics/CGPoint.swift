@@ -21,7 +21,7 @@ class CGPoint_Tests: XCTestCase {
 
 	func testDistance() {
 		let point = CGPoint(x: 1, y: 2)
-		XCTAssertEqualWithAccuracy(point.distanceTo(CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: .Epsilon)
+		XCTAssertEqualWithAccuracy(point.distanceTo(CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: CGFloat(FLT_EPSILON))
 	}
 
 	
@@ -65,10 +65,10 @@ class CGPoint_Tests: XCTestCase {
 
 	func testTransform() {
 		let point = CGPoint(x: 1, y: 2)
-		XCTAssertEqual(point.transform(CGAffineTransformMakeTranslation(1, 2)), CGPoint(x: 2, y: 4))
+		XCTAssertEqual(point.transform(CGAffineTransform(translationX: 1, y: 2)), CGPoint(x: 2, y: 4))
 
 		var mutablePoint = point
-		mutablePoint.transformInPlace(CGAffineTransformMakeTranslation(1, 2))
+		mutablePoint.transformInPlace(CGAffineTransform(translationX: 1, y: 2))
 		XCTAssertEqual(mutablePoint, CGPoint(x: 2, y: 4))
 	}
 }
