@@ -13,10 +13,10 @@ public extension FileManager {
 
 	@nonobjc
 	fileprivate func asyncWithHandler <ValueType> (_ handler: ((Result<ValueType>) -> Void)?, errorMessage: @autoclosure @escaping (Void) -> String, action: @escaping (Void) throws -> ValueType) {
-		onBackgroundQueueOfPriority(.low) {
+		onBackgroundQueue(qos: .utility) {
 			do {
 				let value = try action()
-				handler?(.Success(value))
+				handler?(.success(value))
 			}
 			catch let error {
 				return self.reportError(error, withMessage: errorMessage(), toHandler: handler)
@@ -42,6 +42,6 @@ public extension FileManager {
 			return
 		}
 
-		handler(.Failure(error))
+		handler(.failure(error))
 	}
 }

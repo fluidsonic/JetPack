@@ -3,8 +3,8 @@ import Foundation
 
 open /* non-final */ class AsyncOperation: Operation {
 
-	fileprivate var _executing = false
-	fileprivate var _finished = false
+	private var _executing = false
+	private var _finished = false
 
 
 	public final override var isAsynchronous: Bool {
@@ -17,7 +17,7 @@ open /* non-final */ class AsyncOperation: Operation {
 	}
 
 
-	fileprivate func finish() {
+	private func finish() {
 		guard _executing else {
 			fatalError("Completion closure called while not executing")
 		}

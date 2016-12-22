@@ -47,9 +47,9 @@ open /* non-final */ class NavigationController: UINavigationController {
 			return
 		}
 
-		redirectMethodInType(self, fromSelector: #selector(UINavigationController.init(nibName:bundle:)), toSelector: #selector(UINavigationController.init(nibName:bundle:)), inType: UINavigationController.self)
+		redirectMethod(in: self, from: #selector(UINavigationController.init(nibName:bundle:)), to: #selector(UINavigationController.init(nibName:bundle:)), in: UINavigationController.self)
 
-		copyMethodInType(object_getClass(self), fromSelector: #selector(overridesPreferredInterfaceOrientationForPresentation), toSelector: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
+		copyMethod(in: object_getClass(self), from: #selector(overridesPreferredInterfaceOrientationForPresentation), to: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
 	}
 
 

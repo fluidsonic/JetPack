@@ -1,6 +1,12 @@
 import ObjectiveC
 
 
+@inline(__always)
+public func asObject(_ value: Any) -> AnyObject? {
+	return isObject(value) ? value as AnyObject : nil
+}
+
+
 private func class_getInstanceMethodIgnoringSupertypes(_ clazz: AnyClass, _ name: Selector) -> Method? {
 	let method = class_getInstanceMethod(clazz, name)
 
@@ -15,7 +21,7 @@ private func class_getInstanceMethodIgnoringSupertypes(_ clazz: AnyClass, _ name
 }
 
 
-internal func copyMethodWithSelector(_ selector: Selector, fromType: AnyClass, toType: AnyClass) {
+internal func copyMethod(selector: Selector, from fromType: AnyClass, to toType: AnyClass) {
 	precondition(fromType != toType)
 
 	let fromMethod = class_getInstanceMethodIgnoringSupertypes(fromType, selector)
@@ -45,7 +51,7 @@ internal func copyMethodWithSelector(_ selector: Selector, fromType: AnyClass, t
 }
 
 
-internal func copyMethodInType(_ type: AnyClass, includingSupertypes: Bool = false, fromSelector: Selector, toSelector: Selector) {
+internal func copyMethod(in type: AnyClass, includingSupertypes: Bool = false, from fromSelector: Selector, to toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = (includingSupertypes ? class_getInstanceMethod : class_getInstanceMethodIgnoringSupertypes)(type, fromSelector)
@@ -75,15 +81,20 @@ internal func copyMethodInType(_ type: AnyClass, includingSupertypes: Bool = fal
 }
 
 
-public func identity<T>(_ element: T) -> T {
-	return element
+public func identity<Value>(_ value: Value) -> Value {
+	return value
 }
 
 
-public func lazyPlaceholder<T>(_ file: StaticString = #file, line: UInt = #line) -> T {
+@inline(__always)
+public func isObject(_ value: Any) -> Bool {
+	return type(of: value) is AnyClass
+}
+
+
+public func lazyPlaceholder<Value>(file: StaticString = #file, line: UInt = #line) -> Value {
 	fatalError("Lazy variable accessed before being initialized.", file: file, line: line)
 }
-
 
 
 public func makeEscapable<Parameters,Result>(_ closure: (Parameters) -> Result) -> (Parameters) -> Result {
@@ -95,22 +106,19 @@ public func makeEscapable<Parameters,Result>(_ closure: (Parameters) -> Result) 
 }
 
 
-
 public func not<Parameter>(_ closure: @escaping (Parameter) -> Bool) -> (Parameter) -> Bool {
 	return { !closure($0) }
 }
 
 
-
 public func not<Parameter>(_ closure: @escaping (Parameter) throws -> Bool) -> (Parameter) throws -> Bool {
-	return { !(try closure($0)) }
+	return { try !closure($0) }
 }
 
 
 public func obfuscatedSelector(_ parts: String...) -> Selector {
 	return Selector(parts.joined(separator: ""))
 }
-
 
 
 public func optionalMax<Element: Comparable>(_ elements: Element? ...) -> Element? {
@@ -133,7 +141,6 @@ public func optionalMax<Element: Comparable>(_ elements: Element? ...) -> Elemen
 }
 
 
-
 public func optionalMin<Element: Comparable>(_ elements: Element? ...) -> Element? {
 	var minimumElement: Element?
 
@@ -154,13 +161,12 @@ public func optionalMin<Element: Comparable>(_ elements: Element? ...) -> Elemen
 }
 
 
-
-public func pointerOf(_ object: AnyObject) -> UnsafeMutableRawPointer {
+public func pointer(of object: AnyObject) -> UnsafeMutableRawPointer {
 	return Unmanaged<AnyObject>.passUnretained(object).toOpaque()
 }
 
 
-public func redirectMethodInType(_ type: AnyClass, fromSelector: Selector, toSelector: Selector, inType toType: AnyClass? = nil) {
+public func redirectMethod(in type: AnyClass, from fromSelector: Selector, to toSelector: Selector, in toType: AnyClass? = nil) {
 	let actualToType: AnyClass = toType ?? type
 
 	precondition(fromSelector != toSelector || type != actualToType)
@@ -192,7 +198,7 @@ public func redirectMethodInType(_ type: AnyClass, fromSelector: Selector, toSel
 }
 
 
-public func swizzleMethodInType(_ type: AnyClass, fromSelector: Selector, toSelector: Selector) {
+public func swizzleMethod(in type: AnyClass, from fromSelector: Selector, to toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
 	let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector)
@@ -224,9 +230,7 @@ public func swizzleMethodInType(_ type: AnyClass, fromSelector: Selector, toSele
 
 public func synchronized<ReturnType>(_ object: AnyObject, closure: (Void) throws -> ReturnType) rethrows -> ReturnType {
 	objc_sync_enter(object)
-	defer {
-		objc_sync_exit(object)
-	}
+	defer { objc_sync_exit(object) }
 
 	return try closure()
 }

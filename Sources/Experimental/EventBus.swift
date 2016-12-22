@@ -3,8 +3,8 @@ import Dispatch
 
 open class EventBus {
 
-	fileprivate let lock = EmptyObject()
-	fileprivate var subscriptionsByScope = [ObjectIdentifier : AnySubscriptions]()
+	private let lock = EmptyObject()
+	private var subscriptionsByScope = [ObjectIdentifier : AnySubscriptions]()
 
 
 	public init() {}
@@ -71,8 +71,8 @@ open class EventBus {
 
 	public final class Consumer {
 
-		fileprivate let lock = EmptyObject()
-		fileprivate var unsubscribes = [Closure]()
+		private let lock = EmptyObject()
+		private var unsubscribes = [Closure]()
 
 
 		public init() {}
@@ -105,9 +105,9 @@ open class EventBus {
 
 	public final class Pool {
 
-		fileprivate let eventBus: EventBus
-		fileprivate let lock = EmptyObject()
-		fileprivate var unsubscribes = [Closure]()
+		private let eventBus: EventBus
+		private let lock = EmptyObject()
+		private var unsubscribes = [Closure]()
 
 
 		fileprivate init(eventBus: EventBus) {
@@ -141,7 +141,7 @@ open class EventBus {
 
 
 
-private class Subscription<T> {
+fileprivate class Subscription<T> {
 
 	fileprivate var callback: ((T) -> Void)?
 
@@ -153,9 +153,9 @@ private class Subscription<T> {
 
 
 
-private protocol AnySubscriptions {}
+fileprivate protocol AnySubscriptions {}
 
-private class Subscriptions<T>: AnySubscriptions {
+fileprivate class Subscriptions<T>: AnySubscriptions {
 
 	fileprivate var list = [Subscription<T>]()
 }

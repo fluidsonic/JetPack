@@ -221,7 +221,7 @@ public extension UIImage {
 			return
 		}
 
-		dataProvider.data
+		_ = dataProvider.data
 	}
 
 

@@ -47,7 +47,7 @@ public extension UIScrollView {
 
 		let newContentOffset = oldContentOffset
 			.offsetBy(dy: oldContentInsets.top - newContentInsets.top)
-			.clamp(min: minimumContentOffset, max: maximumContentOffset)
+			.coerced(min: minimumContentOffset, max: maximumContentOffset)
 		guard newContentOffset != oldContentOffset else {
 			return
 		}

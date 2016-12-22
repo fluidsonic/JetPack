@@ -18,6 +18,22 @@ public extension CGRect {
 	}
 
 
+	public func applying(_ transform: CGAffineTransform, anchorPoint: CGPoint) -> CGRect {
+		if anchorPoint != .zero {
+			let anchorLeft = left + (width * anchorPoint.left)
+			let anchorTop = top + (height * anchorPoint.top)
+
+			let t1 = CGAffineTransform(horizontalTranslation: anchorLeft, verticalTranslation: anchorTop)
+			let t2 = CGAffineTransform(horizontalTranslation: -anchorLeft, verticalTranslation: -anchorTop)
+
+			return self.applying(t2 * transform * t1)
+		}
+		else {
+			return self.applying(transform)
+		}
+	}
+
+
 	public var bottom: CGFloat {
 		get { return origin.top + size.height }
 		mutating set { origin.top = newValue - size.height }
@@ -48,8 +64,7 @@ public extension CGRect {
 	}
 
 
-	
-	public func centeredAt(_ center: CGPoint) -> CGRect {
+	public func centered(at center: CGPoint) -> CGRect {
 		var rect = self
 		rect.center = center
 		return rect
@@ -68,14 +83,12 @@ public extension CGRect {
 	}
 
 
-	
-	public func contains(_ point: CGPoint, atCornerRadius cornerRadius: CGFloat) -> Bool {
-		if (!self.contains(point)) {
+	public func contains(_ point: CGPoint, cornerRadius: CGFloat) -> Bool {
+		guard contains(point) else {
 			// full rect misses, so does any rounded rect
 			return false
 		}
-
-		if cornerRadius <= 0 {
+		guard cornerRadius > 0 else {
 			// full rect already hit
 			return true
 		}
@@ -87,7 +100,7 @@ public extension CGRect {
 		let maxX = minX + width
 		let maxXBeforeCorner = maxX - cornerRadius
 
-		if point.x >= minXAfterCorner && point.x <= maxXBeforeCorner {
+		guard point.x < minXAfterCorner || point.x > maxXBeforeCorner else {
 			return true
 		}
 
@@ -96,7 +109,7 @@ public extension CGRect {
 		let maxY = minY + height
 		let maxYBeforeCorner = maxY - cornerRadius
 
-		if point.y >= minYAfterCorner && point.y <= maxYBeforeCorner {
+		guard point.y < minYAfterCorner || point.y > maxYBeforeCorner else {
 			return true
 		}
 
@@ -124,23 +137,21 @@ public extension CGRect {
 		}
 
 		// just test distance from the matching circle to the point
-		return (circleCenter.distanceTo(point) <= cornerRadius)
+		return (circleCenter.distance(to: point) <= cornerRadius)
 	}
 
 
-	
-	public func displacementTo(_ point: CGPoint) -> CGPoint {
+	public func displacement(to point: CGPoint) -> CGPoint {
 		return CGPoint(
 			left: point.left.coerced(in: left ... right),
 			top:  point.top.coerced(in: top ... bottom)
-		).displacementTo(point)
+		).displacement(to: point)
 	}
 
 
-	
-	public func distanceTo(_ point: CGPoint) -> CGFloat {
-		let displacement = displacementTo(point)
-		return sqrt((displacement.x * displacement.x) + (displacement.y * displacement.y))
+	public func distance(to point: CGPoint) -> CGFloat {
+		let displacement = self.displacement(to: point)
+		return ((displacement.x * displacement.x) + (displacement.y * displacement.y)).squareRoot()
 	}
 
 
@@ -156,8 +167,7 @@ public extension CGRect {
 	}
 
 
-	
-	public func interpolateTo(_ destination: CGRect, fraction: CGFloat) -> CGRect {
+	public func interpolate(to destination: CGRect, fraction: CGFloat) -> CGRect {
 		return CGRect(
 			left:   left + ((destination.left - left) * fraction),
 			top:    top + ((destination.top - top) * fraction),
@@ -205,28 +215,6 @@ public extension CGRect {
 	public var topRight: CGPoint {
 		get { return CGPoint(left: right, top: top) }
 		mutating set { right = newValue.left; top = newValue.top }
-	}
-
-
-	
-	public func transform(_ transform: CGAffineTransform, anchorPoint: CGPoint = .zero) -> CGRect {
-		if anchorPoint != .zero {
-			let anchorLeft = left + (width * anchorPoint.left)
-			let anchorTop = top + (height * anchorPoint.top)
-
-			let t1 = CGAffineTransform(horizontalTranslation: anchorLeft, verticalTranslation: anchorTop)
-			let t2 = CGAffineTransform(horizontalTranslation: -anchorLeft, verticalTranslation: -anchorTop)
-
-			return self.applying(t2 * transform * t1)
-		}
-		else {
-			return self.applying(transform)
-		}
-	}
-
-
-	public mutating func transformInPlace(_ transform: CGAffineTransform, anchorPoint: CGPoint = .zero) {
-		self = self.transform(transform, anchorPoint: anchorPoint)
 	}
 
 

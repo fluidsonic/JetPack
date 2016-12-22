@@ -35,7 +35,7 @@ open /* non-final */ class Window: _Window {
 			return
 		}
 
-		redirectMethodInType(self, fromSelector: #selector(UIView.init(frame:)), toSelector: #selector(UIView.init(frame:)), inType: UIWindow.self)
+		redirectMethod(in: self, from: #selector(UIView.init(frame:)), to: #selector(UIView.init(frame:)), in: UIWindow.self)
 	}
 
 
@@ -86,7 +86,7 @@ open /* non-final */ class _Window: UIWindow {
 			return
 		}
 
-		redirectMethodInType(self, fromSelector: #selector(NSObject.init),       toSelector: #selector(NSObject.init),       inType: UIWindow.self)
-		redirectMethodInType(self, fromSelector: #selector(UIView.init(frame:)), toSelector: #selector(UIView.init(frame:)), inType: UIWindow.self)
+		redirectMethod(in: self, from: #selector(NSObject.init),       to: #selector(NSObject.init),       in: UIWindow.self)
+		redirectMethod(in: self, from: #selector(UIView.init(frame:)), to: #selector(UIView.init(frame:)), in: UIWindow.self)
 	}
 }

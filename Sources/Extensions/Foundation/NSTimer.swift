@@ -18,6 +18,6 @@ private class TimerHandler: NSObject {
 	@objc
 	fileprivate func handle(_ timer: Timer) {
 		let closureReference = timer.userInfo as! StrongReference<Closure>
-		closureReference.target()
+		closureReference.value()
 	}
 }

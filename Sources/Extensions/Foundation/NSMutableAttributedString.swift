@@ -27,11 +27,9 @@ public extension NSMutableAttributedString {
 			return
 		}
 
-		let escapingTransform = makeEscapable(transform)
-
 		beginEditing()
 		enumerateAttributes(in: NSRange(location: 0, length: length), options: []) { _, range, _ in
-			replaceCharacters(in: range, with: escapingTransform(attributedSubstring(from: range).string))
+			replaceCharacters(in: range, with: attributedSubstring(from: range).string)
 		}
 		endEditing()
 	}

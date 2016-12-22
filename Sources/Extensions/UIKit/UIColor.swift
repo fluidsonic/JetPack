@@ -250,7 +250,7 @@ private final class ColorUsingTintColor: UIColor {
 
 
 	fileprivate override func isEqual(_ object: Any?) -> Bool {
-		if object as? AnyObject === self {
+		if object as? UIColor === self {
 			return true
 		}
 		guard let color = object as? ColorUsingTintColor else {

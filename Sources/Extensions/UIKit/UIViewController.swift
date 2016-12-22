@@ -351,15 +351,15 @@ extension UIViewController {
 
 	@nonobjc
 	internal static func UIViewController_setUp() {
-		swizzleMethodInType(self, fromSelector: #selector(didMove(toParentViewController:)),  toSelector: #selector(swizzled_didMoveToParentViewController(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(present(_:animated:completion:)),   toSelector: #selector(swizzled_presentViewController(_:animated:completion:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewDidAppear(_:)),                 toSelector: #selector(swizzled_viewDidAppear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewDidLayoutSubviews),             toSelector: #selector(swizzled_viewDidLayoutSubviews))
-		swizzleMethodInType(self, fromSelector: #selector(viewDidDisappear(_:)),              toSelector: #selector(swizzled_viewDidDisappear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewWillAppear(_:)),                toSelector: #selector(swizzled_viewWillAppear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewWillDisappear(_:)),             toSelector: #selector(swizzled_viewWillDisappear(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(viewWillLayoutSubviews),            toSelector: #selector(swizzled_viewWillLayoutSubviews))
-		swizzleMethodInType(self, fromSelector: #selector(willMove(toParentViewController:)), toSelector: #selector(swizzled_willMoveToParentViewController(_:)))
+		swizzleMethod(in: self, from: #selector(didMove(toParentViewController:)),  to: #selector(swizzled_didMoveToParentViewController(_:)))
+		swizzleMethod(in: self, from: #selector(present(_:animated:completion:)),   to: #selector(swizzled_presentViewController(_:animated:completion:)))
+		swizzleMethod(in: self, from: #selector(viewDidAppear(_:)),                 to: #selector(swizzled_viewDidAppear(_:)))
+		swizzleMethod(in: self, from: #selector(viewDidLayoutSubviews),             to: #selector(swizzled_viewDidLayoutSubviews))
+		swizzleMethod(in: self, from: #selector(viewDidDisappear(_:)),              to: #selector(swizzled_viewDidDisappear(_:)))
+		swizzleMethod(in: self, from: #selector(viewWillAppear(_:)),                to: #selector(swizzled_viewWillAppear(_:)))
+		swizzleMethod(in: self, from: #selector(viewWillDisappear(_:)),             to: #selector(swizzled_viewWillDisappear(_:)))
+		swizzleMethod(in: self, from: #selector(viewWillLayoutSubviews),            to: #selector(swizzled_viewWillLayoutSubviews))
+		swizzleMethod(in: self, from: #selector(willMove(toParentViewController:)), to: #selector(swizzled_willMoveToParentViewController(_:)))
 
 		subscribeToApplicationActiveNotifications()
 		subscribeToKeyboardNotifications()
@@ -450,7 +450,7 @@ extension UIViewController {
 		self.appearState = .didAppear
 
 		if containmentState == .willMoveToParent {
-			onMainQueueAfterDelay(1) {
+			onMainQueue(after: 1) {
 				guard self.containmentState == .willMoveToParent && self.appearState == .didAppear else {
 					return
 				}
@@ -480,7 +480,7 @@ extension UIViewController {
 		self.appearState = .didDisappear
 
 		if containmentState == .willMoveFromParent {
-			onMainQueueAfterDelay(1) {
+			onMainQueue(after: 1) {
 				guard self.containmentState == .willMoveFromParent && self.appearState == .didDisappear else {
 					return
 				}

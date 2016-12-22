@@ -68,7 +68,7 @@ extension UIView {
 	@nonobjc
 	
 	public func frameWhenApplyingTransform(_ transform: CGAffineTransform) -> CGRect {
-		return untransformedFrame.transform(transform, anchorPoint: layer.anchorPoint)
+		return untransformedFrame.applying(transform, anchorPoint: layer.anchorPoint)
 	}
 
 
@@ -180,7 +180,7 @@ extension UIView {
 	public final func sizeThatFitsSize(_ maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
 		var fittingSize = sizeThatFitsSize(maximumSize)
 		if allowsTruncation {
-			fittingSize = fittingSize.constrainTo(maximumSize)
+			fittingSize = fittingSize.coerced(atMost: maximumSize)
 		}
 
 		return fittingSize
@@ -218,7 +218,7 @@ extension UIView {
 			let anchorPoint = layer.anchorPoint
 			let centerOffset = CGPoint(left: (0.5 - anchorPoint.left) * size.width, top: (0.5 - anchorPoint.top) * size.height)
 
-			return CGRect(size: size).centeredAt(center.offsetBy(centerOffset))
+			return CGRect(size: size).centered(at: center.offsetBy(centerOffset))
 		}
 		set {
 			let anchorPoint = layer.anchorPoint
@@ -233,9 +233,9 @@ extension UIView {
 	@nonobjc
 	internal static func UIView_setUp() {
 		// cannot use didMoveToWindow() because some subclasses don't call super's implementation
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), toSelector: #selector(swizzled_didChangeWindow(from:to:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), to: #selector(swizzled_didChangeWindow(from:to:)))
 
-		swizzleMethodInType(self, fromSelector: #selector(invalidateIntrinsicContentSize), toSelector: #selector(swizzled_invalidateIntrinsicContentSize))
+		swizzleMethod(in: self, from: #selector(invalidateIntrinsicContentSize), to: #selector(swizzled_invalidateIntrinsicContentSize))
 	}
 
 

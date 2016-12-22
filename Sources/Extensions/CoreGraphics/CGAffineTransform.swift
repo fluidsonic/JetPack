@@ -33,17 +33,6 @@ public extension CGAffineTransform {
 	}
 
 
-	public mutating func concatenateWith(_ transform: CGAffineTransform) {
-		self = concatenatedWith(transform)
-	}
-
-
-	
-	public func concatenatedWith(_ transform: CGAffineTransform) -> CGAffineTransform {
-		return self.concatenating(transform)
-	}
-
-
 	public var horizontalScale: CGFloat {
 		return sqrt((a * a) + (c * c))
 	}
@@ -54,75 +43,29 @@ public extension CGAffineTransform {
 	}
 
 
-	public var isIdentity: Bool {
-		return self.isIdentity
-	}
-
-
 	public var rotation: CGFloat {
 		return atan2(b, a)
 	}
 
 
-	public mutating func rotateBy(_ angle: CGFloat) {
-		self = rotatedBy(angle)
-	}
-
-
-	
-	public func rotatedBy(_ angle: CGFloat) -> CGAffineTransform {
-		return self.rotated(by: angle)
-	}
-
-
-	public mutating func scaleBy(_ scale: CGFloat) {
-		scaleBy(horizontally: scale, vertically: scale)
-	}
-
-
-	public mutating func scaleBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) {
-		self = scaledBy(horizontally: horizontal, vertically: vertical)
-	}
-
-
-	public mutating func scaleBy(vertically vertical: CGFloat) {
-		scaleBy(horizontally: 1, vertically: vertical)
-	}
-
-
-	
 	public func scaledBy(_ scale: CGFloat) -> CGAffineTransform {
 		return scaledBy(horizontally: scale, vertically: scale)
 	}
 
 
-	
 	public func scaledBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) -> CGAffineTransform {
-		return self.scaledBy(x: horizontal, y: vertical)
+		return scaledBy(x: horizontal, y: vertical)
 	}
 
 
-	
 	public func scaledBy(vertically vertical: CGFloat) -> CGAffineTransform {
 		return scaledBy(horizontally: 1, vertically: vertical)
 	}
 
 
-	public mutating func translateBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) {
-		self = translatedBy(horizontally: horizontal, vertically: vertical)
-	}
-
-
-	public mutating func translateBy(vertically vertical: CGFloat) {
-		translateBy(horizontally: 0, vertically: vertical)
-	}
-
-
-	
 	public func translatedBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) -> CGAffineTransform {
 		return self.translatedBy(x: horizontal, y: vertical)
 	}
-
 
 	
 	public func translatedBy(vertically vertical: CGFloat) -> CGAffineTransform {
@@ -197,10 +140,5 @@ extension CGAffineTransform: CustomStringConvertible {
 
 
 public func * (a: CGAffineTransform, b: CGAffineTransform) -> CGAffineTransform {
-	return a.concatenatedWith(b)
-}
-
-
-public func *= (a: inout CGAffineTransform, b: CGAffineTransform) {
-	a.concatenateWith(b)
+	return a.concatenating(b)
 }

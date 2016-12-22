@@ -1,22 +1,21 @@
 import Foundation
 
 
-public func onBackgroundQueue(_ closure: @escaping Closure) {
-	onBackgroundQueueOfPriority(.default, closure: closure)
+public func onBackgroundQueue(execute work: @escaping Closure) {
+	onBackgroundQueue(qos: .default, execute: work)
 }
 
 
-public func onBackgroundQueueOfPriority(_ priority: DispatchQueue.GlobalQueuePriority, closure: @escaping Closure) {
-	DispatchQueue.global(priority: priority).async(execute: closure)
+public func onBackgroundQueue(qos: DispatchQoS.QoSClass, execute work: @escaping Closure) {
+	DispatchQueue.global(qos: qos).async(execute: work)
 }
 
 
-public func onMainQueue(_ closure: @escaping Closure) {
-	DispatchQueue.main.async(execute: closure)
+public func onMainQueue(execute work: @escaping Closure) {
+	DispatchQueue.main.async(execute: work)
 }
 
 
-public func onMainQueueAfterDelay(_ delay: TimeInterval, closure: @escaping Closure) {
-	let time = DispatchTime.now() + Double(Int64(delay * TimeInterval(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-	DispatchQueue.main.asyncAfter(deadline: time, execute: closure)
+public func onMainQueue(after delay: TimeInterval, execute work: @escaping Closure) {
+	DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
 }

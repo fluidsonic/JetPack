@@ -112,7 +112,7 @@ open /* non-final */ class ScrollView: UIScrollView {
 		set {
 			super.delegate = newValue
 
-			delegateRespondsToViewForZooming = super.delegate?.responds(to: #selector(UIScrollViewDelegate.viewForZooming(`in`:))) ?? false
+			delegateRespondsToViewForZooming = super.delegate?.responds(to: #selector(UIScrollViewDelegate.viewForZooming(in:))) ?? false
 			newDelegate = super.delegate as? ScrollViewDelegate
 		}
 	}
@@ -177,7 +177,7 @@ open /* non-final */ class ScrollView: UIScrollView {
 			hitZoneCornerRadius = 0
 		}
 
-		return extendedHitZone.contains(point, atCornerRadius: hitZoneCornerRadius)
+		return extendedHitZone.contains(point, cornerRadius: hitZoneCornerRadius)
 	}
 
 

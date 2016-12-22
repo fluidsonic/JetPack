@@ -54,7 +54,7 @@ public extension UITableViewCell {
 			)
 		}
 		else {
-			editing = self.swizzled_editing
+			editing = self.swizzled_isEditing
 
 			predictedConfiguration = nil
 		}
@@ -74,7 +74,7 @@ public extension UITableViewCell {
 
 	@nonobjc
 	fileprivate var predictedConfiguration: PredictedConfiguration? {
-		get { return (objc_getAssociatedObject(self, &AssociatedKeys.predictedConfiguration) as? StrongReference<PredictedConfiguration>)?.target }
+		get { return (objc_getAssociatedObject(self, &AssociatedKeys.predictedConfiguration) as? StrongReference<PredictedConfiguration>)?.value }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.predictedConfiguration, newValue != nil ? StrongReference(newValue!) : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
@@ -95,15 +95,15 @@ public extension UITableViewCell {
 
 	@nonobjc
 	internal static func UITableViewCell_setUp() {
-		swizzleMethodInType(self, fromSelector: Selector("isEditing"),                toSelector: Selector("JetPack_isEditing"))
-		swizzleMethodInType(self, fromSelector: Selector("editingStyle"),             toSelector: Selector("JetPack_editingStyle"))
-		swizzleMethodInType(self, fromSelector: Selector("shouldIndentWhileEditing"), toSelector: Selector("JetPack_shouldIndentWhileEditing"))
-		swizzleMethodInType(self, fromSelector: Selector("showsReorderControl"),      toSelector: Selector("JetPack_showsReorderControl"))
+		swizzleMethod(in: self, from: #selector(getter: UITextField.isEditing),                    to: #selector(getter: UITableViewCell.swizzled_isEditing))
+		swizzleMethod(in: self, from: #selector(getter: UITableViewCell.editingStyle),             to: #selector(getter: UITableViewCell.swizzled_editingStyle))
+		swizzleMethod(in: self, from: #selector(getter: UITableViewCell.shouldIndentWhileEditing), to: #selector(getter: UITableViewCell.swizzled_shouldIndentWhileEditing))
+		swizzleMethod(in: self, from: #selector(getter: UITableViewCell.showsReorderControl),      to: #selector(getter: UITableViewCell.swizzled_showsReorderControl))
 
 		// yep, private API necessary :(
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		redirectMethodInType(self, fromSelector: Selector("JetPack_layoutManager"),  toSelector: obfuscatedSelector("layout", "Manager"))
-		redirectMethodInType(self, fromSelector: Selector("JetPack_separatorStyle"), toSelector: obfuscatedSelector("separator", "Style"))
+		redirectMethod(in: self, from: #selector(getter: UITableViewCell.private_layoutManager),  to: obfuscatedSelector("layout", "Manager"))
+		redirectMethod(in: self, from: #selector(getter: UITableViewCell.private_separatorStyle), to: obfuscatedSelector("separator", "Style"))
 
 		LayoutManager.setUp()
 	}
@@ -121,16 +121,6 @@ public extension UITableViewCell {
 	}
 
 
-	@objc(JetPack_isEditing)
-	fileprivate dynamic var swizzled_editing: Bool {
-		if let predictedConfiguration = predictedConfiguration {
-			return predictedConfiguration.editing
-		}
-
-		return self.swizzled_editing
-	}
-
-
 	@objc(JetPack_editingStyle)
 	fileprivate dynamic var swizzled_editingStyle: UITableViewCellEditingStyle {
 		if let predictedConfiguration = predictedConfiguration {
@@ -138,6 +128,16 @@ public extension UITableViewCell {
 		}
 
 		return self.swizzled_editingStyle
+	}
+
+
+	@objc(JetPack_isEditing)
+	fileprivate dynamic var swizzled_isEditing: Bool {
+		if let predictedConfiguration = predictedConfiguration {
+			return predictedConfiguration.editing
+		}
+
+		return self.swizzled_isEditing
 	}
 
 
@@ -182,10 +182,10 @@ private final class LayoutManager: NSObject {
 			return
 		}
 
-		copyMethodWithSelector(#selector(private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:)), fromType: self, toType: layoutManagerType)
-		redirectMethodInType(layoutManagerType,
-			fromSelector: #selector(private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:)),
-			toSelector:   obfuscatedSelector("_", "content", "Rect", "For", "Cell:", "for", "Editing", "State:", "showingDeleteConfirmation:", "row", "Width:")
+		copyMethod(selector: #selector(private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:)), from: self, to: layoutManagerType)
+		redirectMethod(in: layoutManagerType,
+			from: #selector(private_contentFrameForCell(_:editing:showingDeleteConfirmation:width:)),
+			to:   obfuscatedSelector("_", "content", "Rect", "For", "Cell:", "for", "Editing", "State:", "showingDeleteConfirmation:", "row", "Width:")
 		)
 	}
 }

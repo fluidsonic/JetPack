@@ -26,7 +26,7 @@ public struct Animation {
 
 
 	public static func ignore(_ changes: Closure) {
-		UIView.performWithoutAnimation(makeEscapable(changes))
+		UIView.performWithoutAnimation(changes)
 	}
 
 

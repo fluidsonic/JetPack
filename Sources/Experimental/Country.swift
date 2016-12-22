@@ -112,7 +112,7 @@ extension Country: Hashable {
 }
 
 
-public extension Country {
+extension Country {
 
 	// from https://github.com/datasets/country-codes/blob/master/data/country-codes.csv w/ several fixed calling codes
 	public static let all: [Country] = {
@@ -390,13 +390,13 @@ public extension Country {
 					return valuesForLength
 				}()
 
-				if valuesForLength.target.updateValue(country, forKey: callingCode) != nil {
+				if valuesForLength.value.updateValue(country, forKey: callingCode) != nil {
 					log("Multiple countries share the same calling code '\(callingCode)'")
 				}
 			}
 		}
 
-		return values.mapAsDictionary { ($0, $1.target) }
+		return values.mapAsDictionary { ($0, $1.value) }
 	}()
 
 

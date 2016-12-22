@@ -33,6 +33,7 @@ public extension UIAlertController {
 	}
 
 
+	@discardableResult
 	@nonobjc
 	public func addActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
 		let action = UIAlertAction(title: title, style: .default) { _ in handler?() }
@@ -41,12 +42,14 @@ public extension UIAlertController {
 	}
 
 
+	@discardableResult
 	@nonobjc
 	public func addCancelAction(_ handler: Closure? = nil) -> UIAlertAction {
 		return addCancelActionWithTitle(Bundle(for: UIAlertController.self).localizedString(forKey: "Cancel", value: "Cancel", table: nil), handler: handler)
 	}
 
 
+	@discardableResult
 	@nonobjc
 	public func addCancelActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
 		let action = UIAlertAction(title: title, style: .cancel) { _ in handler?() }
@@ -55,6 +58,7 @@ public extension UIAlertController {
 	}
 
 
+	@discardableResult
 	@nonobjc
 	public func addDestructiveActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
 		let action = UIAlertAction(title: title, style: .destructive) { _ in handler?() }
@@ -63,6 +67,7 @@ public extension UIAlertController {
 	}
 
 
+	@discardableResult
 	@nonobjc
 	public func addOkayAction(_ handler: Closure? = nil) -> UIAlertAction {
 		let action = addActionWithTitle(Bundle(for: UIAlertController.self).localizedString(forKey: "OK", value: "OK", table: nil), handler: handler)
@@ -75,6 +80,7 @@ public extension UIAlertController {
 	}
 
 
+	@discardableResult
 	@nonobjc
 	public func addPreferredActionWithTitle(_ title: String, handler: Closure? = nil) -> UIAlertAction {
 		let action = UIAlertAction(title: title, style: .default) { _ in handler?() }

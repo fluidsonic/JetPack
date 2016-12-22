@@ -104,12 +104,12 @@ public extension UITableView {
 	internal static func UITableView_setUp() {
 		// yep, private API necessary :(
 
-		redirectMethodInType(self, fromSelector: #selector(redirected_headerAndFooterViewsFloat), toSelector: obfuscatedSelector("_header", "And", "Footer", "Views", "Float"))
+		redirectMethod(in: self, from: #selector(redirected_headerAndFooterViewsFloat), to: obfuscatedSelector("_header", "And", "Footer", "Views", "Float"))
 
-		redirectMethodInType(self, fromSelector: #selector(redirected_setHeaderAndFooterViewsFloat), toSelector: obfuscatedSelector("_set", "Header", "And", "Footer", "Views" ,"Float:"))
+		redirectMethod(in: self, from: #selector(redirected_setHeaderAndFooterViewsFloat), to: obfuscatedSelector("_set", "Header", "And", "Footer", "Views" ,"Float:"))
 
 		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), toSelector: #selector(swizzled_computeHeightForCell(_:atIndexPath:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), to: #selector(swizzled_computeHeightForCell(_:atIndexPath:)))
 	}
 
 

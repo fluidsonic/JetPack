@@ -195,7 +195,7 @@ open /* non-final */ class ScrollViewController: ViewController {
 				}
 			}
 
-			newContentOffset = newContentOffset.clamp(min: scrollView.minimumContentOffset, max: scrollView.maximumContentOffset)
+			newContentOffset = newContentOffset.coerced(min: scrollView.minimumContentOffset, max: scrollView.maximumContentOffset)
 
 			if newContentOffset != contentOffset {
 				scrollView.contentOffset = newContentOffset

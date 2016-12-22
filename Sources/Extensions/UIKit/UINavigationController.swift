@@ -1,12 +1,12 @@
 import UIKit
 
 
-public extension UINavigationController {
+extension UINavigationController {
 
-	fileprivate struct AssociatedKeys {
+	private struct AssociatedKeys {
 		fileprivate static var lastKnownNavigationBarBottom = UInt8()
 	}
-	
+
 
 
 	open override func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
@@ -112,8 +112,8 @@ public extension UINavigationController {
 
 	@nonobjc
 	internal static func UINavigationController_setUp() {
-		swizzleMethodInType(self, fromSelector: Selector("setNavigationBarHidden:"),            toSelector: #selector(swizzled_setNavigationBarHidden(_:)))
-		swizzleMethodInType(self, fromSelector: #selector(setNavigationBarHidden(_:animated:)), toSelector: #selector(swizzled_setNavigationBarHidden(_:animated:)))
-		swizzleMethodInType(self, fromSelector: #selector(willTransition(to:with:)),            toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
+		swizzleMethod(in: self, from: #selector(setter: UINavigationController.isNavigationBarHidden), to: #selector(swizzled_setNavigationBarHidden(_:)))
+		swizzleMethod(in: self, from: #selector(setNavigationBarHidden(_:animated:)),                  to: #selector(swizzled_setNavigationBarHidden(_:animated:)))
+		swizzleMethod(in: self, from: #selector(willTransition(to:with:)),                             to: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 }

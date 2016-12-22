@@ -42,7 +42,7 @@ public extension UIBlurEffect {
 		// yep, private API necessary :(
 		if let customBlurEffectType = customBlurEffectType {
 			let factorySelectorName = "effectWithStyle:"
-			redirectMethodInType(object_getClass(self), fromSelector: #selector(customEffectWithStyle(_:)), toSelector: Selector(factorySelectorName), inType: object_getClass(customBlurEffectType))
+			redirectMethod(in: object_getClass(self), from: #selector(customEffectWithStyle(_:)), to: Selector(factorySelectorName), in: object_getClass(customBlurEffectType))
 		}
 		else {
 			log("Cannot find type for custom blur effect.")

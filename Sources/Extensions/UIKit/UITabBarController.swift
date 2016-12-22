@@ -73,7 +73,7 @@ extension UITabBarController {
 
 	@nonobjc
 	internal static func UITabBarController_setUp() {
-		swizzleMethodInType(self, fromSelector: #selector(willTransition(to:with:)), toSelector: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
+		swizzleMethod(in: self, from: #selector(willTransition(to:with:)), to: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 
 

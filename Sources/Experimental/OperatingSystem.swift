@@ -1,15 +1,14 @@
 import Foundation
-import UIKit
-
-public let operatingSystem = OperatingSystem()
 
 
 public struct OperatingSystem {
 
+	public static let instance = OperatingSystem()
+
 	public let version: Version
 
 
-	fileprivate init() {
+	private init() {
 		version = Version(ProcessInfo().operatingSystemVersion)
 	}
 }

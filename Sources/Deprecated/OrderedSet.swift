@@ -1,12 +1,12 @@
 import Foundation
 
 
-public struct OrderedSet<T: Hashable> {
+// TODO if we continue to support this, then conform to SetAlgebra
 
-	public typealias Element = T
+public struct OrderedSet<Element: Hashable> {
 
-	fileprivate var elements: Set<T>
-	fileprivate var orderedElements = [T]()
+	fileprivate var elements: Set<Element>
+	fileprivate var orderedElements = [Element]()
 
 
 	public init() {
@@ -20,60 +20,59 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public init(element: T) {
+	public init(element: Element) {
 		self.init(minimumCapacity: 1)
 
 		add(element)
 	}
 
 
-	public init(elements: T...) {
+	public init(elements: Element...) {
 		self.init(minimumCapacity: elements.count)
 
-		union(elements)
+		formUnion(elements)
 	}
 
 
-	public init<S: Sequence>(_ sequence: S) where S.Iterator.Element == T {
+	public init<Source: Sequence>(_ sequence: Source) where Source.Iterator.Element == Element {
 		self.init()
 
-		union(sequence)
+		formUnion(sequence)
 	}
 
 
-	public init(_ orderedSet: OrderedSet<T>) {
+	public init(_ orderedSet: OrderedSet<Element>) {
 		elements = orderedSet.elements
 		orderedElements = orderedSet.orderedElements
 	}
 
 
-	public mutating func add(_ element: T) -> Bool {
-		if elements.contains(element) {
-			return false
+	@discardableResult
+	public mutating func add(_ newMember: Element) -> (inserted: Bool, memberAfterInsert: Element) {
+		let (inserted, memberAfterInsert) = elements.insert(newMember)
+		guard inserted else {
+			return (false, memberAfterInsert)
 		}
 
-		elements.insert(element)
-		orderedElements.append(element)
+		orderedElements.append(newMember)
 
-		return true
+		return (true, memberAfterInsert)
 	}
 
 
-	public var any: T? {
+	public var any: Element? {
 		return orderedElements.first
 	}
 
 
-	public func contains(_ element: T) -> Bool {
-		return elements.contains(element)
+	public func contains(_ member: Element) -> Bool {
+		return elements.contains(member)
 	}
 
 
-	public func contains(_ matches: (T) -> Bool) -> Bool {
-		for element in orderedElements {
-			if matches(element) {
-				return true
-			}
+	public func contains(where predicate: (Element) throws -> Bool) rethrows -> Bool {
+		for element in orderedElements where try predicate(element) {
+			return true
 		}
 
 		return false
@@ -84,11 +83,10 @@ public struct OrderedSet<T: Hashable> {
 		return elements.count
 	}
 
-
 	
-	public func filterAsOrderedSet(includeElement: (T) throws -> Bool) rethrows -> OrderedSet<T> {
-		var filteredElements = OrderedSet<T>()
-		for element in orderedElements where try includeElement(element) {
+	public func filterAsOrderedSet(_ isIncluded: (Element) throws -> Bool) rethrows -> OrderedSet<Element> {
+		var filteredElements = OrderedSet<Element>()
+		for element in orderedElements where try isIncluded(element) {
 			filteredElements.add(element)
 		}
 
@@ -96,49 +94,39 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func filterInPlace(includeElement: (T) throws -> Bool) rethrows {
-		var excludes = [T]()
-		for element in elements where !(try includeElement(element)) {
-			excludes.append(element)
-		}
-
-		minus(excludes)
-	}
-
-
-	public var first: T? {
+	public var first: Element? {
 		return orderedElements.first
 	}
 
 
-	public func indexOf(_ element: T) -> Int? {
-		if elements.contains(element) {
-			var index = 0
-			for existingElement in orderedElements {
-				if existingElement == element {
-					return index
-				}
+	public mutating func formIntersection(_ other: OrderedSet<Element>) {
+		remove { !other.contains($0) }
+	}
 
-				index += 1
-			}
+
+	public mutating func formUnion<S: Sequence>(_ other: S) where S.Iterator.Element == Element {
+		for element in other {
+			add(element)
+		}
+	}
+
+
+	public func index(of member: Element) -> Int? {
+		guard elements.contains(member) else {
+			return nil
 		}
 
-		return nil
+		return orderedElements.index { $0 == member }
 	}
 
 
-	public mutating func intersect(_ set: OrderedSet<T>) {
-		filterInPlace { set.contains($0) }
+	public func intersection(_ other: OrderedSet<Element>) -> OrderedSet<Element> {
+		return filterAsOrderedSet { other.contains($0) }
 	}
 
 
-	public func intersected(_ set: OrderedSet<T>) -> OrderedSet<T> {
-		return filterAsOrderedSet { set.contains($0) }
-	}
-
-
-	public func intersects(_ set: OrderedSet<T>) -> Bool {
-		return contains { set.contains($0) }
+	public func intersects(_ other: OrderedSet<Element>) -> Bool {
+		return contains { other.contains($0) }
 	}
 
 
@@ -147,48 +135,32 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public func isSubsetOf(_ set: OrderedSet<T>) -> Bool {
-		return elements.isSubset(of: set)
+	public func isSubset(of other: OrderedSet<Element>) -> Bool {
+		return elements.isSubset(of: other)
 	}
 
 
-	public var last: T? {
+	public var last: Element? {
 		return orderedElements.last
 	}
 
-
 	
-	public func mapAsOrderedSet<U: Hashable>(transform: (T) throws -> U) rethrows -> OrderedSet<U> {
-		var newSet = OrderedSet<U>(minimumCapacity: count)
+	public func mapAsOrderedSet<MappedElement: Hashable>(transform: (Element) throws -> MappedElement) rethrows -> OrderedSet<MappedElement> {
+		var mappedSet = OrderedSet<MappedElement>(minimumCapacity: count)
 		for element in orderedElements {
-			newSet.add(try transform(element))
+			mappedSet.add(try transform(element))
 		}
 
-		return newSet
+		return mappedSet
 	}
 
 
-	public func member(_ element: T) -> T? {
-		if let index = elements.index(of: element) {
-			return elements[index]
+	public func member(_ member: Element) -> Element? {
+		guard let index = elements.index(of: member) else {
+			return nil
 		}
 
-		return nil
-	}
-
-
-	public mutating func minus<S: Sequence>(_ sequence: S) where S.Iterator.Element == T {
-		for element in sequence {
-			remove(element)
-		}
-	}
-
-
-	public func minused<S: Sequence>(_ sequence: S) -> OrderedSet<T> where S.Iterator.Element == T {
-		var copy = self
-		copy.minus(sequence)
-
-		return copy
+		return elements[index]
 	}
 
 
@@ -196,7 +168,7 @@ public struct OrderedSet<T: Hashable> {
 		precondition(fromIndex >= startIndex && fromIndex < endIndex, "fromIndex outside range \(startIndex) ..< \(endIndex)")
 		precondition(toIndex >= startIndex && toIndex < endIndex, "toIndex outside range \(startIndex) ..< \(endIndex)")
 
-		if fromIndex == toIndex {
+		guard fromIndex != toIndex else {
 			return
 		}
 
@@ -204,7 +176,8 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func removeAtIndex(_ index: Int) -> T {
+	@discardableResult
+	public mutating func remove(at index: Int) -> Element {
 		let element = orderedElements[index]
 		orderedElements.remove(at: index)
 
@@ -212,61 +185,66 @@ public struct OrderedSet<T: Hashable> {
 	}
 
 
-	public mutating func remove(_ element: T) -> T? {
-		var removedElementToReturn: T?
-		if let index = indexOf(element) {
-			if let removedElement = elements.remove(element) {
-				orderedElements.remove(at: index)
-				removedElementToReturn = removedElement
-			}
+	public mutating func remove(where predicate: (Element) throws -> Bool) rethrows {
+		subtract(try elements.filter(predicate))
+	}
+
+
+	@discardableResult
+	public mutating func remove(_ member: Element) -> Element? {
+		guard let index = index(of: member), let removedElement = elements.remove(member) else {
+			return nil
 		}
 
-		return removedElementToReturn
+		orderedElements.remove(at: index)
+
+		return removedElement
 	}
 
 
-	public mutating func removeAll() {
-		removeAll(keepCapacity: false)
-	}
-
-
-	public mutating func removeAll(keepCapacity: Bool) {
+	public mutating func removeAll(keepingCapacity keepCapacity: Bool = false) {
 		elements.removeAll(keepingCapacity: keepCapacity)
 		orderedElements.removeAll(keepingCapacity: keepCapacity)
 	}
 
 
-	public mutating func replace(_ element: T) -> T? {
-		var replacedElementToReturn: T?
-		if let index = indexOf(element) {
-			if let replacedElement = elements.remove(element) {
-				elements.insert(element)
-				orderedElements[index] = element
-				replacedElementToReturn = replacedElement
-			}
-		}
-
-		return replacedElementToReturn
-	}
-
-
-	public mutating func union<S: Sequence>(_ sequence: S) where S.Iterator.Element == T {
+	public mutating func subtract<S: Sequence>(_ sequence: S) where S.Iterator.Element == Element {
 		for element in sequence {
-			add(element)
+			remove(element)
 		}
 	}
 
 
-	public func unioned<S: Sequence>(_ sequence: S) -> OrderedSet<T> where S.Iterator.Element == T {
+	public func subtracting<S: Sequence>(_ sequence: S) -> OrderedSet<Element> where S.Iterator.Element == Element {
 		var copy = self
-		copy.union(sequence)
+		copy.subtract(sequence)
 
 		return copy
 	}
 
 
-	public subscript(bounds: Range<Int>) -> OrderedSet<T> {
-		var set = OrderedSet<T>()
+	public func union<S: Sequence>(_ sequence: S) -> OrderedSet<Element> where S.Iterator.Element == Element {
+		var copy = self
+		copy.formUnion(sequence)
+
+		return copy
+	}
+
+
+	public mutating func update(with newMember: Element) -> Element? {
+		guard let index = index(of: newMember), let replacedElement = elements.update(with: newMember) else {
+			add(newMember)
+			return nil
+		}
+
+		orderedElements[index] = newMember
+
+		return replacedElement
+	}
+
+
+	public subscript(bounds: Range<Int>) -> OrderedSet<Element> {
+		var set = OrderedSet<Element>()
 		for element in orderedElements[bounds] {
 			set.add(element)
 		}
@@ -278,7 +256,7 @@ public struct OrderedSet<T: Hashable> {
 
 extension OrderedSet: ExpressibleByArrayLiteral {
 
-	public init(arrayLiteral elements: T...) {
+	public init(arrayLiteral elements: Element...) {
 		self.init(elements)
 	}
 }
@@ -301,7 +279,7 @@ extension OrderedSet: Collection {
 	}
 
 
-	public subscript(index: Int) -> T {
+	public subscript(index: Int) -> Element {
 		return orderedElements[index]
 	}
 }
@@ -339,9 +317,6 @@ extension OrderedSet: CustomStringConvertible {
 }
 
 
-extension OrderedSet: Equatable {}
-
-
 extension OrderedSet: Hashable {
 
 	public var hashValue: Int {
@@ -357,7 +332,7 @@ extension OrderedSet: Hashable {
 
 extension OrderedSet: Sequence {
 
-	public typealias Iterator = IndexingIterator<[T]>
+	public typealias Iterator = IndexingIterator<[Element]>
 
 
 	public func makeIterator() -> Iterator {
@@ -366,16 +341,6 @@ extension OrderedSet: Sequence {
 }
 
 
-public func ==<T> (a: OrderedSet<T>, b: OrderedSet<T>) -> Bool {
-	if a.count != b.count {
-		return false
-	}
-
-	for index in 0 ..< a.count {
-		if a[index] != b[index] {
-			return false
-		}
-	}
-	
-	return true
+public func == <Element> (a: OrderedSet<Element>, b: OrderedSet<Element>) -> Bool {
+	return a.elements == b.elements
 }

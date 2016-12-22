@@ -27,6 +27,7 @@ public struct PhoneNumber {
 
 
 	public enum Digit: Character {
+
 		case _0         = "0"
 		case _1         = "1"
 		case _2         = "2"

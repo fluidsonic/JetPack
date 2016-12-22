@@ -251,7 +251,7 @@ open /* non-final */ class View: UIView {
 			hitZoneCornerRadius = 0
 		}
 
-		return extendedHitZone.contains(point, atCornerRadius: hitZoneCornerRadius)
+		return extendedHitZone.contains(point, cornerRadius: hitZoneCornerRadius)
 	}
 
 

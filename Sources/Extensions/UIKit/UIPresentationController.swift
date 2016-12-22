@@ -30,7 +30,7 @@ public extension UIPresentationController {
 
 	@nonobjc
 	internal static func UIPresentationController_setUp() {
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "enable", "Occlusion:"), toSelector: #selector(swizzled_enableBlocking(_:)))
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "parent", "Presentation", "Controller"), toSelector: #selector(swizzled_parent))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "enable", "Occlusion:"), to: #selector(swizzled_enableBlocking(_:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "parent", "Presentation", "Controller"), to: #selector(swizzled_parent))
 	}
 }

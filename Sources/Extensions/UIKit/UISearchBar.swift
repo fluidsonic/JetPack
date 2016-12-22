@@ -13,6 +13,6 @@ public extension UISearchBar {
 
 	@nonobjc
 	internal static func UISearchBar_setUp() {
-		redirectMethodInType(self, fromSelector: #selector(private_setAutomaticallyDisablesCancelButton(_:)), toSelector: obfuscatedSelector("_", "set", "Auto", "Disable", "Cancel", "Button:"))
+		redirectMethod(in: self, from: #selector(private_setAutomaticallyDisablesCancelButton(_:)), to: obfuscatedSelector("_", "set", "Auto", "Disable", "Cancel", "Button:"))
 	}
 }

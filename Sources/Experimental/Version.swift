@@ -17,10 +17,7 @@ public struct Version {
 		self.minor = minor
 		self.patch = patch
 	}
-}
 
-
-public extension Version {
 
 	public init(_ version: OperatingSystemVersion) {
 		self.init(major: version.majorVersion, minor: version.minorVersion, patch: version.patchVersion)
@@ -28,7 +25,25 @@ public extension Version {
 }
 
 
-extension Version: Comparable {}
+extension Version: Comparable {
+
+	public static func == (a: Version, b: Version) -> Bool {
+		return (a.major == b.major && a.minor == b.minor && a.patch == b.patch)
+	}
+
+
+	public static func < (a: Version, b: Version) -> Bool {
+		if a.major == b.major {
+			if a.minor == b.minor {
+				return a.patch < b.patch
+			}
+
+			return a.minor < b.minor
+		}
+
+		return a.major < b.major
+	}
+}
 
 
 extension Version: CustomDebugStringConvertible {
@@ -48,22 +63,4 @@ extension Version: CustomStringConvertible {
 
 		return "\(major).\(minor)"
 	}
-}
-
-
-public func == (a: Version, b: Version) -> Bool {
-	return (a.major == b.major && a.minor == b.minor && a.patch == b.patch)
-}
-
-
-public func < (a: Version, b: Version) -> Bool {
-	if a.major == b.major {
-		if a.minor == b.minor {
-			return a.patch < b.patch
-		}
-
-		return a.minor < b.minor
-	}
-
-	return a.major < b.major
 }

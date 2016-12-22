@@ -112,7 +112,7 @@ open /* non-final */ class WebViewController: ViewController {
 
 
 	open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if object as? AnyObject === webView, let keyPath = keyPath {
+		if object as? WKWebView === webView, let keyPath = keyPath {
 			switch keyPath {
 			case "loading", "title":
 				if updatesTitleFromDocument {

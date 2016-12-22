@@ -114,6 +114,7 @@ open /* non-final */ class Label: View {
 	}
 
 
+	@discardableResult
 	fileprivate func finalizeText() -> NSAttributedString {
 		let finalTextColor = renderingLayer.finalTextColor // can change due to animation
 		if finalTextColor != lastUsedFinalTextColor {
@@ -299,7 +300,7 @@ open /* non-final */ class Label: View {
 				}
 
 				// distance starts negative from inside the frame and increases the farther the point lies outside
-				let distance = frame.distanceTo(point) * (frame.contains(point) ? -1 : 1)
+				let distance = frame.distance(to: point) * (frame.contains(point) ? -1 : 1)
 				guard distance < bestLinkDistance else {
 					continue
 				}
@@ -667,8 +668,8 @@ open /* non-final */ class Label: View {
 			}
 
 			let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
-			copyMethodWithSelector(defaultLinkAttributesSelector, fromType: object_getClass(NSLayoutManager.self), toType: object_getClass(self))
-			swizzleMethodInType(object_getClass(self), fromSelector: Selector("JetPack_linkAttributes"), toSelector: defaultLinkAttributesSelector)
+			copyMethod(selector: defaultLinkAttributesSelector, from: object_getClass(NSLayoutManager.self), to: object_getClass(self))
+			swizzleMethod(in: object_getClass(self), from: #selector(getter: LayoutManager.linkAttributes), to: defaultLinkAttributesSelector)
 		}
 	}
 

@@ -8,9 +8,9 @@ open class Observatory<Event> {
 
 	public typealias Observer = (Event, ObservatoryExit) -> Void
 
-	fileprivate typealias Subscription = ObservatorySubscription<Event>
+	private typealias Subscription = ObservatorySubscription<Event>
 
-	fileprivate var subscriptions = [Subscription]()
+	private var subscriptions = [Subscription]()
 
 
 	/// Subscribes to events from this observatory and returns a closure which can be called to unsubscribe.
@@ -62,21 +62,21 @@ open class Observatory<Event> {
 
 
 
-private class ObservatorySubscription<Event> {
+fileprivate class ObservatorySubscription<Event> {
 
-	typealias Observer = (Event, ObservatoryExit) -> Void
+	fileprivate typealias Observer = (Event, ObservatoryExit) -> Void
 
-	let exit:     ObservatoryExit
-	let observer: Observer
+	fileprivate let exit: ObservatoryExit
+	fileprivate let observer: Observer
 
 
-	init(observer: @escaping Observer, exit: @escaping ObservatoryExit) {
+	fileprivate init(observer: @escaping Observer, exit: @escaping ObservatoryExit) {
 		self.exit = exit
 		self.observer = observer
 	}
 
 
-	func notify(event: Event) {
+	fileprivate func notify(event: Event) {
 		observer(event, exit)
 	}
 }

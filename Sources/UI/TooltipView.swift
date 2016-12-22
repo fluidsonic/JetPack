@@ -50,7 +50,7 @@ open /* non-final */ class TooltipView: View {
 
 
 	open var buttonText: String {
-		get { return button.textLabel.text ?? "" }
+		get { return button.textLabel.text }
 		set {
 			guard newValue != buttonText else {
 				return
@@ -64,7 +64,7 @@ open /* non-final */ class TooltipView: View {
 
 
 	open var labelText: String {
-		get { return label.text ?? "" }
+		get { return label.text }
 		set {
 			guard newValue != labelText else {
 				return

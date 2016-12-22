@@ -52,7 +52,7 @@ open /* non-final */ class ViewController: UIViewController {
 			return
 		}
 
-		copyMethodInType(object_getClass(self), fromSelector: #selector(overridesPreferredInterfaceOrientationForPresentation), toSelector: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
+		copyMethod(in: object_getClass(self), from: #selector(overridesPreferredInterfaceOrientationForPresentation), to: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
 	}
 
 

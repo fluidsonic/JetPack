@@ -56,11 +56,12 @@ public extension UINavigationBar {
 
 	@nonobjc
 	internal static func UINavigationBar_setUp() {
+		swizzleMethod(in: self, from: #selector(setter: UINavigationItem.prompt), to: #selector(swizzled_setPrompt(_:)))
+
 		// yep, private API necessary :(
 		// If the private method is removed/renamed the related feature will cease to work but we won't crash.
-		swizzleMethodInType(self, fromSelector: Selector("setPrompt:"), toSelector: #selector(swizzled_setPrompt(_:)))
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "popNavigationItemWithTransition:"), toSelector: #selector(swizzled_popNavigationItemWithTransition(_:)))
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "pushNavigationItem:", "transition:"), toSelector: #selector(swizzled_pushNavigationItem(_:transition:)))
-		swizzleMethodInType(self, fromSelector: obfuscatedSelector("_", "setItems:", "transition:", "reset:", "resetOwningRelationship:"), toSelector: #selector(swizzled_setItems(_:transition:reset:resetOwningRelationship:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "popNavigationItemWithTransition:"),                               to: #selector(swizzled_popNavigationItemWithTransition(_:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "pushNavigationItem:", "transition:"),                             to: #selector(swizzled_pushNavigationItem(_:transition:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "setItems:", "transition:", "reset:", "resetOwningRelationship:"), to: #selector(swizzled_setItems(_:transition:reset:resetOwningRelationship:)))
 	}
 }

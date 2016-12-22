@@ -1,7 +1,25 @@
-public final class StrongReference<T> {
+public final class StrongReference<Value> {
 
-	public var target: T
+	public var value: Value
 
 
-	public init(_ target: T) { self.target = target }
+	public init(_ value: Value) {
+		self.value = value
+	}
+}
+
+
+extension StrongReference: CustomDebugStringConvertible {
+
+	public var debugDescription: String {
+		return "StrongReference(\(String(reflecting: value)))"
+	}
+}
+
+
+extension StrongReference: CustomStringConvertible {
+
+	public var description: String {
+		return String(describing: value)
+	}
 }
