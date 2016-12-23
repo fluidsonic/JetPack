@@ -8,6 +8,14 @@ class SequenceType_Tests: XCTestCase {
 	fileprivate let error = NSError(domain: "", code: 0, userInfo: nil)
 
 
+	func testAssociated() {
+		XCTAssertEqual(AnySequence<Int>([]).associated() { ($0, $0) },      [:])
+		XCTAssertEqual(AnySequence([1, 2, 3]).associated(elementSelector: { ($0, $0 * 2) }), [1: 2, 2: 4, 3: 6])
+
+		XCTAssertEqual(AnySequence([(1, 1), (2, 2), (1, 3)]).associated(elementSelector: { $0 }), [2: 2, 1: 3])
+	}
+
+
 	func testContainsIdentical() {
 		let objects = [EmptyNonEqualObject(), EmptyNonEqualObject()]
 		XCTAssertFalse(objects.containsIdentical(EmptyNonEqualObject()))
@@ -73,14 +81,6 @@ class SequenceType_Tests: XCTestCase {
 		XCTAssertEqual(AnySequence([3, 1, 2]).toArray(), [3, 1, 2])
 
 		XCTAssertIdentical(AnySequence([b, a, b]).toArray(), [b, a, b])
-	}
-
-
-	func testToDictionary() {
-		XCTAssertEqual(AnySequence<Int>([]).toDictionary() { ($0, $0) },      [:])
-		XCTAssertEqual(AnySequence([1, 2, 3]).toDictionary(transform: { ($0, $0 * 2) }), [1: 2, 2: 4, 3: 6])
-
-		XCTAssertEqual(AnySequence([(1, 1), (2, 2), (1, 3)]).toDictionary(transform: { $0 }), [2: 2, 1: 3])
 	}
 
 

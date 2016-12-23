@@ -11,7 +11,7 @@ internal final class EmptyEqualObject: CustomStringConvertible, Hashable {
 
 
 	internal var description: String {
-		return "EmptyEqualObject(\(pointerOf(self)))"
+		return "EmptyEqualObject(\(pointer(of: self)))"
 	}
 
 
@@ -27,7 +27,7 @@ internal final class EmptyNonEqualObject: CustomStringConvertible, Hashable {
 
 
 	internal var description: String {
-		return "EmptyNonEqualObject(\(pointerOf(self)))"
+		return "EmptyNonEqualObject(\(pointer(of: self)))"
 	}
 
 

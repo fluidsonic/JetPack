@@ -11,18 +11,12 @@ class CGSize_Tests: XCTestCase {
 	}
 
 
-	func testConstrain() {
+	func testCoerced() {
 		let size = CGSize(width: 3, height: 4)
-		XCTAssertEqual(size.constrainTo(CGSize(width: 1, height: 2)), CGSize(width: 1, height: 2))
-		XCTAssertEqual(size.constrainTo(CGSize(width: 4, height: 5)), size)
-
-		var mutableSize = size
-		mutableSize.constrainInPlace(CGSize(width: 1, height: 2))
-		XCTAssertEqual(mutableSize, CGSize(width: 1, height: 2))
-
-		mutableSize = size
-		mutableSize.constrainInPlace(CGSize(width: 4, height: 5))
-		XCTAssertEqual(mutableSize, size)
+		XCTAssertEqual(size.coerced(atLeast: CGSize(width: 5, height: 6)), CGSize(width: 5, height: 6))
+		XCTAssertEqual(size.coerced(atLeast: CGSize(width: 1, height: 2)), size)
+		XCTAssertEqual(size.coerced(atMost: CGSize(width: 1, height: 2)), CGSize(width: 1, height: 2))
+		XCTAssertEqual(size.coerced(atMost: CGSize(width: 4, height: 5)), size)
 	}
 
 

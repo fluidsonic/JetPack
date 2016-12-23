@@ -18,58 +18,58 @@ class CGRect_Tests: XCTestCase {
 		let insideRect = hitRect.insetBy(dx: 1, dy: 1)
 		let outsideRect = hitRect.insetBy(dx: -1, dy: -1)
 
-		XCTAssertEqual(hitRect.contains(insideRect.topLeft,       atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.topCenter,     atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.topRight,      atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.bottomLeft,    atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.bottomCenter,  atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.bottomRight,   atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.center,        atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.centerLeft,    atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(insideRect.centerRight,   atCornerRadius: 0), true)
-		XCTAssertEqual(hitRect.contains(outsideRect.topLeft,      atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.topCenter,    atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.topRight,     atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.bottomLeft,   atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.bottomCenter, atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.bottomRight,  atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.centerLeft,   atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.centerRight,  atCornerRadius: 0), false)
-		XCTAssertEqual(hitRect.contains(insideRect.topLeft,       atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(insideRect.topCenter,     atCornerRadius: 5), true)
-		XCTAssertEqual(hitRect.contains(insideRect.topRight,      atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(insideRect.bottomLeft,    atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(insideRect.bottomCenter,  atCornerRadius: 5), true)
-		XCTAssertEqual(hitRect.contains(insideRect.bottomRight,   atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(insideRect.center,        atCornerRadius: 5), true)
-		XCTAssertEqual(hitRect.contains(insideRect.centerLeft,    atCornerRadius: 5), true)
-		XCTAssertEqual(hitRect.contains(insideRect.centerRight,   atCornerRadius: 5), true)
-		XCTAssertEqual(hitRect.contains(outsideRect.topLeft,      atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.topCenter,    atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.topRight,     atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.bottomLeft,   atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.bottomCenter, atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.bottomRight,  atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.centerLeft,   atCornerRadius: 5), false)
-		XCTAssertEqual(hitRect.contains(outsideRect.centerRight,  atCornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(insideRect.topLeft,       cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.topCenter,     cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.topRight,      cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.bottomLeft,    cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.bottomCenter,  cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.bottomRight,   cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.center,        cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.centerLeft,    cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(insideRect.centerRight,   cornerRadius: 0), true)
+		XCTAssertEqual(hitRect.contains(outsideRect.topLeft,      cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.topCenter,    cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.topRight,     cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.bottomLeft,   cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.bottomCenter, cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.bottomRight,  cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.centerLeft,   cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.centerRight,  cornerRadius: 0), false)
+		XCTAssertEqual(hitRect.contains(insideRect.topLeft,       cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(insideRect.topCenter,     cornerRadius: 5), true)
+		XCTAssertEqual(hitRect.contains(insideRect.topRight,      cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(insideRect.bottomLeft,    cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(insideRect.bottomCenter,  cornerRadius: 5), true)
+		XCTAssertEqual(hitRect.contains(insideRect.bottomRight,   cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(insideRect.center,        cornerRadius: 5), true)
+		XCTAssertEqual(hitRect.contains(insideRect.centerLeft,    cornerRadius: 5), true)
+		XCTAssertEqual(hitRect.contains(insideRect.centerRight,   cornerRadius: 5), true)
+		XCTAssertEqual(hitRect.contains(outsideRect.topLeft,      cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.topCenter,    cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.topRight,     cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.bottomLeft,   cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.bottomCenter, cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.bottomRight,  cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.centerLeft,   cornerRadius: 5), false)
+		XCTAssertEqual(hitRect.contains(outsideRect.centerRight,  cornerRadius: 5), false)
 	}
 
 
 	func testDisplacement() {
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x: -1, y: 1)), CGPoint(x: -1, y: -1))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x:  1, y: 1)), CGPoint(x:  0, y: -1))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x:  3, y: 1)), CGPoint(x:  1, y: -1))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x: -1, y: 3)), CGPoint(x: -1, y:  0))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x:  1, y: 3)), CGPoint(x:  0, y:  0))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x:  3, y: 3)), CGPoint(x:  1, y:  0))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x: -1, y: 7)), CGPoint(x: -1, y:  1))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x:  1, y: 7)), CGPoint(x:  0, y:  1))
-		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacementTo(CGPoint(x:  3, y: 7)), CGPoint(x:  1, y:  1))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x: -1, y: 1)), CGPoint(x: -1, y: -1))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x:  1, y: 1)), CGPoint(x:  0, y: -1))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x:  3, y: 1)), CGPoint(x:  1, y: -1))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x: -1, y: 3)), CGPoint(x: -1, y:  0))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x:  1, y: 3)), CGPoint(x:  0, y:  0))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x:  3, y: 3)), CGPoint(x:  1, y:  0))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x: -1, y: 7)), CGPoint(x: -1, y:  1))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x:  1, y: 7)), CGPoint(x:  0, y:  1))
+		XCTAssertEqual(CGRect(x: 0, y: 2, width: 2, height: 4).displacement(to: CGPoint(x:  3, y: 7)), CGPoint(x:  1, y:  1))
 	}
 
 
 	func testDistance() {
-		XCTAssertEqualWithAccuracy(CGRect(x: 0, y: 0, width: 1, height: 2).distanceTo(CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: CGFloat(FLT_EPSILON))
+		XCTAssertEqualWithAccuracy(CGRect(x: 0, y: 0, width: 1, height: 2).distance(to: CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: CGFloat(FLT_EPSILON))
 	}
 
 
@@ -77,11 +77,11 @@ class CGRect_Tests: XCTestCase {
 		let fromRect = CGRect(x: 0, y: 1, width: 10, height: 20)
 		let toRect   = CGRect(x: 5, y: 6, width: 15, height: 25)
 
-		XCTAssertEqual(fromRect.interpolateTo(toRect, fraction: -1),   CGRect(x: -5, y: -4, width: 5, height: 15))
-		XCTAssertEqual(fromRect.interpolateTo(toRect, fraction:  0),   fromRect)
-		XCTAssertEqual(fromRect.interpolateTo(toRect, fraction:  0.5), CGRect(x: 2.5, y: 3.5, width: 12.5, height: 22.5))
-		XCTAssertEqual(fromRect.interpolateTo(toRect, fraction:  1),   toRect)
-		XCTAssertEqual(fromRect.interpolateTo(toRect, fraction:  2),   CGRect(x: 10, y: 11, width: 20, height: 30))
+		XCTAssertEqual(fromRect.interpolate(to: toRect, fraction: -1),   CGRect(x: -5, y: -4, width: 5, height: 15))
+		XCTAssertEqual(fromRect.interpolate(to: toRect, fraction:  0),   fromRect)
+		XCTAssertEqual(fromRect.interpolate(to: toRect, fraction:  0.5), CGRect(x: 2.5, y: 3.5, width: 12.5, height: 22.5))
+		XCTAssertEqual(fromRect.interpolate(to: toRect, fraction:  1),   toRect)
+		XCTAssertEqual(fromRect.interpolate(to: toRect, fraction:  2),   CGRect(x: 10, y: 11, width: 20, height: 30))
 	}
 
 
@@ -176,15 +176,5 @@ class CGRect_Tests: XCTestCase {
 		mutableRect.width = 3
 		XCTAssertEqual(mutableRect, CGRect(x: 0, y: 1, width: 3, height: 3))
 		*/
-	}
-
-
-	func testTransform() {
-		let rect = CGRect(x: 1, y: 2, width: 3, height: 4)
-		XCTAssertEqual(rect.transform(CGAffineTransform(translationX: 1, y: 2)), CGRect(x: 2, y: 4, width: 3, height: 4))
-
-		var mutableRect = rect
-		mutableRect.transformInPlace(CGAffineTransform(translationX: 1, y: 2))
-		XCTAssertEqual(mutableRect, CGRect(x: 2, y: 4, width: 3, height: 4))
 	}
 }
