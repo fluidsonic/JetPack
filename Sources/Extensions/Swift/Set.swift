@@ -1,4 +1,4 @@
-public extension Set {
+extension Set {
 
 	public init(element: Element) {
 		self.init()
@@ -27,14 +27,21 @@ public extension Set {
 		subtract(excludes)
 	}
 
-
 	
 	public func intersects(_ set: Set<Element>) -> Bool {
 		return contains { set.contains($0) }
 	}
 
 
-	
+	public func member(_ member: Element) -> Element? {
+		guard let index = index(of: member) else {
+			return nil
+		}
+
+		return self[index]
+	}
+
+
 	public func toSet() -> Set<Iterator.Element> {
 		return self
 	}
