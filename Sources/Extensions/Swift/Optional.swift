@@ -38,3 +38,32 @@ extension Optional: _TypeerasedOptional {
 		return value
 	}
 }
+
+
+
+public func flatOptional(_ value: Any) -> Any? {
+	guard let optional = value as? _TypeerasedOptional else {
+		return value
+	}
+
+	return optional.typeerasedSelf.map(flatOptional)
+}
+
+
+public func flatOptional(_ value: Any?) -> Any? {
+	return value.flatMap(flatOptional)
+}
+
+
+public func flatOptional<Value>(_ value: Any) -> Value? {
+	guard let optional = value as? _TypeerasedOptional else {
+		return value as? Value
+	}
+
+	return optional.typeerasedSelf.flatMap(flatOptional)
+}
+
+
+public func flatOptional<Value>(_ value: Any?) -> Value? {
+	return value.flatMap(flatOptional)
+}
