@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_TableViewCell)
-open /* non-final */ class TableViewCell: UITableViewCell {
+open class TableViewCell: UITableViewCell {
 
 	fileprivate var defaultContentHeight = CGFloat(0)
 

@@ -1,7 +1,7 @@
 import Foundation
 
 
-open /* non-final */ class AsyncOperation: Operation {
+open class AsyncOperation: Operation {
 
 	private var _executing = false
 	private var _finished = false

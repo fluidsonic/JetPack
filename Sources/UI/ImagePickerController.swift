@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ImagePickerController)
-open /* non-final */ class ImagePickerController: _ImagePickerController {
+open class ImagePickerController: _ImagePickerController {
 
 	public override init() {
 		super.init()
@@ -35,7 +35,7 @@ open /* non-final */ class ImagePickerController: _ImagePickerController {
 
 // fix to make init() the designated initializers of ImagePickerController
 @objc(_JetPack_ImagePickerController)
-open /* non-final */ class _ImagePickerController: UIImagePickerController {
+open class _ImagePickerController: UIImagePickerController {
 
 	fileprivate dynamic init() {
 		// not supposed to be called

@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_Window)
-open /* non-final */ class Window: _Window {
+open class Window: _Window {
 
 	public override convenience init() {
 		self.init(workaroundForSubclassing: ())
@@ -62,7 +62,7 @@ extension Window: _NonSystemWindow {}
 
 // fix to make init() the designated initializers of Window
 @objc(_JetPack_Window)
-open /* non-final */ class _Window: UIWindow {
+open class _Window: UIWindow {
 
 	fileprivate dynamic init() {
 		// not supposed to be called

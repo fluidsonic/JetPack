@@ -7,7 +7,7 @@ private let titleViewKey = ["_", "titleView"].joined(separator: "")
 
 
 @objc(JetPack_NavigationBar)
-open /* non-final */ class NavigationBar: UINavigationBar {
+open class NavigationBar: UINavigationBar {
 
 	fileprivate var ignoresItemChanges = 0
 	fileprivate var originalAlpha = CGFloat(1)

@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ViewController)
-open /* non-final */ class ViewController: UIViewController {
+open class ViewController: UIViewController {
 
 	public typealias SeguePreparation = (_ segue: UIStoryboardSegue) -> Void
 

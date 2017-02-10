@@ -2,7 +2,7 @@ import QuartzCore
 
 
 @objc(JetPack_Layer)
-open /* non-final */ class Layer: CALayer {
+open class Layer: CALayer {
 
 	public override init() {
 		super.init()

@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_CollectionViewController)
-open /* non-final */ class CollectionViewController: ViewController {
+open class CollectionViewController: ViewController {
 
 	fileprivate var lastLayoutedSize = CGSize()
 

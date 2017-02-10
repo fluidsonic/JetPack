@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_View)
-open /* non-final */ class View: UIView {
+open class View: UIView {
 
 	fileprivate static let _dummyView = View()
 

@@ -1,7 +1,7 @@
 import UIKit
 
 
-open /* non-final */ class SearchBar: UISearchBar {
+open class SearchBar: UISearchBar {
 
 	public init() {
 		super.init(frame: .zero)

@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_TooltipView)
-open /* non-final */ class TooltipView: View {
+open class TooltipView: View {
 
 	fileprivate let arrowSize = CGSize(width: 12, height: 8)
 	fileprivate let backgroundCornerRadius = CGFloat(3)

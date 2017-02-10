@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_TextField)
-open /* non-final */ class TextField: UITextField {
+open class TextField: UITextField {
 
 	open var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	open var hitZoneFollowsCornerRadius = true

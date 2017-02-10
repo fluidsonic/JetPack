@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_TextView)
-open /* non-final */ class TextView: UITextView {
+open class TextView: UITextView {
 
 	fileprivate var changeObserver: NSObjectProtocol?
 	fileprivate var placeholderLabel: Label?

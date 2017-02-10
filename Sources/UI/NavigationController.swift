@@ -1,7 +1,7 @@
 import UIKit
 
 
-open /* non-final */ class NavigationController: UINavigationController {
+open class NavigationController: UINavigationController {
 
 	@nonobjc
 	public init(navigationBarClass: NavigationBar.Type?, toolbarClass: UIToolbar.Type?) {

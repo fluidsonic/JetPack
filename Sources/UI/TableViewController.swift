@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_TableViewController)
-open /* non-final */ class TableViewController: ViewController {
+open class TableViewController: ViewController {
 
 	fileprivate let style: UITableViewStyle
 

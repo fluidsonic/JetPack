@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ScrollView)
-open /* non-final */ class ScrollView: UIScrollView {
+open class ScrollView: UIScrollView {
 
 	fileprivate var delegateRespondsToViewForZooming = false
 

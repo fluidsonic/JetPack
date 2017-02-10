@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_GuideViewController)
-open /* non-final */ class GuideViewController: ViewController {
+open class GuideViewController: ViewController {
 
 	fileprivate lazy var backgroundView = BackgroundView()
 	fileprivate lazy var focusShadowView = View()

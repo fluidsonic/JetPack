@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ShapeView)
-open /* non-final */ class ShapeView: View {
+open class ShapeView: View {
 
 	fileprivate var originalFillColor: UIColor?
 	fileprivate var originalStrokeColor: UIColor?

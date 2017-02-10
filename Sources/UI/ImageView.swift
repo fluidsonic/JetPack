@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ImageView)
-open /* non-final */ class ImageView: View {
+open class ImageView: View {
 
 	public typealias Session = _ImageViewSession
 	public typealias SessionListener = _ImageViewSessionListener

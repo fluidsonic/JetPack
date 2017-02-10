@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_Label)
-open /* non-final */ class Label: View {
+open class Label: View {
 
 	fileprivate lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
 	fileprivate lazy var renderingLayer: LabelLayer = self.layer as! LabelLayer

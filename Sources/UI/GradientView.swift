@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_GradientView)
-open/* non-final */ class GradientView: View {
+open class GradientView: View {
 
 	public override init() {
 		super.init()
