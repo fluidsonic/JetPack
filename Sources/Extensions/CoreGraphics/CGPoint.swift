@@ -8,8 +8,18 @@ public extension CGPoint {
 	}
 
 
-	public func coerced(min: CGPoint, max: CGPoint) -> CGPoint {
-		return CGPoint(x: x.coerced(in: min.x ... max.x), y: y.coerced(in: min.y ... max.y))
+	public func coerced(atLeast minimum: CGPoint) -> CGPoint {
+		return CGPoint(x: x.coerced(atLeast: minimum.x), y: y.coerced(atLeast: minimum.y))
+	}
+
+
+	public func coerced(atMost maximum: CGPoint) -> CGPoint {
+		return CGPoint(x: x.coerced(atMost: maximum.x), y: y.coerced(atMost: maximum.y))
+	}
+
+
+	public func coerced(atLeast minimum: CGPoint, atMost maximum: CGPoint) -> CGPoint {
+		return CGPoint(x: x.coerced(in: minimum.x ... maximum.x), y: y.coerced(in: minimum.y ... maximum.y))
 	}
 
 
