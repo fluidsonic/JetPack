@@ -7,9 +7,9 @@ import JetPack
 class CGPoint_Tests: XCTestCase {
 
 	func testCoerced() {
-		XCTAssertEqual(CGPoint(x: 1, y: 2).coerced(min: CGPoint(x: 0, y: 1), max: CGPoint(x: 0, y: 1)), CGPoint(x: 0, y: 1))
-		XCTAssertEqual(CGPoint(x: 1, y: 2).coerced(min: CGPoint(x: 0, y: 1), max: CGPoint(x: 2, y: 3)), CGPoint(x: 1, y: 2))
-		XCTAssertEqual(CGPoint(x: 1, y: 2).coerced(min: CGPoint(x: 2, y: 3), max: CGPoint(x: 2, y: 3)), CGPoint(x: 2, y: 3))
+		XCTAssertEqual(CGPoint(x: 1, y: 2).coerced(atLeast: CGPoint(x: 0, y: 1), atMost: CGPoint(x: 0, y: 1)), CGPoint(x: 0, y: 1))
+		XCTAssertEqual(CGPoint(x: 1, y: 2).coerced(atLeast: CGPoint(x: 0, y: 1), atMost: CGPoint(x: 2, y: 3)), CGPoint(x: 1, y: 2))
+		XCTAssertEqual(CGPoint(x: 1, y: 2).coerced(atLeast: CGPoint(x: 2, y: 3), atMost: CGPoint(x: 2, y: 3)), CGPoint(x: 2, y: 3))
 	}
 
 
