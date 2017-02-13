@@ -106,6 +106,11 @@ public extension Sequence {
 		return (left, right)
 	}
 
+
+	public func sorted <SortKey: Comparable>(by sortKeySelector: (Iterator.Element) -> SortKey) -> [Iterator.Element] {
+		return sorted { sortKeySelector($0) < sortKeySelector($1) }
+	}
+
 	
 	public func toArray() -> [Iterator.Element] {
 		return Array<Iterator.Element>(self)
