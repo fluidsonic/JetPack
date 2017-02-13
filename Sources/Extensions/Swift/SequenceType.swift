@@ -1,7 +1,6 @@
 public extension Sequence {
 
-	
-	public func associated <Key: Hashable, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+		public func associated <Key: Hashable, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		var dictionary = [Key : Value]()
 		for element in self {
 			let (key, value) = try elementSelector(element)
@@ -11,14 +10,12 @@ public extension Sequence {
 		return dictionary
 	}
 
-
 	
 	public func associated <Key: Hashable> (by keySelector: (Iterator.Element) throws -> Key) rethrows -> [Key : Iterator.Element] {
 		return try associated { (try keySelector($0), $0) }
 	}
 
 
-	
 	public func countMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Int {
 		var count = 0
 		for element in self where try predicate(element) {
@@ -29,7 +26,6 @@ public extension Sequence {
 	}
 
 
-	
 	public func firstMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Iterator.Element? {
 		for element in self where try predicate(element) {
 			return element
@@ -37,7 +33,6 @@ public extension Sequence {
 
 		return nil
 	}
-
 
 	
 	public func joinWithSeparator(_ separator: String, lastSeparator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
@@ -76,13 +71,11 @@ public extension Sequence {
 	}
 
 
-	
 	public func joinWithSeparator(_ separator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
 		return try lazy.map(transform).joined(separator: separator)
 	}
 
 
-	
 	public func mapNotNil<T>(transform: (Iterator.Element) throws -> T?) rethrows -> [T] {
 		var result = [T]()
 		for element in self {
@@ -97,7 +90,6 @@ public extension Sequence {
 	}
 
 
-	
 	public func separate(isLeftElement: (Iterator.Element) throws -> Bool) rethrows -> ([Iterator.Element], [Iterator.Element]) {
 		var left = Array<Iterator.Element>()
 		var right = Array<Iterator.Element>()
@@ -114,11 +106,11 @@ public extension Sequence {
 		return (left, right)
 	}
 
-
 	
 	public func toArray() -> [Iterator.Element] {
 		return Array<Iterator.Element>(self)
 	}
+
 
 	@available(*, deprecated: 1, renamed: "associated")
 	public func toDictionary <Key: Hashable, Value>(transform: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
@@ -130,7 +122,6 @@ public extension Sequence {
 
 public extension Sequence where Iterator.Element: AnyObject {
 
-	
 	public func containsIdentical(_ element: Iterator.Element) -> Bool {
 		for existingElement in self where existingElement === element {
 			return true
@@ -144,7 +135,6 @@ public extension Sequence where Iterator.Element: AnyObject {
 
 public extension Sequence where Iterator.Element: Hashable {
 
-	
 	public func toSet() -> Set<Iterator.Element> {
 		return Set(self)
 	}
@@ -154,7 +144,6 @@ public extension Sequence where Iterator.Element: Hashable {
 
 public extension Sequence where Iterator.Element == String {
 
-	
 	public func joinWithSeparator(_ separator: String, lastSeparator: String) -> String {
 		return joinWithSeparator(separator, lastSeparator: lastSeparator, transform: identity)
 	}
@@ -164,7 +153,6 @@ public extension Sequence where Iterator.Element == String {
 
 public extension Sequence where Iterator.Element: _Optional {
 
-	
 	public func filterNonNil() -> [Iterator.Element.Wrapped] {
 		var result = Array<Iterator.Element.Wrapped>()
 		for element in self {
