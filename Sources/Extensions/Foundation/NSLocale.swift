@@ -16,6 +16,10 @@ public extension Locale {
 
 
 	@nonobjc
+	public static let display = Bundle.main.preferredLocalizations.first.map { Locale(identifier: Locale.canonicalLanguageIdentifier(from: $0)) } ?? .autoupdatingCurrent
+
+
+	@nonobjc
 	public static let englishUnitedStatesComputer = Locale(identifier: "en_US_POSIX")
 
 
