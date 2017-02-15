@@ -35,9 +35,9 @@ public extension Sequence {
 	}
 
 	
-	public func joinWithSeparator(_ separator: String, lastSeparator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
+	public func joined(separator: String, lastSeparator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
 		guard lastSeparator != separator else {
-			return try joinWithSeparator(separator, transform: transform)
+			return try joined(separator: separator, transform: transform)
 		}
 
 		var isFirstElement = true
@@ -71,7 +71,7 @@ public extension Sequence {
 	}
 
 
-	public func joinWithSeparator(_ separator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
+	public func joined(separator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
 		return try lazy.map(transform).joined(separator: separator)
 	}
 
@@ -149,8 +149,8 @@ public extension Sequence where Iterator.Element: Hashable {
 
 public extension Sequence where Iterator.Element == String {
 
-	public func joinWithSeparator(_ separator: String, lastSeparator: String) -> String {
-		return joinWithSeparator(separator, lastSeparator: lastSeparator, transform: identity)
+	public func joined(separator: String, lastSeparator: String) -> String {
+		return joined(separator: separator, lastSeparator: lastSeparator, transform: identity)
 	}
 }
 
