@@ -12,7 +12,7 @@ public extension String {
 	}
 
 
-	
+
 	public func trimmedToLength(_ length: Int, truncationString: String = "") -> String {
 		if length <= 0 {
 			return ""
@@ -37,5 +37,18 @@ public extension String {
 
 	public var whitespaceTrimmed: String {
 		return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+	}
+}
+
+
+extension String.UnicodeScalarView {
+
+	public func filterAsView(_ isIncluded: (Iterator.Element) throws -> Bool) rethrows -> String.UnicodeScalarView {
+		var view = String.UnicodeScalarView()
+		for value in self where try isIncluded(value) {
+			view.append(value)
+		}
+
+		return view
 	}
 }
