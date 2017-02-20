@@ -153,7 +153,7 @@ open class WebViewController: ViewController {
 
 
 	fileprivate func updateTitleFromDocument() {
-		title = webView.title?.nonEmpty ?? (webView.isLoading ? "Loading…" : "") // FIXME l10n
+		title = webView.title?.nonEmpty ?? (webView.isLoading ? "Loading…" : "") // TODO l10n
 	}
 
 
