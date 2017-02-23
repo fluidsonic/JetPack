@@ -7,7 +7,6 @@ extension Set {
 	}
 
 
-	
 	public func filterAsSet(includeElement: (Element) throws -> Bool) rethrows -> Set<Element> {
 		var newSet = Set<Element>()
 		for element in self where try includeElement(element) {
@@ -27,9 +26,19 @@ extension Set {
 		subtract(excludes)
 	}
 
-	
+
 	public func intersects(_ set: Set<Element>) -> Bool {
 		return contains { set.contains($0) }
+	}
+
+
+	public func mapAsSet<MappedElement: Hashable>(transform: (Iterator.Element) throws -> MappedElement) rethrows -> Set<MappedElement> {
+		var mappedSet = Set<MappedElement>(minimumCapacity: count)
+		for element in self {
+			mappedSet.insert(try transform(element))
+		}
+
+		return mappedSet
 	}
 
 

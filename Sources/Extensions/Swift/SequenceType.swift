@@ -111,7 +111,7 @@ public extension Sequence {
 		return sorted { sortKeySelector($0) < sortKeySelector($1) }
 	}
 
-	
+
 	public func toArray() -> [Iterator.Element] {
 		return Array<Iterator.Element>(self)
 	}
