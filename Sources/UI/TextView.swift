@@ -40,8 +40,25 @@ open class TextView: UITextView {
 				setNeedsLayout()
 			}
 
-			super.attributedText = newValue
+			super.attributedText = attributedTextIncludingDefaultFormatting(for: newValue ?? NSAttributedString())
 		}
+	}
+
+
+	private func attributedTextIncludingDefaultFormatting(for attributedText: NSAttributedString) -> NSAttributedString {
+		let defaultAttributes = [
+			NSFontAttributeName:            font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize),
+			NSForegroundColorAttributeName: textColor ?? .black
+		]
+
+		let attributedStringIncludingDefaultFormatting = NSMutableAttributedString(string: attributedText.string, attributes: defaultAttributes)
+		attributedStringIncludingDefaultFormatting.beginEditing()
+		attributedText.enumerateAttributes(in: NSRange(forString: attributedText.string), options: [.longestEffectiveRangeNotRequired]) { attributes, range, _ in
+			attributedStringIncludingDefaultFormatting.addAttributes(attributes, range: range)
+		}
+		attributedStringIncludingDefaultFormatting.endEditing()
+
+		return attributedStringIncludingDefaultFormatting
 	}
 
 
