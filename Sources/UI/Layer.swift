@@ -27,14 +27,29 @@ open class Layer: CALayer {
 				return
 			}
 
-			if newValue.size != oldValue.size, let view = delegate as? View {
-				view.willResizeToSize(newValue.size)
+			if newValue.size != oldValue.size {
+				willResizeToSize(newValue.size)
 				super.bounds = newValue
-				view.didResizeFromSize(oldValue.size)
+				didResizeFromSize(oldValue.size)
 			}
 			else {
 				super.bounds = newValue
 			}
 		}
+	}
+
+
+	open func didResizeFromSize(_ oldSize: CGSize) {
+		(delegate as? View)?.didResizeFromSize(oldSize)
+	}
+
+
+	open func size(thatFits maximumSize: CGSize) -> CGSize {
+		return preferredFrameSize()
+	}
+
+
+	open func willResizeToSize(_ newSize: CGSize) {
+		(delegate as? View)?.willResizeToSize(newSize)
 	}
 }

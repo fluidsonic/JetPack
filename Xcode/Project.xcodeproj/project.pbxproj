@@ -26,6 +26,7 @@
 		4986834B1BE41ECF001DCBC7 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683471BE41ECF001DCBC7 /* CGPoint.swift */; };
 		4986834C1BE41ECF001DCBC7 /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683481BE41ECF001DCBC7 /* CGRect.swift */; };
 		4986834D1BE41ECF001DCBC7 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683491BE41ECF001DCBC7 /* CGSize.swift */; };
+		498A0BFC1E69B45D001B8836 /* LabelTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498A0BFA1E69B3BF001B8836 /* LabelTestViewController.swift */; };
 		499EEC3E1CF4C9A0008991A3 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499EEC3D1CF4C9A0008991A3 /* Array.swift */; };
 		49A72CE71BE5A475001FDCE8 /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CE61BE5A475001FDCE8 /* Support.swift */; };
 		49CDDD591C943BD700FB7DEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498683311BE405D6001DCBC7 /* AppDelegate.swift */; };
@@ -146,6 +147,7 @@
 		498683471BE41ECF001DCBC7 /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		498683481BE41ECF001DCBC7 /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		498683491BE41ECF001DCBC7 /* CGSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
+		498A0BFA1E69B3BF001B8836 /* LabelTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTestViewController.swift; sourceTree = "<group>"; };
 		499EEC3D1CF4C9A0008991A3 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		49A72CA81BE5600A001FDCE8 /* NSCalendar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCalendar.swift; sourceTree = "<group>"; };
 		49A72CA91BE5600A001FDCE8 /* NSCalendarUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCalendarUnit.swift; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 				498683311BE405D6001DCBC7 /* AppDelegate.swift */,
 				498683321BE405D6001DCBC7 /* Info.plist */,
 				498683331BE405D6001DCBC7 /* LaunchScreen.storyboard */,
+				498A0BFA1E69B3BF001B8836 /* LabelTestViewController.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -2016,6 +2019,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4956ED061C94551600A33C45 /* AppDelegate.swift in Sources */,
+				498A0BFC1E69B45D001B8836 /* LabelTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

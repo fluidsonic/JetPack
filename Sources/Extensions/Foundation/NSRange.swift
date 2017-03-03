@@ -64,6 +64,22 @@ public extension NSRange {
 }
 
 
+extension NSRange: CustomDebugStringConvertible {
+
+	public var debugDescription: String {
+		return "NSRange(location: \(location), length: \(length))"
+	}
+}
+
+
+extension NSRange: CustomStringConvertible {
+
+	public var description: String {
+		return "(location: \(location), length: \(length))"
+	}
+}
+
+
 extension NSRange: Equatable {}
 
 
