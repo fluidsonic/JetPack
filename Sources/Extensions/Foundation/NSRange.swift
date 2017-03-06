@@ -61,6 +61,11 @@ public extension NSRange {
 	public func startIndexInString(_ string: String) -> String.Index? {
 		return NSRange.indexForLocation(location, inString: string)
 	}
+
+
+	public func toCountableRange() -> CountableRange<Int>? {
+		return toRange().map { $0.lowerBound ..< $0.upperBound }
+	}
 }
 
 
@@ -80,9 +85,36 @@ extension NSRange: CustomStringConvertible {
 }
 
 
-extension NSRange: Equatable {}
+extension NSRange: Equatable {
+
+	public static func == (a: NSRange, b: NSRange) -> Bool {
+		return NSEqualRanges(a, b)
+	}
+}
 
 
-public func == (a: NSRange, b: NSRange) -> Bool {
-	return NSEqualRanges(a, b)
+extension NSRange: Sequence {
+
+	public typealias Iterator = CountableRange<Int>.Iterator
+
+
+	public func makeIterator() -> Iterator {
+		return (location ..< (location + length)).makeIterator()
+	}
+}
+
+
+public extension CountableRange where Bound: SignedInteger { // TODO use same-type requirement with Int once possible
+
+	public func toNSRange() -> NSRange {
+		return NSRange(location: Int(lowerBound.toIntMax()), length: Int(upperBound.toIntMax() - lowerBound.toIntMax()))
+	}
+}
+
+
+public extension Range where Bound: SignedInteger { // TODO use same-type requirement with Int once possible
+
+	public func toNSRange() -> NSRange {
+		return NSRange(location: Int(lowerBound.toIntMax()), length: Int(upperBound.toIntMax() - lowerBound.toIntMax()))
+	}
 }

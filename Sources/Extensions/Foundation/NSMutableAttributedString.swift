@@ -21,16 +21,24 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
+	public func edit(changes: Closure) {
+		beginEditing()
+		changes()
+		endEditing()
+	}
+
+
+	@nonobjc
 	public func transformStringSegments(_ transform: (String) -> String) {
 		let length = self.length
 		guard length > 0 else {
 			return
 		}
 
-		beginEditing()
-		enumerateAttributes(in: NSRange(location: 0, length: length), options: []) { _, range, _ in
-			replaceCharacters(in: range, with: transform(attributedSubstring(from: range).string))
+		edit {
+			enumerateAttributes(in: NSRange(location: 0, length: length), options: []) { _, range, _ in
+				replaceCharacters(in: range, with: transform(attributedSubstring(from: range).string))
+			}
 		}
-		endEditing()
 	}
 }

@@ -20,43 +20,59 @@ class LabelTestViewController: ViewController {
 		at.addAttributes([ NSFontAttributeName: font2 ], range: NSRange(location: 9, length: 9))
 
 		label.backgroundColor = .red
-		label.maximumNumberOfLines = nil
+		label.maximumNumberOfLines = 1
 		label.attributedText = at
 		label.font = font1
-		label.text = "fABCÄÖÜj" // °͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌
+		label.text = "The Lazy Fox" // °͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌
 		label.textColor = .white
 		label.lineHeightMultiple = 1
-		label.verticalAlignment = .top
+		//label.verticalAlignment = .top
 
-		var frame = CGRect(left: 10, top: 200, width: 300, height: 50)
+		var frame = CGRect(left: 30, top: 200, width: 300, height: 50)
 		//frame.size.height = label.heightThatFitsWidth(300)
 		frame.size = label.sizeThatFits()
 		label.frame = frame
 
-		let lineHeight1 = font1.lineHeight * 1
+		let label2 = UILabel()
+		label2.font = font1
+		label2.text = "The Lazy Fox" // °͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌
+		label2.textColor = .white
+		label2.backgroundColor = .red
 
-		// target asc: 7.3 - 7.6
-		print("1 asc: \(font1.ascender)")
-		print("1 des: \(font1.descender)")
-		print("1 cap: \(font1.capHeight)")
-		print("1 lin: \(font1.lineHeight)") // = asc - desc
-		print("1 li4: \(lineHeight1)") // = asc - desc * n
-		print("1 poi: \(font1.pointSize)")
-		print("1 bottom: \(font1.descender)") // bottom space?
-		print("1 top: \(lineHeight1 - font1.capHeight + font1.descender)") // top space?
-
-		let lineHeight2 = font2.lineHeight * 1
-
-		// target asc: 7.3 - 7.6
-		print("2 asc: \(font2.ascender)")
-		print("2 des: \(font2.descender)")
-		print("2 cap: \(font2.capHeight)")
-		print("2 lin: \(font2.lineHeight)") // = asc - desc
-		print("2 li4: \(lineHeight2)") // = asc - desc * n
-		print("2 poi: \(font2.pointSize)")
-		print("2 bottom: \(font2.descender)") // bottom space?
-		print("2 top: \(lineHeight2 - font2.capHeight + font2.descender)") // top space?
+		var frame2 = CGRect(left: 30, top: 400, width: 300, height: 50)
+		frame2.size = label2.sizeThatFits()
+		label2.frame = frame2
 
 		view.addSubview(label)
+		view.addSubview(label2)
+
+		let l3 = Label()
+		l3.backgroundColor = .red
+		l3.font = UIFont.systemFont(ofSize: 17)
+		l3.text = "Own Label"
+		l3.textColor = .white
+		var f3 = CGRect()
+		f3.left = 30
+		f3.size = l3.sizeThatFits()
+		f3.top = 90
+		l3.frame = f3
+
+		let l4 = UILabel()
+		l4.backgroundColor = .red
+		l4.text = "iOS UILabel"
+		l4.textColor = .white
+		var f4 = CGRect()
+		f4.left = 30
+		f4.size = l4.sizeThatFits()
+		f4.top = 370
+		l4.frame = f4
+
+		view.addSubview(l3)
+		view.addSubview(l4)
+
+		onMainQueue(after: 3) { 
+			//self.label.text = "zzz"
+			//self.label.frame.size = self.label.sizeThatFits()
+		}
 	}
 }
