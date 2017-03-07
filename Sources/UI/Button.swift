@@ -878,7 +878,7 @@ private final class ButtonLabel: Label {
 	fileprivate init(button: Button) {
 		self.button = button
 
-		super.init()
+		super.init(usesExactMeasuring: false)
 	}
 
 

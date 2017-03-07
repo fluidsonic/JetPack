@@ -147,7 +147,7 @@ open class TextView: UITextView {
 		}
 		else {
 			let placeholderLabel = self.placeholderLabel ?? {
-				let child = Label()
+				let child = Label(usesExactMeasuring: false)
 				if let font = font {
 					child.font = font
 				}

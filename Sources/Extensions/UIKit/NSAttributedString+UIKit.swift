@@ -61,7 +61,7 @@ extension NSAttributedString {
 
 		let attributedString = NSMutableAttributedString(string: string, attributes: defaultAttributes)
 		attributedString.edit {
-			enumerateAttributes(in: NSRange(forString: string), options: [.longestEffectiveRangeNotRequired]) { attributes, range, _ in
+			enumerateAttributes(in: NSRange(forString: string), options: .longestEffectiveRangeNotRequired) { attributes, range, _ in
 				var attributes = attributes
 
 				if let kerning = kerning {

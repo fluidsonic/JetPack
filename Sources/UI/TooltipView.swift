@@ -8,7 +8,7 @@ open class TooltipView: View {
 	fileprivate let backgroundCornerRadius = CGFloat(3)
 	fileprivate let backgroundView = ShapeView()
 	fileprivate let button = Button()
-	fileprivate let label = Label()
+	fileprivate let label = Label(usesExactMeasuring: false)
 	fileprivate let separator = View()
 
 

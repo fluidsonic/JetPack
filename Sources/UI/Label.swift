@@ -8,16 +8,24 @@ open class Label: View {
 
 	private let linkTapRecognizer = UITapGestureRecognizer()
 	private var originalTextColor = UIColor.red
-	private let textLayer = TextLayer()
+	private let textLayer: TextLayer
 
 	open var linkTapped: ((URL) -> Void)?
 
 
-	public override init() {
+	@available(*, unavailable, renamed: "init(usesExactMeasuring:)")
+	public convenience override init() {
+		self.init(usesExactMeasuring: false) // TODO
+	}
+
+
+	public init(usesExactMeasuring: Bool) {
+		textLayer = TextLayer(usesExactMeasuring: usesExactMeasuring)
+
 		super.init()
 
 		clipsToBounds = false
-		originalTextColor = textColor
+		originalTextColor = UIColor(cgColor: textLayer.textColor)
 
 		textLayer.contentsScale = gridScaleFactor
 		textLayer.tintColor = tintColor.cgColor
@@ -33,7 +41,7 @@ open class Label: View {
 	}
 
 
-	internal var additionalLinkHitZone: UIEdgeInsets {
+	open var additionalLinkHitZone: UIEdgeInsets {
 		get { return textLayer.additionalLinkHitZone }
 		set { textLayer.additionalLinkHitZone = newValue }
 	}
@@ -49,6 +57,7 @@ open class Label: View {
 			textLayer.attributedText = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -72,6 +81,7 @@ open class Label: View {
 			textLayer.font = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -110,6 +120,7 @@ open class Label: View {
 			textLayer.kerning = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -117,15 +128,13 @@ open class Label: View {
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 
-		let bounds = self.bounds
-		guard bounds.size.isPositive else {
+		let maximumTextLayerFrame = bounds.insetBy(padding)
+		guard maximumTextLayerFrame.size.isPositive else {
 			textLayer.isHidden = true
 			return
 		}
 
 		textLayer.isHidden = false
-
-		let maximumTextLayerFrame = bounds.insetBy(padding)
 
 		var textLayerFrame = CGRect()
 		textLayerFrame.size = textLayer.textSize(thatFits: maximumTextLayerFrame.size)
@@ -169,6 +178,7 @@ open class Label: View {
 			textLayer.lineBreakMode = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -183,6 +193,7 @@ open class Label: View {
 			textLayer.lineHeightMultiple = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -202,6 +213,7 @@ open class Label: View {
 			textLayer.maximumNumberOfLines = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -216,6 +228,7 @@ open class Label: View {
 			textLayer.minimumScaleFactor = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -299,6 +312,7 @@ open class Label: View {
 			textLayer.textTransform = newValue
 
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 

@@ -5,12 +5,14 @@ internal class TextLayer: Layer {
 
 	private var configuration = Configuration()
 	private var textLayout: TextLayout?
+	private let usesExactMeasuring: Bool // TODO remove after migration period
 
 
-	internal override init() {
+	internal init(usesExactMeasuring: Bool) {
+		self.usesExactMeasuring = usesExactMeasuring
+
 		super.init()
 
-		backgroundColor = UIColor.red.withAlphaComponent(0.25).cgColor // FIXME
 		isOpaque = false
 		textColor = UIColor.darkText.cgColor
 		tintColor = UIColor.red.cgColor
@@ -22,6 +24,7 @@ internal class TextLayer: Layer {
 		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
 		textLayout = layer.textLayout
+		usesExactMeasuring = layer.usesExactMeasuring
 
 		_links = layer._links
 
@@ -47,7 +50,7 @@ internal class TextLayer: Layer {
 			fallthrough
 
 		default:
-			return super.action(forKey: key)
+			return nil
 		}
 	}
 
@@ -71,7 +74,8 @@ internal class TextLayer: Layer {
 			maximumNumberOfLines: configuration.maximumNumberOfLines,
 			maximumSize:          maximumSize,
 			minimumScaleFactor:   configuration.minimumScaleFactor,
-			renderingScale:       contentsScale
+			renderingScale:       contentsScale,
+			usesExactMeasuring:   usesExactMeasuring
 		)
 	}
 

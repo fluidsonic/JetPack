@@ -20,7 +20,8 @@ internal class TextLayout {
 		maximumNumberOfLines: Int?,
 		maximumSize: CGSize,
 		minimumScaleFactor: CGFloat,
-		renderingScale: CGFloat
+		renderingScale: CGFloat,
+		usesExactMeasuring: Bool
 	) -> TextLayout {
 		precondition(maximumSize.isPositive, "maximumSize must be positive")
 		precondition((0 ... 1).contains(minimumScaleFactor), "minimumScaleFactor must be in range 0...1")
@@ -52,7 +53,8 @@ internal class TextLayout {
 			maximumSize:          maximumSize,
 			minimumScaleFactor:   minimumScaleFactor,
 			renderingScale:       renderingScale,
-			text:                 text
+			text:                 text,
+			usesExactMeasuring:   usesExactMeasuring
 		))
 	}
 
@@ -233,22 +235,25 @@ internal class TextLayout {
 			var boundingRectForLine = layoutManager.boundingRect(forGlyphRange: glyphRangeForLine, in: textContainer)
 
 			// remove spacing above capital letters of first line and below baseline of last line
-			let isFirstLine = (glyphRangeForLine.location == visibleGlyphRange.location)
-			let isLastLine = (glyphRangeForLine.endLocation >= visibleGlyphRange.endLocation)
-			if isFirstLine || isLastLine {
-				// FIXME we also have to remove spacing *during* layout in order fully use maximumSize (using layoutManager delegate) - but may work for now due to the layout cache -> disable it for proper testing
-				if let capitalLetterSpacingForLine = textStorage.capitalLetterSpacing(in: characterRangeForLine, forLineHeight: usedRectForLine.height, usingFontLeading: layoutManager.usesFontLeading) {
-					if isFirstLine {
-						let spacing = capitalLetterSpacingForLine.above.rounded(increment: grid)
-						usedRectForLine.top += spacing
-						usedRectForLine.height -= spacing
-						boundingRectForLine.top -= spacing
-						boundingRectForLine.height += spacing
-					}
-					if isLastLine {
-						let spacing = capitalLetterSpacingForLine.below.rounded(increment: grid)
-						usedRectForLine.height -= spacing
-						boundingRectForLine.height += spacing
+			if configuration.usesExactMeasuring {
+				let isFirstLine = (glyphRangeForLine.location == visibleGlyphRange.location)
+				let isLastLine = (glyphRangeForLine.endLocation >= visibleGlyphRange.endLocation)
+				if isFirstLine || isLastLine {
+					// FIXME we also have to remove spacing *during* layout in order fully use maximumSize (using layoutManager delegate) - but may work for now due to the layout cache -> disable it for proper testing
+					if let capitalLetterSpacingForLine = textStorage.capitalLetterSpacing(in: characterRangeForLine, forLineHeight: usedRectForLine.height, usingFontLeading: layoutManager.usesFontLeading) {
+						if isFirstLine {
+							let spacing = capitalLetterSpacingForLine.above.rounded(increment: grid)
+							// FIXME don't modify usedRect as it's needed for stuff like firstLineHeadIndent
+							usedRectForLine.top += spacing
+							usedRectForLine.height -= spacing
+							boundingRectForLine.top -= spacing
+							boundingRectForLine.height += spacing
+						}
+						if isLastLine {
+							let spacing = capitalLetterSpacingForLine.below.rounded(increment: grid)
+							usedRectForLine.height -= spacing
+							boundingRectForLine.height += spacing
+						}
 					}
 				}
 			}
@@ -340,12 +345,20 @@ internal class TextLayout {
 
 
 		private func layout(_ layout: TextLayout, isAcceptableFor configuration: Configuration) -> Bool {
+			guard configuration.text == layout.configuration.text else {
+				return false
+			}
+
 			guard configuration.lineBreakMode == layout.configuration.lineBreakMode else {
 				// different line break mode will result in a different layout
 				return false
 			}
 			guard configuration.renderingScale == layout.configuration.renderingScale else {
 				// different rendering scale will result in a different layout
+				return false
+			}
+			guard configuration.usesExactMeasuring == layout.configuration.usesExactMeasuring else {
+				// different measuring will result in a different layout
 				return false
 			}
 
@@ -387,6 +400,7 @@ internal class TextLayout {
 		var minimumScaleFactor: CGFloat
 		var renderingScale: CGFloat
 		var text: NSAttributedString
+		var usesExactMeasuring: Bool
 
 
 		fileprivate init(
@@ -395,7 +409,8 @@ internal class TextLayout {
 			maximumSize: CGSize,
 			minimumScaleFactor: CGFloat,
 			renderingScale: CGFloat,
-			text: NSAttributedString
+			text: NSAttributedString,
+			usesExactMeasuring: Bool
 		) {
 			self.lineBreakMode = lineBreakMode
 			self.maximumNumberOfLines = maximumNumberOfLines
@@ -403,11 +418,12 @@ internal class TextLayout {
 			self.minimumScaleFactor = minimumScaleFactor
 			self.renderingScale = renderingScale
 			self.text = text
+			self.usesExactMeasuring = usesExactMeasuring
 		}
 
 
 		var debugDescription: String {
-			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(maximumNumberOfLines == Int.max ? "nil" : String(maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), text: '\(text.string)')"
+			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(maximumNumberOfLines == Int.max ? "-" : String(maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', usesExactMeasuring: \(usesExactMeasuring))"
 		}
 	}
 
