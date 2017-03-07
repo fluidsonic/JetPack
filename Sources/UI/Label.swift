@@ -89,7 +89,7 @@ open class Label: View {
 
 			textLayer.horizontalAlignment = newValue
 
-			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
@@ -113,11 +113,37 @@ open class Label: View {
 
 		let bounds = self.bounds
 		guard bounds.size.isPositive else {
+			textLayer.isHidden = true
 			return
 		}
 
-		var textLayerFrame = CGRect(size: bounds.size)
+		textLayer.isHidden = false
+
+		var textLayerFrame = CGRect()
+		textLayerFrame.size = textLayer.textSize(thatFits: bounds.size)
+
+		switch horizontalAlignment {
+		case .left,
+		     .natural where effectiveUserInterfaceLayoutDirection == .leftToRight:
+			break
+
+		case .center:
+			textLayerFrame.horizontalCenter = bounds.width / 2
+
+		case .right, .natural:
+			textLayerFrame.right = bounds.width
+
+		case .justified:
+			textLayerFrame.width = bounds.width
+		}
+
 		textLayer.textSize = textLayerFrame.size
+
+		switch verticalAlignment {
+		case .top:    break
+		case .center: textLayerFrame.verticalCenter = bounds.height / 2
+		case .bottom: textLayerFrame.bottom = bounds.height
+		}
 
 		textLayerFrame.insetInPlace(textLayer.drawingOverflow)
 		textLayer.frame = alignToGrid(textLayerFrame)
@@ -296,13 +322,16 @@ open class Label: View {
 
 	open var userInteractionLimitedToLinks = true
 
-	// FIXME
-/*
-	open var verticalAlignment: TextAlignment.Vertical {
-		get { return textLayer.verticalAlignment }
-		set { textLayer.verticalAlignment = newValue }
+
+	open var verticalAlignment = TextAlignment.Vertical.center {
+		didSet {
+			guard verticalAlignment != oldValue else {
+				return
+			}
+
+			setNeedsLayout()
+		}
 	}
-*/
 
 
 	private final class DelegateProxy: NSObject, UIGestureRecognizerDelegate {

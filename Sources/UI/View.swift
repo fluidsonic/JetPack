@@ -189,10 +189,19 @@ open class View: UIView {
 	open func didResizeFromSize(_ oldSize: CGSize) {
 		// override in subclasses
 	}
-	
+
+
+	open override var effectiveUserInterfaceLayoutDirection: UIUserInterfaceLayoutDirection {
+		if #available(iOS 10.0, *) {
+			return super.effectiveUserInterfaceLayoutDirection
+		}
+		else {
+			return UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute)
+		}
+	}
+
 
 	// reference implementation
-	
 	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		guard participatesInHitTesting else {
 			return nil

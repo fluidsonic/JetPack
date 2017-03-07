@@ -62,7 +62,7 @@ internal class TextLayer: Layer {
 			return textLayout
 		}
 
-		let textLayout = TextLayout.cache.getOrCreate(forText: configuration.finalText, maximumSize: textSize, maximumNumberOfLines: maximumNumberOfLines)
+		let textLayout = TextLayout.cache.getOrCreate(forText: configuration.finalText, maximumSize: textSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: configuration.lineBreakMode)
 
 		self.textLayout = textLayout
 		return textLayout
@@ -211,7 +211,7 @@ internal class TextLayer: Layer {
 	internal func textSize(thatFits maximumSize: CGSize) -> CGSize {
 		assert(maximumSize.isPositive)
 
-		let layout = TextLayout.cache.getOrCreate(forText: configuration.finalText, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines)
+		let layout = TextLayout.cache.getOrCreate(forText: configuration.finalText, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: configuration.lineBreakMode)
 		return layout.measuredSize
 	}
 
@@ -282,6 +282,15 @@ internal class TextLayer: Layer {
 				paragraphStyle.alignment = horizontalAlignment
 				paragraphStyle.lineHeightMultiple = lineHeightMultiple
 
+				switch lineBreakMode {
+				case .byClipping, .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:
+					paragraphStyle.lineBreakMode = .byWordWrapping
+
+				case .byCharWrapping, .byWordWrapping:
+					paragraphStyle.lineBreakMode = lineBreakMode
+				}
+
+
 				let finalText = text.withDefaultAttributes(
 					font:            font,
 					kerning:         kerning,
@@ -322,7 +331,7 @@ internal class TextLayer: Layer {
 		}
 
 
-		var lineBreakMode = NSLineBreakMode.byWordWrapping {
+		var lineBreakMode = NSLineBreakMode.byTruncatingTail {
 			didSet {
 				if lineBreakMode != oldValue {
 					_finalText = nil
@@ -394,10 +403,11 @@ internal class TextLayer: Layer {
 		private var drawingTintColor = UIColor.red
 		private var isTruncated = false
 		private let layoutManager = LayoutManager()
+		private let lineBreakMode: NSLineBreakMode
 		private let maximumNumberOfLines: Int?
 		private let maximumSize: CGSize
 		private var numberOfLines = 0
-		private let textContainer = NSTextContainer()
+		private let textContainer: NSTextContainer
 		private let textStorage = NSTextStorage()
 
 		private(set) var drawingOverflow = UIEdgeInsets.zero
@@ -406,33 +416,82 @@ internal class TextLayer: Layer {
 		let text: NSAttributedString
 
 
-		init(text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?) {
+		init(text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) {
 			precondition(maximumSize.isPositive)
 
 			if let maximumNumberOfLines = maximumNumberOfLines {
 				precondition(maximumNumberOfLines > 0)
 			}
 
+			self.lineBreakMode = lineBreakMode
 			self.maximumNumberOfLines = maximumNumberOfLines
 			self.maximumSize = maximumSize
 			self.text = text
 
+			layoutManager.usesFontLeading = true
+
+			textContainer = NSTextContainer(size: maximumSize)
+			textContainer.lineBreakMode = lineBreakMode
+			textContainer.lineFragmentPadding = 0
+			textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
+
+			layoutManager.addTextContainer(textContainer)
+			textStorage.addLayoutManager(layoutManager)
+
 			super.init()
 
 			layoutManager.delegate = self
-			layoutManager.usesFontLeading = true
-			layoutManager.addTextContainer(textContainer)
 
-			textContainer.lineFragmentPadding = 0
-			textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
-			//textContainer.lineBreakMode = configuration.lineBreakMode
-			textContainer.size = maximumSize // FIXME
-
-			textStorage.addLayoutManager(layoutManager)
 			textStorage.setAttributedString(text)
 
-			guard let visibleGlyphRange = layoutManager.glyphRange(for: textContainer).toCountableRange() else {
+
+
+			var measuredRect = layoutManager.usedRect(for: textContainer)
+			guard let visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: measuredRect, in: textContainer).toCountableRange() else {
 				return
+			}
+
+			if visibleGlyphRange.upperBound > 0 {
+				var range = NSRange()
+				let r = layoutManager.lineFragmentRect(forGlyphAt: visibleGlyphRange.upperBound - 1, effectiveRange: nil)
+				let ur = layoutManager.lineFragmentUsedRect(forGlyphAt: visibleGlyphRange.upperBound - 1, effectiveRange: &range)
+
+				let ws = CharacterSet.whitespacesAndNewlines
+				let s = textStorage.string[range.rangeInString(textStorage.string)!]
+				var ltorem = 0
+
+				for x in s.unicodeScalars.reversed() {
+					guard ws.contains(x) else {
+						break
+					}
+
+					ltorem += 1
+				}
+
+				if ltorem > 0 {
+					var shorterRange = range
+					shorterRange.length -= ltorem
+
+					let gra = layoutManager.glyphRange(forCharacterRange: shorterRange, actualCharacterRange: nil)
+
+					var usedRect = CGRect.null
+					layoutManager.enumerateEnclosingRects(forGlyphRange: gra, withinSelectedGlyphRange: NSRange(location: NSNotFound, length: 0), in: textContainer, using: { (rect, _) in
+						usedRect = usedRect.union(rect)
+						print("rec: \(rect)")
+					})
+
+					// move to below
+					if usedRect.isNull {
+						usedRect = ur
+						usedRect.width = 0
+					}
+
+					layoutManager.setLineFragmentRect(r, forGlyphRange: range, usedRect: usedRect)
+
+					print("ur: \(usedRect)")
+				}
+
+				print("LL: \(range)")
 			}
 
 			// layoutManager's bounding rectangle won't be calculated correctly unless we tell it to do so…
@@ -449,7 +508,10 @@ internal class TextLayer: Layer {
 			var numberOfLines = 0
 			let newlineCharacterSet = CharacterSet.newlines
 
+			measuredRect = .null
 			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange.toNSRange()) { rect, usedRect, _, lineRange, _ in
+				measuredRect = measuredRect.union(usedRect)
+				let x = self.layoutManager.truncatedGlyphRange(inLineFragmentForGlyphAt: lineRange.location)
 				let lineRange = lineRange.toCountableRange()!
 				let isFirstLine = (lineRange.lowerBound == visibleGlyphRange.lowerBound)
 				let isLastLine = (lineRange.upperBound >= visibleGlyphRange.upperBound)
@@ -465,6 +527,7 @@ internal class TextLayer: Layer {
 				}
 
 				let string = self.textStorage.string
+				print("LINE \(numberOfLines + 1) \(x) - '\(self.textStorage.string[characterRange.rangeInString(self.textStorage.string)!])'")
 				var glyphRangeForBoundingRect = lineRange.toNSRange()
 				if glyphRangeForBoundingRect.length > 0, let characterRange = characterRange.rangeInString(string), let lastCharacter = string[characterRange].unicodeScalars.last, newlineCharacterSet.contains(lastCharacter) {
 					// boundingRect is unreliable when the range ends with a newline character, so we'll exclude it
@@ -482,24 +545,23 @@ internal class TextLayer: Layer {
 
 			var boundingRect = CGRect(left: minimumBoundingBoxLeft, top: minimumBoundingBoxTop, width: maximumBoundingBoxWidth, height: maximumBoundingBoxHeight)
 
-			var measuredSize = layoutManager.usedRect(for: textContainer).size
-			measuredSize.height -= (capitalLetterSpacingAboveFirstLine * 2).rounded() / 2 // FIXME
-			measuredSize.height -= (capitalLetterSpacingBelowLastLine * 2).rounded() / 2 // FIXME
-			measuredSize.width = (measuredSize.width * 2).rounded(.up) / 2 // FIXME
-			measuredSize.height = (measuredSize.height * 2).rounded(.up) / 2 // FIXME
+			measuredRect.height -= (capitalLetterSpacingAboveFirstLine * 2).rounded() / 2 // FIXME
+			measuredRect.height -= (capitalLetterSpacingBelowLastLine * 2).rounded() / 2 // FIXME
+			measuredRect.width = (measuredRect.width * 2).rounded(.up) / 2 // FIXME
+			measuredRect.height = (measuredRect.height * 2).rounded(.up) / 2 // FIXME
 
-			let measuredRect = CGRect(left: 0, top: 0, width: measuredSize.width, height: measuredSize.height)
 			boundingRect.left = (boundingRect.left * 2).rounded(.down) / 2 // FIXME
 			boundingRect.top = (boundingRect.top * 2).rounded(.down) / 2 // FIXME
 			boundingRect.width = (boundingRect.width * 2).rounded(.up) / 2 // FIXME
 			boundingRect.height = (boundingRect.height * 2).rounded(.up) / 2 // FIXME
 			var drawingOverflow = UIEdgeInsets(fromRect: measuredRect, toRect: boundingRect)
 			drawingOverflow.top -= ((capitalLetterSpacingAboveFirstLine * 2).rounded() / 2) // FIXME
+			drawingOverflow.bottom -= ((capitalLetterSpacingBelowLastLine * 2).rounded() / 2) // FIXME
 
 			self.drawingOrigin = CGRect(size: measuredSize).insetBy(drawingOverflow.inverse).origin.offsetBy(dx: 0, dy: -((capitalLetterSpacingAboveFirstLine * 2).rounded() / 2)) // FIXME
 			self.drawingOverflow = drawingOverflow
-			self.isTruncated = visibleGlyphRange.upperBound >= layoutManager.numberOfGlyphs // FIXME may not account for ellipsis replacing single character
-			self.measuredSize = measuredSize
+			self.isTruncated = visibleGlyphRange.upperBound < layoutManager.numberOfGlyphs // FIXME may not account for ellipsis replacing single character
+			self.measuredSize = measuredRect.size
 			self.numberOfLines = numberOfLines
 		}
 
@@ -517,7 +579,11 @@ internal class TextLayer: Layer {
 		}
 
 
-		func isValidFor(maximumSize: CGSize, maximumNumberOfLines: Int?) -> Bool {
+		func isValidFor(maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) -> Bool {
+			guard lineBreakMode == self.lineBreakMode else {
+				return false
+			}
+
 			let cachedHeights = min(self.maximumSize.height, measuredSize.height) ... max(self.maximumSize.height, measuredSize.height)
 			let cachedWidths = min(self.maximumSize.width, measuredSize.width) ... max(self.maximumSize.width, measuredSize.width)
 			guard cachedHeights.contains(maximumSize.height) && cachedWidths.contains(maximumSize.width) else {
@@ -540,12 +606,6 @@ internal class TextLayer: Layer {
 				}
 			}
 
-			return true
-		}
-
-
-		@objc
- func layoutManager(_ layoutManager: NSLayoutManager, shouldSetLineFragmentRect lineFragmentRect: UnsafeMutablePointer<CGRect>, lineFragmentUsedRect: UnsafeMutablePointer<CGRect>, baselineOffset: UnsafeMutablePointer<CGFloat>, in textContainer: NSTextContainer, forGlyphRange glyphRange: NSRange) -> Bool {
 			return true
 		}
 
@@ -633,19 +693,19 @@ internal class TextLayer: Layer {
 			}
 
 
-			func get(forText text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?) -> TextLayout? {
-				return layouts[text]?.first { $0.isValidFor(maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines) }
+			func get(forText text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) -> TextLayout? {
+				return layouts[text]?.first { $0.isValidFor(maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: lineBreakMode) }
 			}
 
 
-			mutating func getOrCreate(forText text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?) -> TextLayout {
-				if let layout = get(forText: text, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines) {
+			mutating func getOrCreate(forText text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) -> TextLayout {
+				if let layout = get(forText: text, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: lineBreakMode) {
 					print("cache HIT")
 					return layout
 				}
 
 				print("cache MISS")
-				let layout = TextLayout(text: text, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines)
+				let layout = TextLayout(text: text, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: lineBreakMode)
 				add(layout: layout)
 
 				return layout

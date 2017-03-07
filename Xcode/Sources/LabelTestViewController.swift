@@ -12,40 +12,50 @@ class LabelTestViewController: ViewController {
 
 		view.backgroundColor = .black
 
-		let font1 = UIFont(name: "Zapfino", size: 30)!
+		let font1 = UIFont(name: "Zapfino", size: 25)!
 		let font2 = UIFont(name: "Zapfino", size: 15)!
 
 		let at = NSMutableAttributedString(string: "ABCDEÄji0ABCDEÄji0")
 		at.addAttributes([ NSFontAttributeName: font1 ], range: NSRange(location: 0, length: 9))
 		at.addAttributes([ NSFontAttributeName: font2 ], range: NSRange(location: 9, length: 9))
 
+		label.horizontalAlignment = .left
 		label.backgroundColor = .red
-		label.maximumNumberOfLines = 1
+		label.lineBreakMode = .byWordWrapping
+		label.maximumNumberOfLines = 2
 		label.attributedText = at
 		label.font = font1
-		label.text = "The Lazy Fox" // °͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌
+		label.text = "The Lazy Fox jumped the fence and died shortly after" // °͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌
 		label.textColor = .white
 		label.lineHeightMultiple = 1
-		//label.verticalAlignment = .top
 
-		var frame = CGRect(left: 30, top: 200, width: 300, height: 50)
+		var frame = CGRect(left: 30, top: 100, width: 300, height: 50)
 		//frame.size.height = label.heightThatFitsWidth(300)
-		frame.size = label.sizeThatFits()
+		frame.size = label.sizeThatFitsWidth(375 - 60)
 		label.frame = frame
 
+		let pas = NSMutableParagraphStyle()
+		pas.alignment = .left
+		pas.lineBreakMode = .byWordWrapping
+		pas.lineHeightMultiple = 1
+
 		let label2 = UILabel()
+		label2.textAlignment = .left
 		label2.font = font1
-		label2.text = "The Lazy Fox" // °͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌͌
+		label2.lineBreakMode = .byWordWrapping
+		label2.numberOfLines = 2
+		label2.attributedText = NSAttributedString(string: "The Lazy fox jumped the fence and died shortly after")
+			.withDefaultAttributes(font: label2.font, foregroundColor: nil, kerning: nil, paragraphStyle: pas, transform: nil)
 		label2.textColor = .white
 		label2.backgroundColor = .red
 
-		var frame2 = CGRect(left: 30, top: 400, width: 300, height: 50)
-		frame2.size = label2.sizeThatFits()
+		var frame2 = CGRect(left: 30, top: 500, width: 300, height: 50)
+		frame2.size = label2.sizeThatFitsWidth(375 - 60)
 		label2.frame = frame2
 
 		view.addSubview(label)
 		view.addSubview(label2)
-
+/*
 		let l3 = Label()
 		l3.backgroundColor = .red
 		l3.font = UIFont.systemFont(ofSize: 17)
@@ -69,7 +79,7 @@ class LabelTestViewController: ViewController {
 
 		view.addSubview(l3)
 		view.addSubview(l4)
-
+*/
 		onMainQueue(after: 3) { 
 			//self.label.text = "zzz"
 			//self.label.frame.size = self.label.sizeThatFits()

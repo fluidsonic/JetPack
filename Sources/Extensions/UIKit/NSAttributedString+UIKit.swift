@@ -41,7 +41,7 @@ extension NSAttributedString {
 
 
 	@nonobjc
-	internal func withDefaultAttributes(
+	public func withDefaultAttributes(
 		font: UIFont? = nil,
 		foregroundColor: UIColor? = nil,
 		kerning: TextKerning? = nil,
