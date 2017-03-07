@@ -3,7 +3,9 @@ import Foundation
 
 public extension NSRange {
 
-	@nonobjc
+	public static let notFound = NSRange(location: NSNotFound, length: 0)
+
+
 	public init(forString string: String) {
 		let indices = string.characters.indices
 
@@ -11,7 +13,6 @@ public extension NSRange {
 	}
 
 
-	@nonobjc
 	public init(range: Range<String.Index>?, inString string: String) {
 		if let range = range {
 			let location = NSRange.locationForIndex(range.lowerBound, inString: string)
@@ -25,9 +26,39 @@ public extension NSRange {
 	}
 
 
+	public func clamped(to limits: NSRange) -> NSRange {
+		if location == NSNotFound || limits.location == NSNotFound {
+			return .notFound
+		}
+
+		let endLocation = self.endLocation
+		if endLocation <= limits.location {
+			return NSRange(location: limits.location, length: 0)
+		}
+
+		let endLocationLimit = limits.endLocation
+		if endLocationLimit <= location {
+			return NSRange(location: endLocationLimit, length: 0)
+		}
+
+		let clampedLocation = location.coerced(atLeast: limits.location)
+		let clampedEndLocation = endLocation.coerced(atMost: endLocationLimit)
+
+		return NSRange(location: clampedLocation, length: clampedEndLocation - clampedLocation)
+	}
+
 	
 	public func endIndexInString(_ string: String) -> String.Index? {
 		return NSRange.indexForLocation(NSMaxRange(self), inString: string)
+	}
+
+
+	public var endLocation: Int {
+		guard location != NSNotFound else {
+			return NSNotFound
+		}
+
+		return location + length
 	}
 
 
@@ -99,6 +130,10 @@ extension NSRange: Sequence {
 
 
 	public func makeIterator() -> Iterator {
+		guard location != NSNotFound else {
+			return (0 ..< 0).makeIterator()
+		}
+
 		return (location ..< (location + length)).makeIterator()
 	}
 }

@@ -7,6 +7,7 @@ open class Label: View {
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
 
 	private let linkTapRecognizer = UITapGestureRecognizer()
+	private var originalTextColor = UIColor.red
 	private let textLayer = TextLayer()
 
 	open var linkTapped: ((URL) -> Void)?
@@ -16,6 +17,10 @@ open class Label: View {
 		super.init()
 
 		clipsToBounds = false
+		originalTextColor = textColor
+
+		textLayer.contentsScale = gridScaleFactor
+		textLayer.tintColor = tintColor.cgColor
 
 		layer.addSublayer(textLayer)
 
@@ -27,8 +32,11 @@ open class Label: View {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	
-	internal var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because actually we outset
+
+	internal var additionalLinkHitZone: UIEdgeInsets {
+		get { return textLayer.additionalLinkHitZone }
+		set { textLayer.additionalLinkHitZone = newValue }
+	}
 
 
 	open var attributedText: NSAttributedString {
@@ -48,8 +56,8 @@ open class Label: View {
 	open override func didMoveToWindow() {
 		super.didMoveToWindow()
 
-		if let window = window {
-			textLayer.contentsScale = window.screen.scale
+		if window != nil {
+			textLayer.contentsScale = gridScaleFactor
 		}
 	}
 
@@ -70,13 +78,11 @@ open class Label: View {
 
 	@objc
 	private func handleLinkTapRecognizer() {
-		// FIXME 
-		/*
 		guard let link = link(at: linkTapRecognizer.location(in: self)) else {
 			return
 		}
 
-		linkTapped?(link)*/
+		linkTapped?(link)
 	}
 
 
@@ -119,33 +125,36 @@ open class Label: View {
 
 		textLayer.isHidden = false
 
+		let maximumTextLayerFrame = bounds.insetBy(padding)
+
 		var textLayerFrame = CGRect()
-		textLayerFrame.size = textLayer.textSize(thatFits: bounds.size)
+		textLayerFrame.size = textLayer.textSize(thatFits: maximumTextLayerFrame.size)
 
 		switch horizontalAlignment {
 		case .left,
 		     .natural where effectiveUserInterfaceLayoutDirection == .leftToRight:
-			break
+			textLayerFrame.left = maximumTextLayerFrame.left
 
 		case .center:
-			textLayerFrame.horizontalCenter = bounds.width / 2
+			textLayerFrame.horizontalCenter = maximumTextLayerFrame.horizontalCenter
 
 		case .right, .natural:
-			textLayerFrame.right = bounds.width
+			textLayerFrame.right = maximumTextLayerFrame.right
 
 		case .justified:
-			textLayerFrame.width = bounds.width
+			textLayerFrame.left = maximumTextLayerFrame.left
+			textLayerFrame.width = maximumTextLayerFrame.width
 		}
 
 		textLayer.textSize = textLayerFrame.size
 
 		switch verticalAlignment {
-		case .top:    break
-		case .center: textLayerFrame.verticalCenter = bounds.height / 2
-		case .bottom: textLayerFrame.bottom = bounds.height
+		case .top:    textLayerFrame.top = maximumTextLayerFrame.top
+		case .center: textLayerFrame.verticalCenter = maximumTextLayerFrame.verticalCenter
+		case .bottom: textLayerFrame.bottom = maximumTextLayerFrame.bottom
 		}
 
-		textLayerFrame.insetInPlace(textLayer.drawingOverflow)
+		textLayerFrame.insetInPlace(textLayer.contentInsets)
 		textLayer.frame = alignToGrid(textLayerFrame)
 	}
 
@@ -177,39 +186,11 @@ open class Label: View {
 		}
 	}
 
-	// FIXME
-/*
-	internal func link(at point: CGPoint) -> Link? {
-		let additionalLinkHitZone = self.additionalLinkHitZone
-
-		var bestLink: Link?
-		var bestLinkDistance = CGFloat.infinity
-
-		for link in links {
-			for frame in link.frames {
-				let hitTestFrame = frame.insetBy(additionalLinkHitZone.inverse)
-				guard hitTestFrame.contains(point) else {
-					continue
-				}
-
-				// distance starts negative from inside the frame and increases the farther the point lies outside
-				let distance = frame.distance(to: point) * (frame.contains(point) ? -1 : 1)
-				guard distance < bestLinkDistance else {
-					continue
-				}
-
-				bestLink = link
-				bestLinkDistance = distance
-			}
-		}
-
-		return bestLink
-	}
 
 	public func link(at point: CGPoint) -> URL? {
 		return textLayer.link(at: layer.convert(point, to: textLayer))?.url
 	}
-*/
+
 
 	open var maximumNumberOfLines: Int? {
 		get { return textLayer.maximumNumberOfLines }
@@ -224,12 +205,10 @@ open class Label: View {
 		}
 	}
 
-	// FIXME
-/*
+
 	open var minimumScaleFactor: CGFloat {
 		get { return textLayer.minimumScaleFactor }
 		set {
-			let newValue = newValue.coerced(in: 0 ... 1)
 			guard newValue != textLayer.minimumScaleFactor else {
 				return
 			}
@@ -246,36 +225,34 @@ open class Label: View {
 	}
 
 
-	open var padding: UIEdgeInsets {
-		get { return textLayer.padding }
-		set {
-			guard newValue != textLayer.padding else {
+	open var padding = UIEdgeInsets.zero {
+		didSet {
+			guard padding != oldValue else {
 				return
 			}
 
-			textLayer.padding = newValue
-
 			invalidateIntrinsicContentSize()
+			setNeedsLayout()
 		}
 	}
 
 
 	open override func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
-		guard super.pointInside(point, withEvent: event, additionalHitZone: additionalHitZone) else {
+		let isInsideLabel = super.pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
+		guard isInsideLabel || textLayer.contains(layer.convert(point, to: textLayer)) else {
 			return false
 		}
 		guard userInteractionLimitedToLinks else {
-			return true
+			return isInsideLabel
 		}
 
 		return link(at: point) != nil
-	}*/
+	}
 
 
 	private func setUpLinkTapRecognizer() {
 		let recognizer = linkTapRecognizer
 		recognizer.delegate = delegateProxy
-		recognizer.isEnabled = false
 		recognizer.addTarget(self, action: #selector(handleLinkTapRecognizer))
 
 		addGestureRecognizer(recognizer)
@@ -283,7 +260,12 @@ open class Label: View {
 
 
 	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
-		return alignToGrid(textLayer.textSize(thatFits: maximumSize))
+		let availableSize = maximumSize.insetBy(padding)
+		guard availableSize.isPositive else {
+			return .zero
+		}
+
+		return textLayer.textSize(thatFits: availableSize).insetBy(padding.inverse)
 	}
 
 
@@ -294,8 +276,16 @@ open class Label: View {
 
 
 	open var textColor: UIColor {
-		get { return textLayer.textColor }
-		set { textLayer.textColor = newValue }
+		get { return originalTextColor }
+		set {
+			guard newValue != originalTextColor else {
+				return
+			}
+
+			originalTextColor = newValue
+
+			updateTextLayerTextColor()
+		}
 	}
 
 
@@ -316,7 +306,14 @@ open class Label: View {
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		textLayer.tintColor = tintColor
+		textLayer.tintColor = tintColor.cgColor
+
+		updateTextLayerTextColor()
+	}
+
+
+	private func updateTextLayerTextColor() {
+		textLayer.textColor = originalTextColor.tintedWithColor(tintColor).cgColor
 	}
 
 
@@ -345,8 +342,8 @@ open class Label: View {
 
 
 		@objc
-		fileprivate func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-			return false // FIXME return label.link(at: touch.location(in: label)) != nil
+		func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+			return label.link(at: touch.location(in: label)) != nil
 		}
 	}
 }

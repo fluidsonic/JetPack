@@ -10,16 +10,20 @@ internal class TextLayer: Layer {
 	internal override init() {
 		super.init()
 
-		backgroundColor = UIColor.red.withAlphaComponent(0.25).cgColor
+		backgroundColor = UIColor.red.withAlphaComponent(0.25).cgColor // FIXME
 		isOpaque = false
-		textColor = UIColor.darkText
+		textColor = UIColor.darkText.cgColor
+		tintColor = UIColor.red.cgColor
 	}
 
 
 	internal required init(layer: Any) {
 		let layer = layer as! TextLayer
+		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
 		textLayout = layer.textLayout
+
+		_links = layer._links
 
 		super.init(layer: layer)
 	}
@@ -32,9 +36,9 @@ internal class TextLayer: Layer {
 
 	internal override func action(forKey key: String) -> CAAction? {
 		switch key {
-		case "textColor":
-			if let animation = super.action(forKey: "backgroundColor") as? CABasicAnimation {
-				animation.fromValue = textColor
+		case "textColor", "tintColor":
+			if let animation = UIView.defaultActionForLayer(self, forKey: "backgroundColor") as? CABasicAnimation {
+				animation.fromValue = value(forKey: key)
 				animation.keyPath = key
 
 				return animation
@@ -48,6 +52,9 @@ internal class TextLayer: Layer {
 	}
 
 
+	internal var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because we outset
+
+
 	internal var attributedText: NSAttributedString {
 		get { return configuration.text }
 		set {
@@ -57,15 +64,15 @@ internal class TextLayer: Layer {
 	}
 
 
-	private func buildTextLayoutIfNecessary() -> TextLayout {
-		if let textLayout = self.textLayout {
-			return textLayout
-		}
-
-		let textLayout = TextLayout.cache.getOrCreate(forText: configuration.finalText, maximumSize: textSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: configuration.lineBreakMode)
-
-		self.textLayout = textLayout
-		return textLayout
+	private func buildTextLayout(maximumSize: CGSize) -> TextLayout {
+		return TextLayout.build(
+			text:                 configuration.finalText,
+			lineBreakMode:        configuration.lineBreakMode,
+			maximumNumberOfLines: configuration.maximumNumberOfLines,
+			maximumSize:          maximumSize,
+			minimumScaleFactor:   configuration.minimumScaleFactor,
+			renderingScale:       contentsScale
+		)
 	}
 
 
@@ -76,16 +83,68 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal override func draw(in context: CGContext) {
-		log("Drawing: \(self)") // FIXME
-		super.draw(in: context)
-
-		buildTextLayoutIfNecessary().draw(in: context, textColor: textColor, tintColor: tintColor)
+	internal var contentInsets: UIEdgeInsets {
+		return ensureTextLayout()?.contentInsets ?? .zero
 	}
 
 
-	internal var drawingOverflow: UIEdgeInsets {
-		return buildTextLayoutIfNecessary().drawingOverflow
+	private func convertPoint(point: CGPoint, fromTextLayout textLayout: TextLayout) -> CGPoint {
+		let contentInsets = textLayout.contentInsets
+
+		var pointFromTextLayout = point
+		pointFromTextLayout.left -= contentInsets.left
+		pointFromTextLayout.top -= contentInsets.top
+
+		return pointFromTextLayout
+	}
+
+
+	private func convertPoint(point: CGPoint, toTextLayout textLayout: TextLayout) -> CGPoint {
+		let contentInsets = textLayout.contentInsets
+
+		var pointInTextLayout = point
+		pointInTextLayout.left += contentInsets.left
+		pointInTextLayout.top += contentInsets.top
+
+		return pointInTextLayout
+	}
+
+
+	private func convertRect(rect: CGRect, fromTextLayout textLayout: TextLayout) -> CGRect {
+		var rectFromTextLayout = rect
+		rectFromTextLayout.origin = convertPoint(point: rectFromTextLayout.origin, fromTextLayout: textLayout)
+
+		return rectFromTextLayout
+	}
+
+
+	private func convertRect(rect: CGRect, toTextLayout textLayout: TextLayout) -> CGRect {
+		var rectFromTextLayout = rect
+		rectFromTextLayout.origin = convertPoint(point: rectFromTextLayout.origin, toTextLayout: textLayout)
+
+		return rectFromTextLayout
+	}
+
+
+	internal override func draw(in context: CGContext) {
+		super.draw(in: context)
+
+		ensureTextLayout()?.draw(in: context, defaultTextColor: UIColor(cgColor: textColor), tintColor: UIColor(cgColor: tintColor))
+	}
+
+
+	private func ensureTextLayout() -> TextLayout? {
+		if let textLayout = self.textLayout {
+			return textLayout
+		}
+
+		guard textSize.isPositive else {
+			return nil
+		}
+
+		let textLayout = buildTextLayout(maximumSize: textSize)
+		self.textLayout = textLayout
+		return textLayout
 	}
 
 
@@ -117,15 +176,10 @@ internal class TextLayer: Layer {
 
 
 	private func invalidateTextLayout() {
+		_links = nil
 		textLayout = nil
+
 		setNeedsDisplay()
-	}
-
-
-	internal override func layoutSublayers() {
-		super.layoutSublayers()
-
-		// FIXME
 	}
 
 
@@ -147,72 +201,112 @@ internal class TextLayer: Layer {
 	}
 
 
+	internal func link(at point: CGPoint) -> Link? {
+		let additionalLinkHitZone = self.additionalLinkHitZone
+
+		var bestLink: Link?
+		var bestLinkDistance = CGFloat.infinity
+
+		for link in links {
+			for frame in link.frames {
+				let hitTestFrame = frame.insetBy(additionalLinkHitZone.inverse)
+				guard hitTestFrame.contains(point) else {
+					continue
+				}
+
+				// distance starts negative from inside the frame and increases the farther the point lies outside
+				let distance = frame.distance(to: point) * (frame.contains(point) ? -1 : 1)
+				guard distance < bestLinkDistance else {
+					continue
+				}
+
+				bestLink = link
+				bestLinkDistance = distance
+			}
+		}
+
+		return bestLink
+	}
+
+
+	private var _links: [Link]?
+	internal var links: [Link] {
+		if let links = _links {
+			return links
+		}
+		guard let textLayout = ensureTextLayout() else {
+			return []
+		}
+
+		let text = textLayout.configuration.text
+
+		var links = [Link]()
+		text.enumerateAttribute(NSLinkAttributeName, in: NSRange(location: 0, length: text.length), options: []) { url, range, _ in
+			guard let url = url as? URL else {
+				return
+			}
+
+			links.append(Link(range: range, frames: [], url: url))
+		}
+
+		links = links.map { link in
+			var frames = [CGRect]()
+			textLayout.enumerateEnclosingRects(forCharacterRange: link.range) { enclosingRect in
+				frames.append(convertRect(rect: enclosingRect, fromTextLayout: textLayout))
+			}
+
+			return Link(range: link.range, frames: frames, url: link.url)
+		}
+		
+		_links = links
+		return links
+	}
+
+
 	internal var maximumNumberOfLines: Int? {
 		get { return configuration.maximumNumberOfLines }
 		set {
+			guard newValue != configuration.maximumNumberOfLines else {
+				return
+			}
+
 			configuration.maximumNumberOfLines = newValue
-			checkConfiguration()
+			invalidateTextLayout()
 		}
 	}
 
 
-	// FIXME
-	/*
-	internal var minimumScaleFactor = CGFloat(1) {
-		didSet {
-			minimumScaleFactor = minimumScaleFactor.coerced(in: 0 ... 1)
-
-			guard minimumScaleFactor != oldValue else {
+	internal var minimumScaleFactor: CGFloat {
+		get { return configuration.minimumScaleFactor }
+		set {
+			guard newValue != configuration.minimumScaleFactor else {
 				return
 			}
 
-			invalidateSizeThatFits()
-			setNeedsDisplay()
+			configuration.minimumScaleFactor = newValue
+			invalidateTextLayout()
 		}
-	}*/
+	}
 
 
 	internal override class func needsDisplay(forKey key: String) -> Bool {
 		switch key {
 		case "textColor": return true
+		case "tintColor": return true // TODO causes unnecessary redraws if label doesn't use .tintColor() - how to optimize?
 		default:          return super.needsDisplay(forKey: key)
 		}
 	}
 
-/*
-	private var _numberOfLines: Int?
+
 	internal var numberOfLines: Int {
-		if let numberOfLines = _numberOfLines {
-			return numberOfLines
-		}
-
-		finalizeText()
-
-		var numberOfLines = 0
-		var glyphIndex = 0
-		let numberOfGlyphs = layoutManager.numberOfGlyphs
-
-		while (glyphIndex < numberOfGlyphs) {
-			var lineRange = NSRange()
-			layoutManager.lineFragmentRect(forGlyphAt: glyphIndex, effectiveRange: &lineRange)
-
-			glyphIndex = NSMaxRange(lineRange)
-
-			numberOfLines += 1
-		}
-
-		_numberOfLines = numberOfLines
-		return numberOfLines
+		return ensureTextLayout()?.numberOfLines ?? 0
 	}
-*/
 
 
-	// FIXME
 	internal func textSize(thatFits maximumSize: CGSize) -> CGSize {
-		assert(maximumSize.isPositive)
+		precondition(maximumSize.isPositive)
 
-		let layout = TextLayout.cache.getOrCreate(forText: configuration.finalText, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: configuration.lineBreakMode)
-		return layout.measuredSize
+		return buildTextLayout(maximumSize: maximumSize).size
 	}
 
 
@@ -234,7 +328,7 @@ internal class TextLayer: Layer {
 
 
 	@objc @NSManaged
-	internal dynamic var textColor: UIColor
+	internal dynamic var textColor: CGColor
 
 
 	internal var textTransform: TextTransform? {
@@ -246,17 +340,8 @@ internal class TextLayer: Layer {
 	}
 
 
-	// FIXME copy? configuration?
-	internal var tintColor = UIColor.red {
-		didSet {
-			guard tintColor != oldValue else {
-				return
-			}
-
-			// FIXME only if necessary
-			setNeedsDisplay()
-		}
-	}
+	@objc @NSManaged
+	internal dynamic var tintColor: CGColor
 
 
 	internal override func willResizeToSize(_ newSize: CGSize) {
@@ -284,12 +369,12 @@ internal class TextLayer: Layer {
 
 				switch lineBreakMode {
 				case .byClipping, .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:
+					// clipping and truncation must only be set on the layout manager
 					paragraphStyle.lineBreakMode = .byWordWrapping
 
 				case .byCharWrapping, .byWordWrapping:
 					paragraphStyle.lineBreakMode = lineBreakMode
 				}
-
 
 				let finalText = text.withDefaultAttributes(
 					font:            font,
@@ -360,6 +445,13 @@ internal class TextLayer: Layer {
 		}
 
 
+		var minimumScaleFactor = CGFloat(1) {
+			didSet {
+				precondition((0 ... 1).contains(minimumScaleFactor), ".minimumScaleFactor must in 0 ... 1")
+			}
+		}
+
+
 		var needsRebuildFinalText: Bool {
 			return _finalText == nil
 		}
@@ -391,405 +483,4 @@ internal class TextLayer: Layer {
 		internal var frames: [CGRect]
 		internal var url: URL
 	}
-
-
-
-	private class TextLayout: NSObject, NSLayoutManagerDelegate {
-
-		static var cache = Cache()
-
-		private var drawingOrigin = CGPoint.zero
-		private var drawingTextColor = UIColor.red
-		private var drawingTintColor = UIColor.red
-		private var isTruncated = false
-		private let layoutManager = LayoutManager()
-		private let lineBreakMode: NSLineBreakMode
-		private let maximumNumberOfLines: Int?
-		private let maximumSize: CGSize
-		private var numberOfLines = 0
-		private let textContainer: NSTextContainer
-		private let textStorage = NSTextStorage()
-
-		private(set) var drawingOverflow = UIEdgeInsets.zero
-		private(set) var measuredSize = CGSize.zero
-
-		let text: NSAttributedString
-
-
-		init(text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) {
-			precondition(maximumSize.isPositive)
-
-			if let maximumNumberOfLines = maximumNumberOfLines {
-				precondition(maximumNumberOfLines > 0)
-			}
-
-			self.lineBreakMode = lineBreakMode
-			self.maximumNumberOfLines = maximumNumberOfLines
-			self.maximumSize = maximumSize
-			self.text = text
-
-			layoutManager.usesFontLeading = true
-
-			textContainer = NSTextContainer(size: maximumSize)
-			textContainer.lineBreakMode = lineBreakMode
-			textContainer.lineFragmentPadding = 0
-			textContainer.maximumNumberOfLines = maximumNumberOfLines ?? 0
-
-			layoutManager.addTextContainer(textContainer)
-			textStorage.addLayoutManager(layoutManager)
-
-			super.init()
-
-			layoutManager.delegate = self
-
-			textStorage.setAttributedString(text)
-
-
-
-			var measuredRect = layoutManager.usedRect(for: textContainer)
-			guard let visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: measuredRect, in: textContainer).toCountableRange() else {
-				return
-			}
-
-			if visibleGlyphRange.upperBound > 0 {
-				var range = NSRange()
-				let r = layoutManager.lineFragmentRect(forGlyphAt: visibleGlyphRange.upperBound - 1, effectiveRange: nil)
-				let ur = layoutManager.lineFragmentUsedRect(forGlyphAt: visibleGlyphRange.upperBound - 1, effectiveRange: &range)
-
-				let ws = CharacterSet.whitespacesAndNewlines
-				let s = textStorage.string[range.rangeInString(textStorage.string)!]
-				var ltorem = 0
-
-				for x in s.unicodeScalars.reversed() {
-					guard ws.contains(x) else {
-						break
-					}
-
-					ltorem += 1
-				}
-
-				if ltorem > 0 {
-					var shorterRange = range
-					shorterRange.length -= ltorem
-
-					let gra = layoutManager.glyphRange(forCharacterRange: shorterRange, actualCharacterRange: nil)
-
-					var usedRect = CGRect.null
-					layoutManager.enumerateEnclosingRects(forGlyphRange: gra, withinSelectedGlyphRange: NSRange(location: NSNotFound, length: 0), in: textContainer, using: { (rect, _) in
-						usedRect = usedRect.union(rect)
-						print("rec: \(rect)")
-					})
-
-					// move to below
-					if usedRect.isNull {
-						usedRect = ur
-						usedRect.width = 0
-					}
-
-					layoutManager.setLineFragmentRect(r, forGlyphRange: range, usedRect: usedRect)
-
-					print("ur: \(usedRect)")
-				}
-
-				print("LL: \(range)")
-			}
-
-			// layoutManager's bounding rectangle won't be calculated correctly unless we tell it to do so…
-			for glyphIndex in visibleGlyphRange {
-				layoutManager.setDrawsOutsideLineFragment(true, forGlyphAt: glyphIndex)
-			}
-
-			var capitalLetterSpacingAboveFirstLine = CGFloat(0)
-			var capitalLetterSpacingBelowLastLine = CGFloat(0)
-			var minimumBoundingBoxLeft = CGFloat(0)
-			var minimumBoundingBoxTop = CGFloat(0)
-			var maximumBoundingBoxWidth = CGFloat(0)
-			var maximumBoundingBoxHeight = CGFloat(0)
-			var numberOfLines = 0
-			let newlineCharacterSet = CharacterSet.newlines
-
-			measuredRect = .null
-			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange.toNSRange()) { rect, usedRect, _, lineRange, _ in
-				measuredRect = measuredRect.union(usedRect)
-				let x = self.layoutManager.truncatedGlyphRange(inLineFragmentForGlyphAt: lineRange.location)
-				let lineRange = lineRange.toCountableRange()!
-				let isFirstLine = (lineRange.lowerBound == visibleGlyphRange.lowerBound)
-				let isLastLine = (lineRange.upperBound >= visibleGlyphRange.upperBound)
-
-				let characterRange = self.layoutManager.characterRange(forGlyphRange: lineRange.toNSRange(), actualGlyphRange: nil)
-				if let capitalLetterSpacing = self.textStorage.capitalLetterSpacing(in: characterRange, forLineHeight: usedRect.height, usingFontLeading: self.layoutManager.usesFontLeading) {
-					if isFirstLine {
-						capitalLetterSpacingAboveFirstLine = capitalLetterSpacing.above
-					}
-					if isLastLine {
-						capitalLetterSpacingBelowLastLine = capitalLetterSpacing.below
-					}
-				}
-
-				let string = self.textStorage.string
-				print("LINE \(numberOfLines + 1) \(x) - '\(self.textStorage.string[characterRange.rangeInString(self.textStorage.string)!])'")
-				var glyphRangeForBoundingRect = lineRange.toNSRange()
-				if glyphRangeForBoundingRect.length > 0, let characterRange = characterRange.rangeInString(string), let lastCharacter = string[characterRange].unicodeScalars.last, newlineCharacterSet.contains(lastCharacter) {
-					// boundingRect is unreliable when the range ends with a newline character, so we'll exclude it
-					glyphRangeForBoundingRect.length -= 1
-				}
-
-				let boundingRect = self.layoutManager.boundingRect(forGlyphRange: glyphRangeForBoundingRect, in: self.textContainer)
-				minimumBoundingBoxLeft = min(minimumBoundingBoxLeft, boundingRect.left)
-				minimumBoundingBoxTop = min(minimumBoundingBoxTop, boundingRect.top)
-				maximumBoundingBoxWidth = max(maximumBoundingBoxWidth, boundingRect.width)
-				maximumBoundingBoxHeight = max(maximumBoundingBoxHeight, boundingRect.height)
-
-				numberOfLines += 1
-			}
-
-			var boundingRect = CGRect(left: minimumBoundingBoxLeft, top: minimumBoundingBoxTop, width: maximumBoundingBoxWidth, height: maximumBoundingBoxHeight)
-
-			measuredRect.height -= (capitalLetterSpacingAboveFirstLine * 2).rounded() / 2 // FIXME
-			measuredRect.height -= (capitalLetterSpacingBelowLastLine * 2).rounded() / 2 // FIXME
-			measuredRect.width = (measuredRect.width * 2).rounded(.up) / 2 // FIXME
-			measuredRect.height = (measuredRect.height * 2).rounded(.up) / 2 // FIXME
-
-			boundingRect.left = (boundingRect.left * 2).rounded(.down) / 2 // FIXME
-			boundingRect.top = (boundingRect.top * 2).rounded(.down) / 2 // FIXME
-			boundingRect.width = (boundingRect.width * 2).rounded(.up) / 2 // FIXME
-			boundingRect.height = (boundingRect.height * 2).rounded(.up) / 2 // FIXME
-			var drawingOverflow = UIEdgeInsets(fromRect: measuredRect, toRect: boundingRect)
-			drawingOverflow.top -= ((capitalLetterSpacingAboveFirstLine * 2).rounded() / 2) // FIXME
-			drawingOverflow.bottom -= ((capitalLetterSpacingBelowLastLine * 2).rounded() / 2) // FIXME
-
-			self.drawingOrigin = CGRect(size: measuredSize).insetBy(drawingOverflow.inverse).origin.offsetBy(dx: 0, dy: -((capitalLetterSpacingAboveFirstLine * 2).rounded() / 2)) // FIXME
-			self.drawingOverflow = drawingOverflow
-			self.isTruncated = visibleGlyphRange.upperBound < layoutManager.numberOfGlyphs // FIXME may not account for ellipsis replacing single character
-			self.measuredSize = measuredRect.size
-			self.numberOfLines = numberOfLines
-		}
-
-
-		func draw(in context: CGContext, textColor: UIColor, tintColor: UIColor) {
-			UIGraphicsPushContext(context)
-			defer { UIGraphicsPopContext() }
-
-			drawingTextColor = textColor.tintedWithColor(tintColor)
-			drawingTintColor = tintColor
-
-			let glyphRange = layoutManager.glyphRange(for: textContainer)
-			layoutManager.drawBackground(forGlyphRange: glyphRange, at: drawingOrigin)
-			layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: drawingOrigin)
-		}
-
-
-		func isValidFor(maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) -> Bool {
-			guard lineBreakMode == self.lineBreakMode else {
-				return false
-			}
-
-			let cachedHeights = min(self.maximumSize.height, measuredSize.height) ... max(self.maximumSize.height, measuredSize.height)
-			let cachedWidths = min(self.maximumSize.width, measuredSize.width) ... max(self.maximumSize.width, measuredSize.width)
-			guard cachedHeights.contains(maximumSize.height) && cachedWidths.contains(maximumSize.width) else {
-				return false
-			}
-
-			if let maximumNumberOfLines = maximumNumberOfLines {
-				guard numberOfLines <= maximumNumberOfLines else {
-					return false
-				}
-				if isTruncated, let ownMaximumNumberOfLines = self.maximumNumberOfLines {
-					guard ownMaximumNumberOfLines >= maximumNumberOfLines else {
-						return false
-					}
-				}
-			}
-			else {
-				guard !isTruncated else {
-					return false
-				}
-			}
-
-			return true
-		}
-
-
-		func layoutManager(
-			_ layoutManager: NSLayoutManager,
-			shouldUseTemporaryAttributes attributes: [String : Any] = [:],
-			forDrawingToScreen toScreen: Bool,
-			atCharacterIndex charIndex: Int,
-			effectiveRange effectiveCharRange: NSRangePointer?
-		) -> [String : Any]? {
-			guard toScreen else {
-				return nil
-			}
-
-			var attributes = attributes
-
-			if let textColor = attributes[NSForegroundColorAttributeName] as? UIColor {
-				attributes[NSForegroundColorAttributeName] = textColor.tintedWithColor(drawingTintColor)
-			}
-			else {
-				attributes[NSForegroundColorAttributeName] = drawingTextColor.tintedWithColor(drawingTintColor)
-			}
-
-			if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor {
-				attributes[NSBackgroundColorAttributeName] = backgroundColor.tintedWithColor(drawingTintColor)
-			}
-
-			return attributes
-		}
-
-/*
-
-		fileprivate var _links: [Link]?
-		fileprivate var links: [Link] {
-			if let links = _links {
-				return links
-			}
-
-			updateTextContainer(forSize: textContainerSize)
-
-			let finalizedText = self.finalizedText
-			let textContainerOrigin = originForTextContainer()
-
-			var links = [Link]()
-			finalizedText.enumerateAttribute(NSLinkAttributeName, in: NSRange(forString: finalizedText.string), options: []) { url, range, _ in
-				guard let url = url as? URL else {
-					return
-				}
-
-				links.append(Link(range: range, frames: [], url: url))
-			}
-
-			links = links.map { link in
-				let glyphRange = layoutManager.glyphRange(forCharacterRange: link.range, actualCharacterRange: nil)
-
-				var frames = [CGRect]()
-				layoutManager.enumerateEnclosingRects(forGlyphRange: glyphRange, withinSelectedGlyphRange: NSRange(location: NSNotFound, length: 0), in: textContainer) { frame, _ in
-					frames.append(frame.offsetBy(dx: textContainerOrigin.x, dy: textContainerOrigin.y))
-				}
-
-				return Link(range: link.range, frames: frames, url: link.url)
-			}
-
-			_links = links
-			return links
-		}
-
-		*/
-
-
-
-		struct Cache {
-
-			private var layouts = [NSAttributedString : [TextLayout]]()
-
-
-			mutating func add(layout: TextLayout) {
-				if layouts[layout.text] != nil {
-					layouts[layout.text]!.append(layout)
-				}
-				else {
-					layouts[layout.text] = [layout]
-				}
-			}
-
-
-			func get(forText text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) -> TextLayout? {
-				return layouts[text]?.first { $0.isValidFor(maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: lineBreakMode) }
-			}
-
-
-			mutating func getOrCreate(forText text: NSAttributedString, maximumSize: CGSize, maximumNumberOfLines: Int?, lineBreakMode: NSLineBreakMode) -> TextLayout {
-				if let layout = get(forText: text, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: lineBreakMode) {
-					print("cache HIT")
-					return layout
-				}
-
-				print("cache MISS")
-				let layout = TextLayout(text: text, maximumSize: maximumSize, maximumNumberOfLines: maximumNumberOfLines, lineBreakMode: lineBreakMode)
-				add(layout: layout)
-
-				return layout
-			}
-		}
-
-
-
-		private final class LayoutManager: NSLayoutManager {
-
-			@objc(JetPack_linkAttributes)
-			private dynamic class var linkAttributes: [AnyHashable: Any] {
-				return [:]
-			}
-
-
-			override class func initialize() {
-				guard self == LayoutManager.self else {
-					return
-				}
-
-				let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
-				copyMethod(selector: defaultLinkAttributesSelector, from: object_getClass(NSLayoutManager.self), to: object_getClass(self))
-				swizzleMethod(in: object_getClass(self), from: #selector(getter: LayoutManager.linkAttributes), to: defaultLinkAttributesSelector)
-			}
-		}
-	}
-
-
-		/*
-		@discardableResult
-		func buildFinalText() -> FinalText {
-		let paragraphStyle = NSMutableParagraphStyle()
-		paragraphStyle.alignment = horizontalAlignment
-		paragraphStyle.lineBreakMode = .byWordWrapping // FIXME ??
-		paragraphStyle.lineHeightMultiple = lineHeightMultiple
-
-		var defaultAttributes: [String : Any] = [
-		NSFontAttributeName:            font,
-		NSForegroundColorAttributeName: color,
-		NSParagraphStyleAttributeName:  paragraphStyle
-		]
-
-		if let kerning = kerning {
-		let kerningValue: CGFloat
-		switch kerning {
-		case let .absolute(value):           kerningValue = value
-		case let .relativeToFontSize(value): kerningValue = font.pointSize * value // TODO font may vary in attributed strings
-		}
-
-		defaultAttributes[NSKernAttributeName] = kerningValue as NSObject?
-		}
-
-		var textUsesTintColor = false
-
-		let finalTextString = NSMutableAttributedString(string: text.string, attributes: defaultAttributes)
-		finalTextString.edit {
-		text.enumerateAttributes(in: NSRange(forString: text.string), options: [.longestEffectiveRangeNotRequired]) { attributes, range, _ in
-		if let foregroundColor = attributes[NSForegroundColorAttributeName] as? UIColor, foregroundColor.tintAlpha != nil {
-		textUsesTintColor = true
-		}
-		else if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor, backgroundColor.tintAlpha != nil {
-		textUsesTintColor = true
-		}
-
-		finalTextString.addAttributes(attributes, range: range)
-		}
-
-		if let transform = transform {
-		let transformation: (String) -> String
-		switch transform {
-		case .capitalize: transformation = { $0.localizedCapitalized } // TODO this isn't 100% reliable when applying to segments instead of to the whole string
-		case .lowercase:  transformation = { $0.localizedLowercase }
-		case .uppercase:  transformation = { $0.localizedUppercase }
-		}
-
-		finalTextString.transformStringSegments(transformation)
-		}
-		}
-
-		return FinalText(
-		string:             finalTextString,
-		dependsOnTintColor: textUsesTintColor
-		)
-		}
-		*/
 }
