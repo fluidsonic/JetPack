@@ -20,13 +20,16 @@ class LabelTestViewController: ViewController {
 		at.addAttributes([ NSFontAttributeName: font2 ], range: NSRange(location: 9, length: 9))
 
 		let p = NSMutableParagraphStyle()
+		p.firstLineHeadIndent = 20
+		p.tailIndent = -30
+		p.headIndent = 30
 
-		let text = NSMutableAttributedString(string: "The Lazy Fox feels good so good")
-//		text.addAttribute(NSParagraphStyleAttributeName, value: p, range: NSRange(location: 0, length: text.length))
+		let text = NSMutableAttributedString(string: "The Lazy Fox\nfeeeeels good and ")
+		//text.addAttribute(NSParagraphStyleAttributeName, value: p, range: NSRange(location: 0, length: text.length))
 
-		label.horizontalAlignment = .center
+		label.horizontalAlignment = .left
 		label.backgroundColor = .red
-		label.lineBreakMode = .byTruncatingHead
+		label.lineBreakMode = .byWordWrapping
 		label.maximumNumberOfLines = 2
 		label.attributedText = text
 		label.font = font1
@@ -42,9 +45,9 @@ class LabelTestViewController: ViewController {
 		label.frame = frame
 
 		let label2 = UILabel()
-		label2.textAlignment = .center
+		label2.textAlignment = .left
 		label2.font = font1
-		label2.lineBreakMode = .byWordWrapping
+		label2.lineBreakMode = .byTruncatingTail
 		label2.numberOfLines = 0
 		label2.attributedText = text
 		label2.textColor = .white
@@ -52,7 +55,7 @@ class LabelTestViewController: ViewController {
 		label2.minimumScaleFactor = 1
 
 		var frame2 = CGRect(left: 30, top: 400, width: 300, height: 50)
-		frame2.size = label2.sizeThatFitsSize(CGSize(width: 375 - 60, height: 999))
+		frame2.size = label2.sizeThatFitsSize(CGSize(width: 375 - 30, height: 999))
 		label2.frame = frame2
 
 		view.addSubview(label)

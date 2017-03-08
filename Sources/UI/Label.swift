@@ -13,18 +13,16 @@ open class Label: View {
 	open var linkTapped: ((URL) -> Void)?
 
 
-	@available(*, unavailable, renamed: "init(usesExactMeasuring:)")
+	@available(*, unavailable, renamed: "init(highPrecision:)")
 	public convenience override init() {
-		self.init(usesExactMeasuring: false) // TODO
+		self.init(highPrecision: false) // TODO
 	}
 
 
-	public init(usesExactMeasuring: Bool) {
-		textLayer = TextLayer(usesExactMeasuring: usesExactMeasuring)
+	public init(highPrecision: Bool) {
+		textLayer = TextLayer(highPrecision: highPrecision)
 
 		super.init()
-
-		backgroundColor = UIColor.red.withAlphaComponent(0.5) // FIXME
 
 		clipsToBounds = false
 		originalTextColor = UIColor(cgColor: textLayer.textColor)

@@ -27,12 +27,12 @@ internal class TextLayout {
 
 	internal static func build(
 		text: NSAttributedString,
+		highPrecision: Bool,
 		lineBreakMode: NSLineBreakMode,
 		maximumNumberOfLines: Int?,
 		maximumSize: CGSize,
 		minimumScaleFactor: CGFloat,
-		renderingScale: CGFloat,
-		usesExactMeasuring: Bool
+		renderingScale: CGFloat
 	) -> TextLayout {
 		precondition(maximumSize.isPositive, "maximumSize must be positive")
 		precondition((0 ... 1).contains(minimumScaleFactor), "minimumScaleFactor must be in range 0...1")
@@ -63,13 +63,13 @@ internal class TextLayout {
 		}
 
 		return forConfiguration(Configuration(
+			highPrecision:        highPrecision,
 			lineBreakMode:        lineBreakMode,
 			maximumNumberOfLines: maximumNumberOfLines ?? Int.max,
 			maximumSize:          maximumSize,
 			minimumScaleFactor:   minimumScaleFactor,
 			renderingScale:       renderingScale,
-			text:                 text,
-			usesExactMeasuring:   usesExactMeasuring
+			text:                 text
 		))
 	}
 
@@ -174,7 +174,7 @@ internal class TextLayout {
 				// different rendering scale will result in a different layout
 				return false
 			}
-			guard configuration.usesExactMeasuring == layout.configuration.usesExactMeasuring else {
+			guard configuration.highPrecision == layout.configuration.highPrecision else {
 				// different measuring will result in a different layout
 				return false
 			}
@@ -211,36 +211,36 @@ internal class TextLayout {
 
 	internal struct Configuration: CustomDebugStringConvertible {
 
+		var highPrecision: Bool
 		var lineBreakMode: NSLineBreakMode
 		var maximumNumberOfLines: Int
 		var maximumSize: CGSize
 		var minimumScaleFactor: CGFloat
 		var renderingScale: CGFloat
 		var text: NSAttributedString
-		var usesExactMeasuring: Bool
 
 
 		fileprivate init(
+			highPrecision: Bool,
 			lineBreakMode: NSLineBreakMode,
 			maximumNumberOfLines: Int,
 			maximumSize: CGSize,
 			minimumScaleFactor: CGFloat,
 			renderingScale: CGFloat,
-			text: NSAttributedString,
-			usesExactMeasuring: Bool
+			text: NSAttributedString
 		) {
+			self.highPrecision = highPrecision
 			self.lineBreakMode = lineBreakMode
 			self.maximumNumberOfLines = maximumNumberOfLines
 			self.maximumSize = maximumSize
 			self.minimumScaleFactor = minimumScaleFactor
 			self.renderingScale = renderingScale
 			self.text = text
-			self.usesExactMeasuring = usesExactMeasuring
 		}
 
 
 		var debugDescription: String {
-			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(maximumNumberOfLines == Int.max ? "-" : String(maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', usesExactMeasuring: \(usesExactMeasuring))"
+			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(maximumNumberOfLines == Int.max ? "-" : String(maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', highPrecision: \(highPrecision))"
 		}
 	}
 
@@ -277,15 +277,59 @@ internal class TextLayout {
 			textStorage.addLayoutManager(layoutManager)
 
 			layoutManager.ensureLayout(for: textContainer)
-			textContainer.size = layoutManager.usedRect(for: textContainer).size // FIXME breaks (firstLine)HeadIntent / tailIntent
-			layoutManager.ensureLayout(for: textContainer)
 
 			let string = textStorage.string
+			var size = CGSize.zero
+
+			// Measure total size while taking head & tail indents into account.
+			do {
+				var paragraphStyle = NSParagraphStyle()
+				var paragraphStyleEndIndex = Int.max
+				var isFirstLineOfParagraph = true
+
+				layoutManager.enumerateLineFragments(forGlyphRange: layoutManager.glyphRange(forBoundingRect: layoutManager.usedRect(for: textContainer), in: textContainer)) { _, usedRectForLine, _, glyphRangeForLine, _ in
+					let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
+
+					if isFirstLineOfParagraph, let lineParagraphStyle = textStorage.attribute(NSParagraphStyleAttributeName, at: characterRangeForLine.location, effectiveRange: nil) as? NSParagraphStyle {
+						paragraphStyle = lineParagraphStyle
+						paragraphStyleEndIndex = characterRangeForLine.endLocation
+					}
+					else if characterRangeForLine.location >= paragraphStyleEndIndex {
+						paragraphStyle = NSParagraphStyle()
+					}
+
+					let headIndent = isFirstLineOfParagraph ? paragraphStyle.firstLineHeadIndent : paragraphStyle.headIndent
+					let tailIndent = paragraphStyle.tailIndent
+
+					var lineWidth = usedRectForLine.width
+					if tailIndent > 0 {
+						lineWidth = lineWidth.coerced(atLeast: tailIndent)
+					}
+					else {
+						lineWidth -= tailIndent
+					}
+					lineWidth += headIndent
+
+					size.width = size.width.coerced(atLeast: lineWidth)
+					size.height += usedRectForLine.height
+
+					if glyphRangeForLine.length > 0,
+						let characterRangeForLine = characterRangeForLine.rangeInString(string),
+						let lastCharacter = string[characterRangeForLine].unicodeScalars.last
+					{
+						isFirstLineOfParagraph = CharacterSet.newlines.contains(lastCharacter)
+					}
+				}
+			}
+
+			size.width = size.width.coerced(atMost: textContainerSize.width)
+
+			textContainer.size = size
+			layoutManager.ensureLayout(for: textContainer)
 
 			// Figure out which glyphs fitted in our text contained and were laid out. This range may also include glyphs which are not visible due to
 			// layoutManager.glyphRange(forBoundingRect:in:) not being reliable or due to text being truncated in the middle.
-			var visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: layoutManager.usedRect(for: textContainer), in: textContainer)
-
+			var visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: CGRect(size: size), in: textContainer)
 			guard visibleGlyphRange.length > 0 else {
 				return Result(
 					contentInsets:      .zero,
@@ -348,12 +392,12 @@ internal class TextLayout {
 
 				if glyphRangeForLineBoundingRect.length > 0 && characterRangeForLine.length > 0 {
 					// Form union of line's bounding rectangle with one's of the other lines.
-					var boundingRectForLine = layoutManager.boundingRect(forGlyphRange: glyphRangeForLineBoundingRect, in: textContainer)
+					let boundingRectForLine = layoutManager.boundingRect(forGlyphRange: glyphRangeForLineBoundingRect, in: textContainer)
 					boundingRect = boundingRect.union(boundingRectForLine)
 
 					// This is why we do all this. We'd like to strip the whitespace between the upper end of labels and the capital letters of the first line
 					// as well as between the last line's baseline and the lower end of the label.
-					if configuration.usesExactMeasuring {
+					if configuration.highPrecision {
 						if isFirstLine || isLastLine {
 							if let capitalLetterSpacing = textStorage.capitalLetterSpacing(in: characterRangeForLine, forLineHeight: usedRectForLine.height, usingFontLeading: layoutManager.usesFontLeading) {
 								if isFirstLine {
@@ -379,6 +423,7 @@ internal class TextLayout {
 
 				// Remove trailing whitespace from last line to reflect UILabel's default behavior.
 				// Not necessary if truncation happend since in that case NSLayoutManager will do that on its own…
+				// TODO in order for this to work this must be done between the first and second layout pass
 				if isLastLine && !isTruncated && characterRangeForLine.length > 0, let stringRangeForLine = characterRangeForLine.rangeInString(string) {
 					let stringForLine = string[stringRangeForLine]
 					let charactersToRemoveFromEndOfLine = CharacterSet.whitespacesAndNewlines
@@ -478,10 +523,8 @@ internal class TextLayout {
 				return layout(configuration: configuration, textContainerHeight: usedRect.height)
 			}
 
-			let size = CGSize(
-				width:  usedRect.width + usedRect.left,
-				height: usedRect.height - topSpacingToRemove - bottomSpacingToRemove
-			)
+			size.height -= topSpacingToRemove
+			size.height -= bottomSpacingToRemove
 
 			let contentInsets = UIEdgeInsets(fromRect: CGRect(size: size), toRect: boundingRect)
 			let origin = CGPoint(left: -boundingRect.left, top: -boundingRect.top - topSpacingToRemove)

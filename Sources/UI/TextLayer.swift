@@ -4,16 +4,15 @@ import UIKit
 internal class TextLayer: Layer {
 
 	private var configuration = Configuration()
+	private let highPrecision: Bool // TODO remove after migration period
 	private var textLayout: TextLayout?
-	private let usesExactMeasuring: Bool // TODO remove after migration period
 
 
-	internal init(usesExactMeasuring: Bool) {
-		self.usesExactMeasuring = usesExactMeasuring
+	internal init(highPrecision: Bool) {
+		self.highPrecision = highPrecision
 
 		super.init()
 
-		backgroundColor = UIColor.red.withAlphaComponent(0.25).cgColor // FIXME
 		isOpaque = false
 		textColor = UIColor.darkText.cgColor
 		tintColor = UIColor.red.cgColor
@@ -24,8 +23,8 @@ internal class TextLayer: Layer {
 		let layer = layer as! TextLayer
 		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
+		highPrecision = layer.highPrecision
 		textLayout = layer.textLayout
-		usesExactMeasuring = layer.usesExactMeasuring
 
 		_links = layer._links
 
@@ -71,12 +70,12 @@ internal class TextLayer: Layer {
 	private func buildTextLayout(maximumSize: CGSize) -> TextLayout {
 		return TextLayout.build(
 			text:                 configuration.finalText,
+			highPrecision:        highPrecision,
 			lineBreakMode:        configuration.lineBreakMode,
 			maximumNumberOfLines: configuration.maximumNumberOfLines,
 			maximumSize:          maximumSize,
 			minimumScaleFactor:   configuration.minimumScaleFactor,
-			renderingScale:       contentsScale,
-			usesExactMeasuring:   usesExactMeasuring
+			renderingScale:       contentsScale
 		)
 	}
 
@@ -370,7 +369,6 @@ internal class TextLayer: Layer {
 
 				let paragraphStyle = NSMutableParagraphStyle()
 				paragraphStyle.alignment = horizontalAlignment
-				//paragraphStyle.firstLineHeadIndent = 20 // FIXME
 				paragraphStyle.lineHeightMultiple = lineHeightMultiple
 
 				switch lineBreakMode {
