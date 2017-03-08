@@ -1,5 +1,16 @@
 import UIKit
 
+/*
+  TODO
+
+  - Truncating (using …) is unreliable. NSLayoutManager doesn't return a consistent layout here.
+    Detecting whether truncation actually happened is also unreliable. We should do truncation on our own.
+    For now we rely on the caching to mitigate most instances of this issue.
+
+  - Various features of NSParagraphStyle are not supported yet, including justified text and tab stops.
+    In general it's not possible to have a single layout pass for both, measuring and laying out text.
+*/
+
 
 internal class TextLayout {
 
@@ -10,7 +21,7 @@ internal class TextLayout {
 
 	private init(configuration: Configuration) {
 		self.configuration = configuration
-		self.result = TextLayout.resolve(configuration: configuration)
+		self.result = Layouter.layout(configuration: configuration)
 	}
 
 
@@ -32,14 +43,18 @@ internal class TextLayout {
 		}
 
 		// Different callers may use different sizes to measure text without size constraints.
-		// We unify to +infinity so that caching works well for all the different cases between +100_000 and +infinity.
+		// We unify to 1_000_000 so that caching works well for all the different cases between +100_000 and +infinity.
 		var maximumSize = maximumSize
 		if maximumSize.width > 100_000 {
-			maximumSize.width = .infinity
+			maximumSize.width = 1_000_000
 		}
 		if maximumSize.height > 100_000 {
-			maximumSize.height = .infinity
+			maximumSize.height = 1_000_000
 		}
+
+		let gridIncrement = 1 / renderingScale
+		maximumSize.width = maximumSize.width.rounded(.up, increment: gridIncrement)
+		maximumSize.height = maximumSize.height.rounded(.up, increment: gridIncrement)
 
 		var minimumScaleFactor = minimumScaleFactor
 		if maximumNumberOfLines != 1 {
@@ -115,204 +130,6 @@ internal class TextLayout {
 
 	internal var numberOfLines: Int {
 		return result.numberOfLines
-	}
-
-
-	private static func resolve(configuration: Configuration) -> Result {
-		let textContainer = NSTextContainer(size: configuration.maximumSize.scaleBy(1 / configuration.minimumScaleFactor))
-		textContainer.lineBreakMode = configuration.lineBreakMode
-		textContainer.lineFragmentPadding = 0
-		textContainer.maximumNumberOfLines = configuration.maximumNumberOfLines == Int.max ? 0 : configuration.maximumNumberOfLines
-
-		let layoutManager = LayoutManager()
-		layoutManager.usesFontLeading = true
-		layoutManager.addTextContainer(textContainer)
-
-		let textStorage = NSTextStorage(attributedString: configuration.text)
-		textStorage.addLayoutManager(layoutManager)
-
-		let string = textStorage.string
-
-		// TODO this is unreliable to determine the visibleGlyphRange
-		var visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: layoutManager.usedRect(for: textContainer), in: textContainer)
-		var isTruncated = visibleGlyphRange.endLocation < layoutManager.numberOfGlyphs
-		var dependsOnTintColor = false
-
-		if visibleGlyphRange.length > 0 {
-			let lastGlyphIndex = visibleGlyphRange.endLocation - 1
-			let truncationGlyphRange = layoutManager.truncatedGlyphRange(inLineFragmentForGlyphAt: lastGlyphIndex)
-			if truncationGlyphRange.length > 0 {
-				isTruncated = true
-			}
-
-			// Remove trailing whitespace from last line to reflect UILabel's default behavior.
-			// Not necessary if truncation happend since in that case NSLayoutManager will do that on its own…
-			if truncationGlyphRange.location == NSNotFound {
-				var glyphRangeForLine = NSRange()
-				let usedRectForLine = layoutManager.lineFragmentUsedRect(forGlyphAt: lastGlyphIndex, effectiveRange: &glyphRangeForLine)
-
-				// only if it's not also the first line
-				if glyphRangeForLine.location != visibleGlyphRange.location {
-					let rectForLine = layoutManager.lineFragmentRect(forGlyphAt: lastGlyphIndex, effectiveRange: nil)
-					let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
-					let stringForLine = string[characterRangeForLine.rangeInString(string)!]
-
-					var truncatedCharacterRangeForLine = characterRangeForLine
-					let charactersToRemoveFromEndOfLine = CharacterSet.whitespacesAndNewlines
-					for character in stringForLine.unicodeScalars.reversed() {
-						guard charactersToRemoveFromEndOfLine.contains(character) else {
-							break
-						}
-
-						truncatedCharacterRangeForLine.length -= 1
-					}
-
-					if truncatedCharacterRangeForLine.length < characterRangeForLine.length {
-						let truncatedGlyphRangeForLine = layoutManager.glyphRange(forCharacterRange: truncatedCharacterRangeForLine, actualCharacterRange: nil).clamped(to: glyphRangeForLine)
-						if truncatedGlyphRangeForLine != glyphRangeForLine {
-							var truncatedUsedRectForLine = CGRect.null
-							layoutManager.enumerateEnclosingRects(forGlyphRange: truncatedGlyphRangeForLine, withinSelectedGlyphRange: .notFound, in: textContainer) { glyphRect, _ in
-								truncatedUsedRectForLine = truncatedUsedRectForLine.union(glyphRect)
-							}
-							if truncatedUsedRectForLine.isNull {
-								truncatedUsedRectForLine = usedRectForLine
-								truncatedUsedRectForLine.width = 0
-							}
-
-							layoutManager.setLineFragmentRect(rectForLine, forGlyphRange: glyphRangeForLine, usedRect: truncatedUsedRectForLine)
-
-							visibleGlyphRange = NSRange(location: visibleGlyphRange.location, length: truncatedGlyphRangeForLine.endLocation - visibleGlyphRange.location)
-						}
-					}
-				}
-			}
-
-			let visibleCharacterRange = layoutManager.characterRange(forGlyphRange: visibleGlyphRange, actualGlyphRange: nil)
-			textStorage.enumerateAttributes(in: visibleCharacterRange, options: .longestEffectiveRangeNotRequired) { attributes, _, stop in
-				if let textColor = attributes[NSForegroundColorAttributeName] as? UIColor, textColor.tintAlpha != nil {
-					dependsOnTintColor = true
-					stop.pointee = true
-					return
-				}
-
-				if let backgroundColor = attributes[NSForegroundColorAttributeName] as? UIColor, backgroundColor.tintAlpha != nil {
-					dependsOnTintColor = true
-					stop.pointee = true
-					return
-				}
-			}
-
-			// layoutManager's bounding rectangle won't be calculated correctly unless we tell it to do so…
-			for glyphIndex in visibleGlyphRange {
-				layoutManager.setDrawsOutsideLineFragment(true, forGlyphAt: glyphIndex)
-			}
-		}
-
-		var boundingRect = CGRect.null
-		var numberOfLines = 0
-		var usedRect = CGRect.null
-		let grid = 1 / configuration.renderingScale
-
-		layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { _, usedRectForLine, _, glyphRangeForLine, stop in
-			guard numberOfLines < configuration.maximumNumberOfLines else {
-				stop.pointee = true
-				return
-			}
-
-			var usedRectForLine = usedRectForLine
-			var glyphRangeForLine = glyphRangeForLine
-			let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
-
-			// boundingRect is unreliable when the range ends with a newline character, so we'll exclude it
-			if glyphRangeForLine.length > 0,
-				let characterRangeForLine = characterRangeForLine.rangeInString(string),
-				let lastCharacter = string[characterRangeForLine].unicodeScalars.last,
-				CharacterSet.newlines.contains(lastCharacter)
-			{
-				glyphRangeForLine.length -= 1
-			}
-
-			var boundingRectForLine = layoutManager.boundingRect(forGlyphRange: glyphRangeForLine, in: textContainer)
-
-			// remove spacing above capital letters of first line and below baseline of last line
-			if configuration.usesExactMeasuring {
-				let isFirstLine = (glyphRangeForLine.location == visibleGlyphRange.location)
-				let isLastLine = (glyphRangeForLine.endLocation >= visibleGlyphRange.endLocation)
-				if isFirstLine || isLastLine {
-					// FIXME we also have to remove spacing *during* layout in order fully use maximumSize (using layoutManager delegate) - but may work for now due to the layout cache -> disable it for proper testing
-					if let capitalLetterSpacingForLine = textStorage.capitalLetterSpacing(in: characterRangeForLine, forLineHeight: usedRectForLine.height, usingFontLeading: layoutManager.usesFontLeading) {
-						if isFirstLine {
-							let spacing = capitalLetterSpacingForLine.above.rounded(increment: grid)
-							// FIXME don't modify usedRect as it's needed for stuff like firstLineHeadIndent
-							usedRectForLine.top += spacing
-							usedRectForLine.height -= spacing
-							boundingRectForLine.top -= spacing
-							boundingRectForLine.height += spacing
-						}
-						if isLastLine {
-							let spacing = capitalLetterSpacingForLine.below.rounded(increment: grid)
-							usedRectForLine.height -= spacing
-							boundingRectForLine.height += spacing
-						}
-					}
-				}
-			}
-
-			boundingRect = boundingRect.union(boundingRectForLine)
-			numberOfLines += 1
-			usedRect = usedRect.union(usedRectForLine)
-		}
-
-		let scaleFactor: CGFloat
-
-		if boundingRect.isNull {
-			boundingRect = .zero
-			usedRect = .zero
-
-			scaleFactor = 1
-		}
-		else {
-			if configuration.minimumScaleFactor < 1 {
-				scaleFactor = min(configuration.maximumSize.width / usedRect.width, configuration.maximumSize.height / usedRect.height).coerced(atMost: 1)
-				if scaleFactor < 1 {
-					boundingRect.left *= scaleFactor
-					boundingRect.top *= scaleFactor
-					boundingRect.size.scaleInPlace(scaleFactor)
-
-					usedRect.left *= scaleFactor
-					usedRect.top *= scaleFactor
-					usedRect.size.scaleInPlace(scaleFactor)
-				}
-			}
-			else {
-				scaleFactor = 1
-			}
-
-			boundingRect.left = boundingRect.left.rounded(.down, increment: grid)
-			boundingRect.top = boundingRect.top.rounded(.down, increment: grid)
-			boundingRect.width = boundingRect.width.rounded(.up, increment: grid)
-			boundingRect.height = boundingRect.height.rounded(.up, increment: grid)
-
-			usedRect.height = usedRect.height.rounded(.up, increment: grid)
-			usedRect.width = usedRect.width.rounded(.up, increment: grid)
-		}
-
-		let contentInsets = UIEdgeInsets(fromRect: usedRect, toRect: boundingRect)
-		let origin = CGPoint(left: -boundingRect.left, top: -boundingRect.top)
-
-		return Result(
-			contentInsets:      contentInsets,
-			dependsOnTintColor: dependsOnTintColor,
-			glyphRange:         visibleGlyphRange,
-			isTruncated:        isTruncated,
-			layoutManager:      layoutManager,
-			numberOfLines:      numberOfLines,
-			origin:             origin,
-			scaleFactor:       scaleFactor,
-			size:               usedRect.size,
-			textContainer:      textContainer,
-			textStorage:        textStorage
-		)
 	}
 
 
@@ -429,7 +246,265 @@ internal class TextLayout {
 
 
 
-	private final class LayoutManager: NSLayoutManager {
+	private struct Layouter {
+
+		private init() {}
+
+
+		static func layout(configuration: Configuration) -> Result {
+			// Since TextKit doesn't give us the right hooks to make our layout work we have to perform multiple layout cycles in order to measure the
+			// correct fitting size which excludes any space below the last line's baseline and any space above capital letters of the largest font of first
+			// line. We start with more available height than necessary which must be larger than the spacing to be compensated for. It should be as small
+			// as possible though in order to prevent an unnecessary high number of layout cycles, each reducing the available height further.
+			return Layouter().layout(configuration: configuration, textContainerHeight: configuration.maximumSize.height + 100) // FIXME use better approximation
+		}
+
+
+		private func layout(configuration: Configuration, textContainerHeight: CGFloat) -> Result {
+			let textContainerSize = CGSize(width: configuration.maximumSize.width, height: textContainerHeight)
+				.scaleBy(1 / configuration.minimumScaleFactor)
+
+			let textContainer = NSTextContainer(size: textContainerSize)
+			textContainer.lineBreakMode = configuration.lineBreakMode
+			textContainer.lineFragmentPadding = 0
+			textContainer.maximumNumberOfLines = configuration.maximumNumberOfLines == Int.max ? 0 : configuration.maximumNumberOfLines
+
+			let layoutManager = LayoutManager()
+			layoutManager.usesFontLeading = true
+			layoutManager.addTextContainer(textContainer)
+
+			let textStorage = NSTextStorage(attributedString: configuration.text)
+			textStorage.addLayoutManager(layoutManager)
+
+			layoutManager.ensureLayout(for: textContainer)
+			textContainer.size = layoutManager.usedRect(for: textContainer).size // FIXME breaks (firstLine)HeadIntent / tailIntent
+			layoutManager.ensureLayout(for: textContainer)
+
+			let string = textStorage.string
+
+			// Figure out which glyphs fitted in our text contained and were laid out. This range may also include glyphs which are not visible due to
+			// layoutManager.glyphRange(forBoundingRect:in:) not being reliable or due to text being truncated in the middle.
+			var visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: layoutManager.usedRect(for: textContainer), in: textContainer)
+
+			guard visibleGlyphRange.length > 0 else {
+				return Result(
+					contentInsets:      .zero,
+					dependsOnTintColor: false,
+					glyphRange:         .notFound,
+					isTruncated:        !string.isEmpty,
+					layoutManager:      layoutManager,
+					numberOfLines:      0,
+					origin:             .zero,
+					scaleFactor:        1,
+					size:               .zero,
+					textContainer:      textContainer,
+					textStorage:        textStorage
+				)
+			}
+
+			// How many lines did we manage to lay out?
+			var numberOfLines = 0
+			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { _ in numberOfLines += 1 }
+			assert(numberOfLines <= configuration.maximumNumberOfLines)
+
+			// layoutManager's bounding rectangles aren't calculated correctly unless we declare glyph drawing outside of the line fragments.
+			// Try it without this when using the font Zapfino if you don't belive me.
+			for glyphIndex in visibleGlyphRange {
+				layoutManager.setDrawsOutsideLineFragment(true, forGlyphAt: glyphIndex)
+			}
+
+			// Union of all lines' bounding rect.
+			var boundingRect = CGRect.null
+
+			// Union of all lines' used rect.
+			var usedRect = CGRect.null
+
+			// If configuration.usesHighPrecision is true then this is the distance between first line's upper end and the tallest capital letter of all fonts
+			// of the first line. 0 otherwise.
+			var topSpacingToRemove = CGFloat(0)
+
+			// If configuration.usesHighPrecision is true then this is the distance between last line's baseline and it's lower end. 0 otherwise.
+			var bottomSpacingToRemove = CGFloat(0)
+
+			// First try to figure out if text was truncated or not.
+			var isTruncated = visibleGlyphRange.endLocation < layoutManager.numberOfGlyphs
+
+			var lineIndex = 0
+			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { rectForLine, usedRectForLine, _, glyphRangeForLine, _ in
+				let isFirstLine = lineIndex == 1
+				let isLastLine = lineIndex == (numberOfLines - 1)
+				let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
+				var usedRectForLine = usedRectForLine
+
+				// layoutManager.boundingRect(forGlyphRange:in:) is unreliable when the range ends with a newline character, but we can simply shorten it.
+				var glyphRangeForLineBoundingRect = glyphRangeForLine
+				if glyphRangeForLine.length > 0,
+					let characterRangeForLine = characterRangeForLine.rangeInString(string),
+					let lastCharacter = string[characterRangeForLine].unicodeScalars.last,
+					CharacterSet.newlines.contains(lastCharacter)
+				{
+					glyphRangeForLineBoundingRect.length -= 1
+				}
+
+				if glyphRangeForLineBoundingRect.length > 0 && characterRangeForLine.length > 0 {
+					// Form union of line's bounding rectangle with one's of the other lines.
+					var boundingRectForLine = layoutManager.boundingRect(forGlyphRange: glyphRangeForLineBoundingRect, in: textContainer)
+					boundingRect = boundingRect.union(boundingRectForLine)
+
+					// This is why we do all this. We'd like to strip the whitespace between the upper end of labels and the capital letters of the first line
+					// as well as between the last line's baseline and the lower end of the label.
+					if configuration.usesExactMeasuring {
+						if isFirstLine || isLastLine {
+							if let capitalLetterSpacing = textStorage.capitalLetterSpacing(in: characterRangeForLine, forLineHeight: usedRectForLine.height, usingFontLeading: layoutManager.usesFontLeading) {
+								if isFirstLine {
+									topSpacingToRemove = capitalLetterSpacing.above
+								}
+								if isLastLine {
+									bottomSpacingToRemove = capitalLetterSpacing.below
+								}
+							}
+						}
+					}
+				}
+
+				// Check if text was truncated not just at the end but somewhere else, e.g. by .byTruncatingHead or .byTruncatingMiddle.
+				// Note that layoutManager.truncatedGlyphRange(inLineFragmentForGlyphAt:) is very unreliable here and often returns NSNotFound even if the text
+				// was truncated.
+				if !isTruncated {
+					let truncatedGlyphRange = layoutManager.truncatedGlyphRange(inLineFragmentForGlyphAt: glyphRangeForLine.location)
+					if truncatedGlyphRange.length > 0 {
+						isTruncated = true
+					}
+				}
+
+				// Remove trailing whitespace from last line to reflect UILabel's default behavior.
+				// Not necessary if truncation happend since in that case NSLayoutManager will do that on its own…
+				if isLastLine && !isTruncated && characterRangeForLine.length > 0, let stringRangeForLine = characterRangeForLine.rangeInString(string) {
+					let stringForLine = string[stringRangeForLine]
+					let charactersToRemoveFromEndOfLine = CharacterSet.whitespacesAndNewlines
+
+					var strippedCharacterRangeForLine = characterRangeForLine
+					for character in stringForLine.unicodeScalars.reversed() {
+						guard charactersToRemoveFromEndOfLine.contains(character) else {
+							break
+						}
+
+						strippedCharacterRangeForLine.length -= 1
+					}
+
+					if strippedCharacterRangeForLine.length < characterRangeForLine.length {
+						let strippedGlyphRangeForLine = layoutManager.glyphRange(forCharacterRange: strippedCharacterRangeForLine, actualCharacterRange: nil).clamped(to: glyphRangeForLine)
+						if strippedGlyphRangeForLine != glyphRangeForLine {
+							if strippedCharacterRangeForLine.length > 0 {
+								layoutManager.enumerateEnclosingRects(forGlyphRange: NSRange(location: strippedCharacterRangeForLine.endLocation - 1, length: 1), withinSelectedGlyphRange: .notFound, in: textContainer) { glyphRect, _ in
+									usedRectForLine.width = glyphRect.right - usedRectForLine.left
+								}
+							}
+							else {
+								usedRectForLine.width = 0
+							}
+
+							layoutManager.setLineFragmentRect(rectForLine, forGlyphRange: glyphRangeForLine, usedRect: usedRectForLine)
+							visibleGlyphRange = NSRange(location: visibleGlyphRange.location, length: strippedGlyphRangeForLine.endLocation - visibleGlyphRange.location)
+						}
+					}
+				}
+
+				// Form union of line's used rectangle with one's of the other lines.
+				usedRect = usedRect.union(usedRectForLine)
+
+				lineIndex += 1
+			}
+
+			assert(!boundingRect.isNull)
+			assert(!usedRect.isNull)
+
+			let visibleCharacterRange = layoutManager.characterRange(forGlyphRange: visibleGlyphRange, actualGlyphRange: nil)
+
+			// Check whether the visible text depends on the tint color. Enables optimizations where clients of the TextLayout can prevent unecessary redraws
+			// when the tint color changes.
+			var dependsOnTintColor = false
+			textStorage.enumerateAttributes(in: visibleCharacterRange, options: .longestEffectiveRangeNotRequired) { attributes, _, stop in
+				if let textColor = attributes[NSForegroundColorAttributeName] as? UIColor, textColor.tintAlpha != nil {
+					dependsOnTintColor = true
+					stop.pointee = true
+				}
+				else if let backgroundColor = attributes[NSForegroundColorAttributeName] as? UIColor, backgroundColor.tintAlpha != nil {
+					dependsOnTintColor = true
+					stop.pointee = true
+				}
+			}
+
+			// If scaling is allowed, figure out how much we had to scale in order to make the text fit.
+			let scaleFactor: CGFloat
+			if configuration.minimumScaleFactor < 1 {
+				scaleFactor = min(configuration.maximumSize.width / usedRect.width, configuration.maximumSize.height / usedRect.height).coerced(atMost: 1)
+				if scaleFactor < 1 {
+					boundingRect.left *= scaleFactor
+					boundingRect.top *= scaleFactor
+					boundingRect.size.scaleInPlace(scaleFactor)
+
+					usedRect.left *= scaleFactor
+					usedRect.top *= scaleFactor
+					usedRect.size.scaleInPlace(scaleFactor)
+
+					topSpacingToRemove *= scaleFactor
+					bottomSpacingToRemove *= scaleFactor
+				}
+			}
+			else {
+				scaleFactor = 1
+			}
+
+			// Align everything nicely depending on our renderingScale in order to prevent unwanted subpixel drawing.
+			let gridIncrement = 1 / configuration.renderingScale
+
+			topSpacingToRemove = topSpacingToRemove.rounded(increment: gridIncrement)
+			bottomSpacingToRemove = bottomSpacingToRemove.rounded(increment: gridIncrement)
+
+			boundingRect.left = boundingRect.left.rounded(.down, increment: gridIncrement)
+			boundingRect.top = boundingRect.top.rounded(.down, increment: gridIncrement)
+			boundingRect.width = boundingRect.width.rounded(.up, increment: gridIncrement)
+			boundingRect.height = boundingRect.height.rounded(.up, increment: gridIncrement)
+
+			usedRect.height = usedRect.height.rounded(.up, increment: gridIncrement)
+			usedRect.width = usedRect.width.rounded(.up, increment: gridIncrement)
+
+			// If the text we've laid out is longer than allowed then we'll have to try again with a shorter text container.
+			// This is necessary since we don't have access to typesetting and cannot tell NSLayoutManager to allow the `topSpacingToRemove` and
+			// `bottomSpacingToRemove` to lie outside of the text container.
+			if usedRect.height > configuration.maximumSize.height && usedRect.height < textContainerSize.height {
+				print("MULTI-PASS LAYOUT") // FIXME the more you see the worse our additional height approximation
+				return layout(configuration: configuration, textContainerHeight: usedRect.height)
+			}
+
+			let size = CGSize(
+				width:  usedRect.width + usedRect.left,
+				height: usedRect.height - topSpacingToRemove - bottomSpacingToRemove
+			)
+
+			let contentInsets = UIEdgeInsets(fromRect: CGRect(size: size), toRect: boundingRect)
+			let origin = CGPoint(left: -boundingRect.left, top: -boundingRect.top - topSpacingToRemove)
+
+			return Result(
+				contentInsets:      contentInsets,
+				dependsOnTintColor: dependsOnTintColor,
+				glyphRange:         visibleGlyphRange,
+				isTruncated:        isTruncated,
+				layoutManager:      layoutManager,
+				numberOfLines:      numberOfLines,
+				origin:             origin,
+				scaleFactor:        scaleFactor,
+				size:               size,
+				textContainer:      textContainer,
+				textStorage:        textStorage
+			)
+		}
+	}
+
+
+
+	private class LayoutManager: NSLayoutManager {
 
 		@objc(JetPack_linkAttributes)
 		private dynamic class var linkAttributes: [AnyHashable: Any] {
@@ -533,7 +608,7 @@ internal class TextLayout {
 		var dependsOnTintColor: Bool
 		var glyphRange: NSRange
 		var isTruncated: Bool
-		var layoutManager: LayoutManager
+		var layoutManager: NSLayoutManager
 		var numberOfLines: Int
 		var origin: CGPoint
 		var scaleFactor: CGFloat

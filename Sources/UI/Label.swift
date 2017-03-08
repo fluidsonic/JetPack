@@ -24,6 +24,8 @@ open class Label: View {
 
 		super.init()
 
+		backgroundColor = UIColor.red.withAlphaComponent(0.5) // FIXME
+
 		clipsToBounds = false
 		originalTextColor = UIColor(cgColor: textLayer.textColor)
 

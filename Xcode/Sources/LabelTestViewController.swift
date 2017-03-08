@@ -4,7 +4,7 @@ import UIKit
 
 class LabelTestViewController: ViewController {
 
-	private let label = Label()
+	private let label = Label(usesExactMeasuring: true)
 
 
 	override func viewDidLoad() {
@@ -12,23 +12,25 @@ class LabelTestViewController: ViewController {
 
 		view.backgroundColor = .black
 
-		let font1 = UIFont(name: "Zapfino", size: 25)!
-		let font2 = UIFont(name: "Zapfino", size: 15)!
+		let font1 = UIFont.systemFont(ofSize: 25) // UIFont(name: "Zapfino", size: 25)!
+		let font2 = UIFont(name: "Zapfino", size: 10)!
 
 		let at = NSMutableAttributedString(string: "ABCDEÄji0ABCDEÄji0")
 		at.addAttributes([ NSFontAttributeName: font1 ], range: NSRange(location: 0, length: 9))
 		at.addAttributes([ NSFontAttributeName: font2 ], range: NSRange(location: 9, length: 9))
 
-		let text = NSMutableAttributedString(string: "")
+		let p = NSMutableParagraphStyle()
 
-		label.horizontalAlignment = .left
+		let text = NSMutableAttributedString(string: "The Lazy Fox feels good so good")
+//		text.addAttribute(NSParagraphStyleAttributeName, value: p, range: NSRange(location: 0, length: text.length))
+
+		label.horizontalAlignment = .center
 		label.backgroundColor = .red
-		label.lineBreakMode = .byTruncatingTail
-		label.maximumNumberOfLines = nil
+		label.lineBreakMode = .byTruncatingHead
+		label.maximumNumberOfLines = 2
 		label.attributedText = text
 		label.font = font1
-		label.minimumScaleFactor = 0
-		label.textColor = .tintColor()
+		label.textColor = .white
 		label.lineHeightMultiple = 1
 		label.linkTapped = { url in
 			print("link tapped!")
@@ -36,28 +38,21 @@ class LabelTestViewController: ViewController {
 
 		var frame = CGRect(left: 30, top: 120, width: 300, height: 50)
 		//frame.size.height = label.heightThatFitsWidth(300)
-		frame.size = label.sizeThatFitsSize(CGSize(width: 375 - 60, height: 180))
+		frame.size = label.sizeThatFitsSize(CGSize(width: 375 - 60, height: 999))
 		label.frame = frame
 
-		let pas = NSMutableParagraphStyle()
-		pas.alignment = .left
-		pas.lineBreakMode = .byWordWrapping
-		pas.lineHeightMultiple = 1
-
 		let label2 = UILabel()
-		label2.textAlignment = .left
+		label2.textAlignment = .center
 		label2.font = font1
 		label2.lineBreakMode = .byWordWrapping
 		label2.numberOfLines = 0
-		label2.attributedText = NSAttributedString(string: "")
-			.withDefaultAttributes(font: label2.font, foregroundColor: nil, kerning: nil, paragraphStyle: pas, transform: nil)
+		label2.attributedText = text
 		label2.textColor = .white
 		label2.backgroundColor = .red
-		label2.minimumScaleFactor = 0
-		label2.adjustsFontSizeToFitWidth = true
+		label2.minimumScaleFactor = 1
 
 		var frame2 = CGRect(left: 30, top: 400, width: 300, height: 50)
-		frame2.size = label2.sizeThatFitsSize(CGSize(width: 375 - 60, height: 150))
+		frame2.size = label2.sizeThatFitsSize(CGSize(width: 375 - 60, height: 999))
 		label2.frame = frame2
 
 		view.addSubview(label)

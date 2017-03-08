@@ -13,6 +13,7 @@ internal class TextLayer: Layer {
 
 		super.init()
 
+		backgroundColor = UIColor.red.withAlphaComponent(0.25).cgColor // FIXME
 		isOpaque = false
 		textColor = UIColor.darkText.cgColor
 		tintColor = UIColor.red.cgColor
@@ -369,6 +370,7 @@ internal class TextLayer: Layer {
 
 				let paragraphStyle = NSMutableParagraphStyle()
 				paragraphStyle.alignment = horizontalAlignment
+				//paragraphStyle.firstLineHeadIndent = 20 // FIXME
 				paragraphStyle.lineHeightMultiple = lineHeightMultiple
 
 				switch lineBreakMode {
