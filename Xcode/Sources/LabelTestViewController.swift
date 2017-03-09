@@ -4,7 +4,7 @@ import UIKit
 
 class LabelTestViewController: ViewController {
 
-	private let label = Label(usesExactMeasuring: true)
+	private let label = Label(highPrecision: true)
 
 
 	override func viewDidLoad() {
