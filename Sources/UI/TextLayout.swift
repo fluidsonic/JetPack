@@ -248,6 +248,9 @@ internal class TextLayout {
 
 	private struct Layouter {
 
+		private let _debuggingFix = 0 // https://bugs.swift.org/browse/SR-4204
+
+
 		private init() {}
 
 
