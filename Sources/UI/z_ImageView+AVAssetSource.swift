@@ -20,11 +20,6 @@ public extension ImageView {
 		public func createSession() -> Session? {
 			return AVAssetSourceSession(asset: asset, videoComposition: videoComposition)
 		}
-
-
-		public var staticImage: UIImage? {
-			return nil
-		}
 	}
 }
 
@@ -56,7 +51,7 @@ private final class AVAssetSourceSession: ImageView.Session {
 
 
 	fileprivate func startOrRestartRequestForImageView(_ imageView: ImageView) {
-		let optimalSize = imageView.optimalImageSize
+		let optimalSize = imageView.optimalImageSize.scaleBy(imageView.optimalImageScale)
 		var size = self.lastRequestedSize
 		size.width = max(size.width, optimalSize.width, size.height, optimalSize.height)
 		size.height = size.width

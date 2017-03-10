@@ -23,11 +23,6 @@ public extension ImageView {
 		public func createSession() -> Session? {
 			return PHAssetSourceSession(source: self)
 		}
-
-
-		public var staticImage: UIImage? {
-			return nil
-		}
 	}
 }
 
@@ -58,7 +53,7 @@ private final class PHAssetSourceSession: ImageView.Session {
 
 
 	fileprivate func startOrRestartRequestForImageView(_ imageView: ImageView) {
-		let optimalSize = imageView.optimalImageSize
+		let optimalSize = imageView.optimalImageSize.scaleBy(imageView.optimalImageScale)
 		var size = self.lastRequestedSize
 		size.width = max(size.width, optimalSize.width)
 		size.height = max(size.height, optimalSize.height)

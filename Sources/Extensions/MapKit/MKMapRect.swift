@@ -77,3 +77,11 @@ public extension MKMapRect {
 		return scaledBy(horizontally: 1, vertically: vertical)
 	}
 }
+
+
+extension MKMapRect: Equatable {
+
+	public static func == (a: MKMapRect, b: MKMapRect) -> Bool {
+		return MKMapRectEqualToRect(a, b)
+	}
+}

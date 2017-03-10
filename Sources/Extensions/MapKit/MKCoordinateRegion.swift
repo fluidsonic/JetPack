@@ -210,9 +210,9 @@ public extension MKCoordinateRegion {
 }
 
 
-extension MKCoordinateRegion: Equatable {}
+extension MKCoordinateRegion: Equatable {
 
-
-public func == (a: MKCoordinateRegion, b: MKCoordinateRegion) -> Bool {
-	return a.center == b.center && a.span == b.span
+	public static func == (a: MKCoordinateRegion, b: MKCoordinateRegion) -> Bool {
+		return a.center == b.center && a.span == b.span
+	}
 }

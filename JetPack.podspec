@@ -129,7 +129,7 @@ Pod::Spec.new do |s|
 	s.subspec 'UI' do |s|
 		s.ios.deployment_target = '9.0'
 
-		s.frameworks   = 'AVFoundation', 'ImageIO', 'Photos', 'QuartzCore', 'UIKit', 'WebKit'
+		s.frameworks   = 'AVFoundation', 'ImageIO', 'MapKit', 'Photos', 'QuartzCore', 'UIKit', 'WebKit'
 		s.source_files = 'Sources/UI/**/*.swift', 'Module/JetPack.h'
 
 		s.dependency 'JetPack/Core'

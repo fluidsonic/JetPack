@@ -27,11 +27,6 @@ public extension ImageView {
 		public func createSession() -> ImageView.Session? {
 			return UrlSourceSession(source: self)
 		}
-
-
-		public var staticImage: UIImage? {
-			return nil
-		}
 	}
 }
 
@@ -71,7 +66,7 @@ private final class UrlSourceSession: ImageView.Session {
 		}
 
 		if source.url.isFileURL && source.considersOptimalImageSize {
-			let optimalImageSize = imageView.optimalImageSize
+			let optimalImageSize = imageView.optimalImageSize.scaleBy(imageView.optimalImageScale)
 			stopLoading = ImageFileLoader.forUrl(source.url, size: max(optimalImageSize.width, optimalImageSize.height)).load(completion)
 		}
 		else {

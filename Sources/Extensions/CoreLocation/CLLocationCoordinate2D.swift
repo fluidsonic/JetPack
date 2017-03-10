@@ -15,9 +15,9 @@ extension CLLocationCoordinate2D: Hashable {
 	public var hashValue: Int {
 		return latitude.hashValue ^ longitude.hashValue
 	}
-}
 
 
-public func == (a: CLLocationCoordinate2D, b: CLLocationCoordinate2D) -> Bool {
-	return a.latitude == b.latitude && a.longitude == b.longitude
+	public static func == (a: CLLocationCoordinate2D, b: CLLocationCoordinate2D) -> Bool {
+		return a.latitude == b.latitude && a.longitude == b.longitude
+	}
 }

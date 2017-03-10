@@ -298,8 +298,13 @@ open class ImageView: View {
 	}
 
 
-	open var optimalImageSize: CGSize {
-		let size = bounds.size.insetBy(padding).scaleBy(gridScaleFactor)
+	public var optimalImageScale: CGFloat {
+		return gridScaleFactor
+	}
+
+
+	public var optimalImageSize: CGSize {
+		let size = bounds.size.insetBy(padding)
 		guard size.width > 0 && size.height > 0 else {
 			return .zero
 		}
@@ -679,6 +684,14 @@ public protocol _ImageViewSource {
 
 	func createSession () -> ImageView.Session?
 	func equals        (_ source: ImageView.Source) -> Bool
+}
+
+
+extension _ImageViewSource {
+
+	public var staticImage: UIImage? {
+		return nil
+	}
 }
 
 
