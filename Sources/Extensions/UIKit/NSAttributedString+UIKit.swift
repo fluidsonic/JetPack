@@ -67,13 +67,7 @@ extension NSAttributedString {
 				if let kerning = kerning {
 					let font = attributes[NSFontAttributeName] as? UIFont ?? font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
 
-					let kerningValue: CGFloat
-					switch kerning {
-					case let .absolute(value):           kerningValue = value
-					case let .relativeToFontSize(value): kerningValue = font.pointSize * value
-					}
-
-					attributes[NSKernAttributeName] = kerningValue as NSNumber
+					attributes[NSKernAttributeName] = kerning.forFontSize(font.pointSize) as NSNumber
 				}
 
 				attributedString.addAttributes(attributes, range: range)
