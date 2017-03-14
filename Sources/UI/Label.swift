@@ -203,6 +203,21 @@ open class Label: View {
 	}
 
 
+	open var maximumLineHeight: CGFloat? {
+		get { return textLayer.maximumLineHeight }
+		set {
+			guard newValue != textLayer.maximumLineHeight else {
+				return
+			}
+
+			textLayer.maximumLineHeight = newValue
+
+			invalidateIntrinsicContentSize()
+			setNeedsLayout()
+		}
+	}
+
+
 	open var maximumNumberOfLines: Int? {
 		get { return textLayer.maximumNumberOfLines }
 		set {
@@ -211,6 +226,21 @@ open class Label: View {
 			}
 
 			textLayer.maximumNumberOfLines = newValue
+
+			invalidateIntrinsicContentSize()
+			setNeedsLayout()
+		}
+	}
+
+
+	open var minimumLineHeight: CGFloat? {
+		get { return textLayer.minimumLineHeight }
+		set {
+			guard newValue != textLayer.minimumLineHeight else {
+				return
+			}
+
+			textLayer.minimumLineHeight = newValue
 
 			invalidateIntrinsicContentSize()
 			setNeedsLayout()

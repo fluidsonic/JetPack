@@ -267,6 +267,15 @@ internal class TextLayer: Layer {
 	}
 
 
+	internal var maximumLineHeight: CGFloat? {
+		get { return configuration.maximumLineHeight }
+		set {
+			configuration.maximumLineHeight = newValue
+			checkConfiguration()
+		}
+	}
+
+
 	internal var maximumNumberOfLines: Int? {
 		get { return configuration.maximumNumberOfLines }
 		set {
@@ -276,6 +285,15 @@ internal class TextLayer: Layer {
 
 			configuration.maximumNumberOfLines = newValue
 			invalidateTextLayout()
+		}
+	}
+
+
+	internal var minimumLineHeight: CGFloat? {
+		get { return configuration.minimumLineHeight }
+		set {
+			configuration.minimumLineHeight = newValue
+			checkConfiguration()
 		}
 	}
 
@@ -370,6 +388,8 @@ internal class TextLayer: Layer {
 				let paragraphStyle = NSMutableParagraphStyle()
 				paragraphStyle.alignment = horizontalAlignment
 				paragraphStyle.lineHeightMultiple = lineHeightMultiple
+				paragraphStyle.maximumLineHeight = maximumLineHeight ?? 0
+				paragraphStyle.minimumLineHeight = minimumLineHeight ?? 0
 
 				switch lineBreakMode {
 				case .byClipping, .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:
@@ -440,10 +460,36 @@ internal class TextLayer: Layer {
 		}
 
 
+		var maximumLineHeight: CGFloat? {
+			didSet {
+				if let maximumLineHeight = maximumLineHeight {
+					precondition(maximumLineHeight > 0, ".maximumLineHeight must be > 0")
+				}
+
+				if maximumLineHeight != oldValue {
+					_finalText = nil
+				}
+			}
+		}
+
+
 		var maximumNumberOfLines: Int? = 1 {
 			didSet {
 				if let maximumNumberOfLines = maximumNumberOfLines {
 					precondition(maximumNumberOfLines > 0, ".maximumNumberOfLines must be > 0")
+				}
+			}
+		}
+
+
+		var minimumLineHeight: CGFloat? {
+			didSet {
+				if let minimumLineHeight = minimumLineHeight {
+					precondition(minimumLineHeight > 0, ".minimumLineHeight must be > 0")
+				}
+
+				if minimumLineHeight != oldValue {
+					_finalText = nil
 				}
 			}
 		}
