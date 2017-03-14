@@ -378,7 +378,7 @@ internal class TextLayout {
 
 			var lineIndex = 0
 			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { rectForLine, usedRectForLine, _, glyphRangeForLine, _ in
-				let isFirstLine = lineIndex == 1
+				let isFirstLine = lineIndex == 0
 				let isLastLine = lineIndex == (numberOfLines - 1)
 				let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
 				var usedRectForLine = usedRectForLine
@@ -507,8 +507,8 @@ internal class TextLayout {
 			// Align everything nicely depending on our renderingScale in order to prevent unwanted subpixel drawing.
 			let gridIncrement = 1 / configuration.renderingScale
 
-			topSpacingToRemove = topSpacingToRemove.rounded(increment: gridIncrement)
-			bottomSpacingToRemove = bottomSpacingToRemove.rounded(increment: gridIncrement)
+			topSpacingToRemove = topSpacingToRemove.rounded(.down, increment: gridIncrement)
+			bottomSpacingToRemove = bottomSpacingToRemove.rounded(.down, increment: gridIncrement)
 
 			boundingRect.left = boundingRect.left.rounded(.down, increment: gridIncrement)
 			boundingRect.top = boundingRect.top.rounded(.down, increment: gridIncrement)
