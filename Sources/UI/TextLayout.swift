@@ -115,11 +115,8 @@ internal class TextLayout {
 
 	private static func forConfiguration(_ configuration: Configuration) -> TextLayout {
 		if let layout = Cache.instance.get(for: configuration) {
-			print("Cache HIT:  \(configuration)")
 			return layout
 		}
-
-		print("Cache MISS: \(configuration)")
 
 		let layout = TextLayout(configuration: configuration)
 		Cache.instance.add(layout)
@@ -522,7 +519,6 @@ internal class TextLayout {
 			// This is necessary since we don't have access to typesetting and cannot tell NSLayoutManager to allow the `topSpacingToRemove` and
 			// `bottomSpacingToRemove` to lie outside of the text container.
 			if usedRect.height > configuration.maximumSize.height && usedRect.height < textContainerSize.height {
-				print("MULTI-PASS LAYOUT") // FIXME the more you see the worse our additional height approximation
 				return layout(configuration: configuration, textContainerHeight: usedRect.height)
 			}
 
