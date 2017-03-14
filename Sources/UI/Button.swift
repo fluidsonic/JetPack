@@ -810,6 +810,7 @@ open class Button: View {
 
 
 	public enum Arrangement {
+
 		case imageBottom
 		case imageLeft
 		case imageRight
@@ -817,7 +818,9 @@ open class Button: View {
 	}
 
 
+
 	public enum HorizontalAlignment {
+
 		case center
 		case fill
 		case left
@@ -825,7 +828,18 @@ open class Button: View {
 	}
 
 
+
+	private struct Layout {
+
+		var activityIndicatorFrame: CGRect?
+		var imageViewFrame: CGRect?
+		var textLabelFrame: CGRect?
+	}
+
+
+
 	public enum VerticalAlignment {
+
 		case bottom
 		case center
 		case fill
@@ -835,33 +849,24 @@ open class Button: View {
 
 
 
-private struct Layout {
+private class ButtonImageView: ImageView {
 
-	fileprivate var activityIndicatorFrame: CGRect?
-	fileprivate var imageViewFrame: CGRect?
-	fileprivate var textLabelFrame: CGRect?
-}
+	private weak var button: Button?
 
 
-
-private final class ButtonImageView: ImageView {
-
-	fileprivate weak var button: Button?
-
-
-	fileprivate init(button: Button) {
+	init(button: Button) {
 		self.button = button
 
 		super.init()
 	}
 
 
-	fileprivate required init?(coder: NSCoder) {
+	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
 
-	fileprivate override var source: Source? {
+	override var source: Source? {
 		didSet {
 			button?.imageViewDidChangeSource()
 		}
@@ -870,30 +875,30 @@ private final class ButtonImageView: ImageView {
 
 
 
-private final class ButtonLabel: Label {
+private class ButtonLabel: Label {
 
-	fileprivate weak var button: Button?
+	private weak var button: Button?
 
 
-	fileprivate init(button: Button) {
+	init(button: Button) {
 		self.button = button
 
-		super.init(highPrecision: false)
+		super.init(highPrecision: true)
 	}
 
 
-	fileprivate override var attributedText: NSAttributedString {
-		didSet {
-		guard attributedText != oldValue else {
-			return
-		}
-
-		button?.textLabelDidChangeAttributedText()
-		}
-	}
-
-
-	fileprivate required init?(coder: NSCoder) {
+	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+
+	override var attributedText: NSAttributedString {
+		didSet {
+			guard attributedText != oldValue else {
+				return
+			}
+
+			button?.textLabelDidChangeAttributedText()
+		}
 	}
 }
