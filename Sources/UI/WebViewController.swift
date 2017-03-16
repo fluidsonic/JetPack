@@ -3,11 +3,12 @@ import WebKit
 
 
 @objc(JetPack_WebViewController)
-open class WebViewController: ViewController {
+open class WebViewController: ViewController, KeyValueObserver, WKNavigationDelegate, WKUIDelegate {
 
 	fileprivate lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
-	fileprivate var initialLoadingCompleted = false
+	private var initialLoadingCompleted = false
+	private var keyValueObserverProxy: KeyValueObserverProxy?
 
 	open let configuration: WKWebViewConfiguration
 	open var initialUrl: URL?
@@ -27,9 +28,9 @@ open class WebViewController: ViewController {
 
 
 	deinit {
-		if isViewLoaded {
-			webView.removeObserver(self, forKeyPath: "loading", context: nil)
-			webView.removeObserver(self, forKeyPath: "title", context: nil)
+		if let keyValueObserverProxy = keyValueObserverProxy {
+			webView.removeObserver(keyValueObserverProxy, forKeyPath: "loading", context: nil)
+			webView.removeObserver(keyValueObserverProxy, forKeyPath: "title", context: nil)
 		}
 	}
 
@@ -111,21 +112,6 @@ open class WebViewController: ViewController {
 	}
 
 
-	open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if object as? WKWebView === webView, let keyPath = keyPath {
-			switch keyPath {
-			case "loading", "title":
-				if updatesTitleFromDocument {
-					updateTitleFromDocument()
-				}
-
-			default:
-				break
-			}
-		}
-	}
-
-
 	fileprivate func setUp() {
 		view.backgroundColor = .white
 
@@ -141,8 +127,10 @@ open class WebViewController: ViewController {
 
 
 	fileprivate func setUpWebView() {
-		webView.addObserver(self, forKeyPath: "loading", options: [], context: nil)
-		webView.addObserver(self, forKeyPath: "title", options: [], context: nil)
+		let keyValueObserverProxy = KeyValueObserverProxy(observer: self)
+		webView.addObserver(keyValueObserverProxy, forKeyPath: "loading", options: [], context: nil)
+		webView.addObserver(keyValueObserverProxy, forKeyPath: "title", options: [], context: nil)
+		self.keyValueObserverProxy = keyValueObserverProxy
 
 		if updatesTitleFromDocument {
 			updateTitleFromDocument()
@@ -166,6 +154,23 @@ open class WebViewController: ViewController {
 			if updatesTitleFromDocument && isViewLoaded {
 				updateTitleFromDocument()
 			}
+		}
+	}
+
+
+	internal func valueChangeObserved(forKeyPath keyPath: String, of object: Any, change: [NSKeyValueChangeKey : Any], context: UnsafeMutableRawPointer?) {
+		guard object as? WKWebView === webView else {
+			return
+		}
+
+		switch keyPath {
+		case "loading", "title":
+			if updatesTitleFromDocument {
+				updateTitleFromDocument()
+			}
+
+		default:
+			break
 		}
 	}
 
@@ -235,10 +240,7 @@ open class WebViewController: ViewController {
 
 
 	open fileprivate(set) lazy var webView: WKWebView = self.createWebView()
-}
 
-
-extension WebViewController: WKNavigationDelegate {
 
 	open func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
 		if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {
@@ -269,6 +271,3 @@ extension WebViewController: WKNavigationDelegate {
 		}
 	}
 }
-
-
-extension WebViewController: WKUIDelegate {}
