@@ -26,6 +26,18 @@ public extension Sequence {
 	}
 
 
+	public func filterIsInstance <Type> (of type: Type.Type = Type.self) -> [Type] {
+		var result = [Type]()
+		for element in self {
+			if let element = element as? Type {
+				result.append(element)
+			}
+		}
+
+		return result
+	}
+
+
 	public func firstMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Iterator.Element? {
 		for element in self where try predicate(element) {
 			return element
