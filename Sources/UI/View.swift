@@ -361,7 +361,7 @@ open class View: UIView {
 			optimalSize.width = preferredWidth
 		}
 		else if let preferredHeight = preferredSize.height {
-			availableSize.height = preferredHeight
+			optimalSize.height = preferredHeight
 		}
 
 		return alignToGrid(optimalSize.coerced(atLeast: minimumSize, atMost: maximumSize))
