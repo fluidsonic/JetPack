@@ -241,7 +241,7 @@ open class Button: View {
 	}
 
 
-	fileprivate func layoutForSize(_ size: CGSize) -> Layout {
+	private func layoutForSize(_ size: CGSize) -> Layout {
 		if size.isEmpty {
 			return Layout()
 		}
@@ -587,22 +587,7 @@ open class Button: View {
 	}
 
 
-	open var showsActivityIndicatorAsImage = false {
-		didSet {
-			guard showsActivityIndicatorAsImage != oldValue else {
-				return
-			}
-
-			setNeedsLayout()
-		}
-	}
-
-
-	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
-		if maximumSize.isEmpty {
-			return .zero
-		}
-
+	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
 		let wantsImage = (_imageView?.image != nil || _imageView?.source != nil)
 		let wantsText = !(_textLabel?.text.isEmpty ?? true)
@@ -613,7 +598,7 @@ open class Button: View {
 		let textLabel: Label? = wantsText ? self.textLabel : nil
 
 		var fittingSize = CGSize()
-		var remainingSize = maximumSize
+		var remainingSize = availableSize
 
 		switch arrangement {
 		case .imageBottom, .imageTop: // vertical
@@ -662,8 +647,19 @@ open class Button: View {
 				fittingSize.height = max(fittingSize.height, textLabelSize.height)
 			}
 		}
-		
-		return alignToGrid(fittingSize)
+
+		return fittingSize
+	}
+
+
+	open var showsActivityIndicatorAsImage = false {
+		didSet {
+			guard showsActivityIndicatorAsImage != oldValue else {
+				return
+			}
+
+			setNeedsLayout()
+		}
 	}
 
 

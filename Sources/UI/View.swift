@@ -4,10 +4,10 @@ import UIKit
 @objc(JetPack_View)
 open class View: UIView {
 
-	fileprivate static let _dummyView = View()
+	private static let _dummyView = View()
 
-	fileprivate var originalBackgroundColor: UIColor?
-	fileprivate var originalBorderColor: UIColor?
+	private var originalBackgroundColor: UIColor?
+	private var originalBorderColor: UIColor?
 
 	open var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	open var backgroundColorLocked = false
@@ -55,92 +55,92 @@ open class View: UIView {
 		}
 	}
 
-	
+
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: [], animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: [], animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: options, animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: options, animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, options: options, animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, options: options, animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: [], animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: [], animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
-	
-	
+
+
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
@@ -227,25 +227,37 @@ open class View: UIView {
 
 
 	// Documentation does not state what the default value is so we define one for View subclasses.
-	
 	open override var intrinsicContentSize : CGSize {
 		return CGSize(width: UIViewNoIntrinsicMetric, height: UIViewNoIntrinsicMetric)
 	}
 
 
-	
 	open override class var layerClass : AnyObject.Type {
 		return Layer.self
 	}
 
 
-	
+	open func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
+		return bounds.size
+	}
+
+
+	open var minimumSize = PartialSize() {
+		didSet {
+			guard minimumSize != oldValue else {
+				return
+			}
+
+			invalidateIntrinsicContentSize()
+		}
+	}
+
+
 	public final override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
 	}
 
 
-	
 	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
 		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
@@ -261,6 +273,17 @@ open class View: UIView {
 		}
 
 		return extendedHitZone.contains(point, cornerRadius: hitZoneCornerRadius)
+	}
+
+
+	open var preferredSize = PartialSize() {
+		didSet {
+			guard preferredSize != oldValue else {
+				return
+			}
+
+			invalidateIntrinsicContentSize()
+		}
 	}
 
 
@@ -313,15 +336,40 @@ open class View: UIView {
 	}
 
 
-	
 	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
-		return bounds.size
+		guard maximumSize.isPositive else {
+			return .zero
+		}
+
+		let preferredSize = self.preferredSize
+
+		var availableSize = maximumSize
+		if let preferredWidth = preferredSize.width {
+			if let preferredHeight = preferredSize.height {
+				return CGSize(width: preferredWidth, height: preferredHeight)
+					.coerced(atLeast: minimumSize, atMost: availableSize)
+			}
+
+			availableSize.width = availableSize.width.coerced(atMost: preferredWidth)
+		}
+		else if let preferredHeight = preferredSize.height {
+			availableSize.height = availableSize.height.coerced(atMost: preferredHeight)
+		}
+
+		var optimalSize = measureOptimalSize(forAvailableSize: availableSize)
+		if let preferredWidth = preferredSize.width {
+			optimalSize.width = preferredWidth
+		}
+		else if let preferredHeight = preferredSize.height {
+			availableSize.height = preferredHeight
+		}
+
+		return alignToGrid(optimalSize.coerced(atLeast: minimumSize, atMost: maximumSize))
 	}
 
 
 	// Override `sizeThatFitsSize(_:)` instead!
 	@available(*, unavailable, renamed: "sizeThatFitsSize")
-	
 	public final override func sizeThatFits(_ maximumSize: CGSize) -> CGSize {
 		return sizeThatFitsSize(maximumSize)
 	}

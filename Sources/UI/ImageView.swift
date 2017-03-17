@@ -239,7 +239,7 @@ open class ImageView: View {
 	}
 
 
-	open override var intrinsicContentSize : CGSize {
+	open override var intrinsicContentSize: CGSize {
 		return sizeThatFits()
 	}
 
@@ -298,6 +298,49 @@ open class ImageView: View {
 	}
 
 
+	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
+		let fittingSize: CGSize
+
+		let availableSize = availableSize.insetBy(padding)
+		if availableSize.isPositive, let imageSize = image?.size, imageSize.isPositive {
+			let imageRatio = imageSize.width / imageSize.height
+
+			switch scaling {
+			case .fitHorizontally,
+			     .fitHorizontallyIgnoringAspectRatio:
+
+				fittingSize = CGSize(
+					width:  availableSize.width,
+					height: availableSize.width / imageRatio
+				)
+
+			case .fitVertically,
+			     .fitVerticallyIgnoringAspectRatio:
+
+				fittingSize = CGSize(
+					width:  availableSize.height * imageRatio,
+					height: availableSize.height
+				)
+
+			case .fitIgnoringAspectRatio,
+			     .fitInside,
+			     .fitOutside,
+			     .none:
+
+				fittingSize = imageSize
+			}
+		}
+		else {
+			fittingSize = .zero
+		}
+
+		return CGSize(
+			width:  fittingSize.width  + padding.left + padding.right,
+			height: fittingSize.height + padding.top  + padding.bottom
+		)
+	}
+
+
 	public var optimalImageScale: CGFloat {
 		return gridScaleFactor
 	}
@@ -327,14 +370,13 @@ open class ImageView: View {
 	}
 
 
-	open var preferredSize: CGSize? {
+	open override var preferredSize: PartialSize {
 		didSet {
 			guard preferredSize != oldValue else {
 				return
 			}
 
 			invalidateConfiguration()
-			invalidateIntrinsicContentSize()
 		}
 	}
 
@@ -360,52 +402,6 @@ open class ImageView: View {
 
 			updateActivityIndicatorAnimated(true)
 		}
-	}
-
-
-	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
-		if let preferredSize = preferredSize {
-			return alignToGrid(preferredSize)
-		}
-
-		let imageSizeThatFits: CGSize
-
-		let availableSize = maximumSize.insetBy(padding)
-		if availableSize.isPositive, let imageSize = image?.size, imageSize.isPositive {
-			let imageRatio = imageSize.width / imageSize.height
-
-			switch scaling {
-			case .fitHorizontally,
-			     .fitHorizontallyIgnoringAspectRatio:
-
-				imageSizeThatFits = CGSize(
-					width:  availableSize.width,
-					height: availableSize.width / imageRatio
-				)
-
-			case .fitVertically,
-			     .fitVerticallyIgnoringAspectRatio:
-
-				imageSizeThatFits = CGSize(
-					width:  availableSize.height * imageRatio,
-					height: availableSize.height
-				)
-
-			case .fitIgnoringAspectRatio,
-			     .fitInside,
-			     .fitOutside,
-			     .none:
-				imageSizeThatFits = imageSize
-			}
-		}
-		else {
-			imageSizeThatFits = .zero
-		}
-
-		return alignToGrid(CGSize(
-			width:  imageSizeThatFits.width  + padding.left + padding.right,
-			height: imageSizeThatFits.height + padding.top  + padding.bottom
-		))
 	}
 
 
