@@ -346,8 +346,8 @@ open class View: UIView {
 		var availableSize = maximumSize
 		if let preferredWidth = preferredSize.width {
 			if let preferredHeight = preferredSize.height {
-				return CGSize(width: preferredWidth, height: preferredHeight)
-					.coerced(atLeast: minimumSize, atMost: availableSize)
+				return alignToGrid(CGSize(width: preferredWidth, height: preferredHeight)
+					.coerced(atLeast: minimumSize, atMost: availableSize))
 			}
 
 			availableSize.width = availableSize.width.coerced(atMost: preferredWidth)
