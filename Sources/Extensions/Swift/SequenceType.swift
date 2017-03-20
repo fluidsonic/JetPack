@@ -124,6 +124,30 @@ public extension Sequence {
 	}
 
 
+	// TODO we should probably rework this to return [ArraySlice<Iterator.Element>]
+	public func split(byCount partitionSize: Int) -> [[Iterator.Element]] {
+		precondition(partitionSize > 0, "partitionSize must be > 0")
+
+		var partitions = Array<Array<Iterator.Element>>()
+		var currentPartition = Array<Iterator.Element>()
+
+		for element in self {
+			if currentPartition.count >= partitionSize {
+				partitions.append(currentPartition)
+				currentPartition.removeAll(keepingCapacity: true)
+			}
+
+			currentPartition.append(element)
+		}
+
+		if !currentPartition.isEmpty {
+			partitions.append(currentPartition)
+		}
+
+		return partitions
+	}
+
+
 	public func toArray() -> [Iterator.Element] {
 		return Array<Iterator.Element>(self)
 	}
