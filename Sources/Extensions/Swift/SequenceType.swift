@@ -1,6 +1,6 @@
 public extension Sequence {
 
-		public func associated <Key: Hashable, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+	public func associated <Key: Hashable, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		var dictionary = [Key : Value]()
 		for element in self {
 			let (key, value) = try elementSelector(element)
