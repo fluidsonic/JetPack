@@ -69,8 +69,14 @@ extension UINavigationController {
 
 
 	@nonobjc
+	public func popToRootViewController() {
+		popToRootViewController(animated: true)
+	}
+
+
+	@nonobjc
 	public func popViewController() {
-		self.popViewController(animated: true)
+		popViewController(animated: true)
 	}
 
 
