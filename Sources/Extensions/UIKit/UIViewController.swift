@@ -218,7 +218,7 @@ extension UIViewController {
 
 	@nonobjc
 	internal func invalidateDecorationInsetsWithAnimationWrapper(_ animationWrapper: Animation.Wrapper?) {
-		if decorationInsetsAnimation == nil {
+		if decorationInsetsAnimation == nil && appearState == .didAppear {
 			decorationInsetsAnimation = animationWrapper
 		}
 
@@ -228,7 +228,7 @@ extension UIViewController {
 
 		decorationInsetsAreValid = false
 
-		if window != nil {
+		if appearState == .didAppear {
 			view.setNeedsLayout()
 		}
 	}
@@ -236,13 +236,13 @@ extension UIViewController {
 
 	@nonobjc
 	fileprivate static func invalidateTopLevelDecorationInsetsWithAnimation(_ animation: Animation?) {
+		let animationWrapper = animation?.wrap()
+
 		for window in UIApplication.shared.windows {
 			guard type(of: window) == UIWindow.self || window is _NonSystemWindow || !NSStringFromClass(type(of: window)).hasPrefix("UI") else {
 				// ignore system windows like the keyboard
 				continue
 			}
-
-			let animationWrapper = animation?.wrap()
 
 			var presentedViewController = window.rootViewController
 			while let viewController = presentedViewController {
@@ -446,7 +446,7 @@ extension UIViewController {
 	private dynamic func swizzled_setNeedsStatusBarAppearanceUpdate() {
 		swizzled_setNeedsStatusBarAppearanceUpdate()
 
-		invalidateDecorationInsetsWithAnimationWrapper(Animation.current?.wrap())
+		UIViewController.invalidateTopLevelDecorationInsetsWithAnimation(Animation.current)
 	}
 
 
