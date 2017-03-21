@@ -203,8 +203,8 @@ extension UIViewController {
 	}
 
 
-	@nonobjc
-	public fileprivate(set) var innerDecorationInsets: UIEdgeInsets {
+	@objc(JetPack_innerDecorationInsets)
+	open private(set) var innerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.innerDecorationInsets) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.innerDecorationInsets, newValue.isEmpty ? nil : NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
@@ -263,8 +263,8 @@ extension UIViewController {
 	}
 
 
-	@nonobjc
-	public fileprivate(set) var outerDecorationInsets: UIEdgeInsets {
+	@objc(JetPack_outerDecorationInsets)
+	open private(set) var outerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
