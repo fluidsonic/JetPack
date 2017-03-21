@@ -107,7 +107,7 @@ open class ViewController: UIViewController {
 	}
 
 
-	open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+	open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
 		return ViewController.defaultSupportedInterfaceOrientationsForModalPresentationStyle(modalPresentationStyle)
 	}
 
