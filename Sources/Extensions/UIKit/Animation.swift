@@ -18,6 +18,8 @@ public struct Animation {
 	public var repeats = false
 	public var timing: Timing
 
+	public private(set) static var current: Animation?
+
 
 	public init(duration: TimeInterval = 0.3, timing: Timing = .spring(initialVelocity: 0, damping: 1)) {
 		self.duration = duration
@@ -36,6 +38,10 @@ public struct Animation {
 
 
 	public func runWithCompletion(_ changes: (_ complete: CompletionRegistration) -> Void) {
+		let outerAnimation = Animation.current
+		Animation.current = self
+		defer { Animation.current = outerAnimation }
+
 		var completions = [Completion]()
 
 		var options = UIViewAnimationOptions()
