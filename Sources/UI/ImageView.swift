@@ -528,6 +528,8 @@ open class ImageView: View {
 
 
 	fileprivate func updateActivityIndicatorAnimated(_ animated: Bool) {
+		let animation = animated ? Animation() : nil
+
 		if activityIndicatorShouldBeVisible {
 			guard !activityIndicatorIsVisible else {
 				return
@@ -539,7 +541,7 @@ open class ImageView: View {
 
 			addSubview(activityIndicator)
 
-			Animation.run(animated ? Animation() : nil) {
+			animation.runAlways {
 				activityIndicator.alpha = 1
 			}
 		}
@@ -550,7 +552,7 @@ open class ImageView: View {
 
 			activityIndicatorIsVisible = false
 
-			Animation.runWithCompletion(animated ? Animation() : nil) { complete in
+			animation.runAlwaysWithCompletion { complete in
 				activityIndicator.alpha = 0
 
 				complete { _ in

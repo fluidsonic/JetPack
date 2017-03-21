@@ -30,38 +30,8 @@ public struct Animation {
 	}
 
 
-	// @available(*, deprecated=1, message="Use optionalAnimation.runAlways { … }") // not enough replacements yet
-	public static func run(_ animation: Animation?, changes: (Void) -> Void) {
-		if let animation = animation {
-			animation.run(changes)
-		}
-		else {
-			changes()
-		}
-	}
-
-
 	public func run(_ changes: (Void) -> Void) {
 		runWithCompletion { _ in changes() }
-	}
-
-
-	// @available(*, deprecated=1, message="Use optionalAnimation.runAlwaysWithCompletion { … }") // not enough replacements yet
-	public static func runWithCompletion(_ animation: Animation?, changes: (_ complete: CompletionRegistration) -> Void) {
-		if let animation = animation {
-			animation.runWithCompletion(changes)
-		}
-		else {
-			var completions = [Completion]()
-
-			changes { completion in
-				completions.append(completion)
-			}
-
-			for completion in completions {
-				completion(true)
-			}
-		}
 	}
 
 
