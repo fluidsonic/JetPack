@@ -22,6 +22,7 @@ private struct Setup {
 	fileprivate init() {
 		Keyboard.setUp()
 
+		UIApplication.UIApplication_setUp()
 		UIView.UIView_setUp()
 
 		UIBlurEffect.UIBlurEffect_setUp()

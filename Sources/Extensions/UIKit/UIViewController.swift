@@ -36,7 +36,7 @@ extension UIViewController {
 
 
 	@nonobjc
-	fileprivate static func applicationDidBecomeActive(_ notification: Notification) {
+	private static func applicationDidBecomeActive(_ notification: Notification) {
 		traverseAllViewControllers() { viewController in
 			viewController.applicationDidBecomeActive()
 		}
@@ -50,7 +50,7 @@ extension UIViewController {
 
 
 	@nonobjc
-	fileprivate static func applicationWillResignActive(_ notification: Notification) {
+	private static func applicationWillResignActive(_ notification: Notification) {
 		traverseAllViewControllers() { viewController in
 			viewController.applicationWillResignActive()
 		}
@@ -353,6 +353,7 @@ extension UIViewController {
 	internal static func UIViewController_setUp() {
 		swizzleMethod(in: self, from: #selector(didMove(toParentViewController:)),  to: #selector(swizzled_didMoveToParentViewController(_:)))
 		swizzleMethod(in: self, from: #selector(present(_:animated:completion:)),   to: #selector(swizzled_presentViewController(_:animated:completion:)))
+		swizzleMethod(in: self, from: #selector(setNeedsStatusBarAppearanceUpdate), to: #selector(swizzled_setNeedsStatusBarAppearanceUpdate))
 		swizzleMethod(in: self, from: #selector(viewDidAppear(_:)),                 to: #selector(swizzled_viewDidAppear(_:)))
 		swizzleMethod(in: self, from: #selector(viewDidLayoutSubviews),             to: #selector(swizzled_viewDidLayoutSubviews))
 		swizzleMethod(in: self, from: #selector(viewDidDisappear(_:)),              to: #selector(swizzled_viewDidDisappear(_:)))
@@ -361,15 +362,14 @@ extension UIViewController {
 		swizzleMethod(in: self, from: #selector(viewWillLayoutSubviews),            to: #selector(swizzled_viewWillLayoutSubviews))
 		swizzleMethod(in: self, from: #selector(willMove(toParentViewController:)), to: #selector(swizzled_willMoveToParentViewController(_:)))
 
-		subscribeToApplicationActiveNotifications()
-		subscribeToKeyboardNotifications()
+		subscribeToEvents()
 	}
 
 
 	@nonobjc
 	fileprivate var shouldReportLifecycleProblems: Bool {
 		let typeName = NSStringFromClass(type(of: self))
-		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
+		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("SFSafari") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
 			// broken implementations in public and private UIKit view controllers
 			return false
 		}
@@ -379,16 +379,13 @@ extension UIViewController {
 
 
 	@nonobjc
-	fileprivate static func subscribeToApplicationActiveNotifications() {
+	fileprivate static func subscribeToEvents() {
+		let application = UIApplication.shared
 		let notificationCenter = NotificationCenter.default
-		notificationCenter.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil, using: applicationDidBecomeActive)
-		notificationCenter.addObserver(forName: NSNotification.Name.UIApplicationWillResignActive, object: nil, queue: nil, using: applicationWillResignActive)
-	}
+		notificationCenter.addObserver(forName: .UIApplicationDidBecomeActive, object: application, queue: nil, using: applicationDidBecomeActive)
+		notificationCenter.addObserver(forName: .UIApplicationWillResignActive, object: application, queue: nil, using: applicationWillResignActive)
 
-
-	@nonobjc
-	fileprivate static func subscribeToKeyboardNotifications() {
-		let _ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
+		_ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
 			self.invalidateTopLevelDecorationInsetsWithAnimation(Keyboard.animation)
 		}
 	}
@@ -442,6 +439,14 @@ extension UIViewController {
 
 		// workaround for UIKit bug, see http://stackoverflow.com/a/30787046/1183577
 		CFRunLoopWakeUp(CFRunLoopGetCurrent())
+	}
+
+
+	@objc(JetPack_setNeedsStatusBarAppearanceUpdate)
+	private dynamic func swizzled_setNeedsStatusBarAppearanceUpdate() {
+		swizzled_setNeedsStatusBarAppearanceUpdate()
+
+		invalidateDecorationInsetsWithAnimationWrapper(Animation.current?.wrap())
 	}
 
 
