@@ -278,8 +278,9 @@ open class Button: View {
 		var horizontalAlignment = self.horizontalAlignment
 		var verticalAlignment = self.verticalAlignment
 
-		let isVerticalArrangement = (arrangement == .imageBottom || arrangement == .imageTop)
-		if isVerticalArrangement {
+		switch arrangement {
+		case .imageBottom, .imageTop: // vertical
+
 			// step 2: measure sizes
 
 			if let imageView = imageView {
@@ -392,8 +393,9 @@ open class Button: View {
 					textLabelFrame.horizontalCenter = size.width / 2
 				}
 			}
-		}
-		else { // horizontal layout
+
+		case .imageLeft, .imageRight: // horizontal
+
 			// step 2: measure sizes
 
 			if let imageView = imageView {
@@ -497,13 +499,77 @@ open class Button: View {
 				switch verticalAlignment {
 				case .bottom:
 					textLabelFrame.bottom = size.height
-
+					
 				case .top:
 					textLabelFrame.top = 0
-
+					
 				case .center, .fill:
 					textLabelFrame.verticalCenter = size.height / 2
 				}
+			}
+
+		case .imageBehindText:
+
+			// step 2: measure sizes
+
+			if let imageView = imageView {
+				if verticalAlignment == .fill && horizontalAlignment == .fill {
+					imageViewFrame.size = remainingSize
+				}
+				else {
+					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+
+					if verticalAlignment == .fill {
+						imageViewFrame.height = remainingSize.height
+					}
+					else if horizontalAlignment == .fill {
+						imageViewFrame.width = remainingSize.width
+					}
+				}
+			}
+			else if let activityIndicator = activityIndicator {
+				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+			}
+
+			if let textLabel = textLabel {
+				if verticalAlignment == .fill && horizontalAlignment == .fill {
+					textLabelFrame.size = remainingSize
+				}
+				else {
+					textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+				}
+			}
+
+			// step 3: measure horizontal positions
+
+			switch horizontalAlignment {
+			case .fill, .left:
+				imageViewFrame.left = 0
+				textLabelFrame.left = 0
+
+			case .right:
+				imageViewFrame.right = size.width
+				textLabelFrame.right = size.width
+
+			case .center:
+				imageViewFrame.horizontalCenter = size.width / 2
+				textLabelFrame.horizontalCenter = size.width / 2
+			}
+
+			// step 4: measure vertical positions
+
+			switch verticalAlignment {
+			case .fill, .top:
+				imageViewFrame.top = 0
+				textLabelFrame.top = 0
+
+			case .bottom:
+				imageViewFrame.bottom = size.height
+				textLabelFrame.bottom = size.height
+
+			case .center:
+				imageViewFrame.verticalCenter = size.height / 2
+				textLabelFrame.verticalCenter = size.height / 2
 			}
 		}
 
@@ -583,6 +649,15 @@ open class Button: View {
 			_activityIndicator?.removeFromSuperview()
 		}
 
+		if arrangement == .imageBehindText && layout.textLabelFrame != nil && (layout.imageViewFrame != nil || layout.activityIndicatorFrame != nil) {
+			if layout.imageViewFrame != nil {
+				insertSubview(imageView, belowSubview: textLabel)
+			}
+			else if layout.activityIndicatorFrame != nil {
+				insertSubview(activityIndicator, belowSubview: textLabel)
+			}
+		}
+
 		super.layoutSubviews()
 	}
 
@@ -645,6 +720,27 @@ open class Button: View {
 
 				fittingSize.width += textLabelSize.width
 				fittingSize.height = max(fittingSize.height, textLabelSize.height)
+			}
+
+		case .imageBehindText:
+			if let imageView = imageView {
+				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+
+				fittingSize.height = fittingSize.height.coerced(atLeast: imageViewSize.height)
+				fittingSize.width = fittingSize.width.coerced(atLeast: imageViewSize.width)
+			}
+			else if let activityIndicator = activityIndicator {
+				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+
+				fittingSize.height = fittingSize.height.coerced(atLeast: activityIndicatorSize.height)
+				fittingSize.width = fittingSize.width.coerced(atLeast: activityIndicatorSize.width)
+			}
+
+			if let textLabel = textLabel {
+				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+
+				fittingSize.height = fittingSize.height.coerced(atLeast: textLabelSize.height)
+				fittingSize.width = fittingSize.width.coerced(atLeast: textLabelSize.width)
 			}
 		}
 
@@ -807,6 +903,7 @@ open class Button: View {
 
 	public enum Arrangement {
 
+		case imageBehindText
 		case imageBottom
 		case imageLeft
 		case imageRight
