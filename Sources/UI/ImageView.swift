@@ -22,7 +22,8 @@ open class ImageView: View {
 	fileprivate var sourceSessionConfigurationIsValid = true
 	fileprivate var tintedImage: UIImage?
 
-	open var imageChanged: Closure?
+	public var imageChanged: Closure?
+	public var sourceTransitionDuration = TimeInterval(0)
 
 
 	public override init() {
@@ -487,6 +488,13 @@ open class ImageView: View {
 					imageView.isSettingImageFromSource = false
 
 					imageView.updateActivityIndicatorAnimated(true)
+
+					let transitionDuration = imageView.sourceTransitionDuration
+					if transitionDuration > 0 {
+						let transition = CATransition()
+						transition.duration = transitionDuration
+						imageView.imageLayer.add(transition, forKey: kCATransition)
+					}
 
 					imageView.imageChanged?()
 				}

@@ -10,11 +10,13 @@ public extension ImageView {
 
 		public var considersOptimalImageSize = true
 		public var isTemplate: Bool
+		public var placeholder: UIImage?
 		public var url: URL
 
 
-		public init(url: URL, isTemplate: Bool = false) {
+		public init(url: URL, isTemplate: Bool = false, placeholder: UIImage? = nil) {
 			self.isTemplate = isTemplate
+			self.placeholder = placeholder
 			self.url = url
 		}
 
@@ -26,6 +28,11 @@ public extension ImageView {
 
 		public func createSession() -> ImageView.Session? {
 			return UrlSourceSession(source: self)
+		}
+
+
+		public static func preload(url: URL) {
+			_ = ImageDownloader.forUrl(url).download { _ in }
 		}
 	}
 }
@@ -56,7 +63,11 @@ private final class UrlSourceSession: ImageView.Session {
 	fileprivate func startRetrievingImageForImageView(_ imageView: ImageView, listener: ImageView.SessionListener) {
 		precondition(stopLoading == nil)
 
+		var isLoadingImage = true
+
 		func completion(image sourceImage: UIImage) {
+			isLoadingImage = false
+
 			var image = sourceImage
 			if self.source.isTemplate {
 				image = image.withRenderingMode(.alwaysTemplate)
@@ -71,6 +82,10 @@ private final class UrlSourceSession: ImageView.Session {
 		}
 		else {
 			stopLoading = ImageDownloader.forUrl(source.url).download(completion)
+		}
+
+		if isLoadingImage, let placeholder = source.placeholder {
+			listener.sessionDidRetrieveImage(placeholder)
 		}
 	}
 
@@ -121,7 +136,7 @@ private final class ImageCache {
 
 
 
-private final class ImageDownloader {
+private class ImageDownloader {
 
 	fileprivate typealias Completion = (UIImage) -> Void
 
