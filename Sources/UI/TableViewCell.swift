@@ -4,7 +4,9 @@ import UIKit
 @objc(JetPack_TableViewCell)
 open class TableViewCell: UITableViewCell {
 
-	fileprivate var defaultContentHeight = CGFloat(0)
+	private var defaultContentHeight = CGFloat(0)
+
+	public var removesAllAnimationsOnReuse = false
 
 
 	public required override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -42,6 +44,18 @@ open class TableViewCell: UITableViewCell {
 	}
 
 
+	open override func prepareForReuse() {
+		if removesAllAnimationsOnReuse {
+			super.prepareForReuse()
+		}
+		else {
+			CALayer.withRemoveAllAnimationsDisabled {
+				super.prepareForReuse()
+			}
+		}
+	}
+
+
 	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentHeightThatFitsWidth(_:) instead.
 	public final override func sizeThatFits(_ maximumSize: CGSize) -> CGSize {
 		return self.sizeThatFitsSize(maximumSize)
@@ -49,7 +63,7 @@ open class TableViewCell: UITableViewCell {
 
 
 	// You cannot reliably implement this method due to UITableViewCell's private nature. Implement contentHeightThatFitsWidth(_:) instead.
-	public final override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
+	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		var sizeThatFits = super.improvedSizeThatFitsSize(maximumSize)
 		sizeThatFits.height = max(sizeThatFits.height, minimumHeight)
 		return sizeThatFits

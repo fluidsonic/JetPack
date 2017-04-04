@@ -84,6 +84,17 @@ Pod::Spec.new do |s|
 			s.dependency 'JetPack/Extensions/Swift'
 		end
 
+		s.subspec 'QuartzCore' do |s|
+			s.ios.deployment_target = '9.0'
+
+			s.frameworks   = 'Foundation', 'QuartzCore'
+			s.source_files = 'Sources/Extensions/QuartzCore/**/*.swift', 'Module/JetPack.h'
+
+			s.dependency 'JetPack/Core'
+			s.dependency 'JetPack/Extensions/CoreGraphics'
+			s.dependency 'JetPack/Extensions/Foundation'
+		end
+
 		s.subspec 'Photos' do |s|
 			s.ios.deployment_target = '9.0'
 
@@ -112,6 +123,7 @@ Pod::Spec.new do |s|
 			s.dependency 'JetPack/Experimental'
 			s.dependency 'JetPack/Extensions/CoreGraphics'
 			s.dependency 'JetPack/Extensions/Foundation'
+			s.dependency 'JetPack/Extensions/QuartzCore'
 			s.dependency 'JetPack/Extensions/Swift'
 		end
 	end

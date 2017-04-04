@@ -211,6 +211,16 @@ extension UIView {
 	}
 
 
+	@objc(JetPack_removeAllAnimations:)
+	private dynamic func swizzled_removeAllAnimations(_ arg1: Bool) {
+		guard !CALayer.removeAllAnimationsCallsAreDisabled else {
+			return
+		}
+
+		swizzled_removeAllAnimations(arg1)
+	}
+
+
 	@nonobjc
 	public var untransformedFrame: CGRect {
 		get {
@@ -234,6 +244,7 @@ extension UIView {
 	internal static func UIView_setUp() {
 		// cannot use didMoveToWindow() because some subclasses don't call super's implementation
 		swizzleMethod(in: self, from: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), to: #selector(swizzled_didChangeWindow(from:to:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "remove", "All", "Animations:"), to: #selector(swizzled_removeAllAnimations(_:)))
 
 		swizzleMethod(in: self, from: #selector(invalidateIntrinsicContentSize), to: #selector(swizzled_invalidateIntrinsicContentSize))
 	}

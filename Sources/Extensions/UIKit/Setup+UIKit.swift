@@ -22,6 +22,8 @@ private struct Setup {
 	fileprivate init() {
 		Keyboard.setUp()
 
+		CALayer.CALayer_setUp()
+
 		UIApplication.UIApplication_setUp()
 		UIView.UIView_setUp()
 
