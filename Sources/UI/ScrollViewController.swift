@@ -289,7 +289,7 @@ open class ScrollViewController: ViewController {
 			let previousScrollCompletion = self.scrollCompletion
 			scrollCompletion = completion
 
-			scrollView.setContentOffset(CGPoint(left: CGFloat(index) * scrollView.bounds.width, top: 0), animated: true)
+			scrollView.setContentOffset(CGPoint(left: CGFloat(index) * scrollView.bounds.width, top: 0), animated: animated)
 
 			previousScrollCompletion?(true)
 		}
