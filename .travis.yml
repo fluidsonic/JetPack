@@ -1,19 +1,19 @@
 language: objective-c
-osx_image: xcode8.2
+osx_image: xcode8.3
 sudo: false
 
 env:
   global:
     - WORKSPACE=Xcode/Project.xcworkspace
-    - IOS_DEVICE_SDK=iphoneos10.2
-    - IOS_SIMULATOR_SDK=iphonesimulator10.2
+    - IOS_DEVICE_SDK=iphoneos10.3
+    - IOS_SIMULATOR_SDK=iphonesimulator10.3
   matrix:
     - POD_LINT="yes"
     - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Debug"
     - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-O"
     - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Debug"   DESTINATION="OS=10.1,name=iPhone 7" # use 10.2 once working again
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Release" DESTINATION="OS=10.1,name=iPhone 7" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule" # use 10.2 once working again
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Debug"   DESTINATION="OS=10.3,name=iPhone 7"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Release" DESTINATION="OS=10.3,name=iPhone 7" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics" CONFIGURATION="Debug"   DESTINATION="OS=9.3,name=iPhone 5s"
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics" CONFIGURATION="Release" DESTINATION="OS=9.3,name=iPhone 6s" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation"   CONFIGURATION="Debug"   DESTINATION="OS=9.2,name=iPhone 5s"
