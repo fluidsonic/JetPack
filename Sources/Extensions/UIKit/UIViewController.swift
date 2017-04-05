@@ -107,7 +107,7 @@ extension UIViewController {
 
 
 	@objc(JetPack_childViewControllerForNavigationBarVisibility)
-	public var childViewControllerForNavigationBarVisibility: UIViewController? {
+	open var childViewControllerForNavigationBarVisibility: UIViewController? {
 		return nil
 	}
 
