@@ -233,6 +233,16 @@ open class Label: View {
 	}
 
 
+	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
+		let availableSize = availableSize.insetBy(padding)
+		guard availableSize.isPositive else {
+			return .zero
+		}
+
+		return textLayer.textSize(thatFits: availableSize).insetBy(padding.inverse)
+	}
+
+
 	open var minimumLineHeight: CGFloat? {
 		get { return textLayer.minimumLineHeight }
 		set {
@@ -299,16 +309,6 @@ open class Label: View {
 		recognizer.addTarget(self, action: #selector(handleLinkTapRecognizer))
 
 		addGestureRecognizer(recognizer)
-	}
-
-
-	open override func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
-		let availableSize = maximumSize.insetBy(padding)
-		guard availableSize.isPositive else {
-			return .zero
-		}
-
-		return textLayer.textSize(thatFits: availableSize).insetBy(padding.inverse)
 	}
 
 
