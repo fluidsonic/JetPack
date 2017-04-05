@@ -11,8 +11,11 @@ open class ScrollViewController: ViewController {
 
 	fileprivate var ignoresScrollViewDidScroll = 0
 	fileprivate var isSettingPrimaryViewControllerInternally = false
-	fileprivate var lastLayoutedSize = CGSize.zero
+	fileprivate var lastLayoutedScrollViewInsets = UIEdgeInsets.zero
+	fileprivate var lastLayoutedScrollViewInsetsForChildren = UIEdgeInsets.zero
+	fileprivate var lastLayoutedScrollViewSizeForChildren = CGSize.zero
 	fileprivate var lastLayoutedSizeForChildren = CGSize.zero
+	fileprivate var lastLayoutedSize = CGSize.zero
 	fileprivate var reusableChildView: ChildView?
 	fileprivate var scrollCompletion: ScrollCompletion?
 	fileprivate var viewControllersNotYetMovedToParentViewController = [UIViewController]()
@@ -120,11 +123,11 @@ open class ScrollViewController: ViewController {
 		ignoresScrollViewDidScroll += 1
 		defer { ignoresScrollViewDidScroll -= 1 }
 
-		let viewSize = view.bounds.size
-		let contentSize = CGSize(width: CGFloat(viewControllers.count) * viewSize.width, height: viewSize.height)
+		let scrollViewFrame = CGRect(size: view.bounds.size).insetBy(scrollViewInsets)
+		let contentSize = CGSize(width: CGFloat(viewControllers.count) * scrollViewFrame.width, height: scrollViewFrame.height)
 
 		let contentOffset = scrollView.contentOffset
-		scrollView.frame = CGRect(size: viewSize)
+		scrollView.frame = scrollViewFrame
 		childContainer.frame = CGRect(size: contentSize)
 		scrollView.contentSize = contentSize
 		scrollView.contentOffset = contentOffset
@@ -136,11 +139,11 @@ open class ScrollViewController: ViewController {
 			return
 		}
 
-		let viewSize = view.bounds.size
+		let containerSize = scrollView.bounds.size
 
 		var childViewFrame = CGRect()
-		childViewFrame.left = CGFloat(childView.index) * viewSize.width
-		childViewFrame.size = viewSize
+		childViewFrame.left = CGFloat(childView.index) * containerSize.width
+		childViewFrame.size = containerSize
 		childView.frame = childViewFrame
 	}
 
@@ -149,16 +152,26 @@ open class ScrollViewController: ViewController {
 		ignoresScrollViewDidScroll += 1
 		defer { ignoresScrollViewDidScroll -= 1 }
 
-		let bounds = view.bounds
 		let viewControllers = self.viewControllers
+		let viewSize = view.bounds.size
+		let scrollViewInsets = self.scrollViewInsets
+		var scrollViewSize = self.scrollView.bounds.size
 		var contentOffset: CGPoint
 		let layoutsExistingChildren: Bool
 
-		let previousViewSize = lastLayoutedSizeForChildren
-		if forcesLayoutUpdate || bounds.size != lastLayoutedSizeForChildren {
-			lastLayoutedSizeForChildren = bounds.size
+		let previousScrollViewSize = lastLayoutedScrollViewSizeForChildren
+		if forcesLayoutUpdate
+			|| scrollViewSize != previousScrollViewSize
+			|| scrollViewInsets != lastLayoutedScrollViewInsetsForChildren
+			|| viewSize != lastLayoutedSizeForChildren
+		{
+			lastLayoutedScrollViewInsetsForChildren = scrollViewInsets
+			lastLayoutedSizeForChildren = viewSize
 
 			layoutChildContainer()
+
+			scrollViewSize = self.scrollView.bounds.size
+			lastLayoutedScrollViewSizeForChildren = scrollViewSize
 
 			contentOffset = scrollView.contentOffset
 			var newContentOffset = contentOffset
@@ -168,8 +181,8 @@ open class ScrollViewController: ViewController {
 				var closestChildOffset = CGFloat(0)
 				var closestDistanceToHorizontalCenter = CGFloat.greatestFiniteMagnitude
 
-				if !previousViewSize.isEmpty {
-					let previousHorizontalCenter = contentOffset.left + (previousViewSize.width / 2)
+				if !previousScrollViewSize.isEmpty {
+					let previousHorizontalCenter = contentOffset.left + (previousScrollViewSize.width / 2)
 					for subview in childContainer.subviews {
 						guard let childView = subview as? ChildView, childView.index >= 0 else {
 							continue
@@ -182,16 +195,16 @@ open class ScrollViewController: ViewController {
 						}
 
 						closestChildIndex = childView.index
-						closestChildOffset = (childViewFrame.left - contentOffset.left) / previousViewSize.width
+						closestChildOffset = (childViewFrame.left - contentOffset.left) / previousScrollViewSize.width
 						closestDistanceToHorizontalCenter = distanceToHorizontalCenter
 					}
 				}
 
 				if let closestChildIndex = closestChildIndex {
-					newContentOffset = CGPoint(left: (CGFloat(closestChildIndex) - closestChildOffset) * bounds.width, top: 0)
+					newContentOffset = CGPoint(left: (CGFloat(closestChildIndex) - closestChildOffset) * scrollViewSize.width, top: 0)
 				}
 				else if let primaryViewController = primaryViewController, let index = viewControllers.indexOfIdentical(primaryViewController) {
-					newContentOffset = CGPoint(left: (CGFloat(index) * bounds.width), top: 0)
+					newContentOffset = CGPoint(left: (CGFloat(index) * scrollViewSize.width), top: 0)
 				}
 			}
 
@@ -211,12 +224,13 @@ open class ScrollViewController: ViewController {
 
 		let visibleIndexes: CountableRange<Int>
 
-		if viewControllers.isEmpty || bounds.isEmpty {
+		if viewControllers.isEmpty || scrollViewSize.isEmpty {
 			visibleIndexes = 0 ..< 0
 		}
 		else {
-			let floatingIndex = contentOffset.left / bounds.width
-			visibleIndexes = Int(floatingIndex.rounded(.down)).coerced(in: 0 ... (viewControllers.count - 1)) ..< (Int(floatingIndex.rounded(.up)).coerced(in: 0 ... (viewControllers.count - 1)) + 1)
+			let floatingIndex = contentOffset.left / scrollViewSize.width
+			visibleIndexes = Int(floatingIndex.rounded(.down)).coerced(in: 0 ... (viewControllers.count - 1))
+				..< (Int(floatingIndex.rounded(.up)).coerced(in: 0 ... (viewControllers.count - 1)) + 1)
 		}
 
 		for subview in childContainer.subviews {
@@ -299,6 +313,19 @@ open class ScrollViewController: ViewController {
 	public fileprivate(set) final lazy var scrollView: UIScrollView = self.createScrollView()
 
 
+	public var scrollViewInsets = UIEdgeInsets.zero {
+		didSet {
+			guard scrollViewInsets != oldValue else {
+				return
+			}
+
+			if isViewLoaded {
+				view.setNeedsLayout()
+			}
+		}
+	}
+
+
 	open override var shouldAutomaticallyForwardAppearanceMethods : Bool {
 		return false
 	}
@@ -352,14 +379,14 @@ open class ScrollViewController: ViewController {
 		var mostVisibleViewController: UIViewController?
 		var mostVisibleWidth = CGFloat.leastNormalMagnitude
 
-		let bounds = view.bounds
+		let scrollViewBounds = CGRect(size: scrollView.bounds.size)
 		for subview in childContainer.subviews {
 			guard let childView = subview as? ChildView else {
 				continue
 			}
 
-			let childFrameInView = childView.convert(childView.bounds, to: view)
-			let intersection = childFrameInView.intersection(bounds)
+			let childFrameInView = childView.convert(childView.bounds, to: scrollView)
+			let intersection = childFrameInView.intersection(scrollViewBounds)
 			guard !intersection.isNull else {
 				continue
 			}
@@ -434,11 +461,14 @@ open class ScrollViewController: ViewController {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		let bounds = view.bounds
-		guard bounds.size != lastLayoutedSize else {
+		let scrollViewInsets = self.scrollViewInsets
+
+		guard bounds.size != lastLayoutedSize || scrollViewInsets != lastLayoutedScrollViewInsets else {
 			return
 		}
 
 		lastLayoutedSize = bounds.size
+		lastLayoutedScrollViewInsets = scrollViewInsets
 
 		layoutChildrenForcingLayoutUpdate(false)
 		updatePrimaryViewController()
