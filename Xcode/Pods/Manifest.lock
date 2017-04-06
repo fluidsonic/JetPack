@@ -18,6 +18,7 @@ PODS:
     - JetPack/Extensions/Foundation (= 0.0.3)
     - JetPack/Extensions/MapKit (= 0.0.3)
     - JetPack/Extensions/Photos (= 0.0.3)
+    - JetPack/Extensions/QuartzCore (= 0.0.3)
     - JetPack/Extensions/Swift (= 0.0.3)
     - JetPack/Extensions/UIKit (= 0.0.3)
   - JetPack/Extensions/CoreGraphics (0.0.3):
@@ -31,6 +32,10 @@ PODS:
     - JetPack/Extensions/CoreLocation
     - JetPack/Extensions/Swift
   - JetPack/Extensions/Photos (0.0.3)
+  - JetPack/Extensions/QuartzCore (0.0.3):
+    - JetPack/Core
+    - JetPack/Extensions/CoreGraphics
+    - JetPack/Extensions/Foundation
   - JetPack/Extensions/Swift (0.0.3):
     - JetPack/Core
     - JetPack/Extensions/Darwin
@@ -39,6 +44,7 @@ PODS:
     - JetPack/Experimental
     - JetPack/Extensions/CoreGraphics
     - JetPack/Extensions/Foundation
+    - JetPack/Extensions/QuartzCore
     - JetPack/Extensions/Swift
   - JetPack/Measures (0.0.3):
     - JetPack/Extensions/Foundation
@@ -72,7 +78,7 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  JetPack: dce7c3d6ddcbff819fc5cbf83e03a037b795ae4e
+  JetPack: 5270dc99854c68d6ae83c14020d7bf287afaa695
 
 PODFILE CHECKSUM: 65acc6e1cc473f137a59f23472c6bb60ef3be901
 

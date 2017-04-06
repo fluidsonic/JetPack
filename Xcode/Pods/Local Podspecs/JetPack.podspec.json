@@ -150,6 +150,31 @@
           }
         },
         {
+          "name": "QuartzCore",
+          "platforms": {
+            "ios": "9.0"
+          },
+          "frameworks": [
+            "Foundation",
+            "QuartzCore"
+          ],
+          "source_files": [
+            "Sources/Extensions/QuartzCore/**/*.swift",
+            "Module/JetPack.h"
+          ],
+          "dependencies": {
+            "JetPack/Core": [
+
+            ],
+            "JetPack/Extensions/CoreGraphics": [
+
+            ],
+            "JetPack/Extensions/Foundation": [
+
+            ]
+          }
+        },
+        {
           "name": "Photos",
           "platforms": {
             "ios": "9.0"
@@ -207,6 +232,9 @@
             "JetPack/Extensions/Foundation": [
 
             ],
+            "JetPack/Extensions/QuartzCore": [
+
+            ],
             "JetPack/Extensions/Swift": [
 
             ]
@@ -241,6 +269,7 @@
       "frameworks": [
         "AVFoundation",
         "ImageIO",
+        "MapKit",
         "Photos",
         "QuartzCore",
         "UIKit",

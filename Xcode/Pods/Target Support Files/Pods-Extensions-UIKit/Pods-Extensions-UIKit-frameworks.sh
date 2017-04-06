@@ -89,10 +89,10 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/JetPack-8f61e187/JetPack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/JetPack-59c1e380/JetPack.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "$BUILT_PRODUCTS_DIR/JetPack-8f61e187/JetPack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/JetPack-59c1e380/JetPack.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
