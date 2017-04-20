@@ -288,7 +288,23 @@ open class ImageView: View {
 
 		if let contentImage = tintedImage ?? image {
 			imageLayer.contents = contentImage.cgImage
+			imageLayer.contentsScale = contentImage.scale
 			imageLayer.transform = CATransform3DMakeAffineTransform(computeImageLayerTransform())
+
+			let capInsets = contentImage.capInsets
+			let imageSize = contentImage.size
+
+			if capInsets.isEmpty || !imageSize.isPositive {
+				imageLayer.contentsCenter = CGRect(width: 1, height: 1)
+			}
+			else {
+				imageLayer.contentsCenter = CGRect(
+					left:   capInsets.left / imageSize.width,
+					top:    capInsets.top / imageSize.height,
+					width:  (imageSize.width - capInsets.right - capInsets.left) / imageSize.width,
+					height: (imageSize.height - capInsets.top - capInsets.bottom) / imageSize.height
+				)
+			}
 		}
 		else {
 			imageLayer.contents = nil
