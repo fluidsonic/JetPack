@@ -11,6 +11,7 @@ open class Button: View {
 	fileprivate var defaultAlpha = CGFloat(1)
 	fileprivate var defaultBackgroundColor: UIColor?
 	fileprivate var defaultBorderColor: UIColor?
+	fileprivate var defaultTintColor: UIColor?
 
 	open var tapped: Closure?
 	open var touchTolerance = CGFloat(75)
@@ -150,13 +151,14 @@ open class Button: View {
 				return
 			}
 
-			if highlightedAlpha != defaultAlpha || highlightedBackgroundColor != defaultBackgroundColor || highlightedBorderColor != defaultBorderColor {
+			if highlightedAlpha != defaultAlpha || highlightedBackgroundColor != defaultBackgroundColor || highlightedBorderColor != defaultBorderColor || highlightedTintColor != defaultTintColor {
 				var animation: Animation? = highlighted ? nil : Animation(duration: 0.3)
 				animation?.allowsUserInteraction = true
 
 				animation.runAlways {
 					updateAlpha()
 					updateBackgroundColor()
+					updateTintColor()
 				}
 			}
 		}
@@ -192,6 +194,17 @@ open class Button: View {
 			}
 
 			updateBorderColor()
+		}
+	}
+
+
+	open var highlightedTintColor: UIColor? {
+		didSet {
+			guard highlightedTintColor != oldValue else {
+				return
+			}
+
+			updateTintColor()
 		}
 	}
 
@@ -797,6 +810,21 @@ open class Button: View {
 	}
 
 
+	// TODO this is hacky but tintColor is quite special anyway. We should split this up to normalTintColor, highlightedTintColor and appliedTintColor.
+	open override var tintColor: UIColor? {
+		get { return super.tintColor }
+		set {
+			guard newValue != defaultTintColor else {
+				return
+			}
+
+			defaultTintColor = newValue
+
+			updateTintColor()
+		}
+	}
+
+
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
@@ -886,6 +914,19 @@ open class Button: View {
 		}
 
 		super.borderColor = borderColor
+	}
+
+
+	fileprivate func updateTintColor() {
+		let tintColor: UIColor?
+		if highlighted, let highlightedTintColor = highlightedTintColor {
+			tintColor = highlightedTintColor
+		}
+		else {
+			tintColor = defaultTintColor
+		}
+
+		super.tintColor = tintColor
 	}
 
 
