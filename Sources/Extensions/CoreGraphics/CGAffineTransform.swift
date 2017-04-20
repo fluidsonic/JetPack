@@ -23,6 +23,7 @@ public extension CGAffineTransform {
 	}
 
 
+	@available(*, unavailable, renamed: "init(rotationAngle:)")
 	public init(rotation angle: CGFloat) {
 		self = CGAffineTransform(rotationAngle: angle)
 	}
@@ -43,7 +44,13 @@ public extension CGAffineTransform {
 	}
 
 
+	@available(*, unavailable, renamed: "rotationAngle")
 	public var rotation: CGFloat {
+		return atan2(b, a)
+	}
+
+
+	public var rotationAngle: CGFloat {
 		return atan2(b, a)
 	}
 
@@ -95,7 +102,7 @@ extension CGAffineTransform: CustomStringConvertible {
 		let verticalScale = self.verticalScale
 		let horizontalTranslation = self.horizontalTranslation
 		let verticalTranslation = self.verticalTranslation
-		let rotation = self.rotation
+		let rotationAngle = self.rotationAngle
 
 		var description = ""
 
@@ -111,10 +118,10 @@ extension CGAffineTransform: CustomStringConvertible {
 			description += String(describing: verticalScale)
 		}
 
-		if rotation != 0 {
+		if rotationAngle != 0 {
 			if !description.isEmpty { description += ", " }
-			description += "rotation: "
-			description += String(describing: rotation / .pi)
+			description += "rotationAngle: "
+			description += String(describing: rotationAngle / .pi)
 			description += " * .pi"
 		}
 
