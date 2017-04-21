@@ -12,7 +12,7 @@ open class View: UIView {
 	open var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	open var backgroundColorLocked = false
 	open var hitZoneFollowsCornerRadius = true
-	open var userInteractionLimitedToSubviews = false
+	open var isUserInteractionLimitedToSubviews = false
 
 
 	public init() {
@@ -206,7 +206,7 @@ open class View: UIView {
 		guard participatesInHitTesting else {
 			return nil
 		}
-		guard self.point(inside: point, with: event) else {
+		guard isUserInteractionLimitedToSubviews || self.point(inside: point, with: event) else {
 			return nil
 		}
 
@@ -218,7 +218,7 @@ open class View: UIView {
 			}
 		}
 
-		if hitView == nil && !userInteractionLimitedToSubviews {
+		if hitView == nil && !isUserInteractionLimitedToSubviews {
 			hitView = self
 		}
 
