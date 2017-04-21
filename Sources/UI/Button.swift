@@ -156,9 +156,7 @@ open class Button: View {
 				animation?.allowsUserInteraction = true
 
 				animation.runAlways {
-					updateAlpha()
-					updateBackgroundColor()
-					updateTintColor()
+					updateHighlightState()
 				}
 			}
 		}
@@ -914,6 +912,13 @@ open class Button: View {
 		}
 
 		super.borderColor = borderColor
+	}
+
+
+	open func updateHighlightState() {
+		updateAlpha()
+		updateBackgroundColor()
+		updateTintColor()
 	}
 
 
