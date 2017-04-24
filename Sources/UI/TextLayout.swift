@@ -130,6 +130,33 @@ internal class TextLayout {
 	}
 
 
+	func rect(forLine line: Int) -> CGRect {
+		guard (0 ..< numberOfLines).contains(line) else {
+			fatalError("Line index \(line) is out of range 0 ..< \(numberOfLines)")
+		}
+
+		let contentInsets = result.contentInsets
+		let origin = result.origin
+
+		var currentLine = 0
+		var rect = CGRect.null
+
+		result.layoutManager.enumerateLineFragments(forGlyphRange: result.glyphRange) { _, usedRect, _, _, stop in
+			if currentLine == line {
+				rect = usedRect
+				rect.left += origin.left - contentInsets.left
+				rect.top += origin.top - contentInsets.top
+
+				stop.pointee = true
+			}
+
+			currentLine += 1
+		}
+
+		return rect
+	}
+
+
 	internal var size: CGSize {
 		return result.size
 	}
@@ -176,11 +203,11 @@ internal class TextLayout {
 				return false
 			}
 
-			guard configuration.maximumNumberOfLines >= layout.result.numberOfLines else {
+			guard configuration.maximumNumberOfLines >= layout.numberOfLines else {
 				// allowing less lines than were already laid out will result in a different layout
 				return false
 			}
-			guard !layout.result.isTruncated || configuration.maximumNumberOfLines == layout.result.numberOfLines || layout.configuration.maximumNumberOfLines > layout.result.numberOfLines else {
+			guard !layout.result.isTruncated || configuration.maximumNumberOfLines == layout.numberOfLines || layout.configuration.maximumNumberOfLines > layout.numberOfLines else {
 				// allowing more lines could result in a different layout
 				return false
 			}

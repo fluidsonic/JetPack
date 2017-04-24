@@ -274,6 +274,8 @@ open class Label: View {
 
 
 	open var numberOfLines: Int {
+		layoutIfNeeded()
+
 		return textLayer.numberOfLines
 	}
 
@@ -300,6 +302,11 @@ open class Label: View {
 		}
 
 		return link(at: point) != nil
+	}
+
+
+	public func rect(forLine line: Int, in referenceView: UIView) -> CGRect {
+		return textLayer.rect(forLine: line, in: referenceView.layer)
 	}
 
 

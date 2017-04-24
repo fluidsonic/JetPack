@@ -325,6 +325,15 @@ internal class TextLayer: Layer {
 	}
 
 
+	func rect(forLine line: Int, in referenceLayer: CALayer) -> CGRect {
+		guard let textLayout = ensureTextLayout() else {
+			return .null
+		}
+
+		return convert(textLayout.rect(forLine: line), to: referenceLayer)
+	}
+
+
 	internal func textSize(thatFits maximumSize: CGSize) -> CGSize {
 		precondition(maximumSize.isPositive)
 
