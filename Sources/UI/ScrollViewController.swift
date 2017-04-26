@@ -379,14 +379,14 @@ open class ScrollViewController: ViewController {
 		var mostVisibleViewController: UIViewController?
 		var mostVisibleWidth = CGFloat.leastNormalMagnitude
 
-		let scrollViewBounds = CGRect(size: scrollView.bounds.size)
+		let scrollViewFrame = scrollView.frame
 		for subview in childContainer.subviews {
 			guard let childView = subview as? ChildView else {
 				continue
 			}
 
-			let childFrameInView = childView.convert(childView.bounds, to: scrollView)
-			let intersection = childFrameInView.intersection(scrollViewBounds)
+			let childFrameInView = childView.convert(childView.bounds, to: view)
+			let intersection = childFrameInView.intersection(scrollViewFrame)
 			guard !intersection.isNull else {
 				continue
 			}
