@@ -19,6 +19,8 @@ open class Button: View {
 
 	public override init() {
 		super.init()
+
+		clipsToBounds = false
 	}
 
 
