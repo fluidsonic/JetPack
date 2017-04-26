@@ -254,6 +254,20 @@ extension UIViewController {
 
 
 	@nonobjc
+	public func isAncestor(of viewController: UIViewController) -> Bool {
+		if viewController === self {
+			return true
+		}
+
+		guard let viewControllerParent = viewController.parent else {
+			return false
+		}
+
+		return isAncestor(of: viewControllerParent)
+	}
+
+
+	@nonobjc
 	fileprivate func nameForParentViewController() -> String {
 		guard let parentViewController = reliableParentViewController else {
 			return "the parent view controller"
