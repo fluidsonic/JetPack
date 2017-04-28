@@ -3,6 +3,10 @@ import UIKit
 
 open class NavigationController: UINavigationController {
 
+	private var interactivePopGestureRecognizerDelegate: NavigationBarIndependentInteractivePopGestureRecognizerDelegate?
+	private var overridden_isNavigationBarHidden: Bool?
+
+
 	@nonobjc
 	public init(navigationBarClass: NavigationBar.Type?, toolbarClass: UIToolbar.Type?) {
 		super.init(navigationBarClass: navigationBarClass ?? NavigationBar.self, toolbarClass: toolbarClass)
@@ -53,9 +57,35 @@ open class NavigationController: UINavigationController {
 	}
 
 
+	public var interactivePopGestureRequiresNavigationBar = true {
+		didSet {
+			guard interactivePopGestureRequiresNavigationBar != oldValue else {
+				return
+			}
+
+			updateInteractivePopGestureRecognizerDelegate()
+		}
+	}
+
+
+	open override var isNavigationBarHidden: Bool {
+		get { return overridden_isNavigationBarHidden ?? super.isNavigationBarHidden }
+		set { super.isNavigationBarHidden = newValue }
+	}
+
+
 	@nonobjc
 	open override var navigationBar: NavigationBar {
 		return super.navigationBar as! NavigationBar
+	}
+
+
+	func override<Result>(isNavigationBarHidden: Bool, block: () -> Result) -> Result {
+		let	overridden_isNavigationBarHidden = self.overridden_isNavigationBarHidden
+		self.overridden_isNavigationBarHidden = isNavigationBarHidden
+		defer { self.overridden_isNavigationBarHidden = overridden_isNavigationBarHidden }
+
+		return block()
 	}
 
 
@@ -82,6 +112,29 @@ open class NavigationController: UINavigationController {
 	}
 
 
+	private func updateInteractivePopGestureRecognizerDelegate() {
+		guard let interactivePopGestureRecognizer = interactivePopGestureRecognizer else {
+			return
+		}
+
+		if interactivePopGestureRequiresNavigationBar {
+			if let interactivePopGestureRecognizerDelegate = interactivePopGestureRecognizerDelegate {
+				interactivePopGestureRecognizer.delegate = interactivePopGestureRecognizerDelegate.nextDelegate
+				interactivePopGestureRecognizerDelegate.nextDelegate = nil
+
+				self.interactivePopGestureRecognizerDelegate = nil
+			}
+		}
+		else {
+			if interactivePopGestureRecognizerDelegate == nil {
+				interactivePopGestureRecognizerDelegate = .init(navigationController: self)
+				interactivePopGestureRecognizerDelegate?.nextDelegate = interactivePopGestureRecognizer.delegate
+				interactivePopGestureRecognizer.delegate = interactivePopGestureRecognizerDelegate
+			}
+		}
+	}
+
+
 	internal final func updateNavigationBarStyleForTopViewController(animation: Animation? = Animation()) {
 		guard let topViewController = topViewController else {
 			return
@@ -100,6 +153,36 @@ open class NavigationController: UINavigationController {
 			animation.runAlways {
 				navigationBar.overridingTintColor = preferredTintColor
 				navigationBar.visibility = preferredVisibility
+			}
+		}
+	}
+
+
+	open override func viewDidLoad() {
+		super.viewDidLoad()
+
+		updateInteractivePopGestureRecognizerDelegate()
+	}
+}
+
+
+
+private class NavigationBarIndependentInteractivePopGestureRecognizerDelegate: NSObject, GestureRecognizerDelegateProxy {
+
+	private unowned let navigationController: NavigationController
+
+	weak var nextDelegate: UIGestureRecognizerDelegate?
+
+
+	init(navigationController: NavigationController) {
+		self.navigationController = navigationController
+	}
+
+
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+		return navigationController.override(isNavigationBarHidden: false) {
+			navigationController.navigationBar.override(hasBackButton: true) {
+				nextDelegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) ?? true
 			}
 		}
 	}

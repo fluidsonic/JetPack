@@ -9,9 +9,10 @@ private let titleViewKey = ["_", "titleView"].joined(separator: "")
 @objc(JetPack_NavigationBar)
 open class NavigationBar: UINavigationBar {
 
-	fileprivate var ignoresItemChanges = 0
-	fileprivate var originalAlpha = CGFloat(1)
-	fileprivate var originalTintColor: UIColor? = nil
+	private var ignoresItemChanges = 0
+	private var originalAlpha = CGFloat(1)
+	private var originalTintColor: UIColor? = nil
+	private var overridden_hasBackButton: Bool?
 
 
 	public convenience init() {
@@ -62,6 +63,11 @@ open class NavigationBar: UINavigationBar {
 	}
 
 
+	override var hasBackButton: Bool {
+		return overridden_hasBackButton ?? super.hasBackButton
+	}
+
+
 	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		guard visibility != .invisible else {
 			return nil
@@ -71,8 +77,17 @@ open class NavigationBar: UINavigationBar {
 	}
 
 
-	fileprivate func isTitleView(_ view: UIView, checkingSubviews: Bool = true) -> Bool {
+	private func isTitleView(_ view: UIView, checkingSubviews: Bool = true) -> Bool {
 		return view === titleView || NSStringFromClass(type(of: view)) == navigationItemViewClassName
+	}
+
+
+	func override<Result>(hasBackButton: Bool, block: () -> Result) -> Result {
+		let	overridden_hasBackButton = self.overridden_hasBackButton
+		self.overridden_hasBackButton = hasBackButton
+		defer { self.overridden_hasBackButton = overridden_hasBackButton }
+
+		return block()
 	}
 
 
@@ -179,12 +194,12 @@ open class NavigationBar: UINavigationBar {
 	}
 
 
-	fileprivate func updateAlpha() {
+	private func updateAlpha() {
 		super.alpha = (visibility == .invisible ? 0 : originalAlpha)
 	}
 
 
-	fileprivate func updateTintColor() {
+	private func updateTintColor() {
 		super.tintColor = overridingTintColor ?? originalTintColor
 	}
 
