@@ -1,16 +1,15 @@
 import UIKit
 
 
-internal class TextLayer: Layer {
+class TextLayer: Layer {
 
 	private var configuration = Configuration()
-	private let highPrecision: Bool // TODO remove after migration period
 	private var textLayout: TextLayout?
 
+	var highPrecision = true // TODO remove after migration period and make the default
 
-	internal init(highPrecision: Bool) {
-		self.highPrecision = highPrecision
 
+	override init() {
 		super.init()
 
 		isOpaque = false
@@ -19,7 +18,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal required init(layer: Any) {
+	required init(layer: Any) {
 		let layer = layer as! TextLayer
 		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
@@ -32,12 +31,12 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal required init?(coder: NSCoder) {
+	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
 
-	internal override func action(forKey key: String) -> CAAction? {
+	override func action(forKey key: String) -> CAAction? {
 		switch key {
 		case "textColor", "tintColor":
 			if let animation = UIView.defaultActionForLayer(self, forKey: "backgroundColor") as? CABasicAnimation {
@@ -55,10 +54,10 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because we outset
+	var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because we outset
 
 
-	internal var attributedText: NSAttributedString {
+	var attributedText: NSAttributedString {
 		get { return configuration.text }
 		set {
 			configuration.text = newValue
@@ -87,7 +86,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var contentInsets: UIEdgeInsets {
+	var contentInsets: UIEdgeInsets {
 		return ensureTextLayout()?.contentInsets ?? .zero
 	}
 
@@ -130,7 +129,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal override func draw(in context: CGContext) {
+	override func draw(in context: CGContext) {
 		super.draw(in: context)
 
 		ensureTextLayout()?.draw(in: context, defaultTextColor: UIColor(cgColor: textColor), tintColor: UIColor(cgColor: tintColor))
@@ -152,7 +151,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var font: UIFont {
+	var font: UIFont {
 		get { return configuration.font }
 		set {
 			configuration.font = newValue
@@ -161,7 +160,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var horizontalAlignment: TextAlignment.Horizontal {
+	var horizontalAlignment: TextAlignment.Horizontal {
 		get { return configuration.horizontalAlignment }
 		set {
 			configuration.horizontalAlignment = newValue
@@ -170,7 +169,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var kerning: TextKerning? {
+	var kerning: TextKerning? {
 		get { return configuration.kerning }
 		set {
 			configuration.kerning = newValue
@@ -187,7 +186,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var lineBreakMode: NSLineBreakMode {
+	var lineBreakMode: NSLineBreakMode {
 		get { return configuration.lineBreakMode }
 		set {
 			configuration.lineBreakMode = newValue
@@ -196,7 +195,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var lineHeightMultiple: CGFloat {
+	var lineHeightMultiple: CGFloat {
 		get { return configuration.lineHeightMultiple }
 		set {
 			configuration.lineHeightMultiple = newValue
@@ -205,7 +204,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal func link(at point: CGPoint) -> Link? {
+	func link(at point: CGPoint) -> Link? {
 		let additionalLinkHitZone = self.additionalLinkHitZone
 
 		var bestLink: Link?
@@ -234,7 +233,7 @@ internal class TextLayer: Layer {
 
 
 	private var _links: [Link]?
-	internal var links: [Link] {
+	var links: [Link] {
 		if let links = _links {
 			return links
 		}
@@ -267,7 +266,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var maximumLineHeight: CGFloat? {
+	var maximumLineHeight: CGFloat? {
 		get { return configuration.maximumLineHeight }
 		set {
 			configuration.maximumLineHeight = newValue
@@ -276,7 +275,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var maximumNumberOfLines: Int? {
+	var maximumNumberOfLines: Int? {
 		get { return configuration.maximumNumberOfLines }
 		set {
 			guard newValue != configuration.maximumNumberOfLines else {
@@ -289,7 +288,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var minimumLineHeight: CGFloat? {
+	var minimumLineHeight: CGFloat? {
 		get { return configuration.minimumLineHeight }
 		set {
 			configuration.minimumLineHeight = newValue
@@ -298,7 +297,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var minimumScaleFactor: CGFloat {
+	var minimumScaleFactor: CGFloat {
 		get { return configuration.minimumScaleFactor }
 		set {
 			guard newValue != configuration.minimumScaleFactor else {
@@ -311,7 +310,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal override class func needsDisplay(forKey key: String) -> Bool {
+	override class func needsDisplay(forKey key: String) -> Bool {
 		switch key {
 		case "textColor": return true
 		case "tintColor": return true // TODO causes unnecessary redraws if label doesn't use .tintColor() - how to optimize?
@@ -320,7 +319,7 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal var numberOfLines: Int {
+	var numberOfLines: Int {
 		return ensureTextLayout()?.numberOfLines ?? 0
 	}
 
@@ -334,20 +333,20 @@ internal class TextLayer: Layer {
 	}
 
 
-	internal func textSize(thatFits maximumSize: CGSize) -> CGSize {
+	func textSize(thatFits maximumSize: CGSize) -> CGSize {
 		precondition(maximumSize.isPositive)
 
 		return buildTextLayout(maximumSize: maximumSize).size
 	}
 
 
-	internal var text: String {
+	var text: String {
 		get { return attributedText.string }
 		set { attributedText = NSAttributedString(string: newValue) }
 	}
 
 
-	internal var textSize = CGSize.zero {
+	var textSize = CGSize.zero {
 		didSet {
 			guard textSize != oldValue else {
 				return
@@ -359,10 +358,10 @@ internal class TextLayer: Layer {
 
 
 	@objc @NSManaged
-	internal dynamic var textColor: CGColor
+	dynamic var textColor: CGColor
 
 
-	internal var textTransform: TextTransform? {
+	var textTransform: TextTransform? {
 		get { return configuration.textTransform }
 		set {
 			configuration.textTransform = newValue
@@ -372,10 +371,10 @@ internal class TextLayer: Layer {
 
 
 	@objc @NSManaged
-	internal dynamic var tintColor: CGColor
+	dynamic var tintColor: CGColor
 
 
-	internal override func willResizeToSize(_ newSize: CGSize) {
+	override func willResizeToSize(_ newSize: CGSize) {
 		super.willResizeToSize(newSize)
 
 		invalidateTextLayout()
@@ -536,10 +535,10 @@ internal class TextLayer: Layer {
 
 
 
-	internal struct Link {
+	struct Link {
 
-		internal var range: NSRange
-		internal var frames: [CGRect]
-		internal var url: URL
+		var range: NSRange
+		var frames: [CGRect]
+		var url: URL
 	}
 }

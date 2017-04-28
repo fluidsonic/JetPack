@@ -1024,7 +1024,7 @@ private class ButtonLabel: Label {
 	init(button: Button) {
 		self.button = button
 
-		super.init(highPrecision: true)
+		super.init()
 	}
 
 

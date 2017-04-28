@@ -8,20 +8,12 @@ open class Label: View {
 
 	private let linkTapRecognizer = UITapGestureRecognizer()
 	private var originalTextColor = UIColor.red
-	private let textLayer: TextLayer
+	private let textLayer = TextLayer()
 
 	open var linkTapped: ((URL) -> Void)?
 
 
-	@available(*, unavailable, renamed: "init(highPrecision:)")
-	public convenience override init() {
-		self.init(highPrecision: false) // TODO
-	}
-
-
-	public init(highPrecision: Bool) {
-		textLayer = TextLayer(highPrecision: highPrecision)
-
+	public override init() {
 		super.init()
 
 		clipsToBounds = false
@@ -33,6 +25,14 @@ open class Label: View {
 		layer.addSublayer(textLayer)
 
 		setUpLinkTapRecognizer()
+	}
+
+
+	@available(*, deprecated: 1, message: "Use init() instead of init(highPrecision: true) since this is the new default. 'false' is deprecated.", renamed: "init()")
+	public convenience init(highPrecision: Bool) {
+		self.init()
+
+		textLayer.highPrecision = highPrecision
 	}
 
 
