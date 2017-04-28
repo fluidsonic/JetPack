@@ -306,6 +306,8 @@ open class Label: View {
 
 
 	public func rect(forLine line: Int, in referenceView: UIView) -> CGRect {
+		layoutIfNeeded()
+
 		return textLayer.rect(forLine: line, in: referenceView.layer)
 	}
 

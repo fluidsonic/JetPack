@@ -4,12 +4,26 @@ import QuartzCore
 extension CALayer {
 
 	@nonobjc
-	internal private(set) static var removeAllAnimationsCallsAreDisabled = false
+	private(set) static var removeAllAnimationsCallsAreDisabled = false
+
+
+	@objc(JetPack_layoutWithSubtreeIfNeeded)
+	func layoutWithSubtreeIfNeeded() {
+		swizzled_layoutWithSubtreeIfNeeded()
+	}
 
 
 	@nonobjc
-	internal static func CALayer_setUp() {
+	static func CALayer_setUp() {
 		swizzleMethod(in: self, from: #selector(removeAllAnimations), to: #selector(swizzled_removeAllAnimations))
+
+		swizzleMethod(in: self, from: obfuscatedSelector("layout", "Below", "If", "Needed"), to: #selector(swizzled_layoutWithSubtreeIfNeeded))
+	}
+
+
+	@objc(JetPack_swizzled_layoutWithSubtreeIfNeeded)
+	private dynamic func swizzled_layoutWithSubtreeIfNeeded() {
+		layoutWithSubtreeIfNeeded()
 	}
 
 
@@ -24,7 +38,7 @@ extension CALayer {
 
 
 	@nonobjc
-	internal static func withRemoveAllAnimationsDisabled(block: Closure) {
+	static func withRemoveAllAnimationsDisabled(block: Closure) {
 		if removeAllAnimationsCallsAreDisabled {
 			block()
 		}
