@@ -167,7 +167,7 @@ open class NavigationController: UINavigationController {
 
 
 
-private class NavigationBarIndependentInteractivePopGestureRecognizerDelegate: NSObject, GestureRecognizerDelegateProxy {
+private class NavigationBarIndependentInteractivePopGestureRecognizerDelegate: NSObject, UIGestureRecognizerDelegate {
 
 	private unowned let navigationController: NavigationController
 
@@ -179,11 +179,42 @@ private class NavigationBarIndependentInteractivePopGestureRecognizerDelegate: N
 	}
 
 
+	@objc
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool {
+		return nextDelegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: press) ?? true
+	}
+
+
+	@objc
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
 		return navigationController.override(isNavigationBarHidden: false) {
 			navigationController.navigationBar.override(hasBackButton: true) {
 				nextDelegate?.gestureRecognizer?(gestureRecognizer, shouldReceive: touch) ?? true
 			}
 		}
+	}
+
+
+	@objc
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		return nextDelegate?.gestureRecognizer?(gestureRecognizer, shouldRecognizeSimultaneouslyWith: otherGestureRecognizer) ?? false
+	}
+
+
+	@objc
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		return nextDelegate?.gestureRecognizer?(gestureRecognizer, shouldBeRequiredToFailBy: otherGestureRecognizer) ?? false
+	}
+
+
+	@objc
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		return nextDelegate?.gestureRecognizer?(gestureRecognizer, shouldRequireFailureOf: otherGestureRecognizer) ?? false
+	}
+
+
+	@objc
+	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+		return nextDelegate?.gestureRecognizerShouldBegin?(gestureRecognizer) ?? true
 	}
 }
