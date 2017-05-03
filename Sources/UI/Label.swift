@@ -7,7 +7,6 @@ open class Label: View {
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
 
 	private let linkTapRecognizer = UITapGestureRecognizer()
-	private var originalTextColor = UIColor.red
 	private let textLayer = TextLayer()
 
 	open var linkTapped: ((URL) -> Void)?
@@ -17,11 +16,8 @@ open class Label: View {
 		super.init()
 
 		clipsToBounds = false
-		originalTextColor = UIColor(cgColor: textLayer.textColor)
 
 		textLayer.contentsScale = gridScaleFactor
-		textLayer.tintColor = tintColor.cgColor
-
 		layer.addSublayer(textLayer)
 
 		setUpLinkTapRecognizer()
@@ -328,16 +324,8 @@ open class Label: View {
 
 
 	open var textColor: UIColor {
-		get { return originalTextColor }
-		set {
-			guard newValue != originalTextColor else {
-				return
-			}
-
-			originalTextColor = newValue
-
-			updateTextLayerTextColor()
-		}
+		get { return textLayer.normalTextColor }
+		set { textLayer.normalTextColor = newValue }
 	}
 
 
@@ -359,14 +347,7 @@ open class Label: View {
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		textLayer.tintColor = tintColor.cgColor
-
-		updateTextLayerTextColor()
-	}
-
-
-	private func updateTextLayerTextColor() {
-		textLayer.textColor = originalTextColor.tintedWithColor(tintColor).cgColor
+		textLayer.updateTintColor(tintColor, adjustmentMode: tintAdjustmentMode)
 	}
 
 

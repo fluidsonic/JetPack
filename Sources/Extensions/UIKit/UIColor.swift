@@ -76,8 +76,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	
-	public func interpolateTo(_ destination: UIColor, fraction: CGFloat) -> UIColor {
+	public func interpolate(to destination: UIColor, fraction: CGFloat) -> UIColor {
 		guard let rgba = rgbaComponents, let destinationRgba = destination.rgbaComponents else {
 			return self
 		}
@@ -92,8 +91,13 @@ public extension UIColor {
 
 
 	@nonobjc
-	
-	public func overlayWithColor(_ overlayColor: UIColor) -> UIColor {
+	public var isTint: Bool {
+		return self is ColorUsingTintColor
+	}
+
+
+	@nonobjc
+	public func overlay(with overlayColor: UIColor) -> UIColor {
 		guard let components = rgbaComponents, let overlayComponents = overlayColor.rgbaComponents else {
 			return overlayColor
 		}
@@ -121,8 +125,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	
-	public static func random(_ alpha: CGFloat = 1) -> Self {
+	public static func random(alpha: CGFloat = 1) -> Self {
 		return self.init(
 			red:   CGFloat(arc4random_uniform(255)) / 255,
 			green: CGFloat(arc4random_uniform(255)) / 255,
@@ -144,112 +147,161 @@ public extension UIColor {
 
 
 	@nonobjc
-	public var tintAlpha: CGFloat? {
-		guard let color = self as? ColorUsingTintColor else {
-			return nil
-		}
-
-		return color.alpha
+	public static var tint: UIColor {
+		return tint(alpha: 1)
 	}
 
 
 	@nonobjc
-	
-	public static func tintColor() -> UIColor {
-		return tintColorWithAlpha(1)
-	}
-
-
-	@nonobjc
-	
-	public static func tintColorWithAlpha(_ alpha: CGFloat) -> UIColor {
+	public static func tint(alpha: CGFloat) -> UIColor {
 		if alpha >= 1 {
 			return ColorUsingTintColor.fullAlpha
 		}
 
-		return ColorUsingTintColor(alpha: max(alpha, 0))
+		return ColorUsingTintColor(alpha: alpha)
+	}
+
+
+	@nonobjc
+	public var tintAlpha: CGFloat? {
+		return (self as? ColorUsingTintColor)?.alpha
+	}
+
+
+	@available(*, unavailable, renamed: "tint")
+	@nonobjc
+	public static func tintColor() -> UIColor {
+		return tint
+	}
+
+
+	@available(*, unavailable, renamed: "tint(alpha:)")
+	@nonobjc
+	public static func tintColorWithAlpha(_ alpha: CGFloat) -> UIColor {
+		return tint(alpha: alpha)
+	}
+
+
+	public func tinted(for view: UIView, dimsWithTint: Bool) -> UIColor {
+		if isTint {
+			guard let tintColor = view.tintColor else {
+				return self
+			}
+
+			return tinted(with: tintColor)
+		}
+		else if dimsWithTint && view.tintAdjustmentMode == .dimmed {
+			guard let tintColor = view.tintColor else {
+				return self
+			}
+
+			return tintColor.withAlphaComponent(alpha * tintColor.alpha)
+		}
+		else {
+			return self
+		}
 	}
 
 
 	@objc(JetPack_tintedWithColor:)
-	
-	public func tintedWithColor(_ color: UIColor) -> UIColor {
+	public func tinted(with tintColor: UIColor) -> UIColor {
 		return self
+	}
+
+
+	public func tinted(with tintColor: UIColor, forAdjustmentMode tintAdjustmentMode: UIViewTintAdjustmentMode, dimsWithTint: Bool) -> UIColor {
+		if isTint {
+			return tinted(with: tintColor)
+		}
+		else if dimsWithTint && tintAdjustmentMode == .dimmed {
+			return tintColor.withAlphaComponent(alpha * tintColor.alpha)
+		}
+		else {
+			return self
+		}
+	}
+
+
+	@available(*, unavailable, renamed: "tinted(with:)")
+	@nonobjc
+	public func tintedWithColor(_ tintColor: UIColor) -> UIColor {
+		return tinted(with: tintColor)
 	}
 }
 
 
 
-private final class ColorUsingTintColor: UIColor {
+private class ColorUsingTintColor: UIColor {
 
-	fileprivate static let fullAlpha = ColorUsingTintColor(alpha: 1)
+	static let fullAlpha = ColorUsingTintColor(alpha: 1)
 
-	fileprivate var _alpha = CGFloat(1)
+	private var _alpha = CGFloat(1)
 
 
-	fileprivate convenience init(alpha: CGFloat) {
+	convenience init(alpha: CGFloat) {
 		self.init()
 
-		_alpha = alpha
+		_alpha = alpha.coerced(atLeast: 0)
 	}
 
 
-	fileprivate override var alpha: CGFloat {
+	override var alpha: CGFloat {
 		return _alpha
 	}
 
 
-	fileprivate override var cgColor: CGColor {
-		return placeholderColorForReason("CGColor").cgColor
+	override var cgColor: CGColor {
+		return placeholderColor(forReason: "cgColor").cgColor
 	}
 
 
-	fileprivate override var ciColor: CoreImage.CIColor {
-		return placeholderColorForReason("CIColor").ciColor
+	override var ciColor: CIColor {
+		return placeholderColor(forReason: "ciColor").ciColor
 	}
 
 
-	fileprivate dynamic var colorSpaceName: String { // public in Mac, probably private in iOS
+	@objc
+	private dynamic var colorSpaceName: String { // public in Mac, probably private in iOS
 		return "tint"
 	}
 
 
-	fileprivate override func withAlphaComponent(_ requestedAlpha: CGFloat) -> UIColor {
-		let alpha = requestedAlpha.coerced(in: 0 ... 1)
+	override func withAlphaComponent(_ alpha: CGFloat) -> UIColor {
+		let alpha = alpha.coerced(in: 0 ... 1)
 		if alpha == self.alpha {
 			return self
 		}
 
-		return UIColor.tintColorWithAlpha(alpha)
+		return .tint(alpha: alpha)
 	}
 
 
-	fileprivate override var description: String {
-		return (alpha >= 1 ? "UIColor.tintColor()" : "UIColor.tintColorWithAlpha(\(alpha))")
+	override var description: String {
+		return (alpha >= 1 ? "UIColor.tint" : "UIColor.tint(alpha: \(alpha))")
 	}
 
 
-	fileprivate override func getHue(_ hue: UnsafeMutablePointer<CGFloat>?, saturation: UnsafeMutablePointer<CGFloat>?, brightness: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+	override func getHue(_ hue: UnsafeMutablePointer<CGFloat>?, saturation: UnsafeMutablePointer<CGFloat>?, brightness: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
 		return false
 	}
 
 
-	fileprivate override func getRed(_ red: UnsafeMutablePointer<CGFloat>?, green: UnsafeMutablePointer<CGFloat>?, blue: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+	override func getRed(_ red: UnsafeMutablePointer<CGFloat>?, green: UnsafeMutablePointer<CGFloat>?, blue: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
 		return false
 	}
 
 
-	fileprivate override func getWhite(_ white: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+	override func getWhite(_ white: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
 		return false
 	}
 
 
-	fileprivate override var hash: Int {
+	override var hash: Int {
 		return 123 ^ _alpha.hashValue
 	}
 
 
-	fileprivate override func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if object as? UIColor === self {
 			return true
 		}
@@ -261,29 +313,29 @@ private final class ColorUsingTintColor: UIColor {
 	}
 
 
-	fileprivate func placeholderColorForReason(_ reason: String) -> UIColor {
-		log("\(self).\(reason) was used instead of applying an actual tint color by using .tintedWithColor(_:) first")
+	private func placeholderColor(forReason reason: String) -> UIColor {
+		log("\(self).\(reason) was used instead of applying an actual tint color by using .tinted(with:) first")
 
 		return UIColor(red: 1, green: 0, blue: 0, alpha: alpha)
 	}
 
 
-	fileprivate override func set() {
-		placeholderColorForReason("set()").set()
+	override func set() {
+		placeholderColor(forReason: "set()").set()
 	}
 
 
-	fileprivate override func setFill() {
-		placeholderColorForReason("setFill()").setFill()
+	override func setFill() {
+		placeholderColor(forReason: "setFill()").setFill()
 	}
 
 
-	fileprivate override func setStroke() {
-		placeholderColorForReason("setStroke()").setStroke()
+	override func setStroke() {
+		placeholderColor(forReason: "setStroke()").setStroke()
 	}
 
 
-	fileprivate override func tintedWithColor(_ tintColor: UIColor) -> UIColor {
+	override func tinted(with tintColor: UIColor) -> UIColor {
 		return tintColor.withAlphaComponent(alpha * tintColor.alpha)
 	}
 }

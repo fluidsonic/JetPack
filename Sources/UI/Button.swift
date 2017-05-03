@@ -783,7 +783,7 @@ open class Button: View {
 			return _textLabel ?? {
 				let child = ButtonLabel(button: self)
 				child.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
-				child.textColor = .tintColor()
+				child.textColor = .tint
 
 				_textLabel = child
 

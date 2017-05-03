@@ -4,8 +4,8 @@ import UIKit
 @objc(JetPack_ShapeView)
 open class ShapeView: View {
 
-	fileprivate var originalFillColor: UIColor?
-	fileprivate var originalStrokeColor: UIColor?
+	private var normalFillColor: UIColor?
+	private var normalStrokeColor: UIColor?
 
 
 	public override init() {
@@ -51,18 +51,28 @@ open class ShapeView: View {
 
 
 	open var fillColor: UIColor? {
-		get { return originalFillColor }
+		get { return normalFillColor }
 		set {
-			guard newValue != originalFillColor else {
+			guard newValue != normalFillColor else {
 				return
 			}
 
-			originalFillColor = newValue
+			normalFillColor = newValue
 
-			shapeLayer.fillColor = newValue?.tintedWithColor(tintColor).cgColor
+			shapeLayer.fillColor = newValue?.tinted(with: tintColor).cgColor
 		}
 	}
 
+
+	public var fillColorDimsWithTint = false {
+		didSet {
+			guard fillColorDimsWithTint != oldValue else {
+				return
+			}
+
+			updateActualFillColor()
+		}
+	}
 
 	
 	public final override class var layerClass : AnyObject.Type {
@@ -117,7 +127,7 @@ open class ShapeView: View {
 	}
 
 
-	public fileprivate(set) final lazy var shapeLayer: CAShapeLayer = self.layer as! CAShapeLayer
+	public private(set) final lazy var shapeLayer: CAShapeLayer = self.layer as! CAShapeLayer
 
 
 	open var strokeEnd: CGFloat {
@@ -131,15 +141,26 @@ open class ShapeView: View {
 
 
 	open var strokeColor: UIColor? {
-		get { return originalStrokeColor }
+		get { return normalStrokeColor }
 		set {
-			guard newValue != originalStrokeColor else {
+			guard newValue != normalStrokeColor else {
 				return
 			}
 
-			originalStrokeColor = newValue
+			normalStrokeColor = newValue
 
-			shapeLayer.strokeColor = newValue?.tintedWithColor(tintColor).cgColor
+			shapeLayer.strokeColor = newValue?.tinted(with: tintColor).cgColor
+		}
+	}
+
+
+	public var strokeColorDimsWithTint = false {
+		didSet {
+			guard strokeColorDimsWithTint != oldValue else {
+				return
+			}
+
+			updateActualStrokeColor()
 		}
 	}
 
@@ -157,12 +178,32 @@ open class ShapeView: View {
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		if let originalFillColor = originalFillColor, originalFillColor.tintAlpha != nil {
-			shapeLayer.fillColor = originalFillColor.tintedWithColor(tintColor).cgColor
+		if let originalFillColor = normalFillColor, originalFillColor.tintAlpha != nil {
+			shapeLayer.fillColor = originalFillColor.tinted(with: tintColor).cgColor
 		}
 
-		if let originalStrokeColor = originalStrokeColor, originalStrokeColor.tintAlpha != nil {
-			shapeLayer.strokeColor = originalStrokeColor.tintedWithColor(tintColor).cgColor
+		if let originalStrokeColor = normalStrokeColor, originalStrokeColor.tintAlpha != nil {
+			shapeLayer.strokeColor = originalStrokeColor.tinted(with: tintColor).cgColor
 		}
+	}
+
+
+	private func updateActualFillColor() {
+		let actualFillColor = normalFillColor?.tinted(for: self, dimsWithTint: fillColorDimsWithTint).cgColor
+		guard actualFillColor != shapeLayer.fillColor else {
+			return
+		}
+
+		shapeLayer.fillColor = actualFillColor
+	}
+
+
+	private func updateActualStrokeColor() {
+		let actualStrokeColor = normalStrokeColor?.tinted(for: self, dimsWithTint: strokeColorDimsWithTint).cgColor
+		guard actualStrokeColor != shapeLayer.strokeColor else {
+			return
+		}
+
+		shapeLayer.strokeColor = actualStrokeColor
 	}
 }

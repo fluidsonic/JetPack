@@ -6,8 +6,8 @@ open class View: UIView {
 
 	private static let _dummyView = View()
 
-	private var originalBackgroundColor: UIColor?
-	private var originalBorderColor: UIColor?
+	private var normalBackgroundColor: UIColor?
+	private var normalBorderColor: UIColor?
 
 	open var additionalHitZone = UIEdgeInsets() // TODO don't use UIEdgeInsets because actually we outset
 	open var backgroundColorLocked = false
@@ -56,120 +56,178 @@ open class View: UIView {
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: [], animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: [], animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: options, animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: options, animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, options: options, animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, options: options, animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: [], animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: [], animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
 
 
+	@available(*, deprecated: 1, message: "use Animation()")
+	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIViewAnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
 
 
 	open override var backgroundColor: UIColor? {
-		get { return originalBackgroundColor }
+		get { return normalBackgroundColor }
 		set {
-			guard !backgroundColorLocked && newValue != originalBackgroundColor else {
+			guard !backgroundColorLocked && newValue != normalBackgroundColor else {
 				return
 			}
 
-			originalBackgroundColor = newValue
+			normalBackgroundColor = newValue
 
-			super.backgroundColor = newValue?.tintedWithColor(tintColor)
+			updateActualBackgroundColor()
+		}
+	}
+
+
+	public var backgroundColorDimsWithTint = false {
+		didSet {
+			guard backgroundColorDimsWithTint != oldValue else {
+				return
+			}
+
+			updateActualBackgroundColor()
 		}
 	}
 
 
 	open var borderColor: UIColor? {
-		get { return originalBorderColor }
+		get { return normalBorderColor }
 		set {
-			guard newValue != originalBorderColor else {
+			guard newValue != normalBorderColor else {
 				return
 			}
 
-			originalBorderColor = newValue
+			normalBorderColor = newValue
 
-			layer.borderColor = newValue?.tintedWithColor(tintColor).cgColor
+			updateActualBorderColor()
+		}
+	}
+
+
+	public var borderColorDimsWithTint = false {
+		didSet {
+			guard borderColorDimsWithTint != oldValue else {
+				return
+			}
+
+			updateActualBorderColor()
 		}
 	}
 
@@ -400,13 +458,28 @@ open class View: UIView {
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		if let originalBackgroundColor = originalBackgroundColor, originalBackgroundColor.tintAlpha != nil {
-			super.backgroundColor = originalBackgroundColor.tintedWithColor(tintColor)
+		updateActualBackgroundColor()
+		updateActualBorderColor()
+	}
+
+
+	private func updateActualBackgroundColor() {
+		let backgroundColor = normalBackgroundColor?.tinted(for: self, dimsWithTint: backgroundColorDimsWithTint)
+		guard backgroundColor != super.backgroundColor else {
+			return
 		}
 
-		if let originalBorderColor = originalBorderColor, originalBorderColor.tintAlpha != nil {
-			layer.borderColor = originalBorderColor.tintedWithColor(tintColor).cgColor
+		super.backgroundColor = backgroundColor
+	}
+
+
+	private func updateActualBorderColor() {
+		let borderColor = normalBorderColor?.tinted(for: self, dimsWithTint: borderColorDimsWithTint).cgColor
+		guard borderColor != layer.borderColor else {
+			return
 		}
+
+		layer.borderColor = borderColor
 	}
 
 

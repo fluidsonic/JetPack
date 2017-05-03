@@ -627,7 +627,7 @@ internal class TextLayout {
 				context.scaleBy(x: scaleFactor, y: scaleFactor)
 			}
 
-			self.defaultTextColor = defaultTextColor.tintedWithColor(tintColor)
+			self.defaultTextColor = defaultTextColor.tinted(with: tintColor)
 			self.tintColor = tintColor
 
 			let layoutManager = layout.result.layoutManager
@@ -661,14 +661,14 @@ internal class TextLayout {
 			var attributes = textStorage.attributes(at: charIndex, effectiveRange: nil)
 
 			if let textColor = attributes[NSForegroundColorAttributeName] as? UIColor {
-				attributes[NSForegroundColorAttributeName] = textColor.tintedWithColor(tintColor)
+				attributes[NSForegroundColorAttributeName] = textColor.tinted(with: tintColor)
 			}
 			else {
 				attributes[NSForegroundColorAttributeName] = defaultTextColor
 			}
 
 			if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor {
-				attributes[NSBackgroundColorAttributeName] = backgroundColor.tintedWithColor(tintColor)
+				attributes[NSBackgroundColorAttributeName] = backgroundColor.tinted(with: tintColor)
 			}
 
 			return attributes

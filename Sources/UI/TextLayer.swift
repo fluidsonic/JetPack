@@ -4,6 +4,8 @@ import UIKit
 class TextLayer: Layer {
 
 	private var configuration = Configuration()
+	private var normalTintAdjustmentMode = UIViewTintAdjustmentMode.normal
+	private var normalTintColor = UIColor.red
 	private var textLayout: TextLayout?
 
 	var highPrecision = true // TODO remove after migration period and make the default
@@ -12,9 +14,9 @@ class TextLayer: Layer {
 	override init() {
 		super.init()
 
+		actualTextColor = normalTextColor.cgColor
+		actualTintColor = normalTintColor.cgColor
 		isOpaque = false
-		textColor = UIColor.darkText.cgColor
-		tintColor = UIColor.red.cgColor
 	}
 
 
@@ -23,6 +25,9 @@ class TextLayer: Layer {
 		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
 		highPrecision = layer.highPrecision
+		normalTextColor = layer.normalTextColor
+		normalTintAdjustmentMode = layer.normalTintAdjustmentMode
+		normalTintColor = layer.normalTintColor
 		textLayout = layer.textLayout
 
 		_links = layer._links
@@ -36,9 +41,17 @@ class TextLayer: Layer {
 	}
 
 
+	@objc @NSManaged
+	private dynamic var actualTextColor: CGColor
+
+
+	@objc @NSManaged
+	private dynamic var actualTintColor: CGColor
+
+
 	override func action(forKey key: String) -> CAAction? {
 		switch key {
-		case "textColor", "tintColor":
+		case "actualTextColor", "actualTintColor":
 			if let animation = UIView.defaultActionForLayer(self, forKey: "backgroundColor") as? CABasicAnimation {
 				animation.fromValue = value(forKey: key)
 				animation.keyPath = key
@@ -132,7 +145,11 @@ class TextLayer: Layer {
 	override func draw(in context: CGContext) {
 		super.draw(in: context)
 
-		ensureTextLayout()?.draw(in: context, defaultTextColor: UIColor(cgColor: textColor), tintColor: UIColor(cgColor: tintColor))
+		ensureTextLayout()?.draw(
+			in:               context,
+			defaultTextColor: UIColor(cgColor: actualTextColor),
+			tintColor:        UIColor(cgColor: actualTintColor)
+		)
 	}
 
 
@@ -312,9 +329,20 @@ class TextLayer: Layer {
 
 	override class func needsDisplay(forKey key: String) -> Bool {
 		switch key {
-		case "textColor": return true
-		case "tintColor": return true // TODO causes unnecessary redraws if label doesn't use .tintColor() - how to optimize?
-		default:          return super.needsDisplay(forKey: key)
+		case "actualTextColor": return true
+		case "actualTintColor": return true // TODO causes unnecessary redraws if label doesn't use .tint - how to optimize?
+		default:                return super.needsDisplay(forKey: key)
+		}
+	}
+
+
+	var normalTextColor = UIColor.darkText {
+		didSet {
+			guard normalTextColor != oldValue else {
+				return
+			}
+
+			updateActualTextColor()
 		}
 	}
 
@@ -346,6 +374,17 @@ class TextLayer: Layer {
 	}
 
 
+	var textColorDimsWithTint = false {
+		didSet {
+			guard textColorDimsWithTint != oldValue else {
+				return
+			}
+
+			updateActualTextColor()
+		}
+	}
+
+
 	var textSize = CGSize.zero {
 		didSet {
 			guard textSize != oldValue else {
@@ -357,10 +396,6 @@ class TextLayer: Layer {
 	}
 
 
-	@objc @NSManaged
-	dynamic var textColor: CGColor
-
-
 	var textTransform: TextTransform? {
 		get { return configuration.textTransform }
 		set {
@@ -370,8 +405,37 @@ class TextLayer: Layer {
 	}
 
 
-	@objc @NSManaged
-	dynamic var tintColor: CGColor
+	private func updateActualTextColor() {
+		let actualTextColor = normalTextColor.tinted(with: normalTintColor, forAdjustmentMode: normalTintAdjustmentMode, dimsWithTint: textColorDimsWithTint).cgColor
+		guard actualTextColor != self.actualTextColor else {
+			return
+		}
+
+		self.actualTextColor = actualTextColor
+	}
+
+
+	private func updateActualTintColor() {
+		let actualTintColor = normalTintColor.cgColor
+		guard actualTintColor != self.actualTintColor else {
+			return
+		}
+
+		self.actualTintColor = actualTintColor
+	}
+
+
+	func updateTintColor(_ tintColor: UIColor, adjustmentMode tintAdjustmentMode: UIViewTintAdjustmentMode) {
+		guard tintAdjustmentMode != normalTintAdjustmentMode || tintColor != normalTintColor else {
+			return
+		}
+
+		normalTintAdjustmentMode = tintAdjustmentMode
+		normalTintColor = tintColor
+
+		updateActualTextColor()
+		updateActualTintColor()
+	}
 
 
 	override func willResizeToSize(_ newSize: CGSize) {
