@@ -329,6 +329,12 @@ open class Label: View {
 	}
 
 
+	public var textColorDimsWithTint: Bool {
+		get { return textLayer.textColorDimsWithTint }
+		set { textLayer.textColorDimsWithTint = newValue }
+	}
+
+
 	open var textTransform: TextTransform? {
 		get { return textLayer.textTransform }
 		set {
