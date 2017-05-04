@@ -70,6 +70,25 @@ public extension UITableView {
 	}
 
 
+	public override var maximumContentOffset: CGPoint {
+		let numberOfSections = self.numberOfSections
+		guard numberOfSections > 0 else {
+			return super.maximumContentOffset
+		}
+
+		// we cannot rely on contentSize while update animations are in-flight, so we use ret(forSection:) instead
+
+		let lastSectionRect = rect(forSection: numberOfSections - 1)
+		let size = self.bounds.size
+		let contentInset = self.contentInset
+
+		return CGPoint(
+			left: 0,
+			top:  max(lastSectionRect.bottom + contentInset.bottom - size.height, -contentInset.top)
+		)
+	}
+
+
 	@objc(JetPack_floatsHeaderAndFooterViews)
 	fileprivate dynamic func redirected_headerAndFooterViewsFloat() -> Bool {
 		// called when private function is no longer available

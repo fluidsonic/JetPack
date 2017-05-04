@@ -9,7 +9,7 @@ public extension UIScrollView {
 	}
 
 
-	@nonobjc
+	@objc(JetPack_maximumContentOffset)
 	public var maximumContentOffset: CGPoint {
 		let size = self.bounds.size
 		let contentInset = self.contentInset
