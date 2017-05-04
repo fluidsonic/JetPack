@@ -6,28 +6,24 @@ private let dummyView = UIView()
 extension UIView {
 
 	@nonobjc
-	
 	public final func alignToGrid(_ rect: CGRect) -> CGRect {
 		return CGRect(origin: alignToGrid(rect.origin), size: alignToGrid(rect.size))
 	}
 
 
 	@nonobjc
-	
 	public final func alignToGrid(_ point: CGPoint) -> CGPoint {
 		return CGPoint(left: roundToGrid(point.left), top: roundToGrid(point.top))
 	}
 
 
 	@nonobjc
-	
 	public final func alignToGrid(_ size: CGSize) -> CGSize {
 		return CGSize(width: ceilToGrid(size.width), height: ceilToGrid(size.height))
 	}
 
 
 	@nonobjc
-	
 	public final func ceilToGrid(_ value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return ceil(value * scale) / scale
@@ -58,7 +54,6 @@ extension UIView {
 
 
 	@nonobjc
-	
 	public final func floorToGrid(_ value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return floor(value * scale) / scale
@@ -66,7 +61,6 @@ extension UIView {
 
 
 	@nonobjc
-	
 	public func frameWhenApplyingTransform(_ transform: CGAffineTransform) -> CGRect {
 		return untransformedFrame.applying(transform, anchorPoint: layer.anchorPoint)
 	}
@@ -79,14 +73,12 @@ extension UIView {
 
 
 	@nonobjc
-	
 	public final func heightThatFits() -> CGFloat {
 		return sizeThatFitsSize(.max).height
 	}
 
 
 	@nonobjc
-	
 	public final func heightThatFitsWidth(_ maximumWidth: CGFloat) -> CGFloat {
 		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .greatestFiniteMagnitude)).height
 	}
@@ -140,7 +132,6 @@ extension UIView {
 
 
 	@nonobjc
-	
 	public final func roundToGrid(_ value: CGFloat) -> CGFloat {
 		let scale = gridScaleFactor
 		return round(value * scale) / scale
@@ -148,35 +139,30 @@ extension UIView {
 
 
 	@nonobjc
-	
 	public final func sizeThatFits() -> CGSize {
 		return sizeThatFitsSize(.max)
 	}
 
 
 	@nonobjc
-	
 	public final func sizeThatFitsHeight(_ maximumHeight: CGFloat, allowsTruncation: Bool = false) -> CGSize {
 		return sizeThatFitsSize(CGSize(width: .greatestFiniteMagnitude, height: maximumHeight), allowsTruncation: allowsTruncation)
 	}
 
 
 	@nonobjc
-	
 	public final func sizeThatFitsWidth(_ maximumWidth: CGFloat, allowsTruncation: Bool = false) -> CGSize {
 		return sizeThatFitsSize(CGSize(width: maximumWidth, height: .greatestFiniteMagnitude), allowsTruncation: allowsTruncation)
 	}
 
 
 	@objc(JetPack_sizeThatFitsSize:)
-	
 	public func sizeThatFitsSize(_ maximumSize: CGSize) -> CGSize {
 		return sizeThatFits(maximumSize)
 	}
 
 
 	@nonobjc
-	
 	public final func sizeThatFitsSize(_ maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
 		var fittingSize = sizeThatFitsSize(maximumSize)
 		if allowsTruncation {
@@ -194,20 +180,18 @@ extension UIView {
 
 
 	@objc(JetPack_didChangeFromWindow:toWindow:)
-	fileprivate dynamic func swizzled_didChangeWindow(from: UIWindow?, to: UIWindow?) {
+	private dynamic func swizzled_didChangeWindow(from: UIWindow?, to: UIWindow?) {
 		swizzled_didChangeWindow(from: from, to: to)
 
 		delegateViewController?.viewDidMoveToWindow()
 	}
 
 
-	@objc(JetPack_invalidateIntrinsicContentSize)
-	fileprivate dynamic func swizzled_invalidateIntrinsicContentSize() {
-		swizzled_invalidateIntrinsicContentSize()
+	@objc(JetPack_invalidateIntrinsicContentSize_needingLayout:)
+	private dynamic func swizzled_invalidateIntrinsicContentSizeNeedingLayout(_ needsLayout: Bool) {
+		swizzled_invalidateIntrinsicContentSizeNeedingLayout(needsLayout)
 
-		if let superview = superview {
-			superview.subviewDidInvalidateIntrinsicContentSize(self)
-		}
+		superview?.subviewDidInvalidateIntrinsicContentSize(self)
 	}
 
 
@@ -244,21 +228,18 @@ extension UIView {
 	internal static func UIView_setUp() {
 		// cannot use didMoveToWindow() because some subclasses don't call super's implementation
 		swizzleMethod(in: self, from: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), to: #selector(swizzled_didChangeWindow(from:to:)))
+		swizzleMethod(in: self, from: obfuscatedSelector("_", "invalidate", "Intrinsic", "Content", "Size", "Needing", "Layout:"), to: #selector(swizzled_invalidateIntrinsicContentSizeNeedingLayout(_:)))
 		swizzleMethod(in: self, from: obfuscatedSelector("_", "remove", "All", "Animations:"), to: #selector(swizzled_removeAllAnimations(_:)))
-
-		swizzleMethod(in: self, from: #selector(invalidateIntrinsicContentSize), to: #selector(swizzled_invalidateIntrinsicContentSize))
 	}
 
 
 	@nonobjc
-	
 	public final func widthThatFits() -> CGFloat {
 		return sizeThatFitsSize(.max).width
 	}
 
 
 	@nonobjc
-	
 	public final func widthThatFitsHeight(_ maximumHeight: CGFloat) -> CGFloat {
 		return sizeThatFitsSize(CGSize(width: .greatestFiniteMagnitude, height: maximumHeight)).width
 	}
