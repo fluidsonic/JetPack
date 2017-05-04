@@ -4,8 +4,8 @@ import UIKit
 @objc(JetPack_TextView)
 open class TextView: UITextView {
 
-	fileprivate var changeObserver: NSObjectProtocol?
-	fileprivate var placeholderLabel: Label?
+	private var changeObserver: NSObjectProtocol?
+	private var placeholderLabel: UILabel?
 
 
 	public init() {
@@ -104,7 +104,7 @@ open class TextView: UITextView {
 	}
 
 
-	fileprivate func subscribeToChangeNotifications() {
+	private func subscribeToChangeNotifications() {
 		changeObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextViewTextDidChange, object: self, queue: nil) { _ in
 			self.updatePlaceholderLabel()
 		}
@@ -141,24 +141,24 @@ open class TextView: UITextView {
 	}
 
 
-	fileprivate func updatePlaceholderLabel() {
+	private func updatePlaceholderLabel() {
 		if text?.nonEmpty != nil || placeholder.isEmpty {
 			placeholderLabel?.removeFromSuperview()
 		}
 		else {
 			let placeholderLabel = self.placeholderLabel ?? {
-				let child = Label(highPrecision: false)
+				let child = UILabel()
 				if let font = font {
 					child.font = font
 				}
-				child.maximumNumberOfLines = nil
+				child.numberOfLines = 0
 				child.text = placeholder
 				child.textColor = placeholderTextColor
 
 				self.placeholderLabel = child
 
 				return child
-				}()
+			}()
 
 			if placeholderLabel.superview == nil {
 				insertSubview(placeholderLabel, at: 0)
