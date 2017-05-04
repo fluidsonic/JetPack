@@ -48,7 +48,7 @@ open class TextView: UITextView {
 	private func attributedTextIncludingDefaultFormatting(for attributedText: NSAttributedString) -> NSAttributedString {
 		let defaultAttributes = [
 			NSFontAttributeName:            font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize),
-			NSForegroundColorAttributeName: textColor ?? .black
+			NSForegroundColorAttributeName: textColor ?? UIColor.darkText
 		]
 
 		let attributedStringIncludingDefaultFormatting = NSMutableAttributedString(string: attributedText.string, attributes: defaultAttributes)
@@ -113,17 +113,7 @@ open class TextView: UITextView {
 
 	open override var text: String? {
 		get { return super.text }
-		set {
-			guard newValue != text else {
-				return
-			}
-
-			if (newValue?.nonEmpty != nil) != (text?.nonEmpty != nil) {
-				setNeedsLayout()
-			}
-
-			super.text = newValue
-		}
+		set { attributedText = newValue.map(NSAttributedString.init(string:)) }
 	}
 
 
