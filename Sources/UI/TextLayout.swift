@@ -313,8 +313,10 @@ internal class TextLayout {
 				var paragraphStyle = NSParagraphStyle()
 				var paragraphStyleEndIndex = Int.max
 				var isFirstLineOfParagraph = true
+				var lastLineUsedRectBottom = CGFloat(0)
 
 				layoutManager.enumerateLineFragments(forGlyphRange: layoutManager.glyphRange(forBoundingRect: layoutManager.usedRect(for: textContainer), in: textContainer)) { _, usedRectForLine, _, glyphRangeForLine, stop in
+					let spacingToPreviousLine = usedRectForLine.top - lastLineUsedRectBottom
 					let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
 
 					if isFirstLineOfParagraph, let lineParagraphStyle = textStorage.attribute(NSParagraphStyleAttributeName, at: characterRangeForLine.location, effectiveRange: nil) as? NSParagraphStyle {
@@ -338,6 +340,7 @@ internal class TextLayout {
 					lineWidth += headIndent
 
 					size.width = size.width.coerced(atLeast: lineWidth)
+					size.height += spacingToPreviousLine
 					size.height += usedRectForLine.height
 
 					if size.height >= configuration.maximumSize.height {
@@ -351,6 +354,8 @@ internal class TextLayout {
 					{
 						isFirstLineOfParagraph = CharacterSet.newlines.contains(lastCharacter)
 					}
+
+					lastLineUsedRectBottom = usedRectForLine.bottom
 				}
 			}
 

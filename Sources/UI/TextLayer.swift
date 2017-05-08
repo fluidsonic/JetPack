@@ -352,6 +352,15 @@ class TextLayer: Layer {
 	}
 
 
+	var paragraphSpacing: CGFloat {
+		get { return configuration.paragraphSpacing }
+		set {
+			configuration.paragraphSpacing = newValue
+			checkConfiguration()
+		}
+	}
+
+
 	func rect(forLine line: Int, in referenceLayer: CALayer) -> CGRect {
 		guard let textLayout = ensureTextLayout() else {
 			return .null
@@ -462,6 +471,7 @@ class TextLayer: Layer {
 				paragraphStyle.lineHeightMultiple = lineHeightMultiple
 				paragraphStyle.maximumLineHeight = maximumLineHeight ?? 0
 				paragraphStyle.minimumLineHeight = minimumLineHeight ?? 0
+				paragraphStyle.paragraphSpacing = paragraphSpacing
 
 				switch lineBreakMode {
 				case .byClipping, .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:
@@ -576,6 +586,17 @@ class TextLayer: Layer {
 
 		var needsRebuildFinalText: Bool {
 			return _finalText == nil
+		}
+
+
+		var paragraphSpacing = CGFloat(0) {
+			didSet {
+				precondition(paragraphSpacing >= 0, ".paragraphSpacing must be >= 0")
+
+				if paragraphSpacing != oldValue {
+					_finalText = nil
+				}
+			}
 		}
 
 

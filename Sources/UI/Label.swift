@@ -288,6 +288,21 @@ open class Label: View {
 	}
 
 
+	open var paragraphSpacing: CGFloat {
+		get { return textLayer.paragraphSpacing }
+		set {
+			guard newValue != textLayer.paragraphSpacing else {
+				return
+			}
+
+			textLayer.paragraphSpacing = newValue
+
+			invalidateIntrinsicContentSize()
+			setNeedsLayout()
+		}
+	}
+
+
 	open override func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let isInsideLabel = super.pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
 		guard isInsideLabel || textLayer.contains(layer.convert(point, to: textLayer)) else {
