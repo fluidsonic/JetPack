@@ -124,6 +124,14 @@ extension NSRange: Equatable {
 }
 
 
+extension NSRange: Hashable {
+
+	public var hashValue: Int {
+		return location ^ length
+	}
+}
+
+
 extension NSRange: Sequence {
 
 	public typealias Iterator = CountableRange<Int>.Iterator
