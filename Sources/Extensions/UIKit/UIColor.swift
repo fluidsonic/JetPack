@@ -183,23 +183,7 @@ public extension UIColor {
 
 
 	public func tinted(for view: UIView, dimsWithTint: Bool) -> UIColor {
-		if isTint {
-			guard let tintColor = view.tintColor else {
-				return self
-			}
-
-			return tinted(with: tintColor)
-		}
-		else if dimsWithTint && view.tintAdjustmentMode == .dimmed {
-			guard let tintColor = view.tintColor else {
-				return self
-			}
-
-			return tintColor.withAlphaComponent(alpha * tintColor.alpha)
-		}
-		else {
-			return self
-		}
+		return tinted(with: view.tintColor, forAdjustmentMode: view.tintAdjustmentMode, dimsWithTint: dimsWithTint)
 	}
 
 
@@ -213,8 +197,8 @@ public extension UIColor {
 		if isTint {
 			return tinted(with: tintColor)
 		}
-		else if dimsWithTint && tintAdjustmentMode == .dimmed {
-			return tintColor.withAlphaComponent(alpha * tintColor.alpha)
+		else if dimsWithTint && tintAdjustmentMode == .dimmed, let hsbaComponents = hsbaComponents, hsbaComponents.saturation > 0 {
+			return UIColor(hue: hsbaComponents.hue, saturation: 0, brightness: hsbaComponents.brightness, alpha: hsbaComponents.alpha)
 		}
 		else {
 			return self
