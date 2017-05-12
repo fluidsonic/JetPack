@@ -87,7 +87,7 @@ public extension UIColor {
 			return colorWithHighestContrast
 		}
 
-		preconditionFailure("Must pass at least one color which supports HSBA representation: \(contrastColors)")
+		preconditionFailure("Must pass at least one color which supports RGBA representation: \(contrastColors)")
 	}
 
 
@@ -265,6 +265,24 @@ public extension UIColor {
 	@nonobjc
 	public func tintedWithColor(_ tintColor: UIColor) -> UIColor {
 		return tinted(with: tintColor)
+	}
+
+
+	@nonobjc
+	public func w3cContrast(to color: UIColor) -> CGFloat? {
+		guard
+			let luminocity = luminocity,
+			let colorLuminocity = color.luminocity
+		else {
+			return nil
+		}
+
+		if colorLuminocity > luminocity {
+			return (colorLuminocity + 0.05) / (luminocity + 0.05)
+		}
+		else {
+			return (luminocity + 0.05) / (colorLuminocity + 0.05)
+		}
 	}
 }
 
