@@ -54,6 +54,44 @@ public extension UIColor {
 
 
 	@nonobjc
+	public func colorHavingHighestContrast(_ contrastColors: [UIColor]) -> UIColor {
+		// http://stackoverflow.com/a/3943023/1183577
+
+		guard let luminocity = luminocity else {
+			preconditionFailure("Cannot call .colorWithHighestContrast() on a color which doesn't support a RGBA representation: \(self)")
+		}
+
+		var colorWithHighestContrast: UIColor?
+		var highestContrast = -CGFloat.infinity
+
+		for contrastColor in contrastColors {
+			guard let constrastColorLuminocity = contrastColor.luminocity else {
+				continue
+			}
+
+			let contrast: CGFloat
+			if constrastColorLuminocity > luminocity {
+				contrast = (constrastColorLuminocity + 0.05) / (luminocity + 0.05)
+			}
+			else {
+				contrast = (luminocity + 0.05) / (constrastColorLuminocity + 0.05)
+			}
+
+			if contrast > highestContrast {
+				colorWithHighestContrast = contrastColor
+				highestContrast = contrast
+			}
+		}
+
+		if let colorWithHighestContrast = colorWithHighestContrast {
+			return colorWithHighestContrast
+		}
+
+		preconditionFailure("Must pass at least one color which supports HSBA representation: \(contrastColors)")
+	}
+
+
+	@nonobjc
 	public var grayscaleComponents: GrayscaleComponents? {
 		var components = GrayscaleComponents(white: 0, alpha: 0)
 		guard getWhite(&components.white, alpha: &components.alpha) else {
@@ -93,6 +131,22 @@ public extension UIColor {
 	@nonobjc
 	public var isTint: Bool {
 		return self is ColorUsingTintColor
+	}
+
+
+	@nonobjc
+	public var luminocity: CGFloat? {
+		// https://www.w3.org/TR/WCAG20/#relativeluminancedef
+
+		guard let components = rgbaComponents else {
+			return nil
+		}
+
+		let r = components.red   <= 0.03928 ? (components.red   / 12.92) : pow((components.red   + 0.055) / 1.055, 2.4)
+		let g = components.green <= 0.03928 ? (components.green / 12.92) : pow((components.green + 0.055) / 1.055, 2.4)
+		let b = components.blue  <= 0.03928 ? (components.blue  / 12.92) : pow((components.blue  + 0.055) / 1.055, 2.4)
+
+		return (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
 	}
 
 
@@ -198,6 +252,7 @@ public extension UIColor {
 			return tinted(with: tintColor)
 		}
 		else if dimsWithTint && tintAdjustmentMode == .dimmed, let hsbaComponents = hsbaComponents, hsbaComponents.saturation > 0 {
+			// TODO should this be based on luminocity, not brightness?
 			return UIColor(hue: hsbaComponents.hue, saturation: 0, brightness: hsbaComponents.brightness, alpha: hsbaComponents.alpha)
 		}
 		else {
