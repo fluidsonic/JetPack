@@ -39,6 +39,8 @@ private struct Setup {
 		UINavigationController.UINavigationController_setUp()
 		UIPresentationController.UIPresentationController_setUp()
 		UITabBarController.UITabBarController_setUp()
+
+		UIViewController.UIViewController_UI_setUp()
 	}
 
 

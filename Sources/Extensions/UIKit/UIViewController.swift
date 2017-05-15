@@ -106,12 +106,6 @@ extension UIViewController {
 	}
 
 
-	@objc(JetPack_childViewControllerForNavigationBarVisibility)
-	open var childViewControllerForNavigationBarVisibility: UIViewController? {
-		return nil
-	}
-
-
 	@nonobjc
 	public fileprivate(set) var containmentState: ContainmentState {
 		get { return ContainmentState(id: objc_getAssociatedObject(self, &AssociatedKeys.containmentState) as? Int ?? 0) }
@@ -281,18 +275,6 @@ extension UIViewController {
 	open private(set) var outerDecorationInsets: UIEdgeInsets {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.outerDecorationInsets) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.outerDecorationInsets, newValue.isEmpty ? nil : NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
-	}
-
-
-	@objc(JetPack_preferredNavigationBarTintColor)
-	open var preferredNavigationBarTintColor: UIColor? {
-		return nil
-	}
-
-
-	@objc(JetPack_preferredNavigationBarVisibility)
-	open var preferredNavigationBarVisibility: NavigationBar.Visibility {
-		return .visible
 	}
 
 
@@ -560,7 +542,6 @@ extension UIViewController {
 
 		decorationInsetsAnimation = nil
 		invalidateDecorationInsetsWithAnimation(nil)
-		updateNavigationBarStyle()
 
 		swizzled_viewWillAppear(animated)
 	}
@@ -687,16 +668,6 @@ extension UIViewController {
 		}
 
 		decorationInsetsAreValid = true
-	}
-
-
-	@nonobjc
-	public func updateNavigationBarStyle(animation: Animation? = Animation()) {
-		guard let navigationController = navigationController as? NavigationController else {
-			return
-		}
-
-		navigationController.updateNavigationBarStyleForTopViewController(animation: animation)
 	}
 
 
