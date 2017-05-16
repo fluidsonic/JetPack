@@ -361,6 +361,10 @@ internal class TextLayout {
 
 			size.width = size.width.coerced(atMost: textContainerSize.width)
 
+			// compensate for rounding errors which can cause an unexpected truncation
+			size.width += 0.01
+			size.height += 0.01
+
 			textContainer.size = size
 			layoutManager.ensureLayout(for: textContainer)
 
