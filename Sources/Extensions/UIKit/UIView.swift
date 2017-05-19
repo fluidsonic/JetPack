@@ -109,6 +109,18 @@ extension UIView {
 
 
 	@nonobjc
+	public func recursivelyFindSubviewOfType <ViewType: UIView>(_ type: ViewType.Type) -> ViewType? {
+		for subview in subviews {
+			if let subview = subview as? ViewType ?? subview.recursivelyFindSubviewOfType(type) {
+				return subview
+			}
+		}
+
+		return nil
+	}
+
+
+	@nonobjc
 	public func recursivelyFindSuperviewOfType <ViewType: UIView>(_ type: ViewType.Type) -> ViewType? {
 		var view = self
 		while let superview = view.superview {
