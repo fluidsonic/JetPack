@@ -114,14 +114,14 @@ extension UIViewController {
 
 
 	@objc(JetPack_computeInnerDecorationInsetsForChildViewController:)
-	
+
 	open func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return innerDecorationInsets
 	}
 
 
 	@objc(JetPack_computeOuterDecorationInsetsForChildViewController:)
-	
+
 	open func computeOuterDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return outerDecorationInsets
 	}
@@ -680,25 +680,25 @@ extension UIViewController {
 
 
 	@objc(JetPack_viewWasCoveredByViewController:animated:)
-	public func viewWasCoveredByViewController(_ viewController: UIViewController, animated: Bool) {
+	open func viewWasCoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_viewWasUncoveredByViewController:animated:)
-	public func viewWasUncoveredByViewController(_ viewController: UIViewController, animated: Bool) {
+	open func viewWasUncoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_viewWillBeCoveredByViewController:animated:)
-	public func viewWillBeCoveredByViewController(_ viewController: UIViewController, animated: Bool) {
+	open func viewWillBeCoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
 
 	@objc(JetPack_viewWillBeUncoveredByViewController:animated:)
-	public func viewWillBeUncoveredByViewController(_ viewController: UIViewController, animated: Bool) {
+	open func viewWillBeUncoveredByViewController(_ viewController: UIViewController, animated: Bool) {
 		// override in subclasses
 	}
 
