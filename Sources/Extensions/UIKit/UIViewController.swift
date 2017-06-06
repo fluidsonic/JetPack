@@ -222,9 +222,7 @@ extension UIViewController {
 
 		decorationInsetsAreValid = false
 
-		if appearState == .didAppear {
-			view.setNeedsLayout()
-		}
+		view.setNeedsLayout()
 	}
 
 
