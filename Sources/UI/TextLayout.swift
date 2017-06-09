@@ -14,6 +14,8 @@ import UIKit
 
 internal class TextLayout {
 
+	private static let maximumLayoutIterationCount = 3
+
 	private let result: Result
 
 	internal let configuration: Configuration
@@ -303,7 +305,7 @@ internal class TextLayout {
 		}
 
 
-		private func layout(configuration: Configuration, textContainerHeight: CGFloat) -> Result {
+		private func layout(configuration: Configuration, textContainerHeight: CGFloat, iteration: Int = 1) -> Result {
 			let textContainerSize = CGSize(width: configuration.maximumSize.width, height: textContainerHeight)
 				.scaleBy(1 / configuration.minimumScaleFactor)
 
@@ -576,7 +578,13 @@ internal class TextLayout {
 			// This is necessary since we don't have access to typesetting and cannot tell NSLayoutManager to allow the `topSpacingToRemove` and
 			// `bottomSpacingToRemove` to lie outside of the text container.
 			if usedRect.height > configuration.maximumSize.height && usedRect.height < textContainerSize.height {
-				return layout(configuration: configuration, textContainerHeight: usedRect.height)
+				if iteration < TextLayout.maximumLayoutIterationCount {
+					return layout(configuration: configuration, textContainerHeight: usedRect.height, iteration: iteration + 1)
+				}
+
+				log("TextLayout needs too many iterations. Implementation may be broken:")
+				log("Configuration: \(configuration)")
+				assertionFailure("TextLayout needs too many iterations. Implementation may be broken.")
 			}
 
 			size.height -= topSpacingToRemove
