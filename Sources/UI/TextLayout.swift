@@ -53,8 +53,8 @@ internal class TextLayout {
 		}
 
 		let gridIncrement = 1 / renderingScale
-		maximumSize.width = maximumSize.width.rounded(.up, increment: gridIncrement)
-		maximumSize.height = maximumSize.height.rounded(.up, increment: gridIncrement)
+		maximumSize.width = TextLayout.roundUpIgnoringErrors(maximumSize.width, increment: gridIncrement)
+		maximumSize.height = TextLayout.roundUpIgnoringErrors(maximumSize.height, increment: gridIncrement)
 
 		var minimumScaleFactor = minimumScaleFactor
 		if maximumNumberOfLines != 1 {
@@ -154,6 +154,22 @@ internal class TextLayout {
 		}
 
 		return rect
+	}
+
+
+	private static func roundDownIgnoringErrors(_ value: CGFloat, increment: CGFloat) -> CGFloat {
+		var value = value
+		value += (5 * value.ulp)
+
+		return value.rounded(.down, increment: increment)
+	}
+
+
+	private static func roundUpIgnoringErrors(_ value: CGFloat, increment: CGFloat) -> CGFloat {
+		var value = value
+		value -= (5 * value.ulp)
+
+		return value.rounded(.up, increment: increment)
 	}
 
 
@@ -545,16 +561,16 @@ internal class TextLayout {
 			// Align everything nicely depending on our renderingScale in order to prevent unwanted subpixel drawing.
 			let gridIncrement = 1 / configuration.renderingScale
 
-			topSpacingToRemove = topSpacingToRemove.rounded(.down, increment: gridIncrement)
-			bottomSpacingToRemove = bottomSpacingToRemove.rounded(.down, increment: gridIncrement)
+			topSpacingToRemove = TextLayout.roundDownIgnoringErrors(topSpacingToRemove, increment: gridIncrement)
+			bottomSpacingToRemove = TextLayout.roundDownIgnoringErrors(bottomSpacingToRemove, increment: gridIncrement)
 
-			boundingRect.left = boundingRect.left.rounded(.down, increment: gridIncrement)
-			boundingRect.top = boundingRect.top.rounded(.down, increment: gridIncrement)
-			boundingRect.width = boundingRect.width.rounded(.up, increment: gridIncrement)
-			boundingRect.height = boundingRect.height.rounded(.up, increment: gridIncrement)
+			boundingRect.left = TextLayout.roundDownIgnoringErrors(boundingRect.left, increment: gridIncrement)
+			boundingRect.top = TextLayout.roundDownIgnoringErrors(boundingRect.top, increment: gridIncrement)
+			boundingRect.width = TextLayout.roundUpIgnoringErrors(boundingRect.width, increment: gridIncrement)
+			boundingRect.height = TextLayout.roundUpIgnoringErrors(boundingRect.height, increment: gridIncrement)
 
-			usedRect.height = usedRect.height.rounded(.up, increment: gridIncrement)
-			usedRect.width = usedRect.width.rounded(.up, increment: gridIncrement)
+			usedRect.height = TextLayout.roundUpIgnoringErrors(usedRect.height, increment: gridIncrement)
+			usedRect.width = TextLayout.roundUpIgnoringErrors(usedRect.width, increment: gridIncrement)
 
 			// If the text we've laid out is longer than allowed then we'll have to try again with a shorter text container.
 			// This is necessary since we don't have access to typesetting and cannot tell NSLayoutManager to allow the `topSpacingToRemove` and

@@ -21,7 +21,6 @@ public extension CGSize {
 	}
 
 
-	
 	public func coerced(atLeast minimum: CGSize) -> CGSize {
 		return CGSize(
 			width:  width.coerced(atLeast: minimum.width),
@@ -30,7 +29,6 @@ public extension CGSize {
 	}
 
 
-	
 	public func coerced(atMost maximum: CGSize) -> CGSize {
 		return CGSize(
 			width:  width.coerced(atMost: maximum.width),
@@ -39,7 +37,6 @@ public extension CGSize {
 	}
 
 
-	
 	public func coerced(atLeast minimum: CGSize, atMost maximum: CGSize) -> CGSize {
 		return coerced(atMost: maximum).coerced(atLeast: minimum)
 	}
@@ -70,22 +67,6 @@ public extension CGSize {
 		return (height >= 0 && width >= 0)
 	}
 
-
-	public var rounded: CGSize {
-		return CGSize(width: width.rounded(), height: height.rounded())
-	}
-
-
-	public var roundedDown: CGSize {
-		return CGSize(width: width.rounded(.down), height: height.rounded(.down))
-	}
-
-
-	public var roundedUp: CGSize {
-		return CGSize(width: width.rounded(.up), height: height.rounded(.up))
-	}
-
-
 	
 	public func scaleBy(_ scale: CGFloat) -> CGSize {
 		return CGSize(width: width * scale, height: height * scale)
@@ -97,7 +78,6 @@ public extension CGSize {
 	}
 
 
-	
 	public func transform(_ transform: CGAffineTransform) -> CGSize {
 		return self.applying(transform)
 	}

@@ -25,8 +25,7 @@ extension UIView {
 
 	@nonobjc
 	public final func ceilToGrid(_ value: CGFloat) -> CGFloat {
-		let scale = gridScaleFactor
-		return ceil(value * scale) / scale
+		return UIView.roundUpIgnoringErrors(value, increment: gridScaleFactor)
 	}
 
 
@@ -55,8 +54,7 @@ extension UIView {
 
 	@nonobjc
 	public final func floorToGrid(_ value: CGFloat) -> CGFloat {
-		let scale = gridScaleFactor
-		return floor(value * scale) / scale
+		return UIView.roundDownIgnoringErrors(value, increment: gridScaleFactor)
 	}
 
 
@@ -144,9 +142,26 @@ extension UIView {
 
 
 	@nonobjc
+	private static func roundDownIgnoringErrors(_ value: CGFloat, increment: CGFloat) -> CGFloat {
+		var value = value
+		value += (5 * value.ulp)
+
+		return value.rounded(.down, increment: increment)
+	}
+
+
+	@nonobjc
+	private static func roundUpIgnoringErrors(_ value: CGFloat, increment: CGFloat) -> CGFloat {
+		var value = value
+		value -= (5 * value.ulp)
+
+		return value.rounded(.up, increment: increment)
+	}
+
+
+	@nonobjc
 	public final func roundToGrid(_ value: CGFloat) -> CGFloat {
-		let scale = gridScaleFactor
-		return round(value * scale) / scale
+		return value.rounded(increment: gridScaleFactor)
 	}
 
 
