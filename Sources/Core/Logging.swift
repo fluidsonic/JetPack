@@ -8,7 +8,7 @@ import Foundation
 #endif
 
 
-public func log(_ messageClosure: @autoclosure (Void) throws -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) rethrows {
+public func log(_ messageClosure: @autoclosure () throws -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) rethrows {
 	if !logEnabled {
 		return
 	}
@@ -20,7 +20,7 @@ public func log(_ messageClosure: @autoclosure (Void) throws -> String, function
 }
 
 
-public func logWithoutContext(_ messageClosure: @autoclosure (Void) throws -> String) rethrows {
+public func logWithoutContext(_ messageClosure: @autoclosure () throws -> String) rethrows {
 	if !logEnabled {
 		return
 	}

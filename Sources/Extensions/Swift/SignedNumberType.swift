@@ -1,13 +1,35 @@
-public extension SignedNumber {
+#if swift(>=3.2)
 
-	var sign: Self {
-		if self == 0 {
-			return 0
-		}
-		if self < 0 {
-			return -1
-		}
+	public extension SignedNumeric where Self: Comparable {
 
-		return 1
+		var sign: Self {
+			if self == 0 {
+				return 0
+			}
+			if self < 0 {
+				return -1
+			}
+
+			return 1
+		}
 	}
-}
+
+#else
+
+	public extension SignedNumber {
+
+		var sign: Self {
+			if self == 0 {
+				return 0
+			}
+			if self < 0 {
+				return -1
+			}
+
+			return 1
+		}
+	}
+
+
+#endif
+

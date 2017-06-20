@@ -228,7 +228,7 @@ public func swizzleMethod(in type: AnyClass, from fromSelector: Selector, to toS
 }
 
 
-public func synchronized<ReturnType>(_ object: AnyObject, closure: (Void) throws -> ReturnType) rethrows -> ReturnType {
+public func synchronized<ReturnType>(_ object: AnyObject, closure: () throws -> ReturnType) rethrows -> ReturnType {
 	objc_sync_enter(object)
 	defer { objc_sync_exit(object) }
 

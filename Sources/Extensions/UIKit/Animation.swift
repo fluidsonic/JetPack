@@ -32,7 +32,7 @@ public struct Animation {
 	}
 
 
-	public func run(_ changes: (Void) -> Void) {
+	public func run(_ changes: () -> Void) {
 		runWithCompletion { _ in changes() }
 	}
 
@@ -203,7 +203,7 @@ extension Animation.Timing: CustomStringConvertible {
 
 extension _Optional where Wrapped == Animation {
 
-	public func runAlways(_ changes: (Void) -> Void) {
+	public func runAlways(_ changes: () -> Void) {
 		if let animation = value {
 			animation.run(changes)
 		}

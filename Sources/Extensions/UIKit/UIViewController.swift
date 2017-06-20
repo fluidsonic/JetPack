@@ -178,6 +178,9 @@ extension UIViewController {
 			case .carPlay, .tv, .unspecified:
 				return .portrait
 			}
+
+		default: // FIXME add iOS 11 support
+			return .all
 		}
 	}
 

@@ -36,8 +36,9 @@ open class GradientView: View {
 	public fileprivate(set) final lazy var gradientLayer: CAGradientLayer = self.layer as! CAGradientLayer
 
 
-	
-	public final override class var layerClass : AnyClass {
+
+	@available(*, unavailable, message: "Don't override this.") // cannot mark as final
+	open override class var layerClass: AnyClass {
 		return CAGradientLayer.self
 	}
 

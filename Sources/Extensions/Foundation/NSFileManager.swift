@@ -12,7 +12,7 @@ public extension FileManager {
 
 
 	@nonobjc
-	fileprivate func asyncWithHandler <ValueType> (_ handler: ((Result<ValueType>) -> Void)?, errorMessage: @autoclosure @escaping (Void) -> String, action: @escaping (Void) throws -> ValueType) {
+	fileprivate func asyncWithHandler <ValueType> (_ handler: ((Result<ValueType>) -> Void)?, errorMessage: @autoclosure @escaping () -> String, action: @escaping () throws -> ValueType) {
 		onBackgroundQueue(qos: .utility) {
 			do {
 				let value = try action()
@@ -36,7 +36,7 @@ public extension FileManager {
 
 
 	@nonobjc
-	fileprivate func reportError <ValueType> (_ error: Error, withMessage message: @autoclosure (Void) -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line, toHandler handler: ((Result<ValueType>) -> Void)?) {
+	fileprivate func reportError <ValueType> (_ error: Error, withMessage message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line, toHandler handler: ((Result<ValueType>) -> Void)?) {
 		guard let handler = handler else {
 			log("'\(message())': \(error)", function: function, file: file, line: line)
 			return

@@ -74,8 +74,9 @@ open class ShapeView: View {
 		}
 	}
 
-	
-	public final override class var layerClass : AnyObject.Type {
+
+	@available(*, unavailable, message: "Don't override this.") // cannot mark as final
+	open override class var layerClass: AnyClass {
 		return CAShapeLayer.self
 	}
 

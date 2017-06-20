@@ -1,7 +1,7 @@
 import Foundation
 
 
-public typealias ObservatoryExit = (Void) -> Bool
+public typealias ObservatoryExit = () -> Bool
 
 
 open class Observatory<Event> {
