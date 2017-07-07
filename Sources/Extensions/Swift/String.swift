@@ -12,7 +12,6 @@ public extension String {
 	}
 
 
-
 	public func trimmedToLength(_ length: Int, truncationString: String = "") -> String {
 		if length <= 0 {
 			return ""
@@ -37,6 +36,15 @@ public extension String {
 
 	public var whitespaceTrimmed: String {
 		return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+	}
+}
+
+
+extension String.SubSequence {
+
+	// allows optional chaining: substring?.toString()
+	func toString() -> String {
+		return String(self)
 	}
 }
 

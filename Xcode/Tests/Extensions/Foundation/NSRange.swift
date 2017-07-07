@@ -14,17 +14,6 @@ class NSRange_Tests: XCTestCase {
 	}
 
 
-	func testEquatable() {
-		let a = NSRange(location: 0, length: 0)
-		let b = NSRange(location: 0, length: 1)
-
-		XCTAssertTrue (a == a)
-		XCTAssertFalse(a != a)
-		XCTAssertFalse(a == b)
-		XCTAssertTrue (a != b)
-	}
-
-
 	func testInit() {
 		let string = "abc"
 

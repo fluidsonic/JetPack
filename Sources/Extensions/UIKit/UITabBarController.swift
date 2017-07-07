@@ -8,7 +8,6 @@ extension UITabBarController {
 	}
 	
 
-
 	open override func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return addTabBarToDecorationInsets(innerDecorationInsets, forChildViewController: childViewController)
 	}
@@ -71,12 +70,6 @@ extension UITabBarController {
 	}
 
 
-	@nonobjc
-	internal static func UITabBarController_setUp() {
-		swizzleMethod(in: self, from: #selector(willTransition(to:with:)), to: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
-	}
-
-
 	@objc(JetPack_willTransitionToTraitCollection:withTransitionCoordinator:)
 	fileprivate dynamic func swizzled_willTransitionToTraitCollection(_ newCollection: UITraitCollection, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
 		swizzled_willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
@@ -84,5 +77,14 @@ extension UITabBarController {
 		coordinator.animate(alongsideTransition: { _ in
 			self.checkTabBarFrame()
 		})
+	}
+}
+
+
+@objc(_JetPack_Extensions_UIKit_UITabBarController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: UITabBarController.self, from: #selector(UITabBarController.willTransition(to:with:)), to: #selector(UITabBarController.swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 }

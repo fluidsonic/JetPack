@@ -93,23 +93,29 @@ public extension UIColor {
 
 	@nonobjc
 	public var grayscaleComponents: GrayscaleComponents? {
-		var components = GrayscaleComponents(white: 0, alpha: 0)
-		guard getWhite(&components.white, alpha: &components.alpha) else {
+		var white = CGFloat(0)
+		var alpha = CGFloat(0)
+
+		guard getWhite(&white, alpha: &alpha) else {
 			return nil
 		}
 
-		return components
+		return GrayscaleComponents(white: white, alpha: alpha)
 	}
 
 
 	@nonobjc
 	public var hsbaComponents: HsbaComponents? {
-		var components = HsbaComponents(hue: 0, saturation: 0, brightness: 0, alpha: 0)
-		guard getHue(&components.hue, saturation: &components.saturation, brightness: &components.brightness, alpha: &components.alpha) else {
+		var hue = CGFloat(0)
+		var saturation = CGFloat(0)
+		var brightness = CGFloat(0)
+		var alpha = CGFloat(0)
+
+		guard getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha) else {
 			return nil
 		}
 
-		return components
+		return HsbaComponents(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
 	}
 
 
@@ -191,12 +197,16 @@ public extension UIColor {
 
 	@nonobjc
 	public var rgbaComponents: RgbaComponents? {
-		var components = RgbaComponents(red: 0, green: 0, blue: 0, alpha: 0)
-		guard getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha) else {
+		var red = CGFloat(0)
+		var green = CGFloat(0)
+		var blue = CGFloat(0)
+		var alpha = CGFloat(0)
+
+		guard getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
 			return nil
 		}
 
-		return components
+		return RgbaComponents(red: red, green: green, blue: blue, alpha: alpha)
 	}
 
 

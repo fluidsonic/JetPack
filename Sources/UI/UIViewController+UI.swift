@@ -23,16 +23,10 @@ extension UIViewController {
 
 
 	@objc(JetPack_UI_viewWillAppear:)
-	private dynamic func swizzled_viewWillAppear(_ animated: Bool) {
+	fileprivate dynamic func swizzled_viewWillAppear(_ animated: Bool) {
 		swizzled_viewWillAppear(animated)
 
 		updateNavigationBarStyle()
-	}
-
-
-	@nonobjc
-	static func UIViewController_UI_setUp() {
-		swizzleMethod(in: self, from: #selector(viewWillAppear(_:)), to: #selector(swizzled_viewWillAppear(_:)))
 	}
 
 
@@ -43,5 +37,14 @@ extension UIViewController {
 		}
 
 		navigationController.updateNavigationBarStyleForTopViewController(animation: animation)
+	}
+}
+
+
+@objc(_JetPack_UI_UIViewController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillAppear(_:)), to: #selector(UIViewController.swizzled_viewWillAppear(_:)))
 	}
 }

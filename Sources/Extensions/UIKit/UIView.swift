@@ -207,7 +207,7 @@ extension UIView {
 
 
 	@objc(JetPack_didChangeFromWindow:toWindow:)
-	private dynamic func swizzled_didChangeWindow(from: UIWindow?, to: UIWindow?) {
+	fileprivate dynamic func swizzled_didChangeWindow(from: UIWindow?, to: UIWindow?) {
 		swizzled_didChangeWindow(from: from, to: to)
 
 		delegateViewController?.viewDidMoveToWindow()
@@ -215,7 +215,7 @@ extension UIView {
 
 
 	@objc(JetPack_invalidateIntrinsicContentSize_needingLayout:)
-	private dynamic func swizzled_invalidateIntrinsicContentSizeNeedingLayout(_ needsLayout: Bool) {
+	fileprivate dynamic func swizzled_invalidateIntrinsicContentSizeNeedingLayout(_ needsLayout: Bool) {
 		swizzled_invalidateIntrinsicContentSizeNeedingLayout(needsLayout)
 
 		superview?.subviewDidInvalidateIntrinsicContentSize(self)
@@ -223,7 +223,7 @@ extension UIView {
 
 
 	@objc(JetPack_removeAllAnimations:)
-	private dynamic func swizzled_removeAllAnimations(_ arg1: Bool) {
+	fileprivate dynamic func swizzled_removeAllAnimations(_ arg1: Bool) {
 		guard !CALayer.removeAllAnimationsCallsAreDisabled else {
 			return
 		}
@@ -248,15 +248,6 @@ extension UIView {
 			bounds = CGRect(origin: bounds.origin, size: newValue.size)
 			center = newValue.center.offsetBy(centerOffset)
 		}
-	}
-
-
-	@nonobjc
-	internal static func UIView_setUp() {
-		// cannot use didMoveToWindow() because some subclasses don't call super's implementation
-		swizzleMethod(in: self, from: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), to: #selector(swizzled_didChangeWindow(from:to:)))
-		swizzleMethod(in: self, from: obfuscatedSelector("_", "invalidate", "Intrinsic", "Content", "Size", "Needing", "Layout:"), to: #selector(swizzled_invalidateIntrinsicContentSizeNeedingLayout(_:)))
-		swizzleMethod(in: self, from: obfuscatedSelector("_", "remove", "All", "Animations:"), to: #selector(swizzled_removeAllAnimations(_:)))
 	}
 
 
@@ -378,5 +369,17 @@ extension UIViewTintAdjustmentMode: CustomStringConvertible {
 		case .dimmed:    return "UIViewTintAdjustmentMode.Dimmed"
 		case .normal:    return "UIViewTintAdjustmentMode.Normal"
 		}
+	}
+}
+
+
+@objc(_JetPack_Extensions_UIKit_UIView_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		// cannot use didMoveToWindow() because some subclasses don't call super's implementation
+		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), to: #selector(UIView.swizzled_didChangeWindow(from:to:)))
+		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "invalidate", "Intrinsic", "Content", "Size", "Needing", "Layout:"), to: #selector(UIView.swizzled_invalidateIntrinsicContentSizeNeedingLayout(_:)))
+		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "remove", "All", "Animations:"), to: #selector(UIView.swizzled_removeAllAnimations(_:)))
 	}
 }

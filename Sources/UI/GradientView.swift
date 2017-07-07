@@ -44,7 +44,7 @@ open class GradientView: View {
 
 
 	open var locations: [CGFloat] {
-		get { return gradientLayer.locations?.map { $0 as CGFloat } ?? [] }
+		get { return gradientLayer.locations?.map { $0 as! CGFloat } ?? [] }
 		set { gradientLayer.locations = newValue as [NSNumber]? }
 	}
 

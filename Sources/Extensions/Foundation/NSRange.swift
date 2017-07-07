@@ -95,39 +95,7 @@ public extension NSRange {
 
 
 	public func toCountableRange() -> CountableRange<Int>? {
-		return toRange().map { $0.lowerBound ..< $0.upperBound }
-	}
-}
-
-
-extension NSRange: CustomDebugStringConvertible {
-
-	public var debugDescription: String {
-		return "NSRange(location: \(location), length: \(length))"
-	}
-}
-
-
-extension NSRange: CustomStringConvertible {
-
-	public var description: String {
-		return "(location: \(location), length: \(length))"
-	}
-}
-
-
-extension NSRange: Equatable {
-
-	public static func == (a: NSRange, b: NSRange) -> Bool {
-		return NSEqualRanges(a, b)
-	}
-}
-
-
-extension NSRange: Hashable {
-
-	public var hashValue: Int {
-		return location ^ length
+		return Range(self).map { $0.lowerBound ..< $0.upperBound }
 	}
 }
 
@@ -147,17 +115,17 @@ extension NSRange: Sequence {
 }
 
 
-public extension CountableRange where Bound: SignedInteger { // TODO use same-type requirement with Int once possible
+public extension CountableRange where Bound == Int {
 
 	public func toNSRange() -> NSRange {
-		return NSRange(location: Int(lowerBound.toIntMax()), length: Int(upperBound.toIntMax() - lowerBound.toIntMax()))
+		return NSRange(location: lowerBound, length: upperBound - lowerBound)
 	}
 }
 
 
-public extension Range where Bound: SignedInteger { // TODO use same-type requirement with Int once possible
+public extension Range where Bound == Int {
 
 	public func toNSRange() -> NSRange {
-		return NSRange(location: Int(lowerBound.toIntMax()), length: Int(upperBound.toIntMax() - lowerBound.toIntMax()))
+		return NSRange(location: lowerBound, length: upperBound - lowerBound)
 	}
 }

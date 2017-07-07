@@ -19,15 +19,18 @@ public extension UIWindow {
 
 		swizzled_layoutIfNeeded()
 	}
-
-
-	@nonobjc
-	internal static func UIWindow_setUp() {
-		copyMethod(selector: #selector(layoutIfNeeded), from: UIView.self, to: self)
-		swizzleMethod(in: self, from: #selector(swizzled_layoutIfNeeded), to: #selector(layoutIfNeeded))
-	}
 }
 
 
 
 internal protocol _NonSystemWindow {}
+
+
+@objc(_JetPack_Extensions_UIKit_UIWindow_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		copyMethod(selector: #selector(UIWindow.layoutIfNeeded), from: UIView.self, to: UIWindow.self)
+		swizzleMethod(in: UIWindow.self, from: #selector(UIWindow.swizzled_layoutIfNeeded), to: #selector(UIWindow.layoutIfNeeded))
+	}
+}

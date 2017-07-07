@@ -337,7 +337,7 @@ internal class TextLayout {
 					let spacingToPreviousLine = usedRectForLine.top - lastLineUsedRectBottom
 					let characterRangeForLine = layoutManager.characterRange(forGlyphRange: glyphRangeForLine, actualGlyphRange: nil)
 
-					if isFirstLineOfParagraph, let lineParagraphStyle = textStorage.attribute(NSParagraphStyleAttributeName, at: characterRangeForLine.location, effectiveRange: nil) as? NSParagraphStyle {
+					if isFirstLineOfParagraph, let lineParagraphStyle = textStorage.attribute(.paragraphStyle, at: characterRangeForLine.location, effectiveRange: nil) as? NSParagraphStyle {
 						paragraphStyle = lineParagraphStyle
 						paragraphStyleEndIndex = characterRangeForLine.endLocation
 					}
@@ -407,7 +407,7 @@ internal class TextLayout {
 
 			// How many lines did we manage to lay out?
 			var numberOfLines = 0
-			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { _ in numberOfLines += 1 }
+			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { _, _, _, _, _ in numberOfLines += 1 }
 			assert(numberOfLines <= configuration.maximumNumberOfLines)
 
 			// layoutManager's bounding rectangles aren't calculated correctly unless we declare glyph drawing outside of the line fragments.
@@ -529,11 +529,11 @@ internal class TextLayout {
 			// when the tint color changes.
 			var dependsOnTintColor = false
 			textStorage.enumerateAttributes(in: visibleCharacterRange, options: .longestEffectiveRangeNotRequired) { attributes, _, stop in
-				if let textColor = attributes[NSForegroundColorAttributeName] as? UIColor, textColor.tintAlpha != nil {
+				if let textColor = attributes[.foregroundColor] as? UIColor, textColor.tintAlpha != nil {
 					dependsOnTintColor = true
 					stop.pointee = true
 				}
-				else if let backgroundColor = attributes[NSForegroundColorAttributeName] as? UIColor, backgroundColor.tintAlpha != nil {
+				else if let backgroundColor = attributes[.foregroundColor] as? UIColor, backgroundColor.tintAlpha != nil {
 					dependsOnTintColor = true
 					stop.pointee = true
 				}
@@ -611,22 +611,11 @@ internal class TextLayout {
 
 
 
-	private class LayoutManager: NSLayoutManager {
+	fileprivate class LayoutManager: NSLayoutManager {
 
 		@objc(JetPack_linkAttributes)
-		private dynamic class var linkAttributes: [AnyHashable: Any] {
+		fileprivate dynamic class var linkAttributes: [AnyHashable: Any] {
 			return [:]
-		}
-
-
-		override class func initialize() {
-			guard self == LayoutManager.self else {
-				return
-			}
-
-			let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
-			copyMethod(selector: defaultLinkAttributesSelector, from: object_getClass(NSLayoutManager.self), to: object_getClass(self))
-			swizzleMethod(in: object_getClass(self), from: #selector(getter: LayoutManager.linkAttributes), to: defaultLinkAttributesSelector)
 		}
 	}
 
@@ -686,22 +675,22 @@ internal class TextLayout {
 			forDrawingToScreen toScreen: Bool,
 			atCharacterIndex charIndex: Int,
 			effectiveRange effectiveCharRange: NSRangePointer?
-		) -> [String : Any]? {
+		) -> [NSAttributedStringKey : Any]? {
 			guard toScreen, let textStorage = layoutManager.textStorage else {
 				return nil
 			}
 
 			var attributes = textStorage.attributes(at: charIndex, effectiveRange: nil)
 
-			if let textColor = attributes[NSForegroundColorAttributeName] as? UIColor {
-				attributes[NSForegroundColorAttributeName] = textColor.tinted(with: tintColor)
+			if let textColor = attributes[.foregroundColor] as? UIColor {
+				attributes[.foregroundColor] = textColor.tinted(with: tintColor)
 			}
 			else {
-				attributes[NSForegroundColorAttributeName] = defaultTextColor
+				attributes[.foregroundColor] = defaultTextColor
 			}
 
-			if let backgroundColor = attributes[NSBackgroundColorAttributeName] as? UIColor {
-				attributes[NSBackgroundColorAttributeName] = backgroundColor.tinted(with: tintColor)
+			if let backgroundColor = attributes[.backgroundColor] as? UIColor {
+				attributes[.backgroundColor] = backgroundColor.tinted(with: tintColor)
 			}
 
 			return attributes
@@ -722,5 +711,16 @@ internal class TextLayout {
 		var size: CGSize
 		var textContainer: NSTextContainer
 		var textStorage: NSTextStorage // NSLayoutManager only maintains a weak reference
+	}
+}
+
+
+@objc(_JetPack_UI_TextLayout_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
+		copyMethod(selector: defaultLinkAttributesSelector, from: object_getClass(NSLayoutManager.self)!, to: object_getClass(TextLayout.LayoutManager.self)!)
+		swizzleMethod(in: object_getClass(TextLayout.LayoutManager.self)!, from: #selector(getter: TextLayout.LayoutManager.linkAttributes), to: defaultLinkAttributesSelector)
 	}
 }

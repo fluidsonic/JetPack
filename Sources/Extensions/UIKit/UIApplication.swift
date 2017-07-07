@@ -4,7 +4,7 @@ import UIKit
 extension UIApplication {
 
 	@objc(JetPack_statusBarHeightForOrientation:ignoringHidden:)
-	private dynamic func private_statusBarHeight(for orientation: UIInterfaceOrientation, ignoringHidden: Bool) -> CGFloat {
+	fileprivate dynamic func private_statusBarHeight(for orientation: UIInterfaceOrientation, ignoringHidden: Bool) -> CGFloat {
 		return statusBarFrame.height
 	}
 
@@ -13,10 +13,13 @@ extension UIApplication {
 	public func statusBarHeight(for orientation: UIInterfaceOrientation) -> CGFloat {
 		return private_statusBarHeight(for: orientation, ignoringHidden: true)
 	}
+}
 
 
-	@nonobjc
-	internal static func UIApplication_setUp() {
-		redirectMethod(in: self, from: #selector(private_statusBarHeight(for:ignoringHidden:)), to: obfuscatedSelector("status", "Bar", "Height", "For", "Orientation:", "ignore", "Hidden:"))
+@objc(_JetPack_Extensions_UIKit_UIApplication_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		redirectMethod(in: UIApplication.self, from: #selector(UIApplication.private_statusBarHeight(for:ignoringHidden:)), to: obfuscatedSelector("status", "Bar", "Height", "For", "Orientation:", "ignore", "Hidden:"))
 	}
 }

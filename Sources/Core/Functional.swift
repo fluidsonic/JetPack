@@ -24,8 +24,7 @@ private func class_getInstanceMethodIgnoringSupertypes(_ clazz: AnyClass, _ name
 internal func copyMethod(selector: Selector, from fromType: AnyClass, to toType: AnyClass) {
 	precondition(fromType != toType)
 
-	let fromMethod = class_getInstanceMethodIgnoringSupertypes(fromType, selector)
-	guard fromMethod != nil else {
+	guard let fromMethod = class_getInstanceMethodIgnoringSupertypes(fromType, selector) else {
 		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's not present in the former.")
 		return
 	}
@@ -36,13 +35,12 @@ internal func copyMethod(selector: Selector, from fromType: AnyClass, to toType:
 		return
 	}
 
-	let typePointer = method_getTypeEncoding(fromMethod)
-	let implementation = method_getImplementation(fromMethod)
-
-	guard typePointer != nil && implementation != nil else {
-		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's implementation details could not be accessed.")
+	guard let typePointer = method_getTypeEncoding(fromMethod) else {
+		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since it's type encoding could not be accessed.")
 		return
 	}
+
+	let implementation = method_getImplementation(fromMethod)
 
 	guard class_addMethod(toType, selector, implementation, typePointer) else {
 		log("Selector '\(selector)' was not moved from '\(fromType)' to '\(toType)' since `class_addMethod` vetoed.")
@@ -54,8 +52,7 @@ internal func copyMethod(selector: Selector, from fromType: AnyClass, to toType:
 internal func copyMethod(in type: AnyClass, includingSupertypes: Bool = false, from fromSelector: Selector, to toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
-	let fromMethod = (includingSupertypes ? class_getInstanceMethod : class_getInstanceMethodIgnoringSupertypes)(type, fromSelector)
-	guard fromMethod != nil else {
+	guard let fromMethod = (includingSupertypes ? class_getInstanceMethod : class_getInstanceMethodIgnoringSupertypes)(type, fromSelector) else {
 		log("Selector '\(fromSelector)' was not copied to '\(toSelector)' since the former not present in '\(type)'.")
 		return
 	}
@@ -66,13 +63,12 @@ internal func copyMethod(in type: AnyClass, includingSupertypes: Bool = false, f
 		return
 	}
 
-	let typePointer = method_getTypeEncoding(fromMethod)
-	let implementation = method_getImplementation(fromMethod)
-
-	guard typePointer != nil && implementation != nil else {
-		log("Selector '\(fromSelector)' was not copied to '\(toSelector)' in '\(type)' since it's implementation details could not be accessed.")
+	guard let typePointer = method_getTypeEncoding(fromMethod) else {
+		log("Selector '\(fromSelector)' was not copied to '\(toSelector)' in '\(type)' since it's type encoding could not be accessed.")
 		return
 	}
+
+	let implementation = method_getImplementation(fromMethod)
 
 	guard class_addMethod(type, toSelector, implementation, typePointer) else {
 		log("Selector '\(fromMethod)' was not copied to '\(toSelector)' in '\(type)' since `class_addMethod` vetoed.")
@@ -171,14 +167,12 @@ public func redirectMethod(in type: AnyClass, from fromSelector: Selector, to to
 
 	precondition(fromSelector != toSelector || type != actualToType)
 
-	let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector)
-	guard fromMethod != nil else {
+	guard let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector) else {
 		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the former is not present in '\(type)'.")
 		return
 	}
 
-	let toMethod = class_getInstanceMethod(actualToType, toSelector)
-	guard toMethod != nil else {
+	guard let toMethod = class_getInstanceMethod(actualToType, toSelector) else {
 		log("Selector '\(fromSelector)' was not redirected to selector '\(toSelector)' since the latter is not present in '\(actualToType)'.")
 		return
 	}
@@ -201,14 +195,12 @@ public func redirectMethod(in type: AnyClass, from fromSelector: Selector, to to
 public func swizzleMethod(in type: AnyClass, from fromSelector: Selector, to toSelector: Selector) {
 	precondition(fromSelector != toSelector)
 
-	let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector)
-	guard fromMethod != nil else {
+	guard let fromMethod = class_getInstanceMethodIgnoringSupertypes(type, fromSelector) else {
 		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the former is not present in '\(type)'.")
 		return
 	}
 
-	let toMethod = class_getInstanceMethodIgnoringSupertypes(type, toSelector)
-	guard toMethod != nil else {
+	guard let toMethod = class_getInstanceMethodIgnoringSupertypes(type, toSelector) else {
 		log("Selector '\(fromSelector)' was not swizzled with selector '\(toSelector)' since the latter is not present in '\(type)'.")
 		return
 	}

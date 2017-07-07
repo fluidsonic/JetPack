@@ -13,22 +13,14 @@ extension CALayer {
 	}
 
 
-	@nonobjc
-	static func CALayer_setUp() {
-		swizzleMethod(in: self, from: #selector(removeAllAnimations), to: #selector(swizzled_removeAllAnimations))
-
-		swizzleMethod(in: self, from: obfuscatedSelector("layout", "Below", "If", "Needed"), to: #selector(swizzled_layoutWithSubtreeIfNeeded))
-	}
-
-
 	@objc(JetPack_swizzled_layoutWithSubtreeIfNeeded)
-	private dynamic func swizzled_layoutWithSubtreeIfNeeded() {
+	fileprivate dynamic func swizzled_layoutWithSubtreeIfNeeded() {
 		layoutWithSubtreeIfNeeded()
 	}
 
 
 	@objc(JetPack_removeAllAnimations)
-	private dynamic func swizzled_removeAllAnimations() {
+	fileprivate dynamic func swizzled_removeAllAnimations() {
 		guard !CALayer.removeAllAnimationsCallsAreDisabled else {
 			return
 		}
@@ -47,5 +39,16 @@ extension CALayer {
 			block()
 			removeAllAnimationsCallsAreDisabled = false
 		}
+	}
+}
+
+
+@objc(_JetPack_Extensions_QuartzCore_CALayer_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: CALayer.self, from: #selector(CALayer.removeAllAnimations), to: #selector(CALayer.swizzled_removeAllAnimations))
+
+		swizzleMethod(in: CALayer.self, from: obfuscatedSelector("layout", "Below", "If", "Needed"), to: #selector(CALayer.swizzled_layoutWithSubtreeIfNeeded))
 	}
 }

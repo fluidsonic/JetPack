@@ -114,12 +114,15 @@ extension UINavigationController {
 			self.checkNavigationBarFrame()
 		})
 	}
+}
 
 
-	@nonobjc
-	internal static func UINavigationController_setUp() {
-		swizzleMethod(in: self, from: #selector(setter: UINavigationController.isNavigationBarHidden), to: #selector(swizzled_setNavigationBarHidden(_:)))
-		swizzleMethod(in: self, from: #selector(setNavigationBarHidden(_:animated:)),                  to: #selector(swizzled_setNavigationBarHidden(_:animated:)))
-		swizzleMethod(in: self, from: #selector(willTransition(to:with:)),                             to: #selector(swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
+@objc(_JetPack_Extensions_UIKit_UINavigationController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: UINavigationController.self, from: #selector(setter: UINavigationController.isNavigationBarHidden),       to: #selector(UINavigationController.swizzled_setNavigationBarHidden(_:)))
+		swizzleMethod(in: UINavigationController.self, from: #selector(UINavigationController.setNavigationBarHidden(_:animated:)), to: #selector(UINavigationController.swizzled_setNavigationBarHidden(_:animated:)))
+		swizzleMethod(in: UINavigationController.self, from: #selector(UINavigationController.willTransition(to:with:)),            to: #selector(UINavigationController.swizzled_willTransitionToTraitCollection(_:withTransitionCoordinator:)))
 	}
 }

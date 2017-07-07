@@ -94,22 +94,6 @@ public extension UITableViewCell {
 
 
 	@nonobjc
-	internal static func UITableViewCell_setUp() {
-		swizzleMethod(in: self, from: #selector(getter: UITextField.isEditing),                    to: #selector(getter: UITableViewCell.swizzled_isEditing))
-		swizzleMethod(in: self, from: #selector(getter: UITableViewCell.editingStyle),             to: #selector(getter: UITableViewCell.swizzled_editingStyle))
-		swizzleMethod(in: self, from: #selector(getter: UITableViewCell.shouldIndentWhileEditing), to: #selector(getter: UITableViewCell.swizzled_shouldIndentWhileEditing))
-		swizzleMethod(in: self, from: #selector(getter: UITableViewCell.showsReorderControl),      to: #selector(getter: UITableViewCell.swizzled_showsReorderControl))
-
-		// yep, private API necessary :(
-		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		redirectMethod(in: self, from: #selector(getter: UITableViewCell.private_layoutManager),  to: obfuscatedSelector("layout", "Manager"))
-		redirectMethod(in: self, from: #selector(getter: UITableViewCell.private_separatorStyle), to: obfuscatedSelector("separator", "Style"))
-
-		LayoutManager.setUp()
-	}
-
-
-	@nonobjc
 	fileprivate func sizeThatFitsContentWidth(_ contentWidth: CGFloat, cellWidth: CGFloat, defaultContentHeight: CGFloat) -> CGSize {
 		var cellHeight = contentHeightThatFitsWidth(contentWidth, defaultHeight: defaultContentHeight)
 		if private_separatorStyle != .none {
@@ -217,5 +201,24 @@ extension UITableViewCellEditingStyle: CustomStringConvertible {
 		case .insert: return "Insert"
 		case .none:   return "None"
 		}
+	}
+}
+
+
+@objc(_JetPack_Extensions_UIKit_UITableViewCell_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: UITableViewCell.self, from: #selector(getter: UITextField.isEditing),                    to: #selector(getter: UITableViewCell.swizzled_isEditing))
+		swizzleMethod(in: UITableViewCell.self, from: #selector(getter: UITableViewCell.editingStyle),             to: #selector(getter: UITableViewCell.swizzled_editingStyle))
+		swizzleMethod(in: UITableViewCell.self, from: #selector(getter: UITableViewCell.shouldIndentWhileEditing), to: #selector(getter: UITableViewCell.swizzled_shouldIndentWhileEditing))
+		swizzleMethod(in: UITableViewCell.self, from: #selector(getter: UITableViewCell.showsReorderControl),      to: #selector(getter: UITableViewCell.swizzled_showsReorderControl))
+
+		// yep, private API necessary :(
+		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
+		redirectMethod(in: UITableViewCell.self, from: #selector(getter: UITableViewCell.private_layoutManager),  to: obfuscatedSelector("layout", "Manager"))
+		redirectMethod(in: UITableViewCell.self, from: #selector(getter: UITableViewCell.private_separatorStyle), to: obfuscatedSelector("separator", "Style"))
+
+		LayoutManager.setUp()
 	}
 }

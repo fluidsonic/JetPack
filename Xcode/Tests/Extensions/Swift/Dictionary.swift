@@ -14,7 +14,7 @@ class Dictionary_Tests: XCTestCase {
 		XCTAssertEqual(dictionary.filterAsDictionary { $0 == 0 || $1 == 0 },                   [0: 1, 1: 0])
 
 		do {
-			let _ = try dictionary.filterAsDictionary { _ in throw error }
+			let _ = try dictionary.filterAsDictionary { _, _ in throw error }
 			XCTFail()
 		}
 		catch let error as NSError {
@@ -36,7 +36,7 @@ class Dictionary_Tests: XCTestCase {
 
 		do {
 			mutableDictionary = dictionary
-			try mutableDictionary.filterInPlace { _ in throw error }
+			try mutableDictionary.filterInPlace { _, _ in throw error }
 			XCTFail()
 		}
 		catch let error as NSError {
@@ -51,7 +51,7 @@ class Dictionary_Tests: XCTestCase {
 		XCTAssertEqual(dictionary.mapAsDictionary { ($0 / 2, $1 * 2) },                   [0: 0, 1: 4])
 
 		do {
-			let _ = try dictionary.mapAsDictionary { _ -> (Int, Int) in throw error }
+			let _ = try dictionary.mapAsDictionary { _, _ -> (Int, Int) in throw error }
 			XCTFail()
 		}
 		catch let error as NSError {

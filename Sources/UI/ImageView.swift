@@ -145,7 +145,12 @@ open class ImageView: View {
 		switch image.imageOrientation {
 		case .left, .leftMirrored, .right, .rightMirrored:
 			let center = imageLayerFrame.center
-			swap(&imageLayerFrame.width, &imageLayerFrame.height)
+
+			let imageLayerFrameWidth = imageLayerFrame.width
+			let imageLayerFrameHeight = imageLayerFrame.height
+			imageLayerFrame.width = imageLayerFrameHeight
+			imageLayerFrame.height = imageLayerFrameWidth
+
 			imageLayerFrame.center = center
 
 		case .down, .downMirrored, .up, .upMirrored:

@@ -19,7 +19,7 @@ public extension Dictionary {
 
 
 	
-	public func mapAsDictionary<K: Hashable, V>(transform: (_ key: Key, _ value: Value) throws -> (K, V)) rethrows -> [K : V] {
+	public func mapAsDictionary<K, V>(transform: (_ key: Key, _ value: Value) throws -> (K, V)) rethrows -> [K : V] {
 		var mappedDictionary = [K : V](minimumCapacity: count)
 		for (key, value) in self {
 			let (mappedKey, mappedValue) = try transform(key, value)
@@ -31,7 +31,7 @@ public extension Dictionary {
 
 
 	
-	public func mapAsDictionaryNotNil<K: Hashable, V>(transform: (_ key: Key, _ value: Value) throws -> (K?, V?)) rethrows -> [K : V] {
+	public func mapAsDictionaryNotNil<K, V>(transform: (_ key: Key, _ value: Value) throws -> (K?, V?)) rethrows -> [K : V] {
 		var mappedDictionary = [K : V](minimumCapacity: count)
 		for (key, value) in self {
 			let (mappedKey, mappedValue) = try transform(key, value)

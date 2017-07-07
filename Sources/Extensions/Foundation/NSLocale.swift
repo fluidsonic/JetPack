@@ -7,7 +7,7 @@ public extension Locale {
 
 
 	@nonobjc
-	internal static let defaultDecimalFormatterForResolvingPluralCategory: NumberFormatter = {
+	public static let defaultDecimalFormatterForResolvingPluralCategory: NumberFormatter = {
 		let formatter = NumberFormatter()
 		formatter.locale = Locale.englishUnitedStatesComputer
 		formatter.numberStyle = .decimal
@@ -47,10 +47,10 @@ public extension Locale {
 		guard let
 			wholeNumber = match[0],
 			let integerPart = match[1],
-			let f = simpleDecimalFormatter.number(from: match[2] ?? "0"),
-			let i = simpleDecimalFormatter.number(from: integerPart),
-			let n = simpleDecimalFormatter.number(from: wholeNumber),
-			let t = simpleDecimalFormatter.number(from: match[3] ?? "0")
+			let f = simpleDecimalFormatter.number(from: match[2]?.toString() ?? "0"),
+			let i = simpleDecimalFormatter.number(from: integerPart.toString()),
+			let n = simpleDecimalFormatter.number(from: wholeNumber.toString()),
+			let t = simpleDecimalFormatter.number(from: match[3]?.toString() ?? "0")
 		else {
 			return .other
 		}

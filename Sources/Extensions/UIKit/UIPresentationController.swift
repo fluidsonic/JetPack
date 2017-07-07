@@ -26,11 +26,14 @@ public extension UIPresentationController {
 
 		return swizzled_parent()
 	}
+}
 
 
-	@nonobjc
-	internal static func UIPresentationController_setUp() {
-		swizzleMethod(in: self, from: obfuscatedSelector("_", "enable", "Occlusion:"), to: #selector(swizzled_enableBlocking(_:)))
-		swizzleMethod(in: self, from: obfuscatedSelector("_", "parent", "Presentation", "Controller"), to: #selector(swizzled_parent))
+@objc(_JetPack_Extensions_UIKit_UIPresentationController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: UIPresentationController.self, from: obfuscatedSelector("_", "enable", "Occlusion:"), to: #selector(UIPresentationController.swizzled_enableBlocking(_:)))
+		swizzleMethod(in: UIPresentationController.self, from: obfuscatedSelector("_", "parent", "Presentation", "Controller"), to: #selector(UIPresentationController.swizzled_parent))
 	}
 }

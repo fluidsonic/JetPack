@@ -119,19 +119,6 @@ public extension UITableView {
 	}
 
 
-	@nonobjc
-	internal static func UITableView_setUp() {
-		// yep, private API necessary :(
-
-		redirectMethod(in: self, from: #selector(redirected_headerAndFooterViewsFloat), to: obfuscatedSelector("_header", "And", "Footer", "Views", "Float"))
-
-		redirectMethod(in: self, from: #selector(redirected_setHeaderAndFooterViewsFloat), to: obfuscatedSelector("_set", "Header", "And", "Footer", "Views" ,"Float:"))
-
-		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
-		swizzleMethod(in: self, from: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), to: #selector(swizzled_computeHeightForCell(_:atIndexPath:)))
-	}
-
-
 	@objc(JetPack_computeHeightForCell:atIndexPath:)
 	fileprivate dynamic func swizzled_computeHeightForCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) -> CGFloat {
 		indexPathForCurrentHeightComputation = indexPath
@@ -139,5 +126,21 @@ public extension UITableView {
 		indexPathForCurrentHeightComputation = nil
 
 		return height
+	}
+}
+
+
+@objc(_JetPack_Extensions_UIKit_UITableView_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		// yep, private API necessary :(
+
+		redirectMethod(in: UITableView.self, from: #selector(UITableView.redirected_headerAndFooterViewsFloat), to: obfuscatedSelector("_header", "And", "Footer", "Views", "Float"))
+
+		redirectMethod(in: UITableView.self, from: #selector(UITableView.redirected_setHeaderAndFooterViewsFloat), to: obfuscatedSelector("_set", "Header", "And", "Footer", "Views" ,"Float:"))
+
+		// UIKit doesn't let us properly implement our own sizeThatFits() in UITableViewCell subclasses because we're unable to determine the correct size of .contentView
+		swizzleMethod(in: UITableView.self, from: obfuscatedSelector("_", "height", "For", "Cell:", "at", "Index", "Path:"), to: #selector(UITableView.swizzled_computeHeightForCell(_:atIndexPath:)))
 	}
 }

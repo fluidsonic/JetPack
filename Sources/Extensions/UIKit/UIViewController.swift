@@ -347,23 +347,6 @@ extension UIViewController {
 
 
 	@nonobjc
-	internal static func UIViewController_setUp() {
-		swizzleMethod(in: self, from: #selector(didMove(toParentViewController:)),  to: #selector(swizzled_didMoveToParentViewController(_:)))
-		swizzleMethod(in: self, from: #selector(present(_:animated:completion:)),   to: #selector(swizzled_presentViewController(_:animated:completion:)))
-		swizzleMethod(in: self, from: #selector(setNeedsStatusBarAppearanceUpdate), to: #selector(swizzled_setNeedsStatusBarAppearanceUpdate))
-		swizzleMethod(in: self, from: #selector(viewDidAppear(_:)),                 to: #selector(swizzled_viewDidAppear(_:)))
-		swizzleMethod(in: self, from: #selector(viewDidLayoutSubviews),             to: #selector(swizzled_viewDidLayoutSubviews))
-		swizzleMethod(in: self, from: #selector(viewDidDisappear(_:)),              to: #selector(swizzled_viewDidDisappear(_:)))
-		swizzleMethod(in: self, from: #selector(viewWillAppear(_:)),                to: #selector(swizzled_viewWillAppear(_:)))
-		swizzleMethod(in: self, from: #selector(viewWillDisappear(_:)),             to: #selector(swizzled_viewWillDisappear(_:)))
-		swizzleMethod(in: self, from: #selector(viewWillLayoutSubviews),            to: #selector(swizzled_viewWillLayoutSubviews))
-		swizzleMethod(in: self, from: #selector(willMove(toParentViewController:)), to: #selector(swizzled_willMoveToParentViewController(_:)))
-
-		subscribeToEvents()
-	}
-
-
-	@nonobjc
 	fileprivate var shouldReportLifecycleProblems: Bool {
 		let typeName = NSStringFromClass(type(of: self))
 		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("SFSafari") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
@@ -440,7 +423,7 @@ extension UIViewController {
 
 
 	@objc(JetPack_setNeedsStatusBarAppearanceUpdate)
-	private dynamic func swizzled_setNeedsStatusBarAppearanceUpdate() {
+	fileprivate dynamic func swizzled_setNeedsStatusBarAppearanceUpdate() {
 		swizzled_setNeedsStatusBarAppearanceUpdate()
 
 		UIViewController.invalidateTopLevelDecorationInsetsWithAnimation(Animation.current)
@@ -851,5 +834,25 @@ extension UIViewController.ContainmentState: CustomStringConvertible {
 		case .willMoveToParent:   return "WillMoveToParent"
 		case .willMoveFromParent: return "WillMoveFromParent"
 		}
+	}
+}
+
+
+@objc(_JetPack_Extensions_UIKit_UIViewController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.didMove(toParentViewController:)),  to: #selector(UIViewController.swizzled_didMoveToParentViewController(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.present(_:animated:completion:)),   to: #selector(UIViewController.swizzled_presentViewController(_:animated:completion:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.setNeedsStatusBarAppearanceUpdate), to: #selector(UIViewController.swizzled_setNeedsStatusBarAppearanceUpdate))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewDidAppear(_:)),                 to: #selector(UIViewController.swizzled_viewDidAppear(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewDidLayoutSubviews),             to: #selector(UIViewController.swizzled_viewDidLayoutSubviews))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewDidDisappear(_:)),              to: #selector(UIViewController.swizzled_viewDidDisappear(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillAppear(_:)),                to: #selector(UIViewController.swizzled_viewWillAppear(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillDisappear(_:)),             to: #selector(UIViewController.swizzled_viewWillDisappear(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillLayoutSubviews),            to: #selector(UIViewController.swizzled_viewWillLayoutSubviews))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.willMove(toParentViewController:)), to: #selector(UIViewController.swizzled_willMoveToParentViewController(_:)))
+
+		UIViewController.subscribeToEvents()
 	}
 }

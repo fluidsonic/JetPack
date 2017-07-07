@@ -4,7 +4,7 @@ import Foundation
 public extension NSMutableAttributedString {
 
 	@nonobjc
-	public func appendString(_ string: String, maintainingPrecedingAttributes: Bool = false, additionalAttributes: [String : Any] = [:]) {
+	public func appendString(_ string: String, maintainingPrecedingAttributes: Bool = false, additionalAttributes: [NSAttributedStringKey : Any] = [:]) {
 		if maintainingPrecedingAttributes {
 			let location = length
 

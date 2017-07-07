@@ -9,7 +9,7 @@ extension NSAttributedString {
 		var smallestSpacingBelowCapitalLetters: CGFloat?
 
 		enumerateAttributes(in: range, options: .longestEffectiveRangeNotRequired) { attributes, _, _ in
-			guard let font = attributes[NSFontAttributeName] as? UIFont else {
+			guard let font = attributes[.font] as? UIFont else {
 				return
 			}
 
@@ -17,7 +17,7 @@ extension NSAttributedString {
 			if let lineHeight = lineHeight {
 				effectiveLineHeight = lineHeight - (usingFontLeading ? font.leading : 0)
 			}
-			else if let paragraphStyle = attributes[NSParagraphStyleAttributeName] as? NSParagraphStyle {
+			else if let paragraphStyle = attributes[.paragraphStyle] as? NSParagraphStyle {
 				effectiveLineHeight = paragraphStyle.effectiveLineHeight(for: font.lineHeight)
 			}
 			else {

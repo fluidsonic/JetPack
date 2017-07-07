@@ -32,7 +32,7 @@ extension Set {
 	}
 
 
-	public func mapAsSet<MappedElement: Hashable>(transform: (Iterator.Element) throws -> MappedElement) rethrows -> Set<MappedElement> {
+	public func mapAsSet<MappedElement>(transform: (Iterator.Element) throws -> MappedElement) rethrows -> Set<MappedElement> {
 		var mappedSet = Set<MappedElement>(minimumCapacity: count)
 		for element in self {
 			mappedSet.insert(try transform(element))

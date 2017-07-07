@@ -145,7 +145,7 @@ public struct OrderedSet<Element: Hashable> {
 	}
 
 	
-	public func mapAsOrderedSet<MappedElement: Hashable>(transform: (Element) throws -> MappedElement) rethrows -> OrderedSet<MappedElement> {
+	public func mapAsOrderedSet<MappedElement>(transform: (Element) throws -> MappedElement) rethrows -> OrderedSet<MappedElement> {
 		var mappedSet = OrderedSet<MappedElement>(minimumCapacity: count)
 		for element in orderedElements {
 			mappedSet.add(try transform(element))

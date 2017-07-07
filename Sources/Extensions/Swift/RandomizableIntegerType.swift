@@ -1,4 +1,4 @@
-public protocol RandomizableIntegerType: Integer {
+public protocol RandomizableIntegerType: FixedWidthInteger {
 
 	
 	static func random(start: Self, end: Self) -> Self

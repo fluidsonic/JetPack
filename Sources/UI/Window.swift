@@ -30,15 +30,6 @@ open class Window: _Window {
 	}
 
 
-	open override class func initialize() {
-		guard self == Window.self else {
-			return
-		}
-
-		redirectMethod(in: self, from: #selector(UIView.init(frame:)), to: #selector(UIView.init(frame:)), in: UIWindow.self)
-	}
-
-
 	open override var rootViewController: UIViewController? {
 		get { return super.rootViewController }
 		set {
@@ -79,14 +70,16 @@ open class _Window: UIWindow {
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
+}
 
 
-	open override class func initialize() {
-		guard self == _Window.self else {
-			return
-		}
+@objc(_JetPack_UI_Window_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
 
-		redirectMethod(in: self, from: #selector(NSObject.init),       to: #selector(NSObject.init),       in: UIWindow.self)
-		redirectMethod(in: self, from: #selector(UIView.init(frame:)), to: #selector(UIView.init(frame:)), in: UIWindow.self)
+	static func staticInitialize() {
+		redirectMethod(in: Window.self, from: #selector(UIView.init(frame:)), to: #selector(UIView.init(frame:)), in: UIWindow.self)
+
+		redirectMethod(in: _Window.self, from: #selector(NSObject.init),       to: #selector(NSObject.init),       in: UIWindow.self)
+		redirectMethod(in: _Window.self, from: #selector(UIView.init(frame:)), to: #selector(UIView.init(frame:)), in: UIWindow.self)
 	}
 }

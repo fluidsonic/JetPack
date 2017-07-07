@@ -12,7 +12,7 @@ Functionality is developed along with the apps using it so everything in this li
 Installation
 ------------
 
-JetPack requires **Swift 3** and a deployment target of **iOS 9.0 or newer**.
+JetPack requires **Swift 4** and a deployment target of **iOS 9.0 or newer**.
 
 ```ruby
 pod 'JetPack', :git => 'https://github.com/fluidsonic/JetPack.git'
@@ -21,7 +21,44 @@ pod 'JetPack', :git => 'https://github.com/fluidsonic/JetPack.git'
 Since JetPack isn't versioned yet it is recommended to add it as a Git submodule and import it as a development pod. This way you can be sure that a subsequent `pod update` doesn't break your code until you check out latest changes manually.
 
 
-### Modules
+Initialization
+--------------
+
+JetPack still has to rely on some Objective-C runtime modifications as well as some global notification observers, so it must be initialized.
+
+Call `JetPack.initialize()` as early as possible, ideally early in one of the following locations:
+
+- `main.swift`
+- `init()` of your `UIApplicationDelegate`
+- `application(_:willFinishLaunchingWithOptions:)`
+- `application(_:didFinishLaunchingWithOptions:)`
+
+### Example
+
+```swift
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+	var window: UIWindow?
+
+
+	override init() {
+		super.init()
+
+		JetPack.initialize()
+	}
+
+
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -> Bool {
+		// your app initialization
+	}
+}
+```
+
+
+
+Modules
+-------
 
 | Module | Description |
 |:-------|:------------|

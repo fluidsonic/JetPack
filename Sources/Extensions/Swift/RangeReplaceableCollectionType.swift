@@ -1,7 +1,7 @@
 public extension RangeReplaceableCollection {
 
 	@discardableResult
-	public mutating func removeFirstMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> (Index, Iterator.Element)? {
+	public mutating func removeFirstMatching(predicate: (Element) throws -> Bool) rethrows -> (Index, Element)? {
 		guard let index = try index(where: predicate) else {
 			return nil
 		}
@@ -11,10 +11,10 @@ public extension RangeReplaceableCollection {
 }
 
 
-public extension RangeReplaceableCollection where Indices.Iterator.Element == Index, Iterator.Element: AnyObject {
+public extension RangeReplaceableCollection where Element: AnyObject {
 
 	@discardableResult
-	public mutating func removeFirstIdentical(_ element: Iterator.Element) -> Index? {
+	public mutating func removeFirstIdentical(_ element: Element) -> Index? {
 		guard let index = indexOfIdentical(element) else {
 			return nil
 		}
@@ -25,10 +25,10 @@ public extension RangeReplaceableCollection where Indices.Iterator.Element == In
 }
 
 
-public extension RangeReplaceableCollection where Iterator.Element: Equatable {
+public extension RangeReplaceableCollection where Element: Equatable {
 
 	@discardableResult
-	public mutating func removeFirstEqual(_ element: Iterator.Element) -> (Index, Iterator.Element)? {
+	public mutating func removeFirstEqual(_ element: Element) -> (Index, Element)? {
 		guard let index = index(of: element) else {
 			return nil
 		}

@@ -4,25 +4,26 @@ import UIKit
 public extension NSMutableAttributedString {
 
 	@nonobjc
-	fileprivate func _appendString(_ string: String,
-	                           maintainingPrecedingAttributes: Bool = false,
-	                           font: UIFont?,
-	                           foregroundColor: UIColor?,
-	                           link: URL?,
-	                           paragraphStyle: NSParagraphStyle?)
-	{
-		var attributes = [String : AnyObject]()
+	fileprivate func _appendString(
+		_ string: String,
+		maintainingPrecedingAttributes: Bool = false,
+		font: UIFont?,
+		foregroundColor: UIColor?,
+		link: URL?,
+		paragraphStyle: NSParagraphStyle?
+	) {
+		var attributes = [NSAttributedStringKey : AnyObject]()
 		if let font = font {
-			attributes[NSFontAttributeName] = font
+			attributes[.font] = font
 		}
 		if let foregroundColor = foregroundColor {
-			attributes[NSForegroundColorAttributeName] = foregroundColor
+			attributes[.foregroundColor] = foregroundColor
 		}
 		if let link = link {
-			attributes[NSLinkAttributeName] = link as AnyObject?
+			attributes[.link] = link as AnyObject?
 		}
 		if let paragraphStyle = paragraphStyle {
-			attributes[NSParagraphStyleAttributeName] = paragraphStyle
+			attributes[.paragraphStyle] = paragraphStyle
 		}
 
 		appendString(string, maintainingPrecedingAttributes: maintainingPrecedingAttributes, additionalAttributes: attributes)

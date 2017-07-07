@@ -261,7 +261,7 @@ class TextLayer: Layer {
 		let text = textLayout.configuration.text
 
 		var links = [Link]()
-		text.enumerateAttribute(NSLinkAttributeName, in: NSRange(location: 0, length: text.length), options: []) { url, range, _ in
+		text.enumerateAttribute(.link, in: NSRange(location: 0, length: text.length), options: []) { url, range, _ in
 			guard let url = url as? URL else {
 				return
 			}

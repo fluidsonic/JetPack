@@ -86,11 +86,6 @@ public final class Keyboard {
 	}
 
 
-	internal static func setUp() {
-		subscribeToNotifications()
-	}
-
-
 	fileprivate static func subscribeToNotifications() {
 		let queue = OperationQueue.main
 		let notificationCenter = NotificationCenter.default
@@ -161,5 +156,14 @@ public final class Keyboard {
 
 
 		fileprivate init() {}
+	}
+}
+
+
+@objc(_JetPack_Extensions_UIKit_Keyboard_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		Keyboard.subscribeToNotifications()
 	}
 }

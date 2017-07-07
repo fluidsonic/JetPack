@@ -1,6 +1,6 @@
 public extension Sequence {
 
-	public func associated <Key: Hashable, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+	public func associated <Key, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		var dictionary = [Key : Value]()
 		for element in self {
 			let (key, value) = try elementSelector(element)
@@ -11,7 +11,7 @@ public extension Sequence {
 	}
 
 	
-	public func associated <Key: Hashable> (by keySelector: (Iterator.Element) throws -> Key) rethrows -> [Key : Iterator.Element] {
+	public func associated <Key> (by keySelector: (Iterator.Element) throws -> Key) rethrows -> [Key : Iterator.Element] {
 		return try associated { (try keySelector($0), $0) }
 	}
 
@@ -154,7 +154,7 @@ public extension Sequence {
 
 
 	@available(*, deprecated: 1, renamed: "associated")
-	public func toDictionary <Key: Hashable, Value>(transform: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+	public func toDictionary <Key, Value>(transform: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		return try associated(elementSelector: transform)
 	}
 }

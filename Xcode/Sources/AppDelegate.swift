@@ -8,9 +8,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -> Bool {
+	override init() {
+		super.init()
+
 		logEnabled = true
 
+		JetPack.initialize()
+	}
+
+
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -> Bool {
 		let window = Window()
 		window.rootViewController = LabelTestViewController()
 		self.window = window

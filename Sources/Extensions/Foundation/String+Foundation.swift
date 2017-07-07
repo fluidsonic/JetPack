@@ -3,18 +3,16 @@ import Foundation
 
 public extension String {
 
-	
-	public func firstMatchForRegularExpression(_ regularExpression: NSRegularExpression) -> [String?]? {
+	public func firstMatchForRegularExpression(_ regularExpression: NSRegularExpression) -> [Substring?]? {
 		guard let match = regularExpression.firstMatch(in: self, options: [], range: NSMakeRange(0, utf16.count)) else {
 			return nil
 		}
 
-		return (0 ..< match.numberOfRanges).map { match.rangeAt($0).rangeInString(self).map { self[$0] } }
+		return (0 ..< match.numberOfRanges).map { match.range(at: $0).rangeInString(self).map { self[$0] } }
 	}
 
 
-	
-	public func firstMatchForRegularExpression(_ regularExpressionPattern: String) -> [String?]? {
+	public func firstMatchForRegularExpression(_ regularExpressionPattern: String) -> [Substring?]? {
 		do {
 			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: [])
 			return firstMatchForRegularExpression(regularExpression)
@@ -25,8 +23,7 @@ public extension String {
 	}
 
 
-	
-	public func firstSubstringMatchingRegularExpression(_ regularExpressionPattern: String) -> String? {
+	public func firstSubstringMatchingRegularExpression(_ regularExpressionPattern: String) -> Substring? {
 		if let range = range(of: regularExpressionPattern, options: .regularExpression) {
 			return self[range]
 		}
@@ -35,13 +32,11 @@ public extension String {
 	}
 
 
-	
 	public func stringByReplacingRegularExpression(_ regularExpression: NSRegularExpression, withTemplate template: String) -> String {
 		return regularExpression.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, utf16.count), withTemplate: template)
 	}
 
 
-	
 	public func stringByReplacingRegularExpression(_ regularExpressionPattern: String, withTemplate template: String) -> String {
 		do {
 			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: NSRegularExpression.Options.dotMatchesLineSeparators)
@@ -54,12 +49,18 @@ public extension String {
 
 
 	public var urlEncodedHost: String {
-		return addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed) ?? "<url encoding failed>"
+		var allowedCharacters = CharacterSet.urlHostAllowed
+		allowedCharacters.insert(":") // https://bugs.swift.org/projects/SR/issues/SR-5397
+
+		return addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? "<url encoding failed>"
 	}
 
 
 	public var urlEncodedPath: String {
-		return addingPercentEncoding(withAllowedCharacters: CharacterSet.urlPathAllowed) ?? "<url encoding failed>"
+		var allowedCharacters = CharacterSet.urlPathAllowed
+		allowedCharacters.insert(":") // https://bugs.swift.org/projects/SR/issues/SR-5397
+
+		return addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? "<url encoding failed>"
 	}
 
 

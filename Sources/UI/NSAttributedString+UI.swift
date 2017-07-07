@@ -11,15 +11,15 @@ extension NSAttributedString {
 		paragraphStyle: NSParagraphStyle? = nil,
 		transform: TextTransform? = nil
 	) -> NSMutableAttributedString {
-		var defaultAttributes = [String : Any]()
+		var defaultAttributes = [NSAttributedStringKey : Any]()
 		if let font = font {
-			defaultAttributes[NSFontAttributeName] = font
+			defaultAttributes[.font] = font
 		}
 		if let foregroundColor = foregroundColor {
-			defaultAttributes[NSForegroundColorAttributeName] = foregroundColor
+			defaultAttributes[.foregroundColor] = foregroundColor
 		}
 		if let paragraphStyle = paragraphStyle {
-			defaultAttributes[NSParagraphStyleAttributeName] = paragraphStyle
+			defaultAttributes[.paragraphStyle] = paragraphStyle
 		}
 
 		let attributedString = NSMutableAttributedString(string: string, attributes: defaultAttributes)
@@ -28,9 +28,9 @@ extension NSAttributedString {
 				var attributes = attributes
 
 				if let kerning = kerning {
-					let font = attributes[NSFontAttributeName] as? UIFont ?? font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
+					let font = attributes[.font] as? UIFont ?? font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
 
-					attributes[NSKernAttributeName] = kerning.forFontSize(font.pointSize) as NSNumber
+					attributes[.kern] = kerning.forFontSize(font.pointSize) as NSNumber
 				}
 
 				attributedString.addAttributes(attributes, range: range)

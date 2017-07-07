@@ -46,17 +46,6 @@ open class NavigationController: UINavigationController {
 	}
 
 
-	open override class func initialize() {
-		guard self == NavigationController.self else {
-			return
-		}
-
-		redirectMethod(in: self, from: #selector(UINavigationController.init(nibName:bundle:)), to: #selector(UINavigationController.init(nibName:bundle:)), in: UINavigationController.self)
-
-		copyMethod(in: object_getClass(self), from: #selector(overridesPreferredInterfaceOrientationForPresentation), to: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
-	}
-
-
 	public var interactivePopGestureRequiresNavigationBar = true {
 		didSet {
 			guard interactivePopGestureRequiresNavigationBar != oldValue else {
@@ -216,5 +205,16 @@ private class NavigationBarIndependentInteractivePopGestureRecognizerDelegate: N
 	@objc
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
 		return nextDelegate?.gestureRecognizerShouldBegin?(gestureRecognizer) ?? true
+	}
+}
+
+
+@objc(_JetPack_UI_NavigationController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		redirectMethod(in: NavigationController.self, from: #selector(UINavigationController.init(nibName:bundle:)), to: #selector(UINavigationController.init(nibName:bundle:)), in: UINavigationController.self)
+
+		copyMethod(in: object_getClass(NavigationController.self)!, from: #selector(NavigationController.overridesPreferredInterfaceOrientationForPresentation), to: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
 	}
 }

@@ -132,20 +132,20 @@ fileprivate struct ErrorFailure: Failure {
 
 
 	fileprivate var developerMessage: String {
-		guard let stringConvertible = error as? CustomDebugStringConvertible else {
+		guard error is CustomDebugStringConvertible else { // using 'is' avoids implicit cast to NSError - ignore the warning: https://bugs.swift.org/browse/SR-4765
 			return userMessage
 		}
 
-		return stringConvertible.debugDescription
+		return (error as CustomDebugStringConvertible).debugDescription
 	}
 
 
 	fileprivate var userMessage: String {
-		guard let stringConvertible = error as? CustomStringConvertible else {
+		guard error is CustomStringConvertible else { // using 'is' avoids implicit cast to NSError - ignore the warning: https://bugs.swift.org/browse/SR-4765
 			return defaultUserMessage
 		}
 
-		return stringConvertible.description
+		return (error as CustomStringConvertible).description
 	}
 }
 

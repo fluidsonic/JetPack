@@ -46,9 +46,9 @@ open class TextView: UITextView {
 
 
 	private func attributedTextIncludingDefaultFormatting(for attributedText: NSAttributedString) -> NSAttributedString {
-		let defaultAttributes = [
-			NSFontAttributeName:            font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize),
-			NSForegroundColorAttributeName: textColor ?? UIColor.darkText
+		let defaultAttributes: [NSAttributedStringKey : Any] = [
+			.font:            font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize),
+			.foregroundColor: textColor ?? UIColor.darkText
 		]
 
 		let attributedStringIncludingDefaultFormatting = NSMutableAttributedString(string: attributedText.string, attributes: defaultAttributes)

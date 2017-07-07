@@ -106,7 +106,7 @@ internal func XCTAssertEqual<T: Equatable> (_ expression1: [T?]?, _ expression2:
 
 
 internal func XCTAssertIdentical<T: AnyObject> (_ expression1: T?, _ expression2: T?, file: StaticString = #file, line: UInt = #line) {
-	XCTAssertTrue(expression1 === expression2, "\(expression1) is not identical to \(expression2)", file: file, line: line)
+	XCTAssertTrue(expression1 === expression2, "\(String(describing: expression1)) is not identical to \(String(describing: expression2))", file: file, line: line)
 }
 
 
@@ -125,7 +125,7 @@ internal func XCTAssertIdentical<T: AnyObject> (_ expression1: [T]?, _ expressio
 }
 
 
-internal func XCTAssertIdentical<T> (_ expression1: Set<T>?, _ expression2: Set<T>?, file: StaticString = #file, line: UInt = #line) where T: AnyObject, T: Hashable {
+internal func XCTAssertIdentical<T: AnyObject> (_ expression1: Set<T>?, _ expression2: Set<T>?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 

@@ -20,15 +20,6 @@ open class ImagePickerController: _ImagePickerController {
 		// fixes a bug where the screen is transparent unless Photos permission was given
 		view.backgroundColor = .white
 	}
-
-
-	open override class func initialize() {
-		guard self == ImagePickerController.self else {
-			return
-		}
-
-		redirectMethod(in: self, from: #selector(UIViewController.init(nibName:bundle:)), to: #selector(UIViewController.init(nibName:bundle:)), in: UIImagePickerController.self)
-	}
 }
 
 
@@ -52,14 +43,16 @@ open class _ImagePickerController: UIImagePickerController {
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
+}
 
 
-	open override class func initialize() {
-		guard self == _ImagePickerController.self else {
-			return
-		}
+@objc(_JetPack_UI_ImagePickerController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
 
-		redirectMethod(in: self, from: #selector(NSObject.init), to: #selector(NSObject.init),                                                   in: UIImagePickerController.self)
-		redirectMethod(in: self, from: #selector(UIViewController.init(nibName:bundle:)), to: #selector(UIViewController.init(nibName:bundle:)), in: UIImagePickerController.self)
+	static func staticInitialize() {
+		redirectMethod(in: ImagePickerController.self, from: #selector(UIViewController.init(nibName:bundle:)), to: #selector(UIViewController.init(nibName:bundle:)), in: UIImagePickerController.self)
+
+		redirectMethod(in: _ImagePickerController.self, from: #selector(NSObject.init), to: #selector(NSObject.init),                                                   in: UIImagePickerController.self)
+		redirectMethod(in: _ImagePickerController.self, from: #selector(UIViewController.init(nibName:bundle:)), to: #selector(UIViewController.init(nibName:bundle:)), in: UIImagePickerController.self)
 	}
 }

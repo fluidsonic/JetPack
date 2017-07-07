@@ -8,7 +8,6 @@ public extension UITextField {
 	}
 
 
-
 	@nonobjc
 	public var automaticallyScrollsIntoSight: Bool {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.automaticallyScrollsIntoSight) as? Bool ?? true }
@@ -22,12 +21,15 @@ public extension UITextField {
 			swizzled_scrollIntoSight()
 		}
 	}
+}
 
 
-	@nonobjc
-	internal static func UITextField_setUp() {
+@objc(_JetPack_Extensions_UIKit_UITextField_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
 		// yep, private API necessary :(
 		// If the private method is removed/renamed the related feature will cease to work but we won't crash.
-		swizzleMethod(in: self, from: obfuscatedSelector("scroll", "Text", "Field", "To", "Visible"), to: #selector(swizzled_scrollIntoSight))
+		swizzleMethod(in: UITextField.self, from: obfuscatedSelector("scroll", "Text", "Field", "To", "Visible"), to: #selector(UITextField.swizzled_scrollIntoSight))
 	}
 }

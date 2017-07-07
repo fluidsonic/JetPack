@@ -47,15 +47,6 @@ open class ViewController: UIViewController {
 	}
 
 
-	open override class func initialize() {
-		guard self == ViewController.self else {
-			return
-		}
-
-		copyMethod(in: object_getClass(self), from: #selector(overridesPreferredInterfaceOrientationForPresentation), to: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
-	}
-
-
 	open override func loadView() {
 		view = View()
 		view.frame = UIScreen.main.bounds // required or else UISplitViewController's overlay animation gets broken
@@ -125,5 +116,14 @@ open class ViewController: UIViewController {
 
 	open func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
 		// override in subclasses
+	}
+}
+
+
+@objc(_JetPack_UI_ViewController_Initialization)
+private class StaticInitialization: NSObject, StaticInitializable {
+
+	static func staticInitialize() {
+		copyMethod(in: object_getClass(ViewController.self)!, from: #selector(ViewController.overridesPreferredInterfaceOrientationForPresentation), to: obfuscatedSelector("does", "Override", "Preferred", "Interface", "Orientation", "For", "Presentation"))
 	}
 }
