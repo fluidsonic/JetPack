@@ -1,6 +1,6 @@
 public extension Sequence {
 
-	public func associated <Key, Value>(elementSelector: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+	public func associated <Key, Value>(elementSelector: (Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		var dictionary = [Key : Value]()
 		for element in self {
 			let (key, value) = try elementSelector(element)
@@ -10,13 +10,19 @@ public extension Sequence {
 		return dictionary
 	}
 
-	
-	public func associated <Key> (by keySelector: (Iterator.Element) throws -> Key) rethrows -> [Key : Iterator.Element] {
+
+	@available(*, unavailable, renamed: "associatedBy")
+	public func associated <Key> (by keySelector: (Element) throws -> Key) rethrows -> [Key : Element] {
 		return try associated { (try keySelector($0), $0) }
 	}
 
 
-	public func countMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Int {
+	public func associatedBy <Key> (_ keySelector: (Element) throws -> Key) rethrows -> [Key : Element] {
+		return try associated { (try keySelector($0), $0) }
+	}
+
+
+	public func countMatching(predicate: (Element) throws -> Bool) rethrows -> Int {
 		var count = 0
 		for element in self where try predicate(element) {
 			count += 1
@@ -38,7 +44,7 @@ public extension Sequence {
 	}
 
 
-	public func firstMatching(predicate: (Iterator.Element) throws -> Bool) rethrows -> Iterator.Element? {
+	public func firstMatching(predicate: (Element) throws -> Bool) rethrows -> Element? {
 		for element in self where try predicate(element) {
 			return element
 		}
@@ -47,14 +53,14 @@ public extension Sequence {
 	}
 
 	
-	public func joined(separator: String, lastSeparator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
+	public func joined(separator: String, lastSeparator: String, transform: (Element) throws -> String) rethrows -> String {
 		guard lastSeparator != separator else {
 			return try joined(separator: separator, transform: transform)
 		}
 
 		var isFirstElement = true
 		var joinedString = ""
-		var previousElement: Iterator.Element?
+		var previousElement: Element?
 
 		for element in self {
 			if let previousElement = previousElement {
@@ -83,12 +89,12 @@ public extension Sequence {
 	}
 
 
-	public func joined(separator: String, transform: (Iterator.Element) throws -> String) rethrows -> String {
+	public func joined(separator: String, transform: (Element) throws -> String) rethrows -> String {
 		return try lazy.map(transform).joined(separator: separator)
 	}
 
 
-	public func mapNotNil<T>(transform: (Iterator.Element) throws -> T?) rethrows -> [T] {
+	public func mapNotNil<T>(transform: (Element) throws -> T?) rethrows -> [T] {
 		var result = [T]()
 		for element in self {
 			guard let mappedElement = try transform(element) else {
@@ -102,9 +108,9 @@ public extension Sequence {
 	}
 
 
-	public func separate(isLeftElement: (Iterator.Element) throws -> Bool) rethrows -> ([Iterator.Element], [Iterator.Element]) {
-		var left = Array<Iterator.Element>()
-		var right = Array<Iterator.Element>()
+	public func separate(isLeftElement: (Element) throws -> Bool) rethrows -> ([Element], [Element]) {
+		var left = Array<Element>()
+		var right = Array<Element>()
 
 		for element in self {
 			if try isLeftElement(element) {
@@ -119,17 +125,17 @@ public extension Sequence {
 	}
 
 
-	public func sorted <SortKey: Comparable>(by sortKeySelector: (Iterator.Element) -> SortKey) -> [Iterator.Element] {
+	public func sorted <SortKey: Comparable>(by sortKeySelector: (Element) -> SortKey) -> [Element] {
 		return sorted { sortKeySelector($0) < sortKeySelector($1) }
 	}
 
 
-	// TODO we should probably rework this to return [ArraySlice<Iterator.Element>]
-	public func split(byCount partitionSize: Int) -> [[Iterator.Element]] {
+	// TODO we should probably rework this to return [ArraySlice<Element>]
+	public func split(byCount partitionSize: Int) -> [[Element]] {
 		precondition(partitionSize > 0, "partitionSize must be > 0")
 
-		var partitions = Array<Array<Iterator.Element>>()
-		var currentPartition = Array<Iterator.Element>()
+		var partitions = Array<Array<Element>>()
+		var currentPartition = Array<Element>()
 
 		for element in self {
 			if currentPartition.count >= partitionSize {
@@ -148,22 +154,22 @@ public extension Sequence {
 	}
 
 
-	public func toArray() -> [Iterator.Element] {
-		return Array<Iterator.Element>(self)
+	public func toArray() -> [Element] {
+		return Array<Element>(self)
 	}
 
 
 	@available(*, deprecated: 1, renamed: "associated")
-	public func toDictionary <Key, Value>(transform: (Iterator.Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
+	public func toDictionary <Key, Value>(transform: (Element) throws -> (Key, Value)) rethrows -> [Key : Value] {
 		return try associated(elementSelector: transform)
 	}
 }
 
 
 
-public extension Sequence where Iterator.Element: AnyObject {
+public extension Sequence where Element: AnyObject {
 
-	public func containsIdentical(_ element: Iterator.Element) -> Bool {
+	public func containsIdentical(_ element: Element) -> Bool {
 		for existingElement in self where existingElement === element {
 			return true
 		}
@@ -174,16 +180,16 @@ public extension Sequence where Iterator.Element: AnyObject {
 
 
 
-public extension Sequence where Iterator.Element: Hashable {
+public extension Sequence where Element: Hashable {
 
-	public func toSet() -> Set<Iterator.Element> {
+	public func toSet() -> Set<Element> {
 		return Set(self)
 	}
 }
 
 
 
-public extension Sequence where Iterator.Element == String {
+public extension Sequence where Element == String {
 
 	public func joined(separator: String, lastSeparator: String) -> String {
 		return joined(separator: separator, lastSeparator: lastSeparator, transform: identity)
@@ -192,10 +198,10 @@ public extension Sequence where Iterator.Element == String {
 
 
 
-public extension Sequence where Iterator.Element: _Optional {
+public extension Sequence where Element: _Optional {
 
-	public func filterNonNil() -> [Iterator.Element.Wrapped] {
-		var result = Array<Iterator.Element.Wrapped>()
+	public func filterNonNil() -> [Element.Wrapped] {
+		var result = Array<Element.Wrapped>()
 		for element in self {
 			guard let element = element.value else {
 				continue

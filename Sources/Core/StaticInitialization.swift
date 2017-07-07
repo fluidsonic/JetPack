@@ -1,7 +1,7 @@
 import Foundation
 
 
-public enum JetPack {
+public enum JetPackKit { // for now named *Kit until this is solved: https://bugs.swift.org/browse/SR-898
 
 	private static let typeNames = [
 		// Initialization classes to be invoked. Note that the order of initialization may be relevant in some cases.

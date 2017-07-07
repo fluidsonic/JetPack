@@ -26,7 +26,7 @@ Initialization
 
 JetPack still has to rely on some Objective-C runtime modifications as well as some global notification observers, so it must be initialized.
 
-Call `JetPack.initialize()` as early as possible, ideally early in one of the following locations:
+Call `JetPackKit.initialize()` as early as possible, ideally early in one of the following locations:
 
 - `main.swift`
 - `init()` of your `UIApplicationDelegate`
@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	override init() {
 		super.init()
 
-		JetPack.initialize()
+		JetPackKit.initialize()
 	}
 
 
