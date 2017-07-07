@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		logEnabled = true
 
-		JetPack.initialize()
+		JetPackKit.initialize()
 	}
 
 
