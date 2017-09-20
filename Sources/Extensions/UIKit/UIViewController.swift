@@ -127,8 +127,6 @@ extension UIViewController {
 			return nil
 		}
 
-		let animation = decorationInsetsAnimation
-
 		let innerDecorationInsets: UIEdgeInsets
 		let outerDecorationInsets: UIEdgeInsets
 
