@@ -74,7 +74,11 @@ public extension NSRange {
 
 	fileprivate static func locationForIndex(_ index: String.Index, inString string: String) -> Int {
 		let utf16 = string.utf16
-		return utf16.distance(from: utf16.startIndex, to: index.samePosition(in: utf16))
+		guard let utf16Index = index.samePosition(in: utf16) else {
+			return NSNotFound
+		}
+
+		return utf16.distance(from: utf16.startIndex, to: utf16Index)
 	}
 
 

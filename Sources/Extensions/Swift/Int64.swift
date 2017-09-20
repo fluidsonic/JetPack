@@ -8,7 +8,7 @@ extension Int64: RandomizableIntegerType {
 		}
 
 		let (s, overflow) = end.subtractingReportingOverflow(start)
-		let u = overflow == .overflow ? UInt64.max - UInt64(~s) : UInt64(s)
+		let u = overflow ? UInt64.max - UInt64(~s) : UInt64(s)
 		let r = UInt64.random(start: .min, end: u)
 
 		if r > UInt64(Int64.max)  {

@@ -25,8 +25,8 @@ open class TableViewController: ViewController {
 	open var clearsSelectionOnViewWillAppear = true
 
 
-	fileprivate func createTableView() -> UITableView {
-		let child = UITableView(frame: .zero, style: style)
+	fileprivate func createTableView() -> TableView {
+		let child = TableView(style: style)
 		child.estimatedRowHeight = 44
 		child.dataSource = self
 		child.delegate = self
@@ -44,7 +44,7 @@ open class TableViewController: ViewController {
 	}
 
 
-	open fileprivate(set) lazy var tableView: UITableView = self.createTableView()
+	open fileprivate(set) lazy var tableView: TableView = self.createTableView()
 
 
 	open override func viewDidLayoutSubviewsWithAnimation(_ animation: Animation?) {
@@ -84,7 +84,7 @@ open class TableViewController: ViewController {
 extension TableViewController: UITableViewDataSource {
 
 	open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		fatalError("override tableView(_:cellForRowAtIndexPath:) without calling super")
+		fatalError("override tableView(_:cellForRowAt:) without calling super")
 	}
 
 

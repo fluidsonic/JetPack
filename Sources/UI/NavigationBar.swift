@@ -82,6 +82,13 @@ open class NavigationBar: UINavigationBar {
 	}
 
 
+	open override func layoutSubviews() {
+		super.layoutSubviews()
+
+		visibilityDidChange()
+	}
+
+
 	func override<Result>(hasBackButton: Bool, block: () -> Result) -> Result {
 		let	overridden_hasBackButton = self.overridden_hasBackButton
 		self.overridden_hasBackButton = hasBackButton

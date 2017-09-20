@@ -9,13 +9,16 @@ extension UIViewController {
 
 
 	fileprivate struct AssociatedKeys {
+
 		fileprivate static var appearState = UInt8()
 		fileprivate static var containmentState = UInt8()
-		fileprivate static var presentingViewControllerForCurrentCoverageCallbacks = UInt8()
 		fileprivate static var decorationInsetsAnimation = UInt8()
 		fileprivate static var decorationInsetsAreValid = UInt8()
 		fileprivate static var innerDecorationInsets = UInt8()
+		fileprivate static var isInLayout = UInt8()
+		fileprivate static var needsAdditionalLayoutPass = UInt8()
 		fileprivate static var outerDecorationInsets = UInt8()
+		fileprivate static var presentingViewControllerForCurrentCoverageCallbacks = UInt8()
 	}
 
 
@@ -113,15 +116,62 @@ extension UIViewController {
 	}
 
 
-	@objc(JetPack_computeInnerDecorationInsetsForChildViewController:)
+	@nonobjc
+	private func computeDecorationInsets() -> (inner: UIEdgeInsets, outer: UIEdgeInsets)? {
+		let parentViewController = reliableParentViewController
 
+		guard let window = window, (parentViewController == nil || !decorationInsetsAreValid) else {
+			return nil
+		}
+		guard !type(of: window).isPrivate else {
+			return nil
+		}
+
+		let animation = decorationInsetsAnimation
+
+		let innerDecorationInsets: UIEdgeInsets
+		let outerDecorationInsets: UIEdgeInsets
+
+		if let parentViewController = parentViewController {
+			innerDecorationInsets = parentViewController.computeInnerDecorationInsetsForChildViewController(self)
+			outerDecorationInsets = parentViewController.computeOuterDecorationInsetsForChildViewController(self)
+		}
+		else {
+			var decorationInsets: UIEdgeInsets
+
+			if #available(iOS 11.0, *) {
+				decorationInsets = view.safeAreaInsets
+			}
+			else {
+				decorationInsets = UIEdgeInsets(
+					top:    topLayoutGuide.length,
+					left:   0,
+					bottom: bottomLayoutGuide.length,
+					right:  0
+				)
+			}
+
+			let keyboardFrameInWindow = Keyboard.frameInView(window)
+			if !keyboardFrameInWindow.isNull {
+				let bottomDecorationInsetForKeyboard = max(window.bounds.height - keyboardFrameInWindow.top, 0)
+				decorationInsets.bottom = max(bottomDecorationInsetForKeyboard, decorationInsets.bottom)
+			}
+
+			innerDecorationInsets = decorationInsets
+			outerDecorationInsets = decorationInsets
+		}
+
+		return (inner: innerDecorationInsets, outer: outerDecorationInsets)
+	}
+
+
+	@objc(JetPack_computeInnerDecorationInsetsForChildViewController:)
 	open func computeInnerDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return innerDecorationInsets
 	}
 
 
 	@objc(JetPack_computeOuterDecorationInsetsForChildViewController:)
-
 	open func computeOuterDecorationInsetsForChildViewController(_ childViewController: UIViewController) -> UIEdgeInsets {
 		return outerDecorationInsets
 	}
@@ -167,7 +217,7 @@ extension UIViewController {
 		case .pageSheet, .formSheet:
 			return .all
 
-		case .currentContext, .custom, .fullScreen, .none, .overCurrentContext, .overFullScreen, .popover:
+		case .blurOverFullScreen, .currentContext, .custom, .fullScreen, .none, .overCurrentContext, .overFullScreen, .popover:
 			switch UIDevice.current.userInterfaceIdiom {
 			case .pad:
 				return .all
@@ -178,9 +228,6 @@ extension UIViewController {
 			case .carPlay, .tv, .unspecified:
 				return .portrait
 			}
-
-		default: // FIXME add iOS 11 support
-			return .all
 		}
 	}
 
@@ -223,9 +270,21 @@ extension UIViewController {
 			return
 		}
 
-		decorationInsetsAreValid = false
+		if isInLayout {
+			if !needsAdditionalLayoutPass,
+				let (innerDecorationInsets, outerDecorationInsets) = computeDecorationInsets(),
+				innerDecorationInsets != self.innerDecorationInsets || outerDecorationInsets != self.outerDecorationInsets
+			{
+				log("Decoration insets changed while laying out \(String(describing: type(of: self))). Another layout pass will be run to apply the new insets.")
 
-		view.setNeedsLayout()
+				needsAdditionalLayoutPass = true
+			}
+		}
+		else {
+			decorationInsetsAreValid = false
+
+			view.setNeedsLayout()
+		}
 	}
 
 
@@ -263,12 +322,26 @@ extension UIViewController {
 
 
 	@nonobjc
+	private var isInLayout: Bool {
+		get { return (objc_getAssociatedObject(self, &AssociatedKeys.isInLayout) as? NSNumber)?.boolValue ?? false }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.isInLayout, newValue ? true : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+	}
+
+
+	@nonobjc
 	fileprivate func nameForParentViewController() -> String {
 		guard let parentViewController = reliableParentViewController else {
 			return "the parent view controller"
 		}
 
 		return String(describing: type(of: parentViewController))
+	}
+
+
+	@nonobjc
+	private var needsAdditionalLayoutPass: Bool {
+		get { return (objc_getAssociatedObject(self, &AssociatedKeys.needsAdditionalLayoutPass) as? NSNumber)?.boolValue ?? false }
+		set { objc_setAssociatedObject(self, &AssociatedKeys.needsAdditionalLayoutPass, newValue ? true : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
 
 
@@ -501,6 +574,12 @@ extension UIViewController {
 		}
 
 		decorationInsetsAnimation = nil
+		isInLayout = false
+
+		if needsAdditionalLayoutPass {
+			needsAdditionalLayoutPass = false
+			view.setNeedsLayout()
+		}
 	}
 
 
@@ -551,7 +630,12 @@ extension UIViewController {
 
 	@objc(JetPack_viewWillLayoutSubviews)
 	fileprivate dynamic func swizzled_viewWillLayoutSubviews() {
-		updateDecorationInsets()
+		isInLayout = true
+		needsAdditionalLayoutPass = false
+
+		if let (innerDecorationInsets, outerDecorationInsets) = computeDecorationInsets() {
+			updateDecorationInsets(inner: innerDecorationInsets, outer: outerDecorationInsets)
+		}
 
 		swizzled_viewWillLayoutSubviews()
 	}
@@ -585,6 +669,10 @@ extension UIViewController {
 		self.containmentState = newContainmentState
 
 		swizzled_willMoveToParentViewController(parentViewController)
+
+		if parentViewController != nil {
+			invalidateDecorationInsetsWithAnimationWrapper(nil)
+		}
 	}
 
 
@@ -611,47 +699,17 @@ extension UIViewController {
 
 
 	@nonobjc
-	internal func updateDecorationInsets() {
-		let parentViewController = reliableParentViewController
-
-		guard let window = window, (parentViewController == nil || !decorationInsetsAreValid) else {
-			return
-		}
-		guard !type(of: window).isPrivate else {
-			return
-		}
-
-		let animation = decorationInsetsAnimation
-
-		let innerDecorationInsets: UIEdgeInsets
-		let outerDecorationInsets: UIEdgeInsets
-
-		if let parentViewController = parentViewController {
-			innerDecorationInsets = parentViewController.computeInnerDecorationInsetsForChildViewController(self)
-			outerDecorationInsets = parentViewController.computeOuterDecorationInsetsForChildViewController(self)
-		}
-		else {
-			var decorationInsets = UIEdgeInsets(top: topLayoutGuide.length, left: 0, bottom: bottomLayoutGuide.length, right: 0)
-
-			let keyboardFrameInWindow = Keyboard.frameInView(window)
-			if !keyboardFrameInWindow.isNull {
-				let bottomDecorationInsetForKeyboard = max(window.bounds.height - keyboardFrameInWindow.top, 0)
-				decorationInsets.bottom = max(bottomDecorationInsetForKeyboard, decorationInsets.bottom)
-			}
-
-			innerDecorationInsets = decorationInsets
-			outerDecorationInsets = decorationInsets
-		}
-
-		let decorationInsetsChanged = innerDecorationInsets != self.innerDecorationInsets || outerDecorationInsets != self.outerDecorationInsets
-		if decorationInsetsChanged {
-			self.innerDecorationInsets = innerDecorationInsets
-			self.outerDecorationInsets = outerDecorationInsets
-
-			decorationInsetsDidChangeWithAnimation(animation)
-		}
-
+	private func updateDecorationInsets(inner: UIEdgeInsets, outer: UIEdgeInsets) {
 		decorationInsetsAreValid = true
+
+		guard inner != innerDecorationInsets || outer != outerDecorationInsets else {
+			return
+		}
+
+		innerDecorationInsets = inner
+		outerDecorationInsets = outer
+
+		decorationInsetsDidChangeWithAnimation(decorationInsetsAnimation)
 	}
 
 

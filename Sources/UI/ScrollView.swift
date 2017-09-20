@@ -16,6 +16,10 @@ open class ScrollView: UIScrollView {
 
 	public init() {
 		super.init(frame: .zero)
+
+		if #available(iOS 11.0, *) {
+			contentInsetAdjustmentBehavior = .never
+		}
 	}
 
 
