@@ -22,6 +22,21 @@ public struct Version {
 	public init(_ version: OperatingSystemVersion) {
 		self.init(major: version.majorVersion, minor: version.minorVersion, patch: version.patchVersion)
 	}
+
+
+	public init?(_ version: String) {
+		let components = version.components(separatedBy: ".")
+		guard
+			(1 ... 3).contains(components.count),
+			let major = Int(components[0]),
+			let minor = components.count >= 2 ? Int(components[1]) : 0,
+			let patch = components.count >= 3 ? Int(components[2]) : 0
+		else {
+			return nil
+		}
+
+		self.init(major: major, minor: minor, patch: patch)
+	}
 }
 
 
