@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
 	s.summary  = 'A Swiss Army knife for iOS development with Swift in a very early stage.'
 
 	s.module_map = 'Module/JetPack.modulemap'
+	s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.0' }
 
 	s.subspec 'Core' do |s|
 		s.ios.deployment_target = '9.0'
