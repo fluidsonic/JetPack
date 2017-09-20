@@ -51,13 +51,26 @@ open class TableViewController: ViewController {
 		super.viewDidLayoutSubviewsWithAnimation(animation)
 
 		animation.runAlways {
+			var tableViewFrame = CGRect(size: view.bounds.size)
+
 			if automaticallyAdjustsTableViewInsets {
-				tableView.setContentInset(innerDecorationInsets, maintainingVisualContentOffset: true)
-				tableView.scrollIndicatorInsets = outerDecorationInsets
+				var contentInsets = self.innerDecorationInsets
+				var scrollIndicatorInsets = outerDecorationInsets
+
+				tableViewFrame.left += contentInsets.left
+				tableViewFrame.width -= tableViewFrame.left + contentInsets.right
+
+				contentInsets.left = 0
+				contentInsets.right = 0
+				scrollIndicatorInsets.left = 0
+				scrollIndicatorInsets.right = 0
+
+				tableView.setContentInset(contentInsets, maintainingVisualContentOffset: true)
+				tableView.scrollIndicatorInsets = scrollIndicatorInsets
 			}
 
 			tableView.isEditing = isEditing
-			tableView.frame = CGRect(size: view.bounds.size)
+			tableView.frame = tableViewFrame
 		}
 	}
 
@@ -76,6 +89,7 @@ open class TableViewController: ViewController {
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
+		view.backgroundColor = tableView.backgroundColor
 		view.addSubview(tableView)
 	}
 }
