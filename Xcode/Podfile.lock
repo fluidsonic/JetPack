@@ -53,6 +53,7 @@ PODS:
     - JetPack/Core
     - JetPack/Extensions/CoreGraphics
     - JetPack/Extensions/Foundation
+    - JetPack/Extensions/MapKit
     - JetPack/Extensions/Swift
     - JetPack/Extensions/UIKit
 
@@ -78,8 +79,8 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  JetPack: 32d0be06211fd3d9845efec2a17879f6d524ece4
+  JetPack: 116b69e911680fe271db2f3f1a3639d19046b9da
 
-PODFILE CHECKSUM: 23af1fac57dee3a162e422c4ef9f63db166fac40
+PODFILE CHECKSUM: 90640d85aa18e8c17afc8cc25378293f71b92f32
 
 COCOAPODS: 1.3.1

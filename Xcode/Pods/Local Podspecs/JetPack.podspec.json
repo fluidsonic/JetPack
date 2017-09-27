@@ -15,10 +15,8 @@
     "SWIFT_VERSION": "4.0"
   },
   "platforms": {
-    "osx": null,
-    "ios": null,
-    "tvos": null,
-    "watchos": null
+    "ios": "9.0",
+    "osx": "10.10"
   },
   "subspecs": [
     {
@@ -290,6 +288,9 @@
 
         ],
         "JetPack/Extensions/Foundation": [
+
+        ],
+        "JetPack/Extensions/MapKit": [
 
         ],
         "JetPack/Extensions/Swift": [

@@ -18,11 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -> Bool {
-		let window = Window()
-		window.rootViewController = LabelTestViewController()
-		self.window = window
+		#if UI
+			let window = Window()
+			window.rootViewController = LabelTestViewController()
+			self.window = window
 
-		window.makeKeyAndVisible()
+			window.makeKeyAndVisible()
+		#endif
 
 		return true
 	}
