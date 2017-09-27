@@ -11,9 +11,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	override init() {
 		super.init()
 
-		logEnabled = true
+		#if CORE
+			logEnabled = true
 
-		JetPackKit.initialize()
+			JetPackKit.initialize()
+		#endif
 	}
 
 
