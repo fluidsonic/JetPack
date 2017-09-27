@@ -12,6 +12,9 @@ Pod::Spec.new do |s|
 	s.module_map = 'Module/JetPack.modulemap'
 	s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.0' }
 
+	s.ios.deployment_target = '9.0'
+	s.osx.deployment_target = '10.10'
+
 	s.subspec 'Core' do |s|
 		s.ios.deployment_target = '9.0'
 		s.osx.deployment_target = '10.10'
@@ -148,6 +151,7 @@ Pod::Spec.new do |s|
 		s.dependency 'JetPack/Core'
 		s.dependency 'JetPack/Extensions/CoreGraphics'
 		s.dependency 'JetPack/Extensions/Foundation'
+		s.dependency 'JetPack/Extensions/MapKit'
 		s.dependency 'JetPack/Extensions/Swift'
 		s.dependency 'JetPack/Extensions/UIKit'
 	end
