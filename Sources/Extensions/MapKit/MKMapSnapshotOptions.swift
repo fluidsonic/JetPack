@@ -12,13 +12,23 @@ extension MKMapSnapshotOptions {
 			return true
 		}
 
-		return camera == object.camera
-			&& mapRect == object.mapRect
-			&& mapType == object.mapType
-			&& region == object.region
-			&& scale == object.scale
-			&& showsBuildings == object.showsBuildings
-			&& showsPointsOfInterest == object.showsPointsOfInterest
-			&& size == object.size
+		#if os(iOS)
+			return camera == object.camera
+				&& mapRect == object.mapRect
+				&& mapType == object.mapType
+				&& region == object.region
+				&& scale == object.scale
+				&& showsBuildings == object.showsBuildings
+				&& showsPointsOfInterest == object.showsPointsOfInterest
+				&& size == object.size
+		#else
+			return camera == object.camera
+				&& mapRect == object.mapRect
+				&& mapType == object.mapType
+				&& region == object.region
+				&& showsBuildings == object.showsBuildings
+				&& showsPointsOfInterest == object.showsPointsOfInterest
+				&& size == object.size
+		#endif
 	}
 }
