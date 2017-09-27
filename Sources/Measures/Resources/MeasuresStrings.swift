@@ -350,7 +350,7 @@ private func __substituteTemplateParameters(template: String, onCharacter: (Char
 	var isParsingParameter = false
 	var isAwaitingClosingCurlyBracket = false
 
-	for character in template.characters {
+	for character in template {
 		if isAwaitingClosingCurlyBracket && character != "}" {
 			return false
 		}

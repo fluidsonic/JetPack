@@ -17,12 +17,12 @@ public extension String {
 			return ""
 		}
 
-		let currentLength = characters.count
+		let currentLength = count
 		if currentLength <= length {
 			return self
 		}
 
-		let usableLength = length - truncationString.characters.count
+		let usableLength = length - truncationString.count
 		if usableLength < 0 {
 			return truncationString.trimmedToLength(length)
 		}
@@ -30,7 +30,7 @@ public extension String {
 			return truncationString
 		}
 
-		return self[startIndex ..< characters.index(startIndex, offsetBy: usableLength)] + truncationString
+		return self[startIndex ..< index(startIndex, offsetBy: usableLength)] + truncationString
 	}
 
 

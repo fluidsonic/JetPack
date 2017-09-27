@@ -7,7 +7,7 @@ public extension NSRange {
 
 
 	public init(forString string: String) {
-		let indices = string.characters.indices
+		let indices = string.indices
 
 		self.init(range: indices.startIndex ..< indices.endIndex, inString: string)
 	}

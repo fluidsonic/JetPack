@@ -55,7 +55,7 @@ public extension Locale {
 			return .other
 		}
 
-		let v = match[2]?.characters.count ?? 0
+		let v = match[2]?.count ?? 0
 
 		return pluralCategoryForOperands(f: f, i: i, n: n, t: t, v: v)
 	}
