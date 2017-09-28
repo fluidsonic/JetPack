@@ -12,6 +12,8 @@ Pod::Spec.new do |s|
 	s.module_map = 'Module/JetPack.modulemap'
 	s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.0' }
 
+	s.preserve_paths = 'Sources/JetPack.swift'
+
 	s.ios.deployment_target = '9.0'
 	s.osx.deployment_target = '10.10'
 
