@@ -30,6 +30,8 @@ public extension UIScrollView {
 	}
 
 
+	// TODO The way changing the content inset affects the content offset is weird.
+	// This should be re-thought and well-tested.
 	@nonobjc
 	public func setContentInset(_ contentInset: UIEdgeInsets, maintainingVisualContentOffset maintainsVisualContentOffset: Bool) {
 		let oldContentInsets = self.contentInset
@@ -37,22 +39,14 @@ public extension UIScrollView {
 		guard newContentInsets != oldContentInsets else {
 			return
 		}
-		guard maintainsVisualContentOffset else {
-			self.contentInset = newContentInsets
-			return
-		}
 
-		let oldContentOffset = contentOffset
+		let contentOffsetWasMinimum = (contentOffset == minimumContentOffset)
+
 		self.contentInset = newContentInsets
 
-		let newContentOffset = oldContentOffset
-			.offsetBy(dy: oldContentInsets.top - newContentInsets.top)
-			.coerced(atLeast: minimumContentOffset, atMost: maximumContentOffset)
-		guard newContentOffset != oldContentOffset else {
-			return
+		if contentOffsetWasMinimum {
+			contentOffset = minimumContentOffset
 		}
-
-		self.contentOffset = newContentOffset
 	}
 }
 
