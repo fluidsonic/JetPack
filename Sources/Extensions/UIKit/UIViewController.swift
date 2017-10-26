@@ -197,6 +197,24 @@ extension UIViewController {
 	}
 
 
+	@nonobjc
+	internal func default_viewDidLayoutSubviews() {
+		swizzled_viewDidLayoutSubviews()
+
+		if let navigationController = self as? UINavigationController {
+			navigationController.checkNavigationBarFrame()
+		}
+
+		decorationInsetsAnimation = nil
+		isInLayout = false
+
+		if needsAdditionalLayoutPass {
+			needsAdditionalLayoutPass = false
+			view.setNeedsLayout()
+		}
+	}
+
+
 	// reverse-engineered from preferredInterfaceOrientationForPresentation() @ iOS 9.3
 	@nonobjc
 	public static func defaultPreferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
@@ -320,7 +338,7 @@ extension UIViewController {
 
 
 	@nonobjc
-	private var isInLayout: Bool {
+	internal var isInLayout: Bool {
 		get { return (objc_getAssociatedObject(self, &AssociatedKeys.isInLayout) as? NSNumber)?.boolValue ?? false }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.isInLayout, newValue ? true : nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}
@@ -565,19 +583,7 @@ extension UIViewController {
 
 	@objc(JetPack_viewDidLayoutSubviews)
 	fileprivate dynamic func swizzled_viewDidLayoutSubviews() {
-		swizzled_viewDidLayoutSubviews()
-
-		if let navigationController = self as? UINavigationController {
-			navigationController.checkNavigationBarFrame()
-		}
-
-		decorationInsetsAnimation = nil
-		isInLayout = false
-
-		if needsAdditionalLayoutPass {
-			needsAdditionalLayoutPass = false
-			view.setNeedsLayout()
-		}
+		default_viewDidLayoutSubviews()
 	}
 
 

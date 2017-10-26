@@ -14,6 +14,7 @@
   "pod_target_xcconfig": {
     "SWIFT_VERSION": "4.0"
   },
+  "preserve_paths": "Sources/JetPack.swift",
   "platforms": {
     "ios": "9.0",
     "osx": "10.10"

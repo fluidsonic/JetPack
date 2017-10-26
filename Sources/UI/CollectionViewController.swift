@@ -27,11 +27,11 @@ open class CollectionViewController: ViewController {
 	open var clearsSelectionOnViewWillAppear = true
 
 
-	open fileprivate(set) lazy var collectionView: UICollectionView = self.createCollectionView()
+	open fileprivate(set) lazy var collectionView: CollectionView = self.createCollectionView()
 
 
-	fileprivate func createCollectionView() -> UICollectionView {
-		let child = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+	fileprivate func createCollectionView() -> CollectionView {
+		let child = CollectionView(collectionViewLayout: collectionViewLayout)
 		child.dataSource = self
 		child.delegate = self
 
