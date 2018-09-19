@@ -6,11 +6,11 @@ import JetPack
 
 class NSMutableAttributedString_Tests: XCTestCase {
 
-	private let testKey1 = NSAttributedStringKey("a")
-	private let testKey2 = NSAttributedStringKey("b")
+	private let testKey1 = NSAttributedString.Key("a")
+	private let testKey2 = NSAttributedString.Key("b")
 
 
-	fileprivate func attributedString(_ string: String, attributes: [(range: CountableClosedRange<Int>, name: NSAttributedStringKey, value: Any)]) -> NSMutableAttributedString {
+	fileprivate func attributedString(_ string: String, attributes: [(range: CountableClosedRange<Int>, name: NSAttributedString.Key, value: Any)]) -> NSMutableAttributedString {
 		let attributedString = NSMutableAttributedString(string: string)
 		for attribute in attributes {
 			let range = NSRange(location: attribute.range.lowerBound, length: attribute.range.upperBound - attribute.range.lowerBound + 1)

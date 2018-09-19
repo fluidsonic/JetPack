@@ -7,10 +7,10 @@ public extension ImageView {
 
 	public struct MKMapSnapshotSource: ImageView.Source, Equatable {
 
-		private var options: MKMapSnapshotOptions
+		private var options: MKMapSnapshotter.Options
 
 
-		public init(options: MKMapSnapshotOptions = MKMapSnapshotOptions()) {
+		public init(options: MKMapSnapshotter.Options = MKMapSnapshotter.Options()) {
 			self.options = options
 
 			ensureUniqueOptions()
@@ -35,7 +35,7 @@ public extension ImageView {
 
 		private mutating func ensureUniqueOptions() {
 			if !isKnownUniquelyReferenced(&options) {
-				options = options.copy() as! MKMapSnapshotOptions
+				options = options.copy() as! MKMapSnapshotter.Options
 			}
 		}
 
@@ -116,11 +116,11 @@ private final class MKMapSnapshotSourceSession: ImageView.Session {
 	private var lastRequestedScale = CGFloat(0)
 	private var lastRequestedSize = CGSize.zero
 	private var listener: ImageView.SessionListener?
-	private var options: MKMapSnapshotOptions
+	private var options: MKMapSnapshotter.Options
 	private var snapshotter: MKMapSnapshotter?
 
 
-	init(options: MKMapSnapshotOptions) {
+	init(options: MKMapSnapshotter.Options) {
 		self.options = options
 	}
 

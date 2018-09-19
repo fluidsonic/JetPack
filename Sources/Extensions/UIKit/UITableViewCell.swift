@@ -87,7 +87,7 @@ public extension UITableViewCell {
 
 
 	@objc(JetPack_separatorStyle)
-	fileprivate dynamic var private_separatorStyle: UITableViewCellSeparatorStyle {
+	fileprivate dynamic var private_separatorStyle: UITableViewCell.SeparatorStyle {
 		// called only when private property was renamed or removed
 		return .singleLine
 	}
@@ -106,7 +106,7 @@ public extension UITableViewCell {
 
 
 	@objc(JetPack_editingStyle)
-	fileprivate dynamic var swizzled_editingStyle: UITableViewCellEditingStyle {
+	fileprivate dynamic var swizzled_editingStyle: UITableViewCell.EditingStyle {
 		if let predictedConfiguration = predictedConfiguration {
 			return predictedConfiguration.editingStyle
 		}
@@ -178,14 +178,14 @@ private final class LayoutManager: NSObject {
 private struct PredictedConfiguration {
 
 	fileprivate var editing: Bool
-	fileprivate var editingStyle: UITableViewCellEditingStyle
+	fileprivate var editingStyle: UITableViewCell.EditingStyle
 	fileprivate var shouldIndentWhileEditing: Bool
 	fileprivate var showsReorderControl: Bool
 }
 
 
 
-extension UITableViewCellEditingStyle: CustomDebugStringConvertible {
+extension UITableViewCell.EditingStyle: CustomDebugStringConvertible {
 
 	public var debugDescription: String {
 		return "UITableViewCellEditingStyle.\(description)"
@@ -193,7 +193,7 @@ extension UITableViewCellEditingStyle: CustomDebugStringConvertible {
 }
 
 
-extension UITableViewCellEditingStyle: CustomStringConvertible {
+extension UITableViewCell.EditingStyle: CustomStringConvertible {
 
 	public var description: String {
 		switch self {

@@ -73,7 +73,7 @@ private final class AVAssetSourceSession: ImageView.Session {
 		generator.maximumSize = size
 		loading = true
 
-		let times = [NSValue(time: CMTimeMakeWithSeconds(0, 1000))]
+		let times = [NSValue(time: CMTime(seconds: 0, preferredTimescale: 1000))]
 
 		generator.generateCGImagesAsynchronously(forTimes: times) { _, cgImage, _, _, _ in
 			guard let cgImage = cgImage else {

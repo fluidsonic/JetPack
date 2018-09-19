@@ -44,7 +44,7 @@ public struct Animation {
 
 		var completions = [Completion]()
 
-		var options = UIViewAnimationOptions()
+		var options = UIView.AnimationOptions()
 		if allowsUserInteraction {
 			options.insert(.allowUserInteraction)
 		}
@@ -83,14 +83,14 @@ public struct Animation {
 				}
 			}
 
-			let curveOptions: UIViewAnimationOptions?
+			let curveOptions: UIView.AnimationOptions?
 
 			switch timing {
 			case .easeIn:           curveOptions = .curveEaseIn
-			case .easeInEaseOut:    curveOptions = UIViewAnimationOptions()
+			case .easeInEaseOut:    curveOptions = UIView.AnimationOptions()
 			case .easeOut:          curveOptions = .curveEaseOut
 			case .linear:           curveOptions = .curveLinear
-			case let .curve(curve): curveOptions = UIViewAnimationOptions(curve: curve)
+			case let .curve(curve): curveOptions = UIView.AnimationOptions(curve: curve)
 
 			case let .spring(initialVelocity, damping):
 				curveOptions = nil
@@ -116,7 +116,7 @@ public struct Animation {
 		case easeInEaseOut
 		case easeOut
 		case linear
-		case curve(UIViewAnimationCurve)
+		case curve(UIView.AnimationCurve)
 		case spring(initialVelocity: CGFloat, damping: CGFloat)
 	}
 

@@ -69,7 +69,7 @@ class CGRect_Tests: XCTestCase {
 
 
 	func testDistance() {
-		XCTAssertEqualWithAccuracy(CGRect(x: 0, y: 0, width: 1, height: 2).distance(to: CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: CGFloat(FLT_EPSILON))
+		XCTAssertEqual(CGRect(x: 0, y: 0, width: 1, height: 2).distance(to: CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: .ulpOfOne)
 	}
 
 

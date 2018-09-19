@@ -102,7 +102,7 @@ extension UINavigationController {
 
 		lastKnownNavigationBarBottom = navigationBar.frame.bottom
 
-		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? Animation(duration: TimeInterval(UINavigationControllerHideShowBarDuration), timing: .easeInEaseOut) : nil)
+		topViewController?.invalidateDecorationInsetsWithAnimation(animated ? Animation(duration: TimeInterval(UINavigationController.hideShowBarDuration), timing: .easeInEaseOut) : nil)
 	}
 
 

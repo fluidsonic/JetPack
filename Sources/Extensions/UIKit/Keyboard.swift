@@ -5,7 +5,7 @@ public final class Keyboard {
 
 	fileprivate static var preloaded = false
 
-	public fileprivate(set) static var animation = Animation(duration: 0.25, timing: .curve(UIViewAnimationCurve(rawValue: 7)!))
+	public fileprivate(set) static var animation = Animation(duration: 0.25, timing: .curve(UIView.AnimationCurve(rawValue: 7)!))
 	public fileprivate(set) static var frame = CGRect()
 	public fileprivate(set) static var isVisible = false
 
@@ -89,12 +89,12 @@ public final class Keyboard {
 	fileprivate static func subscribeToNotifications() {
 		let queue = OperationQueue.main
 		let notificationCenter = NotificationCenter.default
-		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardDidChangeFrame,  object: nil, queue: queue, using: didChangeFrameWithNotification)
-		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardDidHide,         object: nil, queue: queue, using: didHideWithNotification)
-		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardDidShow,         object: nil, queue: queue, using: didShowWithNotification)
-		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil, queue: queue, using: willChangeFrameWithNotification)
-		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardWillHide,        object: nil, queue: queue, using: willHideWithNotification)
-		notificationCenter.addObserver(forName: NSNotification.Name.UIKeyboardWillShow,        object: nil, queue: queue, using: willShowWithNotification)
+		notificationCenter.addObserver(forName: UIResponder.keyboardDidChangeFrameNotification,  object: nil, queue: queue, using: didChangeFrameWithNotification)
+		notificationCenter.addObserver(forName: UIResponder.keyboardDidHideNotification,         object: nil, queue: queue, using: didHideWithNotification)
+		notificationCenter.addObserver(forName: UIResponder.keyboardDidShowNotification,         object: nil, queue: queue, using: didShowWithNotification)
+		notificationCenter.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: queue, using: willChangeFrameWithNotification)
+		notificationCenter.addObserver(forName: UIResponder.keyboardWillHideNotification,        object: nil, queue: queue, using: willHideWithNotification)
+		notificationCenter.addObserver(forName: UIResponder.keyboardWillShowNotification,        object: nil, queue: queue, using: willShowWithNotification)
 	}
 
 
@@ -104,13 +104,13 @@ public final class Keyboard {
 		}
 
 		if let
-			rawAnimationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int, let animationCurve = UIViewAnimationCurve(rawValue: rawAnimationCurve),
-			let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval
+			rawAnimationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int, let animationCurve = UIView.AnimationCurve(rawValue: rawAnimationCurve),
+			let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval
 		{
 			self.animation = Animation(duration: animationDuration, timing: .curve(animationCurve))
 		}
 
-		if let frameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+		if let frameValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
 			frame = frameValue.cgRectValue
 			isVisible = UIScreen.main.bounds.intersects(frame)
 		}

@@ -46,7 +46,7 @@ open class TextView: UITextView {
 
 
 	private func attributedTextIncludingDefaultFormatting(for attributedText: NSAttributedString) -> NSAttributedString {
-		let defaultAttributes: [NSAttributedStringKey : Any] = [
+		let defaultAttributes: [NSAttributedString.Key : Any] = [
 			.font:            font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize),
 			.foregroundColor: textColor ?? UIColor.darkText
 		]
@@ -105,7 +105,7 @@ open class TextView: UITextView {
 
 
 	private func subscribeToChangeNotifications() {
-		changeObserver = NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextViewTextDidChange, object: self, queue: nil) { _ in
+		changeObserver = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self, queue: nil) { _ in
 			self.updatePlaceholderLabel()
 		}
 	}

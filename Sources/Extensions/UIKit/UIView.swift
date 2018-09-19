@@ -265,109 +265,109 @@ extension UIView {
 
 
 
-extension UIViewAnimationCurve: CustomStringConvertible {
+extension UIView.AnimationCurve: CustomStringConvertible {
 
 	public var description: String {
 		switch self.rawValue {
-		case UIViewAnimationCurve.easeIn.rawValue:    return "UIViewAnimationCurve.EaseIn"
-		case UIViewAnimationCurve.easeInOut.rawValue: return "UIViewAnimationCurve.EaseInOut"
-		case UIViewAnimationCurve.easeOut.rawValue:   return "UIViewAnimationCurve.EaseOut"
-		case UIViewAnimationCurve.linear.rawValue:    return "UIViewAnimationCurve.Linear"
-		default:                 return "UIViewAnimationCurve(\(rawValue))"
+		case UIView.AnimationCurve.easeIn.rawValue:    return "UIView.AnimationCurve.easeIn"
+		case UIView.AnimationCurve.easeInOut.rawValue: return "UIView.AnimationCurve.easeInOut"
+		case UIView.AnimationCurve.easeOut.rawValue:   return "UIView.AnimationCurve.easeOut"
+		case UIView.AnimationCurve.linear.rawValue:    return "UIView.AnimationCurve.linear"
+		default:                                       return "UIView.AnimationCurve(\(rawValue))"
 		}
 	}
 }
 
 
 
-public extension UIViewAnimationOptions {
+public extension UIView.AnimationOptions {
 
-	public init(curve: UIViewAnimationCurve) {
+	public init(curve: UIView.AnimationCurve) {
 		self.init(rawValue: UInt((curve.rawValue & 7) << 16))
 	}
 
 
-	public var curve: UIViewAnimationCurve {
-		return UIViewAnimationCurve(rawValue: Int((rawValue >> 16) & 7))!
+	public var curve: UIView.AnimationCurve {
+		return UIView.AnimationCurve(rawValue: Int((rawValue >> 16) & 7))!
 	}
 }
 
 
-extension UIViewAnimationOptions: CustomStringConvertible {
+extension UIView.AnimationOptions: CustomStringConvertible {
 
 	public var description: String {
 		var options = [String]()
 		if contains(.allowAnimatedContent) {
-			options.append("AllowAnimatedContent")
+			options.append("allowAnimatedContent")
 		}
 		if contains(.allowUserInteraction) {
-			options.append("AllowUserInteraction")
+			options.append("allowUserInteraction")
 		}
 		if contains(.autoreverse) {
-			options.append("Autoreverse")
+			options.append("autoreverse")
 		}
 		if contains(.beginFromCurrentState) {
-			options.append("BeginFromCurrentState")
+			options.append("beginFromCurrentState")
 		}
 		switch curve.rawValue {
-		case UIViewAnimationCurve.easeIn.rawValue:    options.append("CurveEaseIn")
-		case UIViewAnimationCurve.easeInOut.rawValue: options.append("CurveEaseInOut")
-		case UIViewAnimationCurve.easeOut.rawValue:   options.append("CurveEaseOut")
-		case UIViewAnimationCurve.linear.rawValue:    options.append("CurveLinear")
-		default:                                      options.append("Curve(\(curve.rawValue))")
+		case UIView.AnimationCurve.easeIn.rawValue:    options.append("curveEaseIn")
+		case UIView.AnimationCurve.easeInOut.rawValue: options.append("curveEaseInOut")
+		case UIView.AnimationCurve.easeOut.rawValue:   options.append("curveEaseOut")
+		case UIView.AnimationCurve.linear.rawValue:    options.append("curveLinear")
+		default:                                       options.append("curve(\(curve.rawValue))")
 		}
 		if contains(.layoutSubviews) {
-			options.append("LayoutSubviews")
+			options.append("layoutSubviews")
 		}
 		if contains(.overrideInheritedCurve) {
-			options.append("OverrideInheritedCurve")
+			options.append("overrideInheritedCurve")
 		}
 		if contains(.overrideInheritedDuration) {
-			options.append("OverrideInheritedDuration")
+			options.append("overrideInheritedDuration")
 		}
 		if contains(.overrideInheritedOptions) {
-			options.append("OverrideInheritedOptions")
+			options.append("overrideInheritedOptions")
 		}
 		if contains(.repeat) {
-			options.append("Repeat")
+			options.append("repeat")
 		}
 		if contains(.showHideTransitionViews) {
-			options.append("ShowHideTransitionViews")
+			options.append("showHideTransitionViews")
 		}
 		if contains(.transitionCurlUp) {
-			options.append("TransitionCurlUp")
+			options.append("transitionCurlUp")
 		}
 		if contains(.transitionCurlDown) {
-			options.append("TransitionCurlDown")
+			options.append("transitionCurlDown")
 		}
 		if contains(.transitionCrossDissolve) {
-			options.append("TransitionCrossDissolve")
+			options.append("transitionCrossDissolve")
 		}
 		if contains(.transitionFlipFromBottom) {
-			options.append("TransitionFlipFromBottom")
+			options.append("transitionFlipFromBottom")
 		}
 		if contains(.transitionFlipFromLeft) {
-			options.append("TransitionFlipFromLeft")
+			options.append("transitionFlipFromLeft")
 		}
 		if contains(.transitionFlipFromRight) {
-			options.append("TransitionFlipFromRight")
+			options.append("transitionFlipFromRight")
 		}
 		if contains(.transitionFlipFromTop) {
-			options.append("TransitionFlipFromTop")
+			options.append("transitionFlipFromTop")
 		}
 
-		return "UIViewAnimationOptions(\(options.joined(separator: ", ")))"
+		return "UIView.AnimationOptions(\(options.joined(separator: ", ")))"
 	}
 }
 
 
-extension UIViewTintAdjustmentMode: CustomStringConvertible {
+extension UIView.TintAdjustmentMode: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .automatic: return "UIViewTintAdjustmentMode.Automatic"
-		case .dimmed:    return "UIViewTintAdjustmentMode.Dimmed"
-		case .normal:    return "UIViewTintAdjustmentMode.Normal"
+		case .automatic: return "UIViewTint.AdjustmentMode.automatic"
+		case .dimmed:    return "UIViewTint.AdjustmentMode.dimmed"
+		case .normal:    return "UIViewTint.AdjustmentMode.normal"
 		}
 	}
 }

@@ -7,10 +7,9 @@ public extension UIBarButtonItem {
 		fileprivate static var handlerProxy = UInt8()
 	}
 
-	
 
 	@nonobjc
-	public convenience init(image: UIImage, style: UIBarButtonItemStyle = .plain, handler: Closure? = nil) {
+	public convenience init(image: UIImage, style: UIBarButtonItem.Style = .plain, handler: Closure? = nil) {
 		self.init(image: image, style: style, target: nil, action: nil)
 
 		self.handler = handler
@@ -18,7 +17,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public convenience init(title: String, style: UIBarButtonItemStyle = .plain, handler: Closure? = nil) {
+	public convenience init(title: String, style: UIBarButtonItem.Style = .plain, handler: Closure? = nil) {
 		self.init(title: title, style: style, target: nil, action: nil)
 
 		self.handler = handler
@@ -26,7 +25,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public convenience init(systemItem: UIBarButtonSystemItem, handler: Closure? = nil) {
+	public convenience init(systemItem: UIBarButtonItem.SystemItem, handler: Closure? = nil) {
 		self.init(barButtonSystemItem: systemItem, target: nil, action: nil)
 
 		self.handler = handler

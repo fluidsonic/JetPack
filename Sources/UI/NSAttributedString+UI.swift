@@ -11,7 +11,7 @@ extension NSAttributedString {
 		paragraphStyle: NSParagraphStyle? = nil,
 		transform: TextTransform? = nil
 	) -> NSMutableAttributedString {
-		var defaultAttributes = [NSAttributedStringKey : Any]()
+		var defaultAttributes = [NSAttributedString.Key : Any]()
 		if let font = font {
 			defaultAttributes[.font] = font
 		}

@@ -48,7 +48,7 @@ open class ImageView: View {
 	fileprivate var _activityIndicator: UIActivityIndicatorView?
 	public final var activityIndicator: UIActivityIndicatorView {
 		return _activityIndicator ?? {
-			let child = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+			let child = UIActivityIndicatorView(style: .gray)
 			child.hidesWhenStopped = false
 			child.alpha = 0
 			child.startAnimating()
@@ -186,7 +186,7 @@ open class ImageView: View {
 
 
 	@available(*, unavailable, message: "Use .gravity and .scaling instead.")
-	public final override var contentMode: UIViewContentMode {
+	public final override var contentMode: UIView.ContentMode {
 		get { return super.contentMode }
 		set { super.contentMode = newValue }
 	}

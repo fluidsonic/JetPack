@@ -12,7 +12,7 @@ public extension NSMutableAttributedString {
 		link: URL?,
 		paragraphStyle: NSParagraphStyle?
 	) {
-		var attributes = [NSAttributedStringKey : AnyObject]()
+		var attributes = [NSAttributedString.Key : AnyObject]()
 		if let font = font {
 			attributes[.font] = font
 		}

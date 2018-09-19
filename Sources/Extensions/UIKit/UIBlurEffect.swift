@@ -16,7 +16,7 @@ public extension UIBlurEffect {
 
 
 	@nonobjc
-	public static func create(style: UIBlurEffectStyle, tintColor: UIColor, tintAlpha: CGFloat) -> UIBlurEffect {
+	public static func create(style: UIBlurEffect.Style, tintColor: UIColor, tintAlpha: CGFloat) -> UIBlurEffect {
 		if let customBlurEffectType = customBlurEffectType {
 			let effect = customBlurEffectType.customEffectWithStyle(style)
 			if type(of: effect) != UIBlurEffect.self {
@@ -32,7 +32,7 @@ public extension UIBlurEffect {
 
 
 	@objc(JetPack_customEffectWithStyle:)
-	fileprivate dynamic class func customEffectWithStyle(_ style: UIBlurEffectStyle) -> UIBlurEffect {
+	fileprivate dynamic class func customEffectWithStyle(_ style: UIBlurEffect.Style) -> UIBlurEffect {
 		return UIBlurEffect(style: style)
 	}
 }

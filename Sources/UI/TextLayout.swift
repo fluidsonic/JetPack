@@ -676,7 +676,7 @@ internal class TextLayout {
 			forDrawingToScreen toScreen: Bool,
 			atCharacterIndex charIndex: Int,
 			effectiveRange effectiveCharRange: NSRangePointer?
-		) -> [NSAttributedStringKey : Any]? {
+		) -> [NSAttributedString.Key : Any]? {
 			guard toScreen, let textStorage = layoutManager.textStorage else {
 				return nil
 			}

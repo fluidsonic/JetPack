@@ -4,10 +4,10 @@ import UIKit
 @objc(JetPack_TableViewController)
 open class TableViewController: ViewController {
 
-	fileprivate let style: UITableViewStyle
+	fileprivate let style: UITableView.Style
 
 
-	public init(style: UITableViewStyle) {
+	public init(style: UITableView.Style) {
 		self.style = style
 
 		super.init()

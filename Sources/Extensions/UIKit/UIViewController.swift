@@ -191,8 +191,8 @@ extension UIViewController {
 
 	@objc(JetPack_decorationInsetsDidChangeWithAnimation:)
 	public func decorationInsetsDidChangeWithAnimation(_ animationWrapper: Animation.Wrapper?) {
-		for childViewController in childViewControllers {
-			childViewController.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
+		for child in children {
+			child.invalidateDecorationInsetsWithAnimationWrapper(animationWrapper)
 		}
 	}
 
@@ -451,8 +451,8 @@ extension UIViewController {
 	fileprivate static func subscribeToEvents() {
 		let application = UIApplication.shared
 		let notificationCenter = NotificationCenter.default
-		notificationCenter.addObserver(forName: .UIApplicationDidBecomeActive, object: application, queue: nil, using: applicationDidBecomeActive)
-		notificationCenter.addObserver(forName: .UIApplicationWillResignActive, object: application, queue: nil, using: applicationWillResignActive)
+		notificationCenter.addObserver(forName: UIApplication.didBecomeActiveNotification, object: application, queue: nil, using: applicationDidBecomeActive)
+		notificationCenter.addObserver(forName: UIApplication.willResignActiveNotification, object: application, queue: nil, using: applicationWillResignActive)
 
 		_ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
 			self.invalidateTopLevelDecorationInsetsWithAnimation(Keyboard.animation)
@@ -692,8 +692,8 @@ extension UIViewController {
 	fileprivate func traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(_ includesPresentedViewControllers: Bool, closure: (UIViewController) -> Void) {
 		closure(self)
 
-		for childViewController in childViewControllers {
-			childViewController.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(includesPresentedViewControllers, closure: closure)
+		for child in children {
+			child.traverseViewControllerSubtreeFromHereIncludingPresentedViewControllers(includesPresentedViewControllers, closure: closure)
 		}
 
 		if includesPresentedViewControllers {
@@ -904,7 +904,7 @@ extension UIViewController.ContainmentState: CustomStringConvertible {
 private class StaticInitialization: NSObject, StaticInitializable {
 
 	static func staticInitialize() {
-		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.didMove(toParentViewController:)),  to: #selector(UIViewController.swizzled_didMoveToParentViewController(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.didMove),                           to: #selector(UIViewController.swizzled_didMoveToParentViewController(_:)))
 		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.present(_:animated:completion:)),   to: #selector(UIViewController.swizzled_presentViewController(_:animated:completion:)))
 		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.setNeedsStatusBarAppearanceUpdate), to: #selector(UIViewController.swizzled_setNeedsStatusBarAppearanceUpdate))
 		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewDidAppear(_:)),                 to: #selector(UIViewController.swizzled_viewDidAppear(_:)))
@@ -913,7 +913,7 @@ private class StaticInitialization: NSObject, StaticInitializable {
 		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillAppear(_:)),                to: #selector(UIViewController.swizzled_viewWillAppear(_:)))
 		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillDisappear(_:)),             to: #selector(UIViewController.swizzled_viewWillDisappear(_:)))
 		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.viewWillLayoutSubviews),            to: #selector(UIViewController.swizzled_viewWillLayoutSubviews))
-		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.willMove(toParentViewController:)), to: #selector(UIViewController.swizzled_willMoveToParentViewController(_:)))
+		swizzleMethod(in: UIViewController.self, from: #selector(UIViewController.willMove(toParent:)),               to: #selector(UIViewController.swizzled_willMoveToParentViewController(_:)))
 
 		UIViewController.subscribeToEvents()
 	}

@@ -257,7 +257,7 @@ public extension UIColor {
 	}
 
 
-	public func tinted(with tintColor: UIColor, forAdjustmentMode tintAdjustmentMode: UIViewTintAdjustmentMode, dimsWithTint: Bool) -> UIColor {
+	public func tinted(with tintColor: UIColor, forAdjustmentMode tintAdjustmentMode: UIView.TintAdjustmentMode, dimsWithTint: Bool) -> UIColor {
 		if isTint {
 			return tinted(with: tintColor)
 		}

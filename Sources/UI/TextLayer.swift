@@ -4,7 +4,7 @@ import UIKit
 class TextLayer: Layer {
 
 	private var configuration = Configuration()
-	private var normalTintAdjustmentMode = UIViewTintAdjustmentMode.normal
+	private var normalTintAdjustmentMode = UIView.TintAdjustmentMode.normal
 	private var normalTintColor = UIColor.red
 	private var textLayout: TextLayout?
 
@@ -434,7 +434,7 @@ class TextLayer: Layer {
 	}
 
 
-	func updateTintColor(_ tintColor: UIColor, adjustmentMode tintAdjustmentMode: UIViewTintAdjustmentMode) {
+	func updateTintColor(_ tintColor: UIColor, adjustmentMode tintAdjustmentMode: UIView.TintAdjustmentMode) {
 		guard tintAdjustmentMode != normalTintAdjustmentMode || tintColor != normalTintColor else {
 			return
 		}
@@ -495,7 +495,7 @@ class TextLayer: Layer {
 		}
 
 
-		var font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body) {
+		var font = UIFont.preferredFont(forTextStyle: .body) {
 			didSet {
 				if font != oldValue {
 					_finalText = nil

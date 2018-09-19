@@ -233,7 +233,7 @@ public extension UIImage {
 
 
 
-public extension UIImageOrientation {
+public extension UIImage.Orientation {
 
 	public init?(CGImageOrientation: Int) {
 		switch CGImageOrientation {

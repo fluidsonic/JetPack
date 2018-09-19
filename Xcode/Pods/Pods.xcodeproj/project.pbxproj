@@ -5831,40 +5831,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		03066580A7409B8C500D2997FCE8385D /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E398BF54B3626E500F493476B037FAA0 /* JetPack-59c1e380.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-59c1e380/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		04220FF4FF114E00C9BA053891A67BE2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F9198422F401157DAF76F7D5E8F40A81 /* Pods-Extensions-CoreGraphics-Extensions-CoreGraphics-Tests.release.xcconfig */;
@@ -5901,39 +5867,7 @@
 			};
 			name = Release;
 		};
-		043888DC3467A283488C733CB2ACA4E6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C96A234DD6A6DC9CBBFFF1CFCEBBE3B /* JetPack-7e9039c6.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-7e9039c6/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		063FA36049E39B7EDBA39469319DDC81 /* Release */ = {
+		04461BAC00163C5AB65F6C9EF53EA6A7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6929791B8D3B48C54A5CFF2B1F292869 /* JetPack-771028e1.xcconfig */;
 			buildSettings = {
@@ -5959,7 +5893,41 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		05A9AF3AAE4BC0F7F9F85400DAB02621 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF9905022A74A071BEF1A7001B0D0EBB /* JetPack-Core-Extensions_Darwin-Extensions_Swift.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -6002,9 +5970,9 @@
 			};
 			name = Debug;
 		};
-		080FA89AA168478D451FF9D73C217370 /* Debug */ = {
+		0B12E395927F6B3139D8CFEEAF36AB70 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF9905022A74A071BEF1A7001B0D0EBB /* JetPack-Core-Extensions_Darwin-Extensions_Swift.xcconfig */;
+			baseConfigurationReference = E398BF54B3626E500F493476B037FAA0 /* JetPack-59c1e380.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6015,88 +5983,26 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-59c1e380/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
-		};
-		0CC6BC3B3828430B888574B1E98695F1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7D3C846687C8962C26B1B724D2EA16BA /* JetPack-2885890e.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-2885890e/JetPack-2885890e-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-2885890e/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-2885890e/JetPack-2885890e.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		0D9EBB1A33D2169B1B3D4C5E9B240D19 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1FAC9CB5128057EE423170139BCD7B76 /* JetPack-Extensions_Photos.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_Photos/JetPack-Extensions_Photos-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_Photos/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_Photos/JetPack-Extensions_Photos.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
+			name = Release;
 		};
 		0F6265424E498CF39D51E08219A1B3B4 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -6127,6 +6033,38 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		117D099609A9D9621D20EA6473799736 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C96A234DD6A6DC9CBBFFF1CFCEBBE3B /* JetPack-7e9039c6.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-7e9039c6/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -6205,6 +6143,109 @@
 			};
 			name = Release;
 		};
+		1DEBEC44B88F9B2C72349F689578DF88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 959B15DE5C5B2D814F82056839AE58D9 /* JetPack-Deprecated.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Deprecated/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		1F6BF9134578E6BD4030FE82514A6379 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C96A234DD6A6DC9CBBFFF1CFCEBBE3B /* JetPack-7e9039c6.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-7e9039c6/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2062772EC1E43CE01D4CC0BD2FCBA46B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3118AA0CEDF796B1F63E996B42453237 /* JetPack-9fa1117a.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-9fa1117a/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MODULEMAP_FILE = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		23E4B00F9839551DBDAAFC028275BC64 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8F0FA1D6F9F4CB96DC380093CD4DE21 /* Pods-Extensions.debug.xcconfig */;
@@ -6240,9 +6281,9 @@
 			};
 			name = Debug;
 		};
-		2E96305006B4B0D73ACE7ED4E4D3DE7F /* Debug */ = {
+		3D5F5EF24EF67D87CCC7E5457329BA92 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EBB44E782B1F77C01E30076CBBF2DC83 /* JetPack-d9ead517.xcconfig */;
+			baseConfigurationReference = 087B7D53563A81B94A30415C3A874C11 /* JetPack-a88ad25f.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6253,191 +6294,24 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-d9ead517/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-a88ad25f/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		327FC357B09403B8E7135F42F22F825E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68B1D274F6261C6746C9210EFF17741E /* JetPack-bc618c09.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-bc618c09/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		374D381679F21B093A3A5CD2292BE85C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E398BF54B3626E500F493476B037FAA0 /* JetPack-59c1e380.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-59c1e380/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		37DD1E7DEA96C82FF7AE3AA171481A60 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84662E5504B430C46610BC727A85FEFD /* JetPack-f0313141.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-f0313141/JetPack-f0313141-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-f0313141/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-f0313141/JetPack-f0313141.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		3911E71B6E2C44F3BAEFA0572EBC5DBD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = EBB44E782B1F77C01E30076CBBF2DC83 /* JetPack-d9ead517.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-d9ead517/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		3BF888AB16F2DF2242945AAA740351BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3118AA0CEDF796B1F63E996B42453237 /* JetPack-9fa1117a.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-9fa1117a/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MODULEMAP_FILE = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		3FCD18133C9E89019B8CE7497088615F /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -6541,9 +6415,9 @@
 			};
 			name = Debug;
 		};
-		498DE44DDD7C531DE679F6D3EDBBEEAB /* Release */ = {
+		432DC4768EC58F607D7AF60080E56C71 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5CABD41E5ED54E9745F220F312B02BA3 /* JetPack-24a50cff.xcconfig */;
+			baseConfigurationReference = 68B1D274F6261C6746C9210EFF17741E /* JetPack-bc618c09.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6554,12 +6428,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-24a50cff/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-bc618c09/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
@@ -6567,7 +6441,41 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		465B6B8F72BD3FAB4A469BE68FD5A916 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EBB44E782B1F77C01E30076CBBF2DC83 /* JetPack-d9ead517.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-d9ead517/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -6709,43 +6617,9 @@
 			};
 			name = Debug;
 		};
-		50BCE3FE42FF01C9DDC58C4E10B96578 /* Debug */ = {
+		528452104D04A96CDD0699D1AC7FAABC /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3118AA0CEDF796B1F63E996B42453237 /* JetPack-9fa1117a.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-9fa1117a/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MODULEMAP_FILE = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		5610675E956C0432291B43E04ECBE572 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 087B7D53563A81B94A30415C3A874C11 /* JetPack-a88ad25f.xcconfig */;
+			baseConfigurationReference = 5CABD41E5ED54E9745F220F312B02BA3 /* JetPack-24a50cff.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6756,44 +6630,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-a88ad25f/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-24a50cff/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		56B75EDBEE8CAD6B01609ED45B59762A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B3203E8B0701EDCDCC391A909722E2D /* JetPack-Extensions_Darwin.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_Darwin/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
@@ -6801,7 +6643,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -6809,9 +6651,9 @@
 			};
 			name = Release;
 		};
-		5E7D972E9D2B4127BCCF366D47647DD1 /* Debug */ = {
+		5F83EBA9705782E202A774FA36F2B245 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 32C64F245055F2694B1D47D15E10E389 /* JetPack-Extensions_CoreLocation.xcconfig */;
+			baseConfigurationReference = 84662E5504B430C46610BC727A85FEFD /* JetPack-f0313141.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -6822,51 +6664,19 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-f0313141/JetPack-f0313141-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-f0313141/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-f0313141/JetPack-f0313141.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		65B551B4A5412357C855627EF944D499 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6929791B8D3B48C54A5CFF2B1F292869 /* JetPack-771028e1.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-771028e1/JetPack-771028e1-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-771028e1/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-771028e1/JetPack-771028e1.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -6979,6 +6789,70 @@
 			};
 			name = Debug;
 		};
+		6C3BE8666BB4A991315232105BF3BE60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5CABD41E5ED54E9745F220F312B02BA3 /* JetPack-24a50cff.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-24a50cff/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		6DB1722C180FBBF190951DA52C6BA431 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 959B15DE5C5B2D814F82056839AE58D9 /* JetPack-Deprecated.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Deprecated/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		6EB88D1D3794D7EEF773C8734EE4B08E /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4B67ABD48427346D2609D2515070476E /* Pods-Experimental.release.xcconfig */;
@@ -7015,41 +6889,7 @@
 			};
 			name = Release;
 		};
-		758317D7BC1D68B0A2C5AE364C8830C0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 32C64F245055F2694B1D47D15E10E389 /* JetPack-Extensions_CoreLocation.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		78E1E95A998C5989418A1B52EFF7CC4D /* Release */ = {
+		704D68FAB77D0740A52C200180DB5005 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A0DCC431F2B742B0743A4560A1E208D0 /* JetPack-Core.xcconfig */;
 			buildSettings = {
@@ -7073,15 +6913,47 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
+		};
+		73D6D8493F6837435AAE630C9F82F7B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3118AA0CEDF796B1F63E996B42453237 /* JetPack-9fa1117a.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-9fa1117a/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MODULEMAP_FILE = "Target Support Files/JetPack-9fa1117a/JetPack-9fa1117a.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 		7CA59056183F0912D2EA3A4794696AAD /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7118,38 +6990,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		7E9F0EC619274238551DA6AAEF25B525 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68B1D274F6261C6746C9210EFF17741E /* JetPack-bc618c09.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-bc618c09/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 		84679FAB8C28BB03BAD989527E8A3918 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7222,6 +7062,38 @@
 			};
 			name = Debug;
 		};
+		89259ACF768D4AC18DF6B9E1F36DBC65 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E398BF54B3626E500F493476B037FAA0 /* JetPack-59c1e380.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-59c1e380/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-59c1e380/JetPack-59c1e380.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		8BB75523E0BB79421FCE3D038A1BAD10 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DF8A264C956604D45E216F87C732FC31 /* Pods-Extensions-Swift.release.xcconfig */;
@@ -7258,9 +7130,9 @@
 			};
 			name = Release;
 		};
-		8D60FC0E85BD5CD7740A9DDF7B8CEED0 /* Release */ = {
+		8F09240C88D2C09F78D71DEE75AD8CF1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84662E5504B430C46610BC727A85FEFD /* JetPack-f0313141.xcconfig */;
+			baseConfigurationReference = 32C64F245055F2694B1D47D15E10E389 /* JetPack-Extensions_CoreLocation.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -7271,12 +7143,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-f0313141/JetPack-f0313141-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-f0313141/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-f0313141/JetPack-f0313141.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
@@ -7284,45 +7156,13 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		93699CA17C77F2D85CF69E49771E6CF8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B3203E8B0701EDCDCC391A909722E2D /* JetPack-Extensions_Darwin.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_Darwin/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 		96B40EC3851D2316F4E5AE300AC35A02 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -7353,6 +7193,38 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		9B3752C0766C71C1177DAFBFB78F29B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 32C64F245055F2694B1D47D15E10E389 /* JetPack-Extensions_CoreLocation.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_CoreLocation/JetPack-Extensions_CoreLocation.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -7393,40 +7265,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		9F46F9BAB745DFAA0A50387609024A71 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 959B15DE5C5B2D814F82056839AE58D9 /* JetPack-Deprecated.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Deprecated/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		A09E0C9ED113295CB93C5D101C15D22D /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7500,9 +7338,9 @@
 			};
 			name = Release;
 		};
-		A6FB3822C4C5F5B110A8E84DA6C05734 /* Debug */ = {
+		A6DDB640136EA435369934B41865D5A1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0DCC431F2B742B0743A4560A1E208D0 /* JetPack-Core.xcconfig */;
+			baseConfigurationReference = 6B3203E8B0701EDCDCC391A909722E2D /* JetPack-Extensions_Darwin.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -7513,19 +7351,85 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Core/JetPack-Core-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Core/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_Darwin/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Core/JetPack-Core.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A937F1A481FBB21457990BA5F54E6D0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EBB44E782B1F77C01E30076CBBF2DC83 /* JetPack-d9ead517.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-d9ead517/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-d9ead517/JetPack-d9ead517.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		AACCBEFF4E4A000E20B428122C628F15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF9905022A74A071BEF1A7001B0D0EBB /* JetPack-Core-Extensions_Darwin-Extensions_Swift.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -7820,9 +7724,9 @@
 			};
 			name = Debug;
 		};
-		BB95D63AD44966B902E07006782623D0 /* Debug */ = {
+		BA97544C14194E256377CD40551BFFA7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5CABD41E5ED54E9745F220F312B02BA3 /* JetPack-24a50cff.xcconfig */;
+			baseConfigurationReference = 68B1D274F6261C6746C9210EFF17741E /* JetPack-bc618c09.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -7833,26 +7737,26 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-24a50cff/Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-bc618c09/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-24a50cff/JetPack-24a50cff.modulemap";
+				MODULEMAP_FILE = "Target Support Files/JetPack-bc618c09/JetPack-bc618c09.modulemap";
 				PRODUCT_MODULE_NAME = JetPack;
 				PRODUCT_NAME = JetPack;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		BF2848B108A15685A9CC57E99728AAB6 /* Release */ = {
+		BDD5519CBBB782E361FF3835BC46D096 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1FAC9CB5128057EE423170139BCD7B76 /* JetPack-Extensions_Photos.xcconfig */;
 			buildSettings = {
@@ -7878,107 +7782,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		C1FD311B7475DF7F1534B355CC779948 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 959B15DE5C5B2D814F82056839AE58D9 /* JetPack-Deprecated.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Deprecated/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Deprecated/JetPack-Deprecated.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		C33333B27B161103177EC26711B348DD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF9905022A74A071BEF1A7001B0D0EBB /* JetPack-Core-Extensions_Darwin-Extensions_Swift.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-Core-Extensions_Darwin-Extensions_Swift/JetPack-Core-Extensions_Darwin-Extensions_Swift.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		C562845FFB91C09CA0E308D7C2AD96DE /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C96A234DD6A6DC9CBBFFF1CFCEBBE3B /* JetPack-7e9039c6.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-7e9039c6/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-7e9039c6/JetPack-7e9039c6.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -8021,7 +7825,39 @@
 			};
 			name = Debug;
 		};
-		D866E531FB15487657A9694B921A7BE9 /* Release */ = {
+		C99239403BDEC8A26AD124B64EDF5C23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1FAC9CB5128057EE423170139BCD7B76 /* JetPack-Extensions_Photos.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_Photos/JetPack-Extensions_Photos-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_Photos/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_Photos/JetPack-Extensions_Photos.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		CBB6E7E38BE6FCD9F76B556A9223F889 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7D3C846687C8962C26B1B724D2EA16BA /* JetPack-2885890e.xcconfig */;
 			buildSettings = {
@@ -8047,13 +7883,145 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		D22AE057391A516D9015A642884839A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7D3C846687C8962C26B1B724D2EA16BA /* JetPack-2885890e.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-2885890e/JetPack-2885890e-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-2885890e/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-2885890e/JetPack-2885890e.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D3172A2D4EB17A4B442A9042DD4F224E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 84662E5504B430C46610BC727A85FEFD /* JetPack-f0313141.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-f0313141/JetPack-f0313141-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-f0313141/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-f0313141/JetPack-f0313141.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		DED4036BB8E677000A432E5D73B12FEF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 087B7D53563A81B94A30415C3A874C11 /* JetPack-a88ad25f.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-a88ad25f/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		DFEB5F67EF015957C8A48066114B1223 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6929791B8D3B48C54A5CFF2B1F292869 /* JetPack-771028e1.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-771028e1/JetPack-771028e1-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-771028e1/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-771028e1/JetPack-771028e1.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 		E1BEB773B5424C412516E2BE6D5A2B50 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -8161,6 +8129,40 @@
 			};
 			name = Debug;
 		};
+		E8A5EA941F3BACBEEBB8B692EC89D873 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0DCC431F2B742B0743A4560A1E208D0 /* JetPack-Core.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Core/JetPack-Core-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Core/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Core/JetPack-Core.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		F2F7046C23D88EF845195953DDCCB966 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24B6A7C14F6C08CB82DAA362B60F1AF9 /* Pods-Extensions-Photos.debug.xcconfig */;
@@ -8196,6 +8198,38 @@
 			};
 			name = Debug;
 		};
+		F47EC6445E6EAC5F0810BAE568668721 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6B3203E8B0701EDCDCC391A909722E2D /* JetPack-Extensions_Darwin.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JetPack-Extensions_Darwin/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JetPack-Extensions_Darwin/JetPack-Extensions_Darwin.modulemap";
+				PRODUCT_MODULE_NAME = JetPack;
+				PRODUCT_NAME = JetPack;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		F5BE33B7A6F5A12A4CF13C7B781704F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3129DEA72E937201DFB6002C1DE5EBCE /* Pods-UI.release.xcconfig */;
@@ -8225,40 +8259,6 @@
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		F90978119AA1574111C0C17CF8E00C9C /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 087B7D53563A81B94A30415C3A874C11 /* JetPack-a88ad25f.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JetPack-a88ad25f/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JetPack-a88ad25f/JetPack-a88ad25f.modulemap";
-				PRODUCT_MODULE_NAME = JetPack;
-				PRODUCT_NAME = JetPack;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -8379,8 +8379,8 @@
 		01F1BAF0EF15E8F0973638B53C62D28E /* Build configuration list for PBXNativeTarget "JetPack-9fa1117a" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				50BCE3FE42FF01C9DDC58C4E10B96578 /* Debug */,
-				3BF888AB16F2DF2242945AAA740351BA /* Release */,
+				73D6D8493F6837435AAE630C9F82F7B5 /* Debug */,
+				2062772EC1E43CE01D4CC0BD2FCBA46B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8388,8 +8388,8 @@
 		0348E0AD605D4604526DED535A6EF222 /* Build configuration list for PBXNativeTarget "JetPack-24a50cff" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BB95D63AD44966B902E07006782623D0 /* Debug */,
-				498DE44DDD7C531DE679F6D3EDBBEEAB /* Release */,
+				6C3BE8666BB4A991315232105BF3BE60 /* Debug */,
+				528452104D04A96CDD0699D1AC7FAABC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8406,8 +8406,8 @@
 		0BFC84C8700DC97DF3AB50B57EA4B043 /* Build configuration list for PBXNativeTarget "JetPack-d9ead517" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2E96305006B4B0D73ACE7ED4E4D3DE7F /* Debug */,
-				3911E71B6E2C44F3BAEFA0572EBC5DBD /* Release */,
+				A937F1A481FBB21457990BA5F54E6D0E /* Debug */,
+				465B6B8F72BD3FAB4A469BE68FD5A916 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8415,8 +8415,8 @@
 		0CBBFC3EAFE29D34BCB521637E31BA67 /* Build configuration list for PBXNativeTarget "JetPack-a88ad25f" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5610675E956C0432291B43E04ECBE572 /* Debug */,
-				F90978119AA1574111C0C17CF8E00C9C /* Release */,
+				3D5F5EF24EF67D87CCC7E5457329BA92 /* Debug */,
+				DED4036BB8E677000A432E5D73B12FEF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8433,8 +8433,8 @@
 		147AA3620E399D6947DF365114D96571 /* Build configuration list for PBXNativeTarget "JetPack-Extensions_Darwin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				93699CA17C77F2D85CF69E49771E6CF8 /* Debug */,
-				56B75EDBEE8CAD6B01609ED45B59762A /* Release */,
+				F47EC6445E6EAC5F0810BAE568668721 /* Debug */,
+				A6DDB640136EA435369934B41865D5A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8496,8 +8496,8 @@
 		62E5978DBA5487A969617A4956F00EB0 /* Build configuration list for PBXNativeTarget "JetPack-59c1e380" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				374D381679F21B093A3A5CD2292BE85C /* Debug */,
-				03066580A7409B8C500D2997FCE8385D /* Release */,
+				89259ACF768D4AC18DF6B9E1F36DBC65 /* Debug */,
+				0B12E395927F6B3139D8CFEEAF36AB70 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8514,8 +8514,8 @@
 		6C493CCD78A4E4AC357495707B1A716D /* Build configuration list for PBXNativeTarget "JetPack-bc618c09" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7E9F0EC619274238551DA6AAEF25B525 /* Debug */,
-				327FC357B09403B8E7135F42F22F825E /* Release */,
+				BA97544C14194E256377CD40551BFFA7 /* Debug */,
+				432DC4768EC58F607D7AF60080E56C71 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8523,8 +8523,8 @@
 		74C3AEA8F14F8A7CE4A983EE497727F2 /* Build configuration list for PBXNativeTarget "JetPack-Deprecated" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C1FD311B7475DF7F1534B355CC779948 /* Debug */,
-				9F46F9BAB745DFAA0A50387609024A71 /* Release */,
+				6DB1722C180FBBF190951DA52C6BA431 /* Debug */,
+				1DEBEC44B88F9B2C72349F689578DF88 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8577,8 +8577,8 @@
 		9FB296AFB89EAD935F77472FE51812FF /* Build configuration list for PBXNativeTarget "JetPack-Extensions_Photos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0D9EBB1A33D2169B1B3D4C5E9B240D19 /* Debug */,
-				BF2848B108A15685A9CC57E99728AAB6 /* Release */,
+				C99239403BDEC8A26AD124B64EDF5C23 /* Debug */,
+				BDD5519CBBB782E361FF3835BC46D096 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8613,8 +8613,8 @@
 		C4D33CAA0258CF1B1F9926C22E659B90 /* Build configuration list for PBXNativeTarget "JetPack-Core" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A6FB3822C4C5F5B110A8E84DA6C05734 /* Debug */,
-				78E1E95A998C5989418A1B52EFF7CC4D /* Release */,
+				704D68FAB77D0740A52C200180DB5005 /* Debug */,
+				E8A5EA941F3BACBEEBB8B692EC89D873 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8622,8 +8622,8 @@
 		CD29A28D36E374EA2183869AB8588AC0 /* Build configuration list for PBXNativeTarget "JetPack-2885890e" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0CC6BC3B3828430B888574B1E98695F1 /* Debug */,
-				D866E531FB15487657A9694B921A7BE9 /* Release */,
+				D22AE057391A516D9015A642884839A8 /* Debug */,
+				CBB6E7E38BE6FCD9F76B556A9223F889 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8658,8 +8658,8 @@
 		DDE6F12700F217B438DB6E6E1993DA1D /* Build configuration list for PBXNativeTarget "JetPack-Core-Extensions_Darwin-Extensions_Swift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				080FA89AA168478D451FF9D73C217370 /* Debug */,
-				C33333B27B161103177EC26711B348DD /* Release */,
+				AACCBEFF4E4A000E20B428122C628F15 /* Debug */,
+				05A9AF3AAE4BC0F7F9F85400DAB02621 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8667,8 +8667,8 @@
 		E3C51178EAE848F52DBD9426E285D6FC /* Build configuration list for PBXNativeTarget "JetPack-771028e1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				65B551B4A5412357C855627EF944D499 /* Debug */,
-				063FA36049E39B7EDBA39469319DDC81 /* Release */,
+				DFEB5F67EF015957C8A48066114B1223 /* Debug */,
+				04461BAC00163C5AB65F6C9EF53EA6A7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8676,8 +8676,8 @@
 		E819BEAE2E8BA5201A640CEDB4484DE1 /* Build configuration list for PBXNativeTarget "JetPack-f0313141" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				37DD1E7DEA96C82FF7AE3AA171481A60 /* Debug */,
-				8D60FC0E85BD5CD7740A9DDF7B8CEED0 /* Release */,
+				5F83EBA9705782E202A774FA36F2B245 /* Debug */,
+				D3172A2D4EB17A4B442A9042DD4F224E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8685,8 +8685,8 @@
 		F397D4BB293DCA2623C7FAFCB575F00D /* Build configuration list for PBXNativeTarget "JetPack-7e9039c6" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				043888DC3467A283488C733CB2ACA4E6 /* Debug */,
-				C562845FFB91C09CA0E308D7C2AD96DE /* Release */,
+				117D099609A9D9621D20EA6473799736 /* Debug */,
+				1F6BF9134578E6BD4030FE82514A6379 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -8694,8 +8694,8 @@
 		FF6C5408C98B571FCABB38799CD2273A /* Build configuration list for PBXNativeTarget "JetPack-Extensions_CoreLocation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5E7D972E9D2B4127BCCF366D47647DD1 /* Debug */,
-				758317D7BC1D68B0A2C5AE364C8830C0 /* Release */,
+				9B3752C0766C71C1177DAFBFB78F29B2 /* Debug */,
+				8F09240C88D2C09F78D71DEE75AD8CF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

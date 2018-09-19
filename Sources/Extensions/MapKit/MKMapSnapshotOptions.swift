@@ -1,10 +1,10 @@
 import MapKit
 
 
-extension MKMapSnapshotOptions {
+extension MKMapSnapshotter.Options {
 
 	open override func isEqual(_ object: Any?) -> Bool {
-		guard let object = object as? MKMapSnapshotOptions else {
+		guard let object = object as? MKMapSnapshotter.Options else {
 			return false
 		}
 

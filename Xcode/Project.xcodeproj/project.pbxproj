@@ -1009,64 +1009,82 @@
 				ORGANIZATIONNAME = JetPack;
 				TargetAttributes = {
 					4956ED031C94551600A33C45 = {
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1000;
+						ProvisioningStyle = Manual;
 					};
 					4956ED121C94552800A33C45 = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					497B222D1F7BD0EC00508967 = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					4986830C1BE404F7001DCBC7 = {
 						CreatedOnToolsVersion = 7.1;
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					498683201BE404F7001DCBC7 = {
 						CreatedOnToolsVersion = 7.1;
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDD561C943BD700FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDD671C94406B00FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDD771C94411D00FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDD881C9442A700FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDD981C94433C00FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDDA81C94464400FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDDB91C94465D00FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDDCA1C94467000FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDDDB1C94474800FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDDED1C94474900FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDDFF1C94474B00FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDE111C94488400FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDE241C9451F300FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 					49CDDE4E1C94520300FB7DEF = {
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -2144,12 +2162,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 92AECC6AABA6329DA5AF0639 /* Pods-All.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE UI";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2158,12 +2180,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3D387A185E0543E382FD9AB1 /* Pods-All.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE UI";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2172,11 +2198,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4C071F6CC9DE91192C095F14 /* Pods-Extensions.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2186,11 +2215,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B4ADF0EE53FF503DFEEFF756 /* Pods-Extensions.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2202,11 +2234,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jetpack.macOS;
 				PRODUCT_NAME = "JetPack macOS";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 			};
@@ -2218,11 +2252,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jetpack.macOS;
 				PRODUCT_NAME = "JetPack macOS";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 			};
@@ -2287,7 +2323,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -2342,7 +2378,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2351,11 +2387,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2C55D36B48076A8CF3551096 /* Pods-Core.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2365,11 +2404,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C878A4601DC6FB1613AA4530 /* Pods-Core.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2379,10 +2421,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5DE37AF43C1B8A65442A43FA /* Pods-Extensions-CoreGraphics-Extensions-CoreGraphics-Tests.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -2390,10 +2435,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AE347F894B9075EB046E7BEB /* Pods-Extensions-CoreGraphics-Extensions-CoreGraphics-Tests.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -2401,11 +2449,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A591C4BE1111FA506350A4F /* Pods-UI.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE UI";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2415,11 +2466,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A4E39307497BDA5B01A9F20E /* Pods-UI.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE UI";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2429,11 +2483,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D3A5F5C28171C5225E8468D /* Pods-Deprecated.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2442,11 +2499,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BF56FDEA69507CFCC9ECBC1B /* Pods-Deprecated.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2455,11 +2515,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 88397D87ECC482D43BF9D41F /* Pods-Experimental.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2469,11 +2532,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3BD5642801DA4404963076C0 /* Pods-Experimental.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2483,11 +2549,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 18700D4D07D1C65F2B22967E /* Pods-Measures.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2497,11 +2566,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8017092FB8C6FF3C60436943 /* Pods-Measures.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2511,11 +2583,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FD30D50D985B6FD35DFDCC04 /* Pods-Extensions-CoreGraphics.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2525,11 +2600,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 82471216090932162EAEB35E /* Pods-Extensions-CoreGraphics.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2539,11 +2617,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A677B058CF9C520DF382BF8B /* Pods-Extensions-CoreLocation.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2552,11 +2633,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7F767386BCD018E362A38DCB /* Pods-Extensions-CoreLocation.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2565,11 +2649,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2226686ABAFC3A46E44B7521 /* Pods-Extensions-Darwin.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2578,11 +2665,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 90411C9DF7024F20E3736512 /* Pods-Extensions-Darwin.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2591,11 +2681,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2ABA1E00AF286A629054EA7E /* Pods-Extensions-Foundation.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2605,11 +2698,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8F275751BC403673607491F9 /* Pods-Extensions-Foundation.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2619,11 +2715,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0D1503388B023F5F44F45AD5 /* Pods-Extensions-MapKit.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2633,11 +2732,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AD56998C65E565F35838E11D /* Pods-Extensions-MapKit.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2647,11 +2749,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CC0F0BA77C90F5391D133B7C /* Pods-Extensions-Photos.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -2660,11 +2765,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8F00C50FD438892AED9ADC33 /* Pods-Extensions-Photos.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -2673,11 +2781,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2307D441627DF4FCF2856811 /* Pods-Extensions-Swift.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2687,11 +2798,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D4E6A950110E360F20BE854E /* Pods-Extensions-Swift.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2701,11 +2815,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A4AD55121E040B5DAF9542CB /* Pods-Extensions-UIKit.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2715,11 +2832,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2703F67BECB095A7740402FA /* Pods-Extensions-UIKit.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Sources/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Project;
 				PRODUCT_MODULE_NAME = Project;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) CORE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2729,10 +2849,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF51FE580D2C8EE4FEFED25D /* Pods-Extensions-Foundation-Extensions-Foundation-Tests.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -2740,10 +2863,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2E9F6818C8233D5F83C8716B /* Pods-Extensions-Foundation-Extensions-Foundation-Tests.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -2751,10 +2877,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0BD3CF53B6D2E2E1C8C4363A /* Pods-Extensions-Swift-Extensions-Swift-Tests.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -2762,10 +2891,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 59893149A460CECC1F878E72 /* Pods-Extensions-Swift-Extensions-Swift-Tests.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

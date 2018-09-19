@@ -21,7 +21,7 @@ class CGPoint_Tests: XCTestCase {
 
 	func testDistance() {
 		let point = CGPoint(x: 1, y: 2)
-		XCTAssertEqualWithAccuracy(point.distance(to: CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: CGFloat(FLT_EPSILON))
+		XCTAssertEqual(point.distance(to: CGPoint(x: 3, y: 4)), 2.8284271247461900976033774484193961571, accuracy: .ulpOfOne)
 	}
 
 	

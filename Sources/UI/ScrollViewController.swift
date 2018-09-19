@@ -364,7 +364,7 @@ open class ScrollViewController: ViewController {
 
 			onMainQueue { // perform one cycle later since the child may not yet have completed the transitions in this cycle
 				if viewController.containmentState == .willMoveToParent {
-					viewController.didMove(toParentViewController: self)
+					viewController.didMove(toParent: self)
 				}
 			}
 		}
@@ -418,7 +418,7 @@ open class ScrollViewController: ViewController {
 
 			var removedViewControllers = [UIViewController]()
 			for viewController in oldValue where viewController.parent === self && !viewControllers.containsIdentical(viewController) {
-				viewController.willMove(toParentViewController: nil)
+				viewController.willMove(toParent: nil)
 
 				childViewForViewController(viewController)?.index = -1
 				removedViewControllers.append(viewController)
@@ -429,7 +429,7 @@ open class ScrollViewController: ViewController {
 				let viewController = viewControllers[index]
 
 				if viewController.parent !== self {
-					addChildViewController(viewController)
+					addChild(viewController)
 					viewControllersNotYetMovedToParentViewController.append(viewController)
 				}
 				else {
@@ -451,7 +451,7 @@ open class ScrollViewController: ViewController {
 			}
 
 			for viewController in removedViewControllers {
-				viewController.removeFromParentViewController()
+				viewController.removeFromParent()
 			}
 		}
 	}

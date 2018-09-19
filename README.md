@@ -12,7 +12,7 @@ Functionality is developed along with the apps using it so everything in this li
 Installation
 ------------
 
-JetPack requires **Swift 4** and a deployment target of **iOS 9.0 or newer**.
+JetPack requires **Swift 4.2** and a deployment target of **iOS 9.0 or newer**.
 
 ```ruby
 pod 'JetPack', :git => 'https://github.com/fluidsonic/JetPack.git'
@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
 		// your app initialization
 	}
 }

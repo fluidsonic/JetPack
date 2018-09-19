@@ -24,8 +24,8 @@ open class ViewController: UIViewController {
 
 
 	open func decorationInsetsDidChangeWithAnimation(_ animation: Animation?) {
-		for childViewController in childViewControllers {
-			childViewController.invalidateDecorationInsetsWithAnimation(animation)
+		for child in children {
+			child.invalidateDecorationInsetsWithAnimation(animation)
 		}
 	}
 

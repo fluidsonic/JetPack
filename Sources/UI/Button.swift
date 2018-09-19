@@ -32,7 +32,7 @@ open class Button: View {
 	public final var activityIndicator: UIActivityIndicatorView {
 		get {
 			return _activityIndicator ?? {
-				let child = UIActivityIndicatorView(activityIndicatorStyle: .white)
+				let child = UIActivityIndicatorView(style: .white)
 				child.hidesWhenStopped = false
 
 				_activityIndicator = child
@@ -782,7 +782,7 @@ open class Button: View {
 		get {
 			return _textLabel ?? {
 				let child = ButtonLabel(button: self)
-				child.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body)
+				child.font = UIFont.preferredFont(forTextStyle: .body)
 				child.textColor = .tint
 
 				_textLabel = child

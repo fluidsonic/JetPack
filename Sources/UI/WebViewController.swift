@@ -5,7 +5,7 @@ import WebKit
 @objc(JetPack_WebViewController)
 open class WebViewController: ViewController, KeyValueObserver, WKNavigationDelegate, WKUIDelegate {
 
-	fileprivate lazy var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+	fileprivate lazy var activityIndicator = UIActivityIndicatorView(style: .gray)
 
 	private var initialLoadingCompleted = false
 	private var keyValueObserverProxy: KeyValueObserverProxy?

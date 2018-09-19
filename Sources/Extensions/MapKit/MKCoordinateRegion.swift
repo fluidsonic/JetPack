@@ -4,8 +4,9 @@ import MapKit
 
 public extension MKCoordinateRegion {
 
+	@available(*, unavailable, renamed: "init(center:latitudinalMeters:longitudinalMeters:)")
 	public init(center: CLLocationCoordinate2D, latitudalDistance: CLLocationDistance, longitudalDistance: CLLocationDistance) {
-		self = MKCoordinateRegionMakeWithDistance(center, latitudalDistance, longitudalDistance)
+		self.init(center: center, latitudinalMeters: latitudalDistance, longitudinalMeters: longitudalDistance)
 	}
 
 
