@@ -10,8 +10,13 @@ public extension MKCoordinateRegion {
 
 
 	public init(north: CLLocationDegrees, east: CLLocationDegrees, south: CLLocationDegrees, west: CLLocationDegrees) {
-		span = MKCoordinateSpan(latitudeDelta: north - south, longitudeDelta: east - west)
-		center = CLLocationCoordinate2D(latitude: north - (span.latitudeDelta / 2), longitude: west + (span.longitudeDelta / 2))
+		let span = MKCoordinateSpan(latitudeDelta: north - south, longitudeDelta: east - west)
+		let center = CLLocationCoordinate2D(latitude: north - (span.latitudeDelta / 2), longitude: west + (span.longitudeDelta / 2))
+
+		self.init(
+			center: center,
+			span:   span
+		)
 	}
 
 
@@ -43,12 +48,10 @@ public extension MKCoordinateRegion {
 			return nil
 		}
 
-		span = MKCoordinateSpan(latitudeDelta: maxLatitude - minLatitude, longitudeDelta: maxLongitude - minLongitude)
-		center = CLLocationCoordinate2D(latitude: minLatitude + (span.latitudeDelta / 2), longitude: minLongitude + (span.longitudeDelta / 2))
+		self.init(north: maxLatitude, east: maxLongitude, south: minLatitude, west: minLongitude)
 	}
 
 
-	
 	public func contains(_ point: CLLocationCoordinate2D) -> Bool {
 		guard (point.latitude - center.latitude).absolute >= span.latitudeDelta else {
 			return false

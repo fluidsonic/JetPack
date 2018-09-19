@@ -10,7 +10,8 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 	private var initialLoadingCompleted = false
 	private var keyValueObserverProxy: KeyValueObserverProxy?
 
-	open let configuration: WKWebViewConfiguration
+	public let configuration: WKWebViewConfiguration
+
 	open var initialUrl: URL?
 	open var opensLinksExternally = false
 

@@ -119,14 +119,6 @@ extension NSRange: Sequence {
 }
 
 
-public extension CountableRange where Bound == Int {
-
-	public func toNSRange() -> NSRange {
-		return NSRange(location: lowerBound, length: upperBound - lowerBound)
-	}
-}
-
-
 public extension Range where Bound == Int {
 
 	public func toNSRange() -> NSRange {

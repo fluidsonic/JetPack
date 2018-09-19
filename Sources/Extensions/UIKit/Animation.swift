@@ -70,39 +70,37 @@ public struct Animation {
 			options.insert(.repeat)
 		}
 
-
-		let escapableChanges = makeEscapable(changes)
-
-		func performChanges() {
-			escapableChanges() { completion in
-				completions.append(completion)
+		withoutActuallyEscaping(changes) { changes in
+			func performChanges() {
+				changes() { completion in
+					completions.append(completion)
+				}
 			}
-		}
 
-
-		func completion(_ finished: Bool) {
-			for completion in completions {
-				completion(finished)
+			func completion(_ finished: Bool) {
+				for completion in completions {
+					completion(finished)
+				}
 			}
-		}
 
-		let curveOptions: UIViewAnimationOptions?
+			let curveOptions: UIViewAnimationOptions?
 
-		switch timing {
-		case .easeIn:           curveOptions = .curveEaseIn
-		case .easeInEaseOut:    curveOptions = UIViewAnimationOptions()
-		case .easeOut:          curveOptions = .curveEaseOut
-		case .linear:           curveOptions = .curveLinear
-		case let .curve(curve): curveOptions = UIViewAnimationOptions(curve: curve)
+			switch timing {
+			case .easeIn:           curveOptions = .curveEaseIn
+			case .easeInEaseOut:    curveOptions = UIViewAnimationOptions()
+			case .easeOut:          curveOptions = .curveEaseOut
+			case .linear:           curveOptions = .curveLinear
+			case let .curve(curve): curveOptions = UIViewAnimationOptions(curve: curve)
 
-		case let .spring(initialVelocity, damping):
-			curveOptions = nil
-			UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity, options: options, animations: performChanges, completion: completion)
-		}
+			case let .spring(initialVelocity, damping):
+				curveOptions = nil
+				UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity, options: options, animations: performChanges, completion: completion)
+			}
 
-		if let curveOptions = curveOptions {
-			options.insert(curveOptions)
-			UIView.animate(withDuration: duration, delay: delay, options: options, animations: performChanges, completion: completion)
+			if let curveOptions = curveOptions {
+				options.insert(curveOptions)
+				UIView.animate(withDuration: duration, delay: delay, options: options, animations: performChanges, completion: completion)
+			}
 		}
 	}
 

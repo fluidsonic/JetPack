@@ -8,8 +8,8 @@ public enum File {
 		
 		let path = UnsafeMutablePointer<Int8>.allocate(capacity: Int(PATH_MAX))
 		defer {
-			path.deallocate(capacity: Int(PATH_MAX))
-			path.deinitialize()
+			path.deallocate()
+			path.deinitialize(count: 1)
 		}
 
 		pathTemplate.getFileSystemRepresentation(path, maxLength: Int(PATH_MAX))

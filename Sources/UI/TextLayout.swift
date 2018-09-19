@@ -92,25 +92,26 @@ internal class TextLayout {
 
 
 	internal func enumerateEnclosingRects(forCharacterRange characterRange: NSRange, using block: ((CGRect) -> Void)) {
-		let block = makeEscapable(block)
-		let contentInsets = result.contentInsets
-		let origin = result.origin
-		let scaleFactor = result.scaleFactor
+		withoutActuallyEscaping(block) { block in
+			let contentInsets = result.contentInsets
+			let origin = result.origin
+			let scaleFactor = result.scaleFactor
 
-		let glyphRange = result.layoutManager.glyphRange(forCharacterRange: characterRange, actualCharacterRange: nil)
-		result.layoutManager.enumerateEnclosingRects(forGlyphRange: glyphRange, withinSelectedGlyphRange: .notFound, in: result.textContainer) { enclosingRect, _ in
-			var enclosingRect = enclosingRect
-			if scaleFactor < 1 {
-				enclosingRect.left *= scaleFactor
-				enclosingRect.top *= scaleFactor
-				enclosingRect.width *= scaleFactor
-				enclosingRect.height *= scaleFactor
+			let glyphRange = result.layoutManager.glyphRange(forCharacterRange: characterRange, actualCharacterRange: nil)
+			result.layoutManager.enumerateEnclosingRects(forGlyphRange: glyphRange, withinSelectedGlyphRange: .notFound, in: result.textContainer) { enclosingRect, _ in
+				var enclosingRect = enclosingRect
+				if scaleFactor < 1 {
+					enclosingRect.left *= scaleFactor
+					enclosingRect.top *= scaleFactor
+					enclosingRect.width *= scaleFactor
+					enclosingRect.height *= scaleFactor
+				}
+
+				enclosingRect.left += origin.left + contentInsets.left
+				enclosingRect.top += origin.top + contentInsets.top
+
+				block(enclosingRect)
 			}
-
-			enclosingRect.left += origin.left + contentInsets.left
-			enclosingRect.top += origin.top + contentInsets.top
-
-			block(enclosingRect)
 		}
 	}
 

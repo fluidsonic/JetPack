@@ -445,7 +445,7 @@ open class View: UIView {
 		get { return super.tintColor }
 		set {
 			guard newValue?.tintAlpha == nil else {
-				log("Cannot set .tintColor of \(self) to \(newValue). Use `nil` instead.")
+				log("Cannot set .tintColor of \(self) to \(newValue!). Use `nil` instead.")
 				super.tintColor = nil
 				return
 			}

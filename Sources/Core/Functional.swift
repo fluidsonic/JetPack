@@ -93,15 +93,6 @@ public func lazyPlaceholder<Value>(file: StaticString = #file, line: UInt = #lin
 }
 
 
-public func makeEscapable<Parameters,Result>(_ closure: (Parameters) -> Result) -> (Parameters) -> Result {
-	func cast<From,To>(_ instance: From) -> To {
-		return (instance as Any) as! To
-	}
-
-	return cast(closure)
-}
-
-
 public func not<Parameter>(_ closure: @escaping (Parameter) -> Bool) -> (Parameter) -> Bool {
 	return { !closure($0) }
 }
