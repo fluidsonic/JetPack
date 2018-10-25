@@ -25,5 +25,32 @@ public func logWithoutContext(_ messageClosure: @autoclosure () throws -> String
 		return
 	}
 
-	NSLog("%@", "\(try messageClosure())")
+	let maximumLineLength = 800
+
+	let lines = try messageClosure()
+		.split(separator: "\n")
+		.flatMap { (line: Substring) -> [String] in
+			let line = Array(line)
+			let lineLength = line.count
+
+			let sublines = stride(from: 0, to: lineLength, by: maximumLineLength)
+				.map { lineOffset in
+					return line[lineOffset ..< min(lineOffset + maximumLineLength, lineLength)]
+				}
+
+			return sublines
+				.enumerated()
+				.map { index, line in
+					if index < sublines.count - 1 {
+						return String(line + "⏎")
+					}
+					else {
+						return String(line)
+					}
+				}
+	}
+
+	for line in lines {
+		NSLog("%@", line)
+	}
 }
