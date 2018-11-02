@@ -36,6 +36,10 @@ Call `JetPackKit.initialize()` as early as possible, ideally early in one of the
 ### Example
 
 ```swift
+import JetPack
+import UIKit
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
