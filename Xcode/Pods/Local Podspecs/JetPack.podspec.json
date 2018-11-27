@@ -2,7 +2,7 @@
   "name": "JetPack",
   "version": "0.0.3",
   "authors": {
-    "Marc Knaup": "marc@knaup.koeln"
+    "Marc Knaup": "marc@knaup.io"
   },
   "homepage": "https://github.com/fluidsonic/JetPack",
   "license": "MIT",
@@ -11,9 +11,6 @@
   },
   "summary": "A Swiss Army knife for iOS development with Swift in a very early stage.",
   "module_map": "Module/JetPack.modulemap",
-  "pod_target_xcconfig": {
-    "SWIFT_VERSION": "4.0"
-  },
   "preserve_paths": "Sources/JetPack.swift",
   "platforms": {
     "ios": "9.0",

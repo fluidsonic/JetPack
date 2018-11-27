@@ -3,15 +3,13 @@ Pod::Spec.new do |s|
 	s.name    = 'JetPack'
 	s.version = '0.0.3'
 
-	s.author   = { 'Marc Knaup' => 'marc@knaup.koeln' }
+	s.author   = { 'Marc Knaup' => 'marc@knaup.io' }
 	s.homepage = 'https://github.com/fluidsonic/JetPack'
 	s.license  = 'MIT'
 	s.source   = { :git => 'https://github.com/fluidsonic/JetPack.git' }
 	s.summary  = 'A Swiss Army knife for iOS development with Swift in a very early stage.'
 
-	s.module_map = 'Module/JetPack.modulemap'
-	s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.0' }
-
+	s.module_map     = 'Module/JetPack.modulemap'
 	s.preserve_paths = 'Sources/JetPack.swift'
 
 	s.ios.deployment_target = '9.0'
