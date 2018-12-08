@@ -46,7 +46,7 @@ class Dictionary_Tests: XCTestCase {
 
 
 	func testMapAsDictionary() {
-		let dictionary = [0: 1, 1: 0, 2: 2]
+		let dictionary = [0: 0, 1: 0, 2: 2]
 		XCTAssertEqual(dictionary.mapAsDictionary { key, value in (key / 2, value * 2) }, [0: 0, 1: 4])
 		XCTAssertEqual(dictionary.mapAsDictionary { ($0 / 2, $1 * 2) },                   [0: 0, 1: 4])
 
