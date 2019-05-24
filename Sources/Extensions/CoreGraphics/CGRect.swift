@@ -3,22 +3,22 @@ import CoreGraphics
 
 public extension CGRect {
 
-	public init(size: CGSize) {
+	init(size: CGSize) {
 		self.init(x: 0, y: 0, width: size.width, height: size.height)
 	}
 
 
-	public init(left: CGFloat, top: CGFloat, width: CGFloat, height: CGFloat) {
+	init(left: CGFloat, top: CGFloat, width: CGFloat, height: CGFloat) {
 		self.init(x: left, y: top, width: width, height: height)
 	}
 
 
-	public init(width: CGFloat, height: CGFloat) {
+	init(width: CGFloat, height: CGFloat) {
 		self.init(x: 0, y: 0, width: width, height: height)
 	}
 
 
-	public func applying(_ transform: CGAffineTransform, anchorPoint: CGPoint) -> CGRect {
+	func applying(_ transform: CGAffineTransform, anchorPoint: CGPoint) -> CGRect {
 		if anchorPoint != .zero {
 			let anchorLeft = left + (width * anchorPoint.left)
 			let anchorTop = top + (height * anchorPoint.top)
@@ -34,56 +34,56 @@ public extension CGRect {
 	}
 
 
-	public var bottom: CGFloat {
+	var bottom: CGFloat {
 		get { return origin.top + size.height }
 		mutating set { origin.top = newValue - size.height }
 	}
 
 
-	public var bottomCenter: CGPoint {
+	var bottomCenter: CGPoint {
 		get { return CGPoint(left: left + (width / 2), top: bottom) }
 		mutating set { left = newValue.left - (width / 2); bottom = newValue.top }
 	}
 
 
-	public var bottomLeft: CGPoint {
+	var bottomLeft: CGPoint {
 		get { return CGPoint(left: left, top: bottom) }
 		mutating set { left = newValue.left; bottom = newValue.top }
 	}
 
 
-	public var bottomRight: CGPoint {
+	var bottomRight: CGPoint {
 		get { return CGPoint(left: right, top: bottom) }
 		mutating set { right = newValue.left; bottom = newValue.top }
 	}
 
 
-	public var center: CGPoint {
+	var center: CGPoint {
 		get { return CGPoint(left: left + (width / 2), top: top + (height / 2)) }
 		mutating set { left = newValue.left - (width / 2); top = newValue.top - (height / 2) }
 	}
 
 
-	public func centered(at center: CGPoint) -> CGRect {
+	func centered(at center: CGPoint) -> CGRect {
 		var rect = self
 		rect.center = center
 		return rect
 	}
 
 
-	public var centerLeft: CGPoint {
+	var centerLeft: CGPoint {
 		get { return CGPoint(left: left, top: top + (height / 2)) }
 		mutating set { left = newValue.left; top = newValue.top - (height / 2) }
 	}
 
 
-	public var centerRight: CGPoint {
+	var centerRight: CGPoint {
 		get { return CGPoint(left: right, top: top + (height / 2)) }
 		mutating set { right = newValue.left; top = newValue.top - (height / 2) }
 	}
 
 
-	public func contains(_ point: CGPoint, cornerRadius: CGFloat) -> Bool {
+	func contains(_ point: CGPoint, cornerRadius: CGFloat) -> Bool {
 		guard contains(point) else {
 			// full rect misses, so does any rounded rect
 			return false
@@ -141,7 +141,7 @@ public extension CGRect {
 	}
 
 
-	public func displacement(to point: CGPoint) -> CGPoint {
+	func displacement(to point: CGPoint) -> CGPoint {
 		return CGPoint(
 			left: point.left.coerced(in: left ... right),
 			top:  point.top.coerced(in: top ... bottom)
@@ -149,25 +149,37 @@ public extension CGRect {
 	}
 
 
-	public func distance(to point: CGPoint) -> CGFloat {
+	func distance(to point: CGPoint) -> CGFloat {
 		let displacement = self.displacement(to: point)
 		return ((displacement.x * displacement.x) + (displacement.y * displacement.y)).squareRoot()
 	}
 
 
-	internal var height: CGFloat {  // make public once the ambigous call problem for the getter is solved
+	internal var height: CGFloat { // public doesn't work due getter ambigutity
 		get { return size.height }
 		mutating set { size.height = newValue }
 	}
 
 
-	public var horizontalCenter: CGFloat {
+	var heightFromBottom: CGFloat {
+		get { return size.height }
+		mutating set { top += height - newValue; heightFromTop = newValue }
+	}
+
+
+	var heightFromTop: CGFloat {
+		get { return size.height }
+		mutating set { size.height = newValue }
+	}
+
+
+	var horizontalCenter: CGFloat {
 		get { return CGFloat(left + (width / 2)) }
 		mutating set { left = newValue - (width / 2) }
 	}
 
 
-	public func interpolate(to destination: CGRect, fraction: CGFloat) -> CGRect {
+	func interpolate(to destination: CGRect, fraction: CGFloat) -> CGRect {
 		return CGRect(
 			left:   left + ((destination.left - left) * fraction),
 			top:    top + ((destination.top - top) * fraction),
@@ -177,55 +189,67 @@ public extension CGRect {
 	}
 
 
-	public var isValid: Bool {
+	var isValid: Bool {
 		return size.isValid
 	}
 
 
-	public var left: CGFloat {
+	var left: CGFloat {
 		get { return origin.left }
 		mutating set { origin.left = newValue }
 	}
 
 
-	public var right: CGFloat {
+	var right: CGFloat {
 		get { return origin.left + size.width }
 		mutating set { origin.left = newValue - size.width }
 	}
 
 
-	public var top: CGFloat {
+	var top: CGFloat {
 		get { return origin.top }
 		mutating set { origin.top = newValue }
 	}
 
 
-	public var topCenter: CGPoint {
+	var topCenter: CGPoint {
 		get { return CGPoint(left: left + (width / 2), top: top) }
 		mutating set { left = newValue.left - (width / 2); top = newValue.top }
 	}
 
 
-	public var topLeft: CGPoint {
+	var topLeft: CGPoint {
 		get { return origin }
 		mutating set { origin = newValue }
 	}
 
 
-	public var topRight: CGPoint {
+	var topRight: CGPoint {
 		get { return CGPoint(left: right, top: top) }
 		mutating set { right = newValue.left; top = newValue.top }
 	}
 
 
-	public var verticalCenter: CGFloat {
+	var verticalCenter: CGFloat {
 		get { return CGFloat(top + (height / 2)) }
 		mutating set { top = newValue - (height / 2) }
 	}
 
 
-	internal var width: CGFloat {  // make public once the ambigous call problem for the getter is solved
+	internal var width: CGFloat { // public doesn't work due getter ambigutity
 		get { return size.width }
 		mutating set { size.width = newValue }
+	}
+
+
+	var widthFromLeft: CGFloat {
+		get { return size.width }
+		mutating set { size.width = newValue }
+	}
+
+
+	var widthFromRight: CGFloat {
+		get { return size.width }
+		mutating set { left += width - newValue; widthFromLeft = newValue }
 	}
 }
