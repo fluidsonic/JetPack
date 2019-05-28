@@ -27,6 +27,7 @@ public enum JetPackKit { // for now named *Kit until this is solved: https://bug
 
 		"_JetPack_UI_ImagePickerController_Initialization",
 		"_JetPack_UI_NavigationController_Initialization",
+		"_JetPack_UI_TextLayout_Initialization",
 		"_JetPack_UI_ViewController_Initialization",
 		"_JetPack_UI_Window_Initialization"
 	]
