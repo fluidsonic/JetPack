@@ -243,7 +243,13 @@ extension UIViewController {
 
 			case .carPlay, .tv, .unspecified:
 				return .portrait
+
+			@unknown default:
+				return .portrait
 			}
+
+		@unknown default:
+			return .portrait
 		}
 	}
 

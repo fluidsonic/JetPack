@@ -8,7 +8,7 @@ public protocol Unit: CustomDebugStringConvertible, CustomStringConvertible {
 
 public extension Unit { // CustomDebugStringConvertible
 
-	public var debugDescription: String {
+	var debugDescription: String {
 		return "\(type(of: self))(\(description))"
 	}
 }
@@ -16,7 +16,7 @@ public extension Unit { // CustomDebugStringConvertible
 
 public extension Unit { // CustomStringConvertible
 
-	public var description: String {
+	var description: String {
 		return name.forPluralCategory(.many)
 	}
 }

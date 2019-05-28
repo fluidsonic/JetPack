@@ -4,13 +4,13 @@ import UIKit
 
 public extension UIColor {
 
-	public typealias GrayscaleComponents = (white: CGFloat, alpha: CGFloat)
-	public typealias HsbaComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
-	public typealias RgbaComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
+	typealias GrayscaleComponents = (white: CGFloat, alpha: CGFloat)
+	typealias HsbaComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
+	typealias RgbaComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
 
 
 	@nonobjc
-	public convenience init(argb: Int) {
+	convenience init(argb: Int) {
 		let alpha = CGFloat((argb >> 24) & 0xFF) / 255
 		let red   = CGFloat((argb >> 16) & 0xFF) / 255
 		let green = CGFloat((argb >> 8)  & 0xFF) / 255
@@ -21,13 +21,13 @@ public extension UIColor {
 
 
 	@nonobjc
-	public convenience init(rgb: Int) {
+	convenience init(rgb: Int) {
 		self.init(rgb: rgb, alpha: 1)
 	}
 
 
 	@nonobjc
-	public convenience init(rgb: Int, alpha: CGFloat) {
+	convenience init(rgb: Int, alpha: CGFloat) {
 		let red   = CGFloat((rgb >> 16) & 0xFF) / 255
 		let green = CGFloat((rgb >> 8)  & 0xFF) / 255
 		let blue  = CGFloat(rgb         & 0xFF) / 255
@@ -37,7 +37,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public convenience init(rgba: Int) {
+	convenience init(rgba: Int) {
 		let red   = CGFloat((rgba >> 24) & 0xFF) / 255
 		let green = CGFloat((rgba >> 16) & 0xFF) / 255
 		let blue  = CGFloat((rgba >> 8)  & 0xFF) / 255
@@ -48,13 +48,13 @@ public extension UIColor {
 
 
 	@objc(JetPack_alpha)
-	public var alpha: CGFloat {
+	var alpha: CGFloat {
 		return rgbaComponents?.alpha ?? hsbaComponents?.alpha ?? grayscaleComponents?.alpha ?? 1
 	}
 
 
 	@nonobjc
-	public func colorHavingHighestContrast(_ contrastColors: [UIColor]) -> UIColor {
+	func colorHavingHighestContrast(_ contrastColors: [UIColor]) -> UIColor {
 		// http://stackoverflow.com/a/3943023/1183577
 
 		guard let luminocity = luminocity else {
@@ -92,7 +92,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public var grayscaleComponents: GrayscaleComponents? {
+	var grayscaleComponents: GrayscaleComponents? {
 		var white = CGFloat(0)
 		var alpha = CGFloat(0)
 
@@ -105,7 +105,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public var hsbaComponents: HsbaComponents? {
+	var hsbaComponents: HsbaComponents? {
 		var hue = CGFloat(0)
 		var saturation = CGFloat(0)
 		var brightness = CGFloat(0)
@@ -120,7 +120,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public func interpolate(to destination: UIColor, fraction: CGFloat) -> UIColor {
+	func interpolate(to destination: UIColor, fraction: CGFloat) -> UIColor {
 		guard let rgba = rgbaComponents, let destinationRgba = destination.rgbaComponents else {
 			return self
 		}
@@ -135,13 +135,13 @@ public extension UIColor {
 
 
 	@nonobjc
-	public var isTint: Bool {
+	var isTint: Bool {
 		return self is ColorUsingTintColor
 	}
 
 
 	@nonobjc
-	public var luminocity: CGFloat? {
+	var luminocity: CGFloat? {
 		// https://www.w3.org/TR/WCAG20/#relativeluminancedef
 
 		guard let components = rgbaComponents else {
@@ -157,7 +157,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public func overlay(with overlayColor: UIColor) -> UIColor {
+	func overlay(with overlayColor: UIColor) -> UIColor {
 		guard let components = rgbaComponents, let overlayComponents = overlayColor.rgbaComponents else {
 			return overlayColor
 		}
@@ -185,7 +185,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public static func random(alpha: CGFloat = 1) -> Self {
+	static func random(alpha: CGFloat = 1) -> Self {
 		return self.init(
 			red:   CGFloat(arc4random_uniform(255)) / 255,
 			green: CGFloat(arc4random_uniform(255)) / 255,
@@ -196,7 +196,7 @@ public extension UIColor {
 
 
 	@nonobjc
-	public var rgbaComponents: RgbaComponents? {
+	var rgbaComponents: RgbaComponents? {
 		var red = CGFloat(0)
 		var green = CGFloat(0)
 		var blue = CGFloat(0)
@@ -211,13 +211,13 @@ public extension UIColor {
 
 
 	@nonobjc
-	public static var tint: UIColor {
+	static var tint: UIColor {
 		return tint(alpha: 1)
 	}
 
 
 	@nonobjc
-	public static func tint(alpha: CGFloat) -> UIColor {
+	static func tint(alpha: CGFloat) -> UIColor {
 		if alpha >= 1 {
 			return ColorUsingTintColor.fullAlpha
 		}
@@ -227,37 +227,37 @@ public extension UIColor {
 
 
 	@nonobjc
-	public var tintAlpha: CGFloat? {
+	var tintAlpha: CGFloat? {
 		return (self as? ColorUsingTintColor)?.alpha
 	}
 
 
 	@available(*, unavailable, renamed: "tint")
 	@nonobjc
-	public static func tintColor() -> UIColor {
+	static func tintColor() -> UIColor {
 		return tint
 	}
 
 
 	@available(*, unavailable, renamed: "tint(alpha:)")
 	@nonobjc
-	public static func tintColorWithAlpha(_ alpha: CGFloat) -> UIColor {
+	static func tintColorWithAlpha(_ alpha: CGFloat) -> UIColor {
 		return tint(alpha: alpha)
 	}
 
 
-	public func tinted(for view: UIView, dimsWithTint: Bool) -> UIColor {
+	func tinted(for view: UIView, dimsWithTint: Bool) -> UIColor {
 		return tinted(with: view.tintColor, forAdjustmentMode: view.tintAdjustmentMode, dimsWithTint: dimsWithTint)
 	}
 
 
 	@objc(JetPack_tintedWithColor:)
-	public func tinted(with tintColor: UIColor) -> UIColor {
+	func tinted(with tintColor: UIColor) -> UIColor {
 		return self
 	}
 
 
-	public func tinted(with tintColor: UIColor, forAdjustmentMode tintAdjustmentMode: UIView.TintAdjustmentMode, dimsWithTint: Bool) -> UIColor {
+	func tinted(with tintColor: UIColor, forAdjustmentMode tintAdjustmentMode: UIView.TintAdjustmentMode, dimsWithTint: Bool) -> UIColor {
 		if isTint {
 			return tinted(with: tintColor)
 		}
@@ -273,13 +273,13 @@ public extension UIColor {
 
 	@available(*, unavailable, renamed: "tinted(with:)")
 	@nonobjc
-	public func tintedWithColor(_ tintColor: UIColor) -> UIColor {
+	func tintedWithColor(_ tintColor: UIColor) -> UIColor {
 		return tinted(with: tintColor)
 	}
 
 
 	@nonobjc
-	public func w3cContrast(to color: UIColor) -> CGFloat? {
+	func w3cContrast(to color: UIColor) -> CGFloat? {
 		guard
 			let luminocity = luminocity,
 			let colorLuminocity = color.luminocity

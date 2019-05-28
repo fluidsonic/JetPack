@@ -4,7 +4,7 @@ import Foundation
 public extension NSCalendar.Unit {
 
 	@nonobjc
-	public static let All: NSCalendar.Unit = [
+	static let all: NSCalendar.Unit = [
 		.era,
 		.year,
 		.month,

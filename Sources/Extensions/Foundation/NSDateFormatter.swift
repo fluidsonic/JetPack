@@ -13,6 +13,7 @@ public extension DateFormatter {
 		return formatter
 	}()
 
+
 	@nonobjc
 	private static let iso8601FormatterWithFractionalSeconds: DateFormatter = {
 		let formatter = DateFormatter()
@@ -23,13 +24,9 @@ public extension DateFormatter {
 		return formatter
 	}()
 
-	@available(*, deprecated, message: "use 'iso8601Formatter(withFractionalSeconds: Bool)' instead")
-	@nonobjc
-	public static let iso8859Formatter: DateFormatter = iso8601Formatter
-
 
 	@nonobjc
-	public static func iso8601Formatter(withFractionalSeconds: Bool = false) -> DateFormatter {
+	static func iso8601Formatter(withFractionalSeconds: Bool = false) -> DateFormatter {
 		if withFractionalSeconds {
 			return iso8601FormatterWithFractionalSeconds
 		}

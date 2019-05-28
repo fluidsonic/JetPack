@@ -480,6 +480,9 @@ class TextLayer: Layer {
 
 				case .byCharWrapping, .byWordWrapping:
 					paragraphStyle.lineBreakMode = lineBreakMode
+
+				@unknown default:
+					paragraphStyle.lineBreakMode = lineBreakMode
 				}
 
 				let finalText = text.withDefaultAttributes(

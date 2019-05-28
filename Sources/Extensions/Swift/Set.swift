@@ -43,7 +43,7 @@ extension Set {
 
 
 	public func member(_ member: Element) -> Element? {
-		guard let index = index(of: member) else {
+		guard let index = firstIndex(of: member) else {
 			return nil
 		}
 

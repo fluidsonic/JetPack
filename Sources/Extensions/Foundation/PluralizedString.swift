@@ -9,7 +9,7 @@ public protocol PluralizedString {
 
 public extension PluralizedString {
 
-	public func forNumber(_ number: NSNumber, formatter: NumberFormatter = Locale.defaultDecimalFormatterForResolvingPluralCategory, locale: Locale = Locale.current) -> String {
+	func forNumber(_ number: NSNumber, formatter: NumberFormatter = Locale.defaultDecimalFormatterForResolvingPluralCategory, locale: Locale = Locale.current) -> String {
 		return forPluralCategory(locale.pluralCategoryForNumber(number, formatter: formatter))
 	}
 }

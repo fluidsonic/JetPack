@@ -56,126 +56,126 @@ open class View: UIView {
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: [], animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: [], animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIView.AnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: options, animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIView.AnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, options: options, animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIView.AnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, options: options, animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, options: UIView.AnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, options: options, animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: [], animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIView.AnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIView.AnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIView.AnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, options: UIView.AnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: 0, options: options, animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: [], animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: [], animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIView.AnimationOptions, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIView.AnimationOptions, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: 0, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIView.AnimationOptions, delay: TimeInterval, changes: @escaping () -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: nil)
 	}
 
 
-	@available(*, deprecated: 1, message: "use Animation()")
+	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, usingSpringWithDamping damping: CGFloat, initialSpringVelocity: CGFloat, options: UIView.AnimationOptions, delay: TimeInterval, changes: @escaping () -> Void, completion: @escaping (Bool) -> Void) {
 		self.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialSpringVelocity, options: options, animations: changes, completion: completion)

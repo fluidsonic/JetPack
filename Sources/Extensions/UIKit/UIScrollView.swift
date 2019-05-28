@@ -4,13 +4,13 @@ import UIKit
 public extension UIScrollView {
 
 	@nonobjc
-	public var contentFrame: CGRect {
+	var contentFrame: CGRect {
 		return CGRect(size: contentSize)
 	}
 
 
 	@objc(JetPack_maximumContentOffset)
-	public var maximumContentOffset: CGPoint {
+	var maximumContentOffset: CGPoint {
 		let size = self.bounds.size
 		let contentInset = self.contentInset
 		let contentSize = self.contentSize
@@ -23,7 +23,7 @@ public extension UIScrollView {
 
 
 	@nonobjc
-	public var minimumContentOffset: CGPoint {
+	var minimumContentOffset: CGPoint {
 		let contentInset = self.contentInset
 
 		return CGPoint(left: -contentInset.left, top: -contentInset.top)
@@ -33,7 +33,7 @@ public extension UIScrollView {
 	// TODO The way changing the content inset affects the content offset is weird.
 	// This should be re-thought and well-tested.
 	@nonobjc
-	public func setContentInset(_ contentInset: UIEdgeInsets, maintainingVisualContentOffset maintainsVisualContentOffset: Bool) {
+	func setContentInset(_ contentInset: UIEdgeInsets, maintainingVisualContentOffset maintainsVisualContentOffset: Bool) {
 		let oldContentInsets = self.contentInset
 		let newContentInsets = contentInset
 		guard newContentInsets != oldContentInsets else {

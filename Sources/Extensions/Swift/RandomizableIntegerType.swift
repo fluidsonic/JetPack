@@ -8,7 +8,7 @@ public protocol RandomizableIntegerType: FixedWidthInteger {
 public extension RandomizableIntegerType {
 
 	
-	public static func random(min: Self = 0, max: Self) -> Self {
+	static func random(min: Self = 0, max: Self) -> Self {
 		return random(start: min, end: max + 1)
 	}
 }

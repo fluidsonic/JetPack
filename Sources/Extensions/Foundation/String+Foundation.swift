@@ -3,7 +3,7 @@ import Foundation
 
 public extension String {
 
-	public func firstMatchForRegularExpression(_ regularExpression: NSRegularExpression) -> [Substring?]? {
+	func firstMatchForRegularExpression(_ regularExpression: NSRegularExpression) -> [Substring?]? {
 		guard let match = regularExpression.firstMatch(in: self, options: [], range: NSMakeRange(0, utf16.count)) else {
 			return nil
 		}
@@ -12,7 +12,7 @@ public extension String {
 	}
 
 
-	public func firstMatchForRegularExpression(_ regularExpressionPattern: String) -> [Substring?]? {
+	func firstMatchForRegularExpression(_ regularExpressionPattern: String) -> [Substring?]? {
 		do {
 			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: [])
 			return firstMatchForRegularExpression(regularExpression)
@@ -23,7 +23,7 @@ public extension String {
 	}
 
 
-	public func firstSubstringMatchingRegularExpression(_ regularExpressionPattern: String) -> Substring? {
+	func firstSubstringMatchingRegularExpression(_ regularExpressionPattern: String) -> Substring? {
 		if let range = range(of: regularExpressionPattern, options: .regularExpression) {
 			return self[range]
 		}
@@ -32,12 +32,12 @@ public extension String {
 	}
 
 
-	public func stringByReplacingRegularExpression(_ regularExpression: NSRegularExpression, withTemplate template: String) -> String {
+	func stringByReplacingRegularExpression(_ regularExpression: NSRegularExpression, withTemplate template: String) -> String {
 		return regularExpression.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, utf16.count), withTemplate: template)
 	}
 
 
-	public func stringByReplacingRegularExpression(_ regularExpressionPattern: String, withTemplate template: String) -> String {
+	func stringByReplacingRegularExpression(_ regularExpressionPattern: String, withTemplate template: String) -> String {
 		do {
 			let regularExpression = try NSRegularExpression(pattern: regularExpressionPattern, options: NSRegularExpression.Options.dotMatchesLineSeparators)
 			return stringByReplacingRegularExpression(regularExpression, withTemplate: template)
@@ -48,7 +48,7 @@ public extension String {
 	}
 
 
-	public var urlEncodedHost: String {
+	var urlEncodedHost: String {
 		var allowedCharacters = CharacterSet.urlHostAllowed
 		allowedCharacters.insert(":") // https://bugs.swift.org/projects/SR/issues/SR-5397
 
@@ -56,7 +56,7 @@ public extension String {
 	}
 
 
-	public var urlEncodedPath: String {
+	var urlEncodedPath: String {
 		var allowedCharacters = CharacterSet.urlPathAllowed
 		allowedCharacters.insert(":") // https://bugs.swift.org/projects/SR/issues/SR-5397
 
@@ -64,17 +64,17 @@ public extension String {
 	}
 
 
-	public var urlEncodedPathComponent: String {
+	var urlEncodedPathComponent: String {
 		return addingPercentEncoding(withAllowedCharacters: CharacterSet.URLPathComponentAllowedCharacterSet()) ?? "<url encoding failed>"
 	}
 
 
-	public var urlEncodedQuery: String {
+	var urlEncodedQuery: String {
 		return addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "<url encoding failed>"
 	}
 
 
-	public var urlEncodedQueryParameter: String {
+	var urlEncodedQueryParameter: String {
 		return addingPercentEncoding(withAllowedCharacters: CharacterSet.URLQueryParameterAllowedCharacterSet()) ?? "<url encoding failed>"
 	}
 }

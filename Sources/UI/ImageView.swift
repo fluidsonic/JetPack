@@ -155,6 +155,9 @@ open class ImageView: View {
 
 		case .down, .downMirrored, .up, .upMirrored:
 			break
+
+		@unknown default:
+			break
 		}
 
 		imageLayerFrame = alignToGrid(imageLayerFrame)
@@ -179,6 +182,7 @@ open class ImageView: View {
 		case .rightMirrored: transform = CGAffineTransform(rotationAngle: .pi / 2)
 		case .up:            transform = CGAffineTransform.identity
 		case .upMirrored:    transform = CGAffineTransform.identity
+		@unknown default:    transform = CGAffineTransform.identity
 		}
 
 		return transform

@@ -4,7 +4,7 @@ import UIKit
 public extension UIImage {
 
 	@nonobjc
-	public convenience init(placeholderOfSize size: CGSize) {
+	convenience init(placeholderOfSize size: CGSize) {
 		guard size.isPositive else {
 			fatalError("\(#function) requires a positive size")
 		}
@@ -20,13 +20,13 @@ public extension UIImage {
 
 
 	@nonobjc
-	public convenience init?(named name: String, inBundle bundle: Bundle) {
+	convenience init?(named name: String, inBundle bundle: Bundle) {
 		self.init(named: name, in: bundle, compatibleWith: nil)
 	}
 
 
 	@nonobjc
-	public static func fromColor(_ color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
+	static func fromColor(_ color: UIColor, withSize size: CGSize = CGSize(square: 1), scale: CGFloat = 1) -> UIImage {
 		let frame = CGRect(size: size)
 
 		UIGraphicsBeginImageContextWithOptions(frame.size, false, scale)
@@ -49,7 +49,7 @@ public extension UIImage {
 
 
 	@nonobjc
-	public var hasAlphaChannel: Bool {
+	var hasAlphaChannel: Bool {
 		guard let cgImage = cgImage else {
 			return false // TODO support CIImage
 		}
@@ -61,12 +61,15 @@ public extension UIImage {
 
 		case .none, .noneSkipFirst, .noneSkipLast:
 			return false
+
+		@unknown default:
+			fatalError()
 		}
 	}
 
 
 	@nonobjc
-	public func imageConstrainedToSize(_ maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .high) -> UIImage {
+	func imageConstrainedToSize(_ maximumSize: CGSize, interpolationQuality: CGInterpolationQuality = .high) -> UIImage {
 		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
 
 		guard let cgImage = self.cgImage else {
@@ -102,7 +105,7 @@ public extension UIImage {
 
 
 	@nonobjc
-	public func imageCroppedToSize(_ maximumSize: CGSize) -> UIImage {
+	func imageCroppedToSize(_ maximumSize: CGSize) -> UIImage {
 		let orientedMaximumSize = imageOrientation.isLandscape ? CGSize(width: maximumSize.height, height: maximumSize.width) : maximumSize
 		guard let cgImage = self.cgImage else {
 			return self
@@ -140,7 +143,7 @@ public extension UIImage {
 
 
 	@nonobjc
-	public func imageWithAlpha(_ alpha: CGFloat) -> UIImage {
+	func imageWithAlpha(_ alpha: CGFloat) -> UIImage {
 		guard alpha <= 0 else {
 			return self
 		}
@@ -186,25 +189,25 @@ public extension UIImage {
 
 
 	@nonobjc
-	public func imageWithBlendMode(_ blendMode: CGBlendMode, destinationColor: UIColor) -> UIImage {
+	func imageWithBlendMode(_ blendMode: CGBlendMode, destinationColor: UIColor) -> UIImage {
 		return imageWithBlendMode(blendMode, color: destinationColor, colorIsDestination: true)
 	}
 
 
 	@nonobjc
-	public func imageWithBlendMode(_ blendMode: CGBlendMode, sourceColor: UIColor) -> UIImage {
+	func imageWithBlendMode(_ blendMode: CGBlendMode, sourceColor: UIColor) -> UIImage {
 		return imageWithBlendMode(blendMode, color: sourceColor, colorIsDestination: false)
 	}
 
 
 	@nonobjc
-	public func imageWithHueFromColor(_ color: UIColor) -> UIImage {
+	func imageWithHueFromColor(_ color: UIColor) -> UIImage {
 		return imageWithBlendMode(.hue, sourceColor: color)
 	}
 
 
 	@nonobjc
-	public func imageWithColor(_ color: UIColor) -> UIImage {
+	func imageWithColor(_ color: UIColor) -> UIImage {
 		return imageWithBlendMode(.sourceIn, sourceColor: color)
 	}
 
@@ -216,7 +219,7 @@ public extension UIImage {
 		so subsequent operations like rendering are faster.
 	*/
 	@nonobjc
-	public func inflate() {
+	func inflate() {
 		guard let cgImage = cgImage, let dataProvider = cgImage.dataProvider else {
 			return
 		}
@@ -226,7 +229,7 @@ public extension UIImage {
 
 
 	@nonobjc
-	public func luminocityImage() -> UIImage {
+	func luminocityImage() -> UIImage {
 		return imageWithBlendMode(.luminosity, destinationColor: .white)
 	}
 }
@@ -235,7 +238,7 @@ public extension UIImage {
 
 public extension UIImage.Orientation {
 
-	public init?(CGImageOrientation: Int) {
+	init?(CGImageOrientation: Int) {
 		switch CGImageOrientation {
 		case 1: self = .up
 		case 2: self = .upMirrored
@@ -250,18 +253,21 @@ public extension UIImage.Orientation {
 	}
 
 
-	public var isLandscape: Bool {
+	var isLandscape: Bool {
 		switch self {
 		case .left, .leftMirrored, .right, .rightMirrored:
 			return true
 
 		case .down, .downMirrored, .up, .upMirrored:
 			return false
+
+		@unknown default:
+			fatalError()
 		}
 	}
 
 
-	public var isPortrait: Bool {
+	var isPortrait: Bool {
 		return !isLandscape
 	}
 }

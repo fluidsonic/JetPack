@@ -4,13 +4,13 @@ import Foundation
 public extension Timer {
 
 	@nonobjc
-	public static func scheduledTimer(withTimeInterval timeInterval: TimeInterval, block: @escaping (Timer) -> Void) -> Timer {
+	static func scheduledTimer(withTimeInterval timeInterval: TimeInterval, block: @escaping (Timer) -> Void) -> Timer {
 		return scheduledTimer_backport(withTimeInterval: timeInterval, repeats: false, block: block)
 	}
 
 
 	@nonobjc
-	public static func scheduledTimer_backport(withTimeInterval timeInterval: TimeInterval, repeats: Bool, block: @escaping (Timer) -> Void) -> Timer {
+	static func scheduledTimer_backport(withTimeInterval timeInterval: TimeInterval, repeats: Bool, block: @escaping (Timer) -> Void) -> Timer {
 		return scheduledTimer(timeInterval: timeInterval, target: timerHandler, selector: #selector(TimerHandler.handle(_:)), userInfo: StrongReference(block), repeats: repeats)
 	}
 }

@@ -7,7 +7,7 @@ private var temporaryFirstResponder: UIResponder?
 public extension UIResponder {
 
 	@nonobjc
-	public var firstResponder: UIResponder? {
+	var firstResponder: UIResponder? {
 		defer {
 			temporaryFirstResponder = nil
 		}

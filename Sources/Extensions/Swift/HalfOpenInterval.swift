@@ -1,6 +1,6 @@
 public extension Range {
 
-	public func subtracting(_ rangeToSubtract: Range<Bound>) -> [Range<Bound>] {
+	func subtracting(_ rangeToSubtract: Range<Bound>) -> [Range<Bound>] {
 		guard rangeToSubtract.lowerBound < upperBound && rangeToSubtract.upperBound > lowerBound else {
 			return [self]
 		}

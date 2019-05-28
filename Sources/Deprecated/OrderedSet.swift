@@ -116,7 +116,7 @@ public struct OrderedSet<Element: Hashable> {
 			return nil
 		}
 
-		return orderedElements.index { $0 == member }
+		return orderedElements.firstIndex { $0 == member }
 	}
 
 
@@ -156,7 +156,7 @@ public struct OrderedSet<Element: Hashable> {
 
 
 	public func member(_ member: Element) -> Element? {
-		guard let index = elements.index(of: member) else {
+		guard let index = elements.firstIndex(of: member) else {
 			return nil
 		}
 
@@ -319,13 +319,10 @@ extension OrderedSet: CustomStringConvertible {
 
 extension OrderedSet: Hashable {
 
-	public var hashValue: Int {
-		var hashValue = 1
+	public func hash(into hasher: inout Hasher) {
 		for element in orderedElements {
-			hashValue = (hashValue &* 31) &+ element.hashValue
+			hasher.combine(element)
 		}
-
-		return hashValue
 	}
 }
 

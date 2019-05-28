@@ -4,7 +4,7 @@ import Foundation
 public extension NSNumber {
 
 	@nonobjc
-	public var isNegative: Bool {
+	var isNegative: Bool {
 		return self < 0
 	}
 

@@ -16,7 +16,7 @@ public extension NSDecimalNumber {
 
 
 	@nonobjc
-	public static let minusOne = NSDecimalNumber(mantissa: 1, exponent: 0, isNegative: true)
+	static let minusOne = NSDecimalNumber(mantissa: 1, exponent: 0, isNegative: true)
 
 
 	@nonobjc

@@ -25,14 +25,14 @@ public extension CharacterSet {
 
 	
 	
-	public static func URLPathComponentAllowedCharacterSet() -> CharacterSet {
+	static func URLPathComponentAllowedCharacterSet() -> CharacterSet {
 		return _URLPathComponentAllowedCharacterSet
 	}
 
 
 	
 	
-	public static func URLQueryParameterAllowedCharacterSet() -> CharacterSet {
+	static func URLQueryParameterAllowedCharacterSet() -> CharacterSet {
 		return _URLQueryParameterAllowedCharacterSet
 	}
 }

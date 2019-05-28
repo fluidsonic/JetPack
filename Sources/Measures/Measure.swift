@@ -16,7 +16,7 @@ public protocol Measure: Comparable, CustomDebugStringConvertible, CustomStringC
 
 public extension Measure { // CustomDebugStringConvertible
 
-	public var debugDescription: String {
+	var debugDescription: String {
 		return "\(rawValue.description) \(Self.rawUnit.debugDescription)"
 	}
 }
@@ -24,7 +24,7 @@ public extension Measure { // CustomDebugStringConvertible
 
 public extension Measure { // CustomStringConvertible
 
-	public var description: String {
+	var description: String {
 		return "\(rawValue.description) \(Self.rawUnit.abbreviation)"
 	}
 }
@@ -32,8 +32,8 @@ public extension Measure { // CustomStringConvertible
 
 public extension Measure { // Hashable
 
-	public var hashValue: Int {
-		return rawValue.hashValue
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(rawValue)
 	}
 }
 

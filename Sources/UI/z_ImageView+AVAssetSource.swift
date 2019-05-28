@@ -6,7 +6,7 @@ import UIKit
 
 public extension ImageView {
 
-	public struct AVAssetSource: Source, Equatable {
+	struct AVAssetSource: Source, Equatable {
 
 		public var asset: AVAsset
 		public var videoComposition: AVVideoComposition?

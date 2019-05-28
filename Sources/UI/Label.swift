@@ -24,7 +24,7 @@ open class Label: View {
 	}
 
 
-	@available(*, deprecated: 1, message: "Use init() instead of init(highPrecision: true) since this is the new default. 'false' is deprecated.", renamed: "init()")
+	@available(*, deprecated, message: "Use init() instead of init(highPrecision: true) since this is the new default. 'false' is deprecated.", renamed: "init()")
 	public convenience init(highPrecision: Bool) {
 		self.init()
 
@@ -149,6 +149,9 @@ open class Label: View {
 		case .justified:
 			textLayerFrame.left = maximumTextLayerFrame.left
 			textLayerFrame.width = maximumTextLayerFrame.width
+
+		@unknown default:
+			textLayerFrame.left = maximumTextLayerFrame.left
 		}
 
 		textLayer.textSize = textLayerFrame.size

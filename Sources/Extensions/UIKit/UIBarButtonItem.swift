@@ -9,7 +9,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public convenience init(image: UIImage, style: UIBarButtonItem.Style = .plain, handler: Closure? = nil) {
+	convenience init(image: UIImage, style: UIBarButtonItem.Style = .plain, handler: Closure? = nil) {
 		self.init(image: image, style: style, target: nil, action: nil)
 
 		self.handler = handler
@@ -17,7 +17,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public convenience init(title: String, style: UIBarButtonItem.Style = .plain, handler: Closure? = nil) {
+	convenience init(title: String, style: UIBarButtonItem.Style = .plain, handler: Closure? = nil) {
 		self.init(title: title, style: style, target: nil, action: nil)
 
 		self.handler = handler
@@ -25,7 +25,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public convenience init(systemItem: UIBarButtonItem.SystemItem, handler: Closure? = nil) {
+	convenience init(systemItem: UIBarButtonItem.SystemItem, handler: Closure? = nil) {
 		self.init(barButtonSystemItem: systemItem, target: nil, action: nil)
 
 		self.handler = handler
@@ -50,7 +50,7 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public static func fixedSpaceOfWidth(_ width: CGFloat) -> UIBarButtonItem {
+	static func fixedSpaceOfWidth(_ width: CGFloat) -> UIBarButtonItem {
 		let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 		item.width = width
 		return item
@@ -58,13 +58,13 @@ public extension UIBarButtonItem {
 
 
 	@nonobjc
-	public static func flexibleSpace() -> UIBarButtonItem {
+	static func flexibleSpace() -> UIBarButtonItem {
 		return UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	}
 
 
 	@nonobjc
-	public var handler: Closure? {
+	var handler: Closure? {
 		get { return eventProxy?.handler }
 		set {
 			if let handler = newValue {

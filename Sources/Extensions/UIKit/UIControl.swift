@@ -27,7 +27,7 @@ public extension UIControl {
 
 
 	@nonobjc
-	public var tapped: Closure? {
+	var tapped: Closure? {
 		get { return eventHandler?.tapped }
 		set {
 			if let tapped = newValue {
@@ -41,7 +41,7 @@ public extension UIControl {
 
 
 	@nonobjc
-	public var valueChanged: Closure? {
+	var valueChanged: Closure? {
 		get { return eventHandler?.valueChanged }
 		set {
 			if let valueChanged = newValue {

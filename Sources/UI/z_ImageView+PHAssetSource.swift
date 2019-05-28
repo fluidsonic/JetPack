@@ -10,7 +10,7 @@ import UIKit
 
 public extension ImageView {
 
-	public struct PHAssetSource: Source, Equatable {
+	struct PHAssetSource: Source, Equatable {
 
 		public var asset: PHAsset
 

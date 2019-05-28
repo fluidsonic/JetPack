@@ -208,7 +208,7 @@ public protocol ScrollViewDelegate: UIScrollViewDelegate {
 
 public extension ScrollViewDelegate {
 
-	public func scrollView(_ scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool {
+	func scrollView(_ scrollView: ScrollView, shouldReceiveTouch touch: UITouch) -> Bool {
 		return scrollView.defaultShouldReceiveTouch(touch)
 	}
 }

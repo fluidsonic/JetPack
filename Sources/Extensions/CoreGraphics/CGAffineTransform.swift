@@ -3,89 +3,89 @@ import CoreGraphics
 
 public extension CGAffineTransform {
 
-	public init(horizontalScale: CGFloat, verticalScale: CGFloat = 1) {
+	init(horizontalScale: CGFloat, verticalScale: CGFloat = 1) {
 		self = CGAffineTransform(scaleX: horizontalScale, y: verticalScale)
 	}
 
 
-	public init(verticalScale: CGFloat) {
+	init(verticalScale: CGFloat) {
 		self = CGAffineTransform(scaleX: 1, y: verticalScale)
 	}
 
 
-	public init(horizontalTranslation: CGFloat, verticalTranslation: CGFloat = 0) {
+	init(horizontalTranslation: CGFloat, verticalTranslation: CGFloat = 0) {
 		self = CGAffineTransform(translationX: horizontalTranslation, y: verticalTranslation)
 	}
 
 
-	public init(verticalTranslation: CGFloat) {
+	init(verticalTranslation: CGFloat) {
 		self = CGAffineTransform(translationX: 0, y: verticalTranslation)
 	}
 
 
 	@available(*, unavailable, renamed: "init(rotationAngle:)")
-	public init(rotation angle: CGFloat) {
+	init(rotation angle: CGFloat) {
 		self = CGAffineTransform(rotationAngle: angle)
 	}
 
 
-	public init(scale: CGFloat) {
+	init(scale: CGFloat) {
 		self = CGAffineTransform(scaleX: scale, y: scale)
 	}
 
 
-	public var horizontalScale: CGFloat {
+	var horizontalScale: CGFloat {
 		return sqrt((a * a) + (c * c))
 	}
 
 
-	public var horizontalTranslation: CGFloat {
+	var horizontalTranslation: CGFloat {
 		return tx
 	}
 
 
 	@available(*, unavailable, renamed: "rotationAngle")
-	public var rotation: CGFloat {
+	var rotation: CGFloat {
 		return atan2(b, a)
 	}
 
 
-	public var rotationAngle: CGFloat {
+	var rotationAngle: CGFloat {
 		return atan2(b, a)
 	}
 
 
-	public func scaledBy(_ scale: CGFloat) -> CGAffineTransform {
+	func scaledBy(_ scale: CGFloat) -> CGAffineTransform {
 		return scaledBy(horizontally: scale, vertically: scale)
 	}
 
 
-	public func scaledBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) -> CGAffineTransform {
+	func scaledBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 1) -> CGAffineTransform {
 		return scaledBy(x: horizontal, y: vertical)
 	}
 
 
-	public func scaledBy(vertically vertical: CGFloat) -> CGAffineTransform {
+	func scaledBy(vertically vertical: CGFloat) -> CGAffineTransform {
 		return scaledBy(horizontally: 1, vertically: vertical)
 	}
 
 
-	public func translatedBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) -> CGAffineTransform {
+	func translatedBy(horizontally horizontal: CGFloat, vertically vertical: CGFloat = 0) -> CGAffineTransform {
 		return self.translatedBy(x: horizontal, y: vertical)
 	}
 
 	
-	public func translatedBy(vertically vertical: CGFloat) -> CGAffineTransform {
+	func translatedBy(vertically vertical: CGFloat) -> CGAffineTransform {
 		return translatedBy(horizontally: 0, vertically: vertical)
 	}
 
 
-	public var verticalScale: CGFloat {
+	var verticalScale: CGFloat {
 		return sqrt((b * b) + (d * d))
 	}
 
 
-	public var verticalTranslation: CGFloat {
+	var verticalTranslation: CGFloat {
 		return ty
 	}
 }

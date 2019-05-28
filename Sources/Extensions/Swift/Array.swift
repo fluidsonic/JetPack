@@ -1,6 +1,6 @@
 public extension Array {
 
-	public func getOrNil(_ index: Index) -> Iterator.Element? {
+	func getOrNil(_ index: Index) -> Iterator.Element? {
 		guard indices.contains(index) else {
 			return nil
 		}
@@ -9,7 +9,7 @@ public extension Array {
 	}
 
 
-	public func toArray() -> [Iterator.Element] {
+	func toArray() -> [Iterator.Element] {
 		return self
 	}
 }
@@ -17,8 +17,8 @@ public extension Array {
 
 public extension Array where Iterator.Element: _Optional, Iterator.Element.Wrapped: Equatable {
 
-	public func index(of element: Iterator.Element.Wrapped?) -> Int? {
-		return index { $0.value == element }
+	func index(of element: Iterator.Element.Wrapped?) -> Int? {
+		return firstIndex { $0.value == element }
 	}
 }
 

@@ -1,6 +1,6 @@
 public extension Range {
 
-	public func mapNotNil<T>(_ transform: (Bound) -> T?) -> Range<T>? {
+	func mapNotNil<T>(_ transform: (Bound) -> T?) -> Range<T>? {
 		guard
 			let lowerBound = transform(lowerBound),
 			let upperBound = transform(upperBound),
@@ -16,7 +16,7 @@ public extension Range {
 
 public extension Range where Bound: RandomizableIntegerType {
 
-	public var randomIndex: Bound? {
+	var randomIndex: Bound? {
 		let distance = upperBound - lowerBound
 		if distance < 0 {
 			return nil

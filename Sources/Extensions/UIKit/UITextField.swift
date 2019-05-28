@@ -9,7 +9,7 @@ public extension UITextField {
 
 
 	@nonobjc
-	public var automaticallyScrollsIntoSight: Bool {
+	var automaticallyScrollsIntoSight: Bool {
 		get { return objc_getAssociatedObject(self, &AssociatedKeys.automaticallyScrollsIntoSight) as? Bool ?? true }
 		set { objc_setAssociatedObject(self, &AssociatedKeys.automaticallyScrollsIntoSight, newValue ? nil : false, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
 	}

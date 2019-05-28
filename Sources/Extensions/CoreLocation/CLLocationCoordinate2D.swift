@@ -3,8 +3,7 @@ import CoreLocation
 
 public extension CLLocationCoordinate2D {
 
-	
-	public func distanceTo(_ coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
+	func distanceTo(_ coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
 		return CLLocation(coordinate: self).distance(from: CLLocation(coordinate: coordinate))
 	}
 }
@@ -12,8 +11,9 @@ public extension CLLocationCoordinate2D {
 
 extension CLLocationCoordinate2D: Hashable {
 
-	public var hashValue: Int {
-		return latitude.hashValue ^ longitude.hashValue
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(latitude)
+		hasher.combine(longitude)
 	}
 
 

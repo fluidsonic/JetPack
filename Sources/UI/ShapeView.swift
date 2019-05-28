@@ -100,9 +100,10 @@ open class ShapeView: View {
 			shapeLayer.fillRule = path.usesEvenOddFillRule ? .evenOdd : .nonZero
 
 			switch path.lineCapStyle {
-			case .butt:   shapeLayer.lineCap = .butt
-			case .round:  shapeLayer.lineCap = .round
-			case .square: shapeLayer.lineCap = .square
+			case .butt:       shapeLayer.lineCap = .butt
+			case .round:      shapeLayer.lineCap = .round
+			case .square:     shapeLayer.lineCap = .square
+			@unknown default: fatalError()
 			}
 
 			var dashPatternCount = 0
@@ -116,9 +117,10 @@ open class ShapeView: View {
 			shapeLayer.lineDashPhase = dashPhase
 
 			switch path.lineJoinStyle {
-			case .bevel: shapeLayer.lineJoin = .bevel
-			case .miter: shapeLayer.lineJoin = .miter
-			case .round: shapeLayer.lineJoin = .round
+			case .bevel:      shapeLayer.lineJoin = .bevel
+			case .miter:      shapeLayer.lineJoin = .miter
+			case .round:      shapeLayer.lineJoin = .round
+			@unknown default: fatalError()
 			}
 
 			shapeLayer.lineWidth = path.lineWidth

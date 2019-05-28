@@ -5,7 +5,7 @@ import MapKit
 
 public extension ImageView {
 
-	public struct MKMapSnapshotSource: ImageView.Source, Equatable {
+	struct MKMapSnapshotSource: ImageView.Source, Equatable {
 
 		private var options: MKMapSnapshotter.Options
 

@@ -3,17 +3,17 @@ import Foundation
 
 public extension NSRange {
 
-	public static let notFound = NSRange(location: NSNotFound, length: 0)
+	static let notFound = NSRange(location: NSNotFound, length: 0)
 
 
-	public init(forString string: String) {
+	init(forString string: String) {
 		let indices = string.indices
 
 		self.init(range: indices.startIndex ..< indices.endIndex, inString: string)
 	}
 
 
-	public init(range: Range<String.Index>?, inString string: String) {
+	init(range: Range<String.Index>?, inString string: String) {
 		if let range = range {
 			let location = NSRange.locationForIndex(range.lowerBound, inString: string)
 			let endLocation = NSRange.locationForIndex(range.upperBound, inString: string)
@@ -26,7 +26,7 @@ public extension NSRange {
 	}
 
 
-	public func clamped(to limits: NSRange) -> NSRange {
+	func clamped(to limits: NSRange) -> NSRange {
 		if location == NSNotFound || limits.location == NSNotFound {
 			return .notFound
 		}
@@ -48,12 +48,12 @@ public extension NSRange {
 	}
 
 	
-	public func endIndexInString(_ string: String) -> String.Index? {
+	func endIndexInString(_ string: String) -> String.Index? {
 		return NSRange.indexForLocation(NSMaxRange(self), inString: string)
 	}
 
 
-	public var endLocation: Int {
+	var endLocation: Int {
 		guard location != NSNotFound else {
 			return NSNotFound
 		}
@@ -83,7 +83,7 @@ public extension NSRange {
 
 
 	
-	public func rangeInString(_ string: String) -> Range<String.Index>? {
+	func rangeInString(_ string: String) -> Range<String.Index>? {
 		if let startIndex = startIndexInString(string), let endIndex = endIndexInString(string) {
 			return startIndex ..< endIndex
 		}
@@ -93,12 +93,12 @@ public extension NSRange {
 
 
 	
-	public func startIndexInString(_ string: String) -> String.Index? {
+	func startIndexInString(_ string: String) -> String.Index? {
 		return NSRange.indexForLocation(location, inString: string)
 	}
 
 
-	public func toCountableRange() -> CountableRange<Int>? {
+	func toCountableRange() -> CountableRange<Int>? {
 		return Range(self).map { $0.lowerBound ..< $0.upperBound }
 	}
 }
@@ -121,7 +121,8 @@ extension NSRange: Sequence {
 
 public extension Range where Bound == Int {
 
-	public func toNSRange() -> NSRange {
+
+	func toNSRange() -> NSRange {
 		return NSRange(location: lowerBound, length: upperBound - lowerBound)
 	}
 }

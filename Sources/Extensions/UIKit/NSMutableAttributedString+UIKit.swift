@@ -31,7 +31,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(_ string: String,
+	func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         font: UIFont?,
 	                         foregroundColor: UIColor? = nil,
@@ -43,7 +43,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(_ string: String,
+	func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         foregroundColor: UIColor?,
 	                         link: URL? = nil,
@@ -54,7 +54,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(_ string: String,
+	func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         link: URL?,
 	                         paragraphStyle: NSParagraphStyle? = nil)
@@ -64,7 +64,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func appendString(_ string: String,
+	func appendString(_ string: String,
 	                         maintainingPrecedingAttributes: Bool = false,
 	                         paragraphStyle: NSParagraphStyle?)
 	{

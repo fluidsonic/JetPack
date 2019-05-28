@@ -4,7 +4,7 @@ import UIKit
 public extension UINavigationItem {
 
 	@nonobjc
-	public var backButtonTitles: Set<String> {
+	var backButtonTitles: Set<String> {
 		get { return backBarButtonItem?.possibleTitles ?? [] }
 		set {
 			guard newValue.isEmpty || newValue != backButtonTitles else {

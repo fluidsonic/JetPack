@@ -1,6 +1,6 @@
 public extension Collection {
 
-	public func lastIndexOf(predicate: (Element) throws -> Bool) rethrows -> Index? {
+	func lastIndexOf(predicate: (Element) throws -> Bool) rethrows -> Index? {
 		for index in indices.reversed() where try predicate(self[index]) {
 			return index
 		}
@@ -9,12 +9,12 @@ public extension Collection {
 	}
 
 
-	public var nonEmpty: Self? {
+	var nonEmpty: Self? {
 		return isEmpty ? nil : self
 	}
 
 
-	public subscript(safe index: Index) -> Element? {
+	subscript(safe index: Index) -> Element? {
 		return indices.contains(index) ? self[index] : nil
 	}
 }
@@ -22,7 +22,7 @@ public extension Collection {
 
 public extension Collection where Element: AnyObject {
 
-	public func indexOfIdentical(_ element: Element) -> Index? {
+	func indexOfIdentical(_ element: Element) -> Index? {
 		for index in indices where self[index] === element {
 			return index
 		}
@@ -34,7 +34,7 @@ public extension Collection where Element: AnyObject {
 
 public extension Collection where Element: Equatable {
 
-	public func lastIndexOf(_ element: Element) -> Index? {
+	func lastIndexOf(_ element: Element) -> Index? {
 		for index in indices.reversed() where self[index] == element {
 			return index
 		}

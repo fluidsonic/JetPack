@@ -24,22 +24,12 @@ public struct PartialSize: CustomDebugStringConvertible, Hashable {
 	}
 
 
-	public var hashValue: Int {
-		return (height?.hashValue ?? 0) ^ (width?.hashValue ?? 0)
-	}
-
-
 	public func toSize() -> CGSize? {
 		guard let height = height, let width = width else {
 			return nil
 		}
 
 		return CGSize(width: width, height: height)
-	}
-
-
-	public static func == (a: PartialSize, b: PartialSize) -> Bool {
-		return a.height == b.height && a.width == b.width
 	}
 }
 

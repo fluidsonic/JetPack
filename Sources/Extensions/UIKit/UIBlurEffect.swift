@@ -16,7 +16,7 @@ public extension UIBlurEffect {
 
 
 	@nonobjc
-	public static func create(style: UIBlurEffect.Style, tintColor: UIColor, tintAlpha: CGFloat) -> UIBlurEffect {
+	static func create(style: UIBlurEffect.Style, tintColor: UIColor, tintAlpha: CGFloat) -> UIBlurEffect {
 		if let customBlurEffectType = customBlurEffectType {
 			let effect = customBlurEffectType.customEffectWithStyle(style)
 			if type(of: effect) != UIBlurEffect.self {

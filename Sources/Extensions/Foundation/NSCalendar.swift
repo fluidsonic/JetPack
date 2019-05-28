@@ -3,7 +3,7 @@ import Foundation
 
 public extension Calendar {
 
-	public func dateByAdding(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, toDate date: Date) -> Date? {
+	func dateByAdding(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, toDate date: Date) -> Date? {
 		var components = DateComponents()
 
 		if let years = years {
@@ -29,12 +29,12 @@ public extension Calendar {
 	}
 
 
-	public func dateBySubtracting(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, fromDate date: Date) -> Date? {
+	func dateBySubtracting(seconds: Int? = nil, minutes: Int? = nil, hours: Int? = nil, days: Int? = nil, months: Int? = nil, years: Int? = nil, fromDate date: Date) -> Date? {
 		return dateByAdding(seconds: seconds.map(-), minutes: minutes.map(-), hours: hours.map(-), days: days.map(-), months: months.map(-), years: years.map(-), toDate: date)
 	}
 
 
-	public func firstDateOfWeek(_ date: Date) -> Date? {
+	func firstDateOfWeek(_ date: Date) -> Date? {
 		let calendar = self as NSCalendar
 		var firstDateOfWeek: NSDate?
 		_ = calendar.range(of: .weekOfYear, start: &firstDateOfWeek, interval: nil, for: date)

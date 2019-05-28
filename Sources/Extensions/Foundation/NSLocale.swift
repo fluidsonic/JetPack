@@ -7,7 +7,7 @@ public extension Locale {
 
 
 	@nonobjc
-	public static let defaultDecimalFormatterForResolvingPluralCategory: NumberFormatter = {
+	static let defaultDecimalFormatterForResolvingPluralCategory: NumberFormatter = {
 		let formatter = NumberFormatter()
 		formatter.locale = Locale.englishUnitedStatesComputer
 		formatter.numberStyle = .decimal
@@ -16,15 +16,15 @@ public extension Locale {
 
 
 	@nonobjc
-	public static let display = Bundle.main.preferredLocalizations.first.map { Locale(identifier: Locale.canonicalLanguageIdentifier(from: $0)) } ?? .autoupdatingCurrent
+	static let display = Bundle.main.preferredLocalizations.first.map { Locale(identifier: Locale.canonicalLanguageIdentifier(from: $0)) } ?? .autoupdatingCurrent
 
 
 	@nonobjc
-	public static let englishUnitedStatesComputer = Locale(identifier: "en_US_POSIX")
+	static let englishUnitedStatesComputer = Locale(identifier: "en_US_POSIX")
 
 
 	
-	public func pluralCategoryForNumber(_ number: NSNumber, formatter: NumberFormatter = defaultDecimalFormatterForResolvingPluralCategory) -> PluralCategory {
+	func pluralCategoryForNumber(_ number: NSNumber, formatter: NumberFormatter = defaultDecimalFormatterForResolvingPluralCategory) -> PluralCategory {
 		guard let formatter = formatter.copy() as? NumberFormatter else {
 			return .other
 		}
@@ -102,19 +102,19 @@ public extension Locale {
 
 
 	@nonobjc
-	public var uses24HourFormat: Bool {
+	var uses24HourFormat: Bool {
 		return !(DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: self)?.contains("a") ?? false)
 	}
 
 
 	@nonobjc
-	public var usesMetricSystem9: Bool {
+	var usesMetricSystem9: Bool {
 		return (self as NSLocale).object(forKey: NSLocale.Key.usesMetricSystem) as? Bool ?? false
 	}
 
 
 	// Swift bug - cannot nest type at the moment
-	public typealias PluralCategory = _Locale_PluralCategory
+	typealias PluralCategory = _Locale_PluralCategory
 }
 
 

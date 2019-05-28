@@ -3,7 +3,7 @@ import Foundation
 
 internal extension Locale {
 
-	internal static let pluralCategoryResolversByLocaleIdentifier: [String : PluralCategoryResolver] = [
+	static let pluralCategoryResolversByLocaleIdentifier: [String : PluralCategoryResolver] = [
 		"af": resolve_no$cgg$uz$ce$lg$brx$fo$fur$tk$bez$jmc$ky$mas$or$nr$seh$mn$st$rwk$eu$syr$ckb$ta$teo$ug$vo$wae$xh$nn$el$ml$tig$ts$gsw$kl$so$bem$os$bg$nd$te$xog$ha$dv$kkj$rof$ps$ne$nb$ve$sq$rm$sdh$ss$af$hu$kcg$pap$lb$ku$mgo$asa$sn$vun$ka$eo$haw$jgo$ks$ee$es$ny$nyn$om$ssy$tn$kaj$tr$nah$az$ksb$kk$saq$nnh$chr,
 		"ak": resolve_pa$nso$ti$mg$wa$bh$guw$ak$ln,
 		"am": resolve_gu$bn$fa$kn$as$hi$mr$zu$am,

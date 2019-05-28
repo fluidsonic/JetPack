@@ -6,7 +6,7 @@ import UIKit
 
 public extension ImageView {
 
-	public struct UrlSource: ImageView.Source, Equatable {
+	struct UrlSource: ImageView.Source, Equatable {
 
 		public var considersOptimalImageSize = true
 		public var isTemplate: Bool
@@ -411,9 +411,9 @@ private final class ImageFileLoader {
 			}
 
 			let options: [AnyHashable: Any] = [
-				kCGImageSourceCreateThumbnailFromImageAlways as AnyHashable: kCFBooleanTrue,
-				kCGImageSourceCreateThumbnailWithTransform as AnyHashable:   kCFBooleanTrue,
-				kCGImageSourceThumbnailMaxPixelSize as AnyHashable:          size
+				kCGImageSourceCreateThumbnailFromImageAlways: kCFBooleanTrue as Any,
+				kCGImageSourceCreateThumbnailWithTransform:   kCFBooleanTrue as Any,
+				kCGImageSourceThumbnailMaxPixelSize:          size
 			]
 
 			guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary?) else {

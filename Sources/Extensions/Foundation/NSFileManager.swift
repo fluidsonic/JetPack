@@ -4,7 +4,7 @@ import Foundation
 public extension FileManager {
 
 	@nonobjc
-	public func asyncRemoveItem(_ item: URL, handler: ((Result<Void>) -> Void)? = nil) {
+	func asyncRemoveItem(_ item: URL, handler: ((Result<Void>) -> Void)? = nil) {
 		asyncWithHandler(handler, errorMessage: "Cannot remove item '\(item)'") {
 			return try self.removeItem(at: item)
 		}
@@ -26,7 +26,7 @@ public extension FileManager {
 
 
 	@nonobjc
-	public func itemExistsAtURL(_ url: URL) -> Bool {
+	func itemExistsAtURL(_ url: URL) -> Bool {
 		guard url.isFileURL, let path = url.path.nonEmpty else {
 			return false
 		}

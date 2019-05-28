@@ -5,7 +5,7 @@ import UIKit
 
 public extension ImageView {
 
-	public struct StaticSource: Source, Equatable {
+	struct StaticSource: Source, Equatable {
 
 		public var image: UIImage
 

@@ -3,7 +3,7 @@ import Foundation
 
 public extension String {
 
-	public var nonEmpty: String? {
+	var nonEmpty: String? {
 		if isEmpty {
 			return nil
 		}
@@ -12,7 +12,7 @@ public extension String {
 	}
 
 
-	public func trimmedToLength(_ length: Int, truncationString: String = "") -> String {
+	func trimmedToLength(_ length: Int, truncationString: String = "") -> String {
 		if length <= 0 {
 			return ""
 		}
@@ -34,7 +34,7 @@ public extension String {
 	}
 
 
-	public var whitespaceTrimmed: String {
+	var whitespaceTrimmed: String {
 		return trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 	}
 }

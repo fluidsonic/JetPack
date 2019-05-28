@@ -282,12 +282,12 @@ extension UIView.AnimationCurve: CustomStringConvertible {
 
 public extension UIView.AnimationOptions {
 
-	public init(curve: UIView.AnimationCurve) {
+	init(curve: UIView.AnimationCurve) {
 		self.init(rawValue: UInt((curve.rawValue & 7) << 16))
 	}
 
 
-	public var curve: UIView.AnimationCurve {
+	var curve: UIView.AnimationCurve {
 		return UIView.AnimationCurve(rawValue: Int((rawValue >> 16) & 7))!
 	}
 }
@@ -365,9 +365,10 @@ extension UIView.TintAdjustmentMode: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .automatic: return "UIViewTint.AdjustmentMode.automatic"
-		case .dimmed:    return "UIViewTint.AdjustmentMode.dimmed"
-		case .normal:    return "UIViewTint.AdjustmentMode.normal"
+		case .automatic:  return "UIView.TintAdjustmentMode.automatic"
+		case .dimmed:     return "UIView.TintAdjustmentMode.dimmed"
+		case .normal:     return "UIView.TintAdjustmentMode.normal"
+		@unknown default: return "UIView.TintAdjustmentMode.rawValue(\(rawValue))"
 		}
 	}
 }

@@ -157,7 +157,7 @@ extension CompassDirection16 {
 
 public extension Angle {
 
-	public var compassDirection8: CompassDirection8 {
+	var compassDirection8: CompassDirection8 {
 		var sector = Int((8 * degrees / 360).rounded()) % 8
 		if sector < 0 {
 			sector += 8
@@ -177,7 +177,7 @@ public extension Angle {
 	}
 
 
-	public var compassDirection16: CompassDirection16 {
+	var compassDirection16: CompassDirection16 {
 		var sector = Int((16 * degrees / 360).rounded()) % 16
 		if sector < 0 {
 			sector += 16

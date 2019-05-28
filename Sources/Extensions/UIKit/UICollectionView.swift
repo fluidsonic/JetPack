@@ -4,7 +4,7 @@ import UIKit
 public extension UICollectionView {
 
 	@nonobjc
-	public var firstResponderCell: UICollectionViewCell? {
+	var firstResponderCell: UICollectionViewCell? {
 		guard let firstResponder = firstResponder as? UIView else {
 			return nil
 		}
@@ -24,7 +24,7 @@ public extension UICollectionView {
 
 
 	@nonobjc
-	public func performBatchUpdates(_ updates: @escaping Closure) {
+	func performBatchUpdates(_ updates: @escaping Closure) {
 		self.performBatchUpdates(updates, completion: nil)
 	}
 }

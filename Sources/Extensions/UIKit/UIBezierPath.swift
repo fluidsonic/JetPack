@@ -4,7 +4,7 @@ import UIKit
 public extension UIBezierPath {
 
 	@nonobjc
-	public convenience init(animatableRoundedRect rect: CGRect, cornerRadii: CornerRadii = .zero) {
+	convenience init(animatableRoundedRect rect: CGRect, cornerRadii: CornerRadii = .zero) {
 		self.init()
 
 		move(to: CGPoint(left: rect.left + cornerRadii.topLeft, top: rect.top))
@@ -20,7 +20,7 @@ public extension UIBezierPath {
 
 
 	@nonobjc
-	public func addRoundedCorner(direction: RoundedCornerDirection, radius requestedRadius: CGFloat) {
+	func addRoundedCorner(direction: RoundedCornerDirection, radius requestedRadius: CGFloat) {
 		let radius = max(requestedRadius, 0)
 
 		var center: CGPoint
@@ -118,7 +118,7 @@ public extension UIBezierPath {
 
 	@nonobjc
 	
-	public func invertedBezierPathInRect(_ rect: CGRect) -> UIBezierPath {
+	func invertedBezierPathInRect(_ rect: CGRect) -> UIBezierPath {
 		let path = UIBezierPath(rect: rect)
 		path.usesEvenOddFillRule = true
 		path.append(self)
@@ -156,7 +156,7 @@ public extension UIBezierPath {
 
 	
 
-	public enum RoundedCornerDirection {
+	enum RoundedCornerDirection {
 		case downLeft
 		case downRight
 		case leftDown

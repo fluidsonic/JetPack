@@ -9,7 +9,7 @@ public extension UITableView {
 
 
 	@nonobjc
-	public func deselectAllRowsAnimated(_ animated: Bool) {
+	func deselectAllRowsAnimated(_ animated: Bool) {
 		for indexPath in indexPathsForSelectedRows ?? [] {
 			deselectRow(at: indexPath, animated: animated)
 		}
@@ -17,7 +17,7 @@ public extension UITableView {
 
 
 	@nonobjc
-	public var firstIndexPath: IndexPath? {
+	var firstIndexPath: IndexPath? {
 		let sectionCount = numberOfSections
 		guard sectionCount > 0 else {
 			return nil
@@ -37,7 +37,7 @@ public extension UITableView {
 
 
 	@nonobjc
-	public var floatsHeaderAndFooterViews: Bool {
+	var floatsHeaderAndFooterViews: Bool {
 		get { return redirected_headerAndFooterViewsFloat() }
 		set { redirected_setHeaderAndFooterViewsFloat(newValue) }
 	}
@@ -51,7 +51,7 @@ public extension UITableView {
 
 
 	@nonobjc
-	public var lastIndexPath: IndexPath? {
+	var lastIndexPath: IndexPath? {
 		let sectionCount = numberOfSections
 		guard sectionCount > 0 else {
 			return nil
@@ -70,7 +70,7 @@ public extension UITableView {
 	}
 
 
-	public override var maximumContentOffset: CGPoint {
+	override var maximumContentOffset: CGPoint {
 		let numberOfSections = self.numberOfSections
 		guard numberOfSections > 0 else {
 			return super.maximumContentOffset
@@ -103,7 +103,7 @@ public extension UITableView {
 
 
 	@nonobjc
-	public func scrollRowAtIndexPathToVisible(_ indexPath: IndexPath, insets: UIEdgeInsets = .zero, animated: Bool = false) -> Bool {
+	func scrollRowAtIndexPathToVisible(_ indexPath: IndexPath, insets: UIEdgeInsets = .zero, animated: Bool = false) -> Bool {
 		let contentSize = self.contentSize
 
 		var rect = rectForRow(at: indexPath).insetBy(insets.inverse)

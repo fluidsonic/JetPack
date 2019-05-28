@@ -4,7 +4,7 @@ import Foundation
 public extension NSMutableAttributedString {
 
 	@nonobjc
-	public func appendString(_ string: String, maintainingPrecedingAttributes: Bool = false, additionalAttributes: [NSAttributedString.Key : Any] = [:]) {
+	func appendString(_ string: String, maintainingPrecedingAttributes: Bool = false, additionalAttributes: [NSAttributedString.Key : Any] = [:]) {
 		if maintainingPrecedingAttributes {
 			let location = length
 
@@ -21,7 +21,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func edit(changes: Closure) {
+	func edit(changes: Closure) {
 		beginEditing()
 		changes()
 		endEditing()
@@ -29,7 +29,7 @@ public extension NSMutableAttributedString {
 
 
 	@nonobjc
-	public func transformStringSegments(_ transform: (String) -> String) {
+	func transformStringSegments(_ transform: (String) -> String) {
 		let length = self.length
 		guard length > 0 else {
 			return

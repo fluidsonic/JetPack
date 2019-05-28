@@ -197,9 +197,12 @@ extension UITableViewCell.EditingStyle: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .delete: return "Delete"
-		case .insert: return "Insert"
-		case .none:   return "None"
+		case .delete: return "delete"
+		case .insert: return "insert"
+		case .none:   return "none"
+
+		@unknown default:
+			return "rawValue(\(rawValue))"
 		}
 	}
 }

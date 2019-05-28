@@ -3,47 +3,47 @@ import UIKit
 
 public extension UIEdgeInsets {
 
-	public init(all: CGFloat) {
+	init(all: CGFloat) {
 		self.init(top: all, left: all, bottom: all, right: all)
 	}
 
 
-	public init(bottom: CGFloat) {
+	init(bottom: CGFloat) {
 		self.init(top: 0, left: 0, bottom: bottom, right: 0)
 	}
 
 
-	public init(horizontal: CGFloat) {
+	init(horizontal: CGFloat) {
 		self.init(top: 0, left: horizontal, bottom: 0, right: horizontal)
 	}
 
 
-	public init(horizontal: CGFloat, vertical: CGFloat) {
+	init(horizontal: CGFloat, vertical: CGFloat) {
 		self.init(top: vertical, left: horizontal, bottom: vertical, right: horizontal)
 	}
 
 
-	public init(left: CGFloat) {
+	init(left: CGFloat) {
 		self.init(top: 0, left: left, bottom: 0, right: 0)
 	}
 
 
-	public init(top: CGFloat) {
+	init(top: CGFloat) {
 		self.init(top: top, left: 0, bottom: 0, right: 0)
 	}
 
 
-	public init(right: CGFloat) {
+	init(right: CGFloat) {
 		self.init(top: 0, left: 0, bottom: 0, right: right)
 	}
 
 
-	public init(vertical: CGFloat) {
+	init(vertical: CGFloat) {
 		self.init(top: vertical, left: 0, bottom: vertical, right: 0)
 	}
 
 
-	public init(fromRect: CGRect, toRect: CGRect) {
+	init(fromRect: CGRect, toRect: CGRect) {
 		self.init(
 			top:    toRect.top - fromRect.top,
 			left:   toRect.left - fromRect.left,
@@ -54,22 +54,22 @@ public extension UIEdgeInsets {
 
 
 	
-	public func increaseBy(_ insets: UIEdgeInsets) -> UIEdgeInsets {
+	func increaseBy(_ insets: UIEdgeInsets) -> UIEdgeInsets {
 		return UIEdgeInsets(top: top + insets.top, left: left + insets.left, bottom: bottom + insets.bottom, right: right + insets.right)
 	}
 
 
-	public mutating func increaseInPlace(_ insets: UIEdgeInsets) {
+	mutating func increaseInPlace(_ insets: UIEdgeInsets) {
 		self = increaseBy(insets)
 	}
 
 
-	public var inverse: UIEdgeInsets {
+	var inverse: UIEdgeInsets {
 		return UIEdgeInsets(top: -top, left: -left, bottom: -bottom, right: -right)
 	}
 
 
-	public var isEmpty: Bool {
+	var isEmpty: Bool {
 		return (top == 0 && left == 0 && bottom == 0 && right == 0)
 	}
 }
@@ -79,7 +79,7 @@ public extension UIEdgeInsets {
 public extension CGRect {
 
 	
-	public func insetBy(_ insets: UIEdgeInsets) -> CGRect {
+	func insetBy(_ insets: UIEdgeInsets) -> CGRect {
 		return CGRect(
 			left:   left + insets.left,
 			top:    top + insets.top,
@@ -89,7 +89,7 @@ public extension CGRect {
 	}
 
 
-	public mutating func insetInPlace(_ insets: UIEdgeInsets) {
+	mutating func insetInPlace(_ insets: UIEdgeInsets) {
 		self = insetBy(insets)
 	}
 }
@@ -99,7 +99,7 @@ public extension CGRect {
 public extension CGSize {
 
 	
-	public func insetBy(_ insets: UIEdgeInsets) -> CGSize {
+	func insetBy(_ insets: UIEdgeInsets) -> CGSize {
 		return CGSize(
 			width:  width - insets.left - insets.right,
 			height: height - insets.top - insets.bottom
@@ -107,7 +107,7 @@ public extension CGSize {
 	}
 
 
-	public mutating func insetInPlace(_ insets: UIEdgeInsets) {
+	mutating func insetInPlace(_ insets: UIEdgeInsets) {
 		self = insetBy(insets)
 	}
 }

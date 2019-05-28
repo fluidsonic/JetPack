@@ -11,7 +11,7 @@ public extension Progress {
 
 
 	@nonobjc
-	public var fractionCompletedHandler: ((Double) -> Void)? {
+	var fractionCompletedHandler: ((Double) -> Void)? {
 		get {
 			return observer?.fractionCompletedHandler
 		}
