@@ -138,7 +138,6 @@ internal class TextLayout {
 			fatalError("Line index \(line) is out of range 0 ..< \(numberOfLines)")
 		}
 
-		let contentInsets = result.contentInsets
 		let origin = result.origin
 
 		var currentLine = 0
@@ -147,8 +146,8 @@ internal class TextLayout {
 		result.layoutManager.enumerateLineFragments(forGlyphRange: result.glyphRange) { _, usedRect, _, _, stop in
 			if currentLine == line {
 				rect = usedRect
-				rect.left += origin.left - contentInsets.left
-				rect.top += origin.top - contentInsets.top
+				rect.left += origin.left
+				rect.top += origin.top
 
 				stop.pointee = true
 			}
