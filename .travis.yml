@@ -5,24 +5,23 @@ sudo: false
 env:
   global:
     - WORKSPACE=Xcode/JetPack.xcworkspace
-    - IOS_DEVICE_SDK=iphoneos12.0
-    - IOS_SIMULATOR_SDK=iphonesimulator12.0
+    - IOS_DEVICE_SDK=iphoneos12.2
+    - IOS_SIMULATOR_SDK=iphonesimulator12.2
   matrix:
     - POD_LINT="yes"
-#    - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Debug"
-#    - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-O"
-#    - SDK="$IOS_DEVICE_SDK"    SCHEME="All"                     CONFIGURATION="Release" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Debug"   DESTINATION="OS=12.0,name=iPhone 8"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                     CONFIGURATION="Release" DESTINATION="OS=12.0,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics" CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics" CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation"   CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation"   CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift"        CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift"        CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                           CONFIGURATION="Debug"   DESTINATION="OS=12.2,name=iPhone 8"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                           CONFIGURATION="Release" DESTINATION="OS=12.2,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics-Tests" CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics-Tests" CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation-Tests"   CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation-Tests"   CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift-Tests"        CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift-Tests"        CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="UI-Tests"                      CONFIGURATION="Debug"   DESTINATION="OS=11.4,name=iPhone 8"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="UI-Tests"                      CONFIGURATION="Release" DESTINATION="OS=11.4,name=iPhone 8" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
     
 before_install:
-  - gem install cocoapods xcpretty xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
+  - gem install cocoapods xcpretty xcpretty-travis-formatter --no-document --quiet
 
 script:
   - Xcode/Tests/Travis.sh
