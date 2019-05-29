@@ -4,22 +4,6 @@ import UIKit
 extension NSAttributedString {
 
 	@nonobjc
-	func maximumFontSize(in range: NSRange) -> CGFloat? {
-		var maximumFontSize: CGFloat?
-
-		enumerateAttributes(in: range, options: .longestEffectiveRangeNotRequired) { attributes, _, _ in
-			guard let font = attributes[.font] as? UIFont else {
-				return
-			}
-
-			maximumFontSize = optionalMin(maximumFontSize, font.pointSize)
-		}
-
-		return maximumFontSize
-	}
-
-
-	@nonobjc
 	func withDefaultAttributes(
 		font: UIFont? = nil,
 		foregroundColor: UIColor? = nil,

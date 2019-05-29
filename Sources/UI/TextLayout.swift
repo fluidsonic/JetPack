@@ -290,6 +290,16 @@ internal class TextLayout {
 
 		func layoutManager(
 			_ layoutManager: NSLayoutManager,
+			paragraphSpacingAfterGlyphAt glyphIndex: Int,
+			withProposedLineFragmentRect rect: CGRect
+		) -> CGFloat {
+			// paragraph spacing is handled in shouldSetLineFragmentRect delegte method
+			return 0
+		}
+
+
+		func layoutManager(
+			_ layoutManager: NSLayoutManager,
 			shouldSetLineFragmentRect lineFragmentRect: UnsafeMutablePointer<CGRect>,
 			lineFragmentUsedRect: UnsafeMutablePointer<CGRect>,
 			baselineOffset: UnsafeMutablePointer<CGFloat>,
@@ -297,25 +307,30 @@ internal class TextLayout {
 			forGlyphRange glyphRange: NSRange
 		) -> Bool {
 			let characterRange = layoutManager.characterRange(forGlyphRange: glyphRange, actualGlyphRange: nil)
-			guard let fontSize = layoutManager.textStorage?.maximumFontSize(in: characterRange) else {
-				log("Cannot find font of text being laid out")
-				return false
+			let lineStyle = configuration.text.lineStyle(for: characterRange)
+
+			if let paragraphSpacing = lineStyle.maximumParagraphSpacing, paragraphSpacing != 0 {
+				let lastCharacter = (configuration.text.string as NSString).character(at: characterRange.endLocation - 1)
+				if lastCharacter == 0x2029 { // <paragraph separator>
+					lineFragmentRect.pointee.heightFromTop += paragraphSpacing
+				}
 			}
 
-			let isFirstLine = glyphRange.location == 0
-			if isFirstLine {
-				baselineOffset.pointee -= (lineFragmentUsedRect.pointee.height - fontSize) / 2
+			if let fontSize = lineStyle.maximumFontSize {
+				let isFirstLine = glyphRange.location == 0
+				if isFirstLine {
+					baselineOffset.pointee -= (lineFragmentUsedRect.pointee.height - fontSize) / 2
 
-				// TODO This depends on this delegate method getting called exactly once at the beginning for the first line. Is there a better way?
-				firstLineBaselineOffsetFromBottom = lineFragmentRect.pointee.height - baselineOffset.pointee
-			}
-			else {
-				baselineOffset.pointee = lineFragmentRect.pointee.height - firstLineBaselineOffsetFromBottom
+					// TODO This depends on this delegate method getting called exactly once at the beginning for the first line. Is there a better way?
+					firstLineBaselineOffsetFromBottom = lineFragmentUsedRect.pointee.height - baselineOffset.pointee
+				}
+				else {
+					baselineOffset.pointee = lineFragmentUsedRect.pointee.height - firstLineBaselineOffsetFromBottom
+				}
 			}
 
 			return true
 		}
-
 
 
 		func layoutManager(
@@ -331,45 +346,46 @@ internal class TextLayout {
 			}
 
 			let characterRange = NSRange(location: characterIndexes.pointee, length: characterIndexes[glyphRange.length - 1] + 1)
-			guard characterRange.contains(truncationLocation) else {
+			guard characterRange.endLocation > truncationLocation else {
 				return 0
 			}
 
-			var ellipsis: UniChar = 0x2026 // …
-			var ellipsisGlyph: CGGlyph = 0
-			guard CTFontGetGlyphsForCharacters(font as CTFont, &ellipsis, &ellipsisGlyph, 1) else {
-				return 0
+			var newGlyphs = Array(UnsafeBufferPointer(start: glyphs, count: glyphRange.length))
+			var newProperties = Array(UnsafeBufferPointer(start: properties, count: glyphRange.length))
+
+			if characterRange.contains(truncationLocation) {
+				var ellipsis: UniChar = 0x2026 // <ellipsis>
+				var ellipsisGlyph: CGGlyph = 0
+				if CTFontGetGlyphsForCharacters(font as CTFont, &ellipsis, &ellipsisGlyph, 1) {
+					for index in 0 ..< glyphRange.length {
+						let characterIndex = characterIndexes[index]
+						if characterIndex == truncationLocation {
+							newGlyphs[index] = ellipsisGlyph
+							newProperties[index] = []
+
+							break
+						}
+					}
+				}
 			}
 
 			for index in 0 ..< glyphRange.length {
 				let characterIndex = characterIndexes[index]
-				if characterIndex == truncationLocation {
-					var newGlyphs = Array(UnsafeBufferPointer(start: glyphs, count: glyphRange.length))
-					var newProperties = Array(UnsafeBufferPointer(start: properties, count: glyphRange.length))
-
-					newGlyphs[index] = ellipsisGlyph
-					newProperties[index] = []
-
-					if glyphRange.length > index + 1 {
-						for remainingIndex in (index + 1) ..< glyphRange.length {
-							newGlyphs[remainingIndex] = kCGFontIndexInvalid
-							newProperties[remainingIndex] = .null
-						}
-					}
-
-					layoutManager.setGlyphs(
-						newGlyphs,
-						properties:       newProperties,
-						characterIndexes: characterIndexes,
-						font:             font,
-						forGlyphRange:    glyphRange
-					)
-
-					return glyphRange.length
+				if characterIndex > truncationLocation {
+					newGlyphs[index] = kCGFontIndexInvalid
+					newProperties[index] = [] // .null sometimes causes blank space at the end of the text
 				}
 			}
 
-			return 0
+			layoutManager.setGlyphs(
+				newGlyphs,
+				properties:       newProperties,
+				characterIndexes: characterIndexes,
+				font:             font,
+				forGlyphRange:    glyphRange
+			)
+
+			return glyphRange.length
 		}
 
 
@@ -443,7 +459,7 @@ internal class TextLayout {
 					let truncatedRange = NSRange(location: truncationLocation, length: text.length - truncationLocation)
 					layoutManager.invalidateGlyphs(forCharacterRange: truncatedRange, changeInLength: 0, actualCharacterRange: nil)
 					layoutManager.invalidateLayout(forCharacterRange: truncatedRange, actualCharacterRange: nil)
-					layoutManager.ensureLayout(forCharacterRange: truncatedRange)
+					layoutManager.ensureLayout(forBoundingRect: CGRect(size: textContainerSize), in: textContainer)
 
 					visibleGlyphRange = layoutManager.glyphRange(for: textContainer)
 
@@ -616,5 +632,34 @@ private class StaticInitialization: NSObject, StaticInitializable {
 		let defaultLinkAttributesSelector = obfuscatedSelector("_", "default", "Link", "Attributes")
 		copyMethod(selector: defaultLinkAttributesSelector, from: object_getClass(NSLayoutManager.self)!, to: object_getClass(TextLayout.LayoutManager.self)!)
 		swizzleMethod(in: object_getClass(TextLayout.LayoutManager.self)!, from: #selector(getter: TextLayout.LayoutManager.linkAttributes), to: defaultLinkAttributesSelector)
+	}
+}
+
+
+private extension NSAttributedString {
+
+	@nonobjc
+	func lineStyle(for range: NSRange) -> LineStyle {
+		var maximumFontSize: CGFloat?
+		var maximumParagraphSpacing: CGFloat?
+
+		enumerateAttributes(in: range, options: .longestEffectiveRangeNotRequired) { attributes, _, _ in
+			if let font = attributes[.font] as? UIFont {
+				maximumFontSize = optionalMax(maximumFontSize, font.pointSize)
+			}
+			if let paragraphStyle = attributes[.paragraphStyle] as? NSParagraphStyle {
+				maximumParagraphSpacing = optionalMax(maximumParagraphSpacing, paragraphStyle.paragraphSpacing)
+			}
+		}
+
+		return LineStyle(maximumFontSize: maximumFontSize, maximumParagraphSpacing: maximumParagraphSpacing)
+	}
+
+
+
+	struct LineStyle {
+
+		var maximumFontSize: CGFloat?
+		var maximumParagraphSpacing: CGFloat?
 	}
 }
