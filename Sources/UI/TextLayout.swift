@@ -115,12 +115,21 @@ internal class TextLayout {
 			fatalError("Line index \(line) is out of range 0 ..< \(numberOfLines)")
 		}
 
+		let scaleFactor = result.scaleFactor
 		var currentLine = 0
 		var rect = CGRect.null
 
 		layoutManager.enumerateLineFragments(forGlyphRange: result.glyphRange) { _, usedRect, _, _, stop in
 			if currentLine == line {
 				rect = usedRect
+
+				if scaleFactor < 1 {
+					rect.left *= scaleFactor
+					rect.top *= scaleFactor
+					rect.width *= scaleFactor
+					rect.height *= scaleFactor
+				}
+
 				stop.pointee = true
 			}
 
@@ -288,107 +297,6 @@ internal class TextLayout {
 		}
 
 
-		func layoutManager(
-			_ layoutManager: NSLayoutManager,
-			paragraphSpacingAfterGlyphAt glyphIndex: Int,
-			withProposedLineFragmentRect rect: CGRect
-		) -> CGFloat {
-			// paragraph spacing is handled in shouldSetLineFragmentRect delegte method
-			return 0
-		}
-
-
-		func layoutManager(
-			_ layoutManager: NSLayoutManager,
-			shouldSetLineFragmentRect lineFragmentRect: UnsafeMutablePointer<CGRect>,
-			lineFragmentUsedRect: UnsafeMutablePointer<CGRect>,
-			baselineOffset: UnsafeMutablePointer<CGFloat>,
-			in textContainer: NSTextContainer,
-			forGlyphRange glyphRange: NSRange
-		) -> Bool {
-			let characterRange = layoutManager.characterRange(forGlyphRange: glyphRange, actualGlyphRange: nil)
-			let lineStyle = configuration.text.lineStyle(for: characterRange)
-
-			if let paragraphSpacing = lineStyle.maximumParagraphSpacing, paragraphSpacing != 0 {
-				let lastCharacter = (configuration.text.string as NSString).character(at: characterRange.endLocation - 1)
-				if lastCharacter == 0x2029 { // <paragraph separator>
-					lineFragmentRect.pointee.heightFromTop += paragraphSpacing
-				}
-			}
-
-			if let fontSize = lineStyle.maximumFontSize {
-				let isFirstLine = glyphRange.location == 0
-				if isFirstLine {
-					baselineOffset.pointee -= (lineFragmentUsedRect.pointee.height - fontSize) / 2
-
-					// TODO This depends on this delegate method getting called exactly once at the beginning for the first line. Is there a better way?
-					firstLineBaselineOffsetFromBottom = lineFragmentUsedRect.pointee.height - baselineOffset.pointee
-				}
-				else {
-					baselineOffset.pointee = lineFragmentUsedRect.pointee.height - firstLineBaselineOffsetFromBottom
-				}
-			}
-
-			return true
-		}
-
-
-		func layoutManager(
-			_ layoutManager: NSLayoutManager,
-			shouldGenerateGlyphs glyphs: UnsafePointer<CGGlyph>,
-			properties: UnsafePointer<NSLayoutManager.GlyphProperty>,
-			characterIndexes: UnsafePointer<Int>,
-			font: UIFont,
-			forGlyphRange glyphRange: NSRange
-		) -> Int {
-			guard let truncationLocation = truncationLocation else {
-				return 0
-			}
-
-			let characterRange = NSRange(location: characterIndexes.pointee, length: characterIndexes[glyphRange.length - 1] + 1)
-			guard characterRange.endLocation > truncationLocation else {
-				return 0
-			}
-
-			var newGlyphs = Array(UnsafeBufferPointer(start: glyphs, count: glyphRange.length))
-			var newProperties = Array(UnsafeBufferPointer(start: properties, count: glyphRange.length))
-
-			if characterRange.contains(truncationLocation) {
-				var ellipsis: UniChar = 0x2026 // <ellipsis>
-				var ellipsisGlyph: CGGlyph = 0
-				if CTFontGetGlyphsForCharacters(font as CTFont, &ellipsis, &ellipsisGlyph, 1) {
-					for index in 0 ..< glyphRange.length {
-						let characterIndex = characterIndexes[index]
-						if characterIndex == truncationLocation {
-							newGlyphs[index] = ellipsisGlyph
-							newProperties[index] = []
-
-							break
-						}
-					}
-				}
-			}
-
-			for index in 0 ..< glyphRange.length {
-				let characterIndex = characterIndexes[index]
-				if characterIndex > truncationLocation {
-					newGlyphs[index] = kCGFontIndexInvalid
-					newProperties[index] = [] // .null sometimes causes blank space at the end of the text
-				}
-			}
-
-			layoutManager.setGlyphs(
-				newGlyphs,
-				properties:       newProperties,
-				characterIndexes: characterIndexes,
-				font:             font,
-				forGlyphRange:    glyphRange
-			)
-
-			return glyphRange.length
-		}
-
-
 		private func layout() -> Result {
 			guard let text = configuration.text.nonEmpty else {
 				return .empty(isTruncated: false)
@@ -508,6 +416,107 @@ internal class TextLayout {
 				textContainer:      textContainer,
 				textStorage:        textStorage
 			)
+		}
+
+
+		func layoutManager(
+			_ layoutManager: NSLayoutManager,
+			paragraphSpacingAfterGlyphAt glyphIndex: Int,
+			withProposedLineFragmentRect rect: CGRect
+		) -> CGFloat {
+			// paragraph spacing is handled in shouldSetLineFragmentRect delegte method
+			return 0
+		}
+
+
+		func layoutManager(
+			_ layoutManager: NSLayoutManager,
+			shouldSetLineFragmentRect lineFragmentRect: UnsafeMutablePointer<CGRect>,
+			lineFragmentUsedRect: UnsafeMutablePointer<CGRect>,
+			baselineOffset: UnsafeMutablePointer<CGFloat>,
+			in textContainer: NSTextContainer,
+			forGlyphRange glyphRange: NSRange
+		) -> Bool {
+			let characterRange = layoutManager.characterRange(forGlyphRange: glyphRange, actualGlyphRange: nil)
+			let lineStyle = configuration.text.lineStyle(for: characterRange)
+
+			if let paragraphSpacing = lineStyle.maximumParagraphSpacing, paragraphSpacing != 0 {
+				let lastCharacter = (configuration.text.string as NSString).character(at: characterRange.endLocation - 1)
+				if lastCharacter == 0x2029 { // <paragraph separator>
+					lineFragmentRect.pointee.heightFromTop += paragraphSpacing
+				}
+			}
+
+			if let fontSize = lineStyle.maximumFontSize {
+				let isFirstLine = glyphRange.location == 0
+				if isFirstLine {
+					baselineOffset.pointee -= (lineFragmentUsedRect.pointee.height - fontSize) / 2
+
+					// TODO This depends on this delegate method getting called exactly once at the beginning for the first line. Is there a better way?
+					firstLineBaselineOffsetFromBottom = lineFragmentUsedRect.pointee.height - baselineOffset.pointee
+				}
+				else {
+					baselineOffset.pointee = lineFragmentUsedRect.pointee.height - firstLineBaselineOffsetFromBottom
+				}
+			}
+
+			return true
+		}
+
+
+		func layoutManager(
+			_ layoutManager: NSLayoutManager,
+			shouldGenerateGlyphs glyphs: UnsafePointer<CGGlyph>,
+			properties: UnsafePointer<NSLayoutManager.GlyphProperty>,
+			characterIndexes: UnsafePointer<Int>,
+			font: UIFont,
+			forGlyphRange glyphRange: NSRange
+		) -> Int {
+			guard let truncationLocation = truncationLocation else {
+				return 0
+			}
+
+			let characterRange = NSRange(location: characterIndexes.pointee, length: characterIndexes[glyphRange.length - 1] + 1)
+			guard characterRange.endLocation > truncationLocation else {
+				return 0
+			}
+
+			var newGlyphs = Array(UnsafeBufferPointer(start: glyphs, count: glyphRange.length))
+			var newProperties = Array(UnsafeBufferPointer(start: properties, count: glyphRange.length))
+
+			if characterRange.contains(truncationLocation) {
+				var ellipsis: UniChar = 0x2026 // <ellipsis>
+				var ellipsisGlyph: CGGlyph = 0
+				if CTFontGetGlyphsForCharacters(font as CTFont, &ellipsis, &ellipsisGlyph, 1) {
+					for index in 0 ..< glyphRange.length {
+						let characterIndex = characterIndexes[index]
+						if characterIndex == truncationLocation {
+							newGlyphs[index] = ellipsisGlyph
+							newProperties[index] = []
+
+							break
+						}
+					}
+				}
+			}
+
+			for index in 0 ..< glyphRange.length {
+				let characterIndex = characterIndexes[index]
+				if characterIndex > truncationLocation {
+					newGlyphs[index] = kCGFontIndexInvalid
+					newProperties[index] = [] // .null sometimes causes blank space at the end of the text
+				}
+			}
+
+			layoutManager.setGlyphs(
+				newGlyphs,
+				properties:       newProperties,
+				characterIndexes: characterIndexes,
+				font:             font,
+				forGlyphRange:    glyphRange
+			)
+
+			return glyphRange.length
 		}
 	}
 

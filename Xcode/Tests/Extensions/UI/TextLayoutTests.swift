@@ -134,4 +134,53 @@ class TextLayoutTests: XCTestCase {
 		XCTAssertEqual(layout.rect(forLine: 2), CGRect(left: 0, top: 120, width: 157.29, height: 40), accuracy: 0.01)
 		XCTAssertEqual(layout.scaleFactor, 1)
 	}
+
+
+	func testRectForLine() {
+		let font = UIFont.systemFont(ofSize: 20)
+
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.lineBreakMode    = .byTruncatingTail
+		paragraphStyle.paragraphSpacing = 40
+		paragraphStyle.set(lineHeight: .relativeToFontSize(multipler: 2), with: font)
+
+		let string = NSMutableAttributedString()
+		string.appendString("long line long line long line long line long line long line long line long line long line long line long line long line", font: font, paragraphStyle: paragraphStyle)
+
+		let layout = TextLayout.build(
+			text:                 string,
+			lineBreakMode:        .byTruncatingTail,
+			maximumNumberOfLines: 1,
+			maximumSize:          CGSize(width: 320, height: 640),
+			minimumScaleFactor:   1,
+			renderingScale:       2
+		)
+
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 317.30, height: 40), accuracy: 0.01)
+	}
+
+
+	func testRectForLineWithScaling() {
+		let font = UIFont.systemFont(ofSize: 20)
+
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.lineBreakMode    = .byTruncatingTail
+		paragraphStyle.paragraphSpacing = 40
+		paragraphStyle.set(lineHeight: .relativeToFontSize(multipler: 2), with: font)
+
+		let string = NSMutableAttributedString()
+		string.appendString("long line long line long line long line long line long line long line long line long line long line long line long line", font: font, paragraphStyle: paragraphStyle)
+
+		let layout = TextLayout.build(
+			text:                 string,
+			lineBreakMode:        .byTruncatingTail,
+			maximumNumberOfLines: 1,
+			maximumSize:          CGSize(width: 320, height: 640),
+			minimumScaleFactor:   0.5,
+			renderingScale:       2
+		)
+
+		XCTAssertEqual(layout.scaleFactor, 0.5, accuracy: 0.01)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 320, height: 20.18), accuracy: 0.01)
+	}
 }
