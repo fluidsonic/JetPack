@@ -1,4 +1,4 @@
-language: objective-c
+language: swift
 osx_image: xcode10.2
 sudo: false
 
@@ -28,11 +28,3 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
-notifications:
-  slack:
-    rooms:
-      secure: O1mImcr+B50sT8mcrY5BbO2WKVfXXIwAGXTH0qgOjR1OEEaJWcg5xrkJbyO55DQEAMsoqaupA5DgFEgShGHZ94HWyr30z6qlCO/CEC9+syRV9vLV/s0CEmnGJDMCSK6gYqwcJsk7S1iawPWRVOPjt8QUZ7O5+c/mrfUitlf2BOY=
-    on_success: change
-    on_failure: change
-    on_start:   never
