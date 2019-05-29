@@ -1,6 +1,6 @@
 {
   "name": "JetPack",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "authors": {
     "Marc Knaup": "marc@knaup.io"
   },
@@ -13,15 +13,15 @@
   "module_map": "Module/JetPack.modulemap",
   "preserve_paths": "Sources/JetPack.swift",
   "platforms": {
-    "ios": "9.0",
-    "osx": "10.10"
+    "ios": "11.0",
+    "osx": "10.11"
   },
   "subspecs": [
     {
       "name": "Core",
       "platforms": {
-        "ios": "9.0",
-        "osx": "10.10"
+        "ios": "11.0",
+        "osx": "10.11"
       },
       "frameworks": "Foundation",
       "source_files": [
@@ -32,7 +32,7 @@
     {
       "name": "Deprecated",
       "platforms": {
-        "ios": "9.0"
+        "ios": "11.0"
       },
       "frameworks": "Foundation",
       "source_files": [
@@ -43,7 +43,7 @@
     {
       "name": "Experimental",
       "platforms": {
-        "ios": "9.0"
+        "ios": "11.0"
       },
       "frameworks": [
         "Foundation",
@@ -68,8 +68,8 @@
         {
           "name": "CoreGraphics",
           "platforms": {
-            "ios": "9.0",
-            "osx": "10.10"
+            "ios": "11.0",
+            "osx": "10.11"
           },
           "frameworks": "CoreGraphics",
           "source_files": [
@@ -85,8 +85,8 @@
         {
           "name": "CoreLocation",
           "platforms": {
-            "ios": "9.0",
-            "osx": "10.10"
+            "ios": "11.0",
+            "osx": "10.11"
           },
           "frameworks": "CoreLocation",
           "source_files": [
@@ -97,8 +97,8 @@
         {
           "name": "Darwin",
           "platforms": {
-            "ios": "9.0",
-            "osx": "10.10"
+            "ios": "11.0",
+            "osx": "10.11"
           },
           "source_files": [
             "Sources/Extensions/Darwin/**/*.swift",
@@ -108,8 +108,8 @@
         {
           "name": "Foundation",
           "platforms": {
-            "ios": "9.0",
-            "osx": "10.10"
+            "ios": "11.0",
+            "osx": "10.11"
           },
           "frameworks": "Foundation",
           "source_files": [
@@ -128,8 +128,8 @@
         {
           "name": "MapKit",
           "platforms": {
-            "ios": "9.0",
-            "osx": "10.10"
+            "ios": "11.0",
+            "osx": "10.11"
           },
           "frameworks": [
             "CoreLocation",
@@ -151,7 +151,7 @@
         {
           "name": "QuartzCore",
           "platforms": {
-            "ios": "9.0"
+            "ios": "11.0"
           },
           "frameworks": [
             "Foundation",
@@ -176,7 +176,7 @@
         {
           "name": "Photos",
           "platforms": {
-            "ios": "9.0"
+            "ios": "11.0"
           },
           "frameworks": "Photos",
           "source_files": [
@@ -187,8 +187,8 @@
         {
           "name": "Swift",
           "platforms": {
-            "ios": "9.0",
-            "osx": "10.10"
+            "ios": "11.0",
+            "osx": "10.11"
           },
           "frameworks": "Foundation",
           "source_files": [
@@ -207,7 +207,7 @@
         {
           "name": "UIKit",
           "platforms": {
-            "ios": "9.0"
+            "ios": "11.0"
           },
           "frameworks": [
             "CoreImage",
@@ -244,7 +244,7 @@
     {
       "name": "Measures",
       "platforms": {
-        "ios": "9.0"
+        "ios": "11.0"
       },
       "source_files": [
         "Sources/Measures/**/*.swift",
@@ -263,7 +263,7 @@
     {
       "name": "UI",
       "platforms": {
-        "ios": "9.0"
+        "ios": "11.0"
       },
       "frameworks": [
         "AVFoundation",

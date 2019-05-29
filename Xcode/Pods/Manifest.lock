@@ -1,55 +1,55 @@
 PODS:
-  - JetPack (0.0.3):
-    - JetPack/Core (= 0.0.3)
-    - JetPack/Deprecated (= 0.0.3)
-    - JetPack/Experimental (= 0.0.3)
-    - JetPack/Extensions (= 0.0.3)
-    - JetPack/Measures (= 0.0.3)
-    - JetPack/UI (= 0.0.3)
-  - JetPack/Core (0.0.3)
-  - JetPack/Deprecated (0.0.3)
-  - JetPack/Experimental (0.0.3):
+  - JetPack (0.0.4):
+    - JetPack/Core (= 0.0.4)
+    - JetPack/Deprecated (= 0.0.4)
+    - JetPack/Experimental (= 0.0.4)
+    - JetPack/Extensions (= 0.0.4)
+    - JetPack/Measures (= 0.0.4)
+    - JetPack/UI (= 0.0.4)
+  - JetPack/Core (0.0.4)
+  - JetPack/Deprecated (0.0.4)
+  - JetPack/Experimental (0.0.4):
     - JetPack/Core
     - JetPack/Extensions/Swift
-  - JetPack/Extensions (0.0.3):
-    - JetPack/Extensions/CoreGraphics (= 0.0.3)
-    - JetPack/Extensions/CoreLocation (= 0.0.3)
-    - JetPack/Extensions/Darwin (= 0.0.3)
-    - JetPack/Extensions/Foundation (= 0.0.3)
-    - JetPack/Extensions/MapKit (= 0.0.3)
-    - JetPack/Extensions/Photos (= 0.0.3)
-    - JetPack/Extensions/QuartzCore (= 0.0.3)
-    - JetPack/Extensions/Swift (= 0.0.3)
-    - JetPack/Extensions/UIKit (= 0.0.3)
-  - JetPack/Extensions/CoreGraphics (0.0.3):
+  - JetPack/Extensions (0.0.4):
+    - JetPack/Extensions/CoreGraphics (= 0.0.4)
+    - JetPack/Extensions/CoreLocation (= 0.0.4)
+    - JetPack/Extensions/Darwin (= 0.0.4)
+    - JetPack/Extensions/Foundation (= 0.0.4)
+    - JetPack/Extensions/MapKit (= 0.0.4)
+    - JetPack/Extensions/Photos (= 0.0.4)
+    - JetPack/Extensions/QuartzCore (= 0.0.4)
+    - JetPack/Extensions/Swift (= 0.0.4)
+    - JetPack/Extensions/UIKit (= 0.0.4)
+  - JetPack/Extensions/CoreGraphics (0.0.4):
     - JetPack/Extensions/Swift
-  - JetPack/Extensions/CoreLocation (0.0.3)
-  - JetPack/Extensions/Darwin (0.0.3)
-  - JetPack/Extensions/Foundation (0.0.3):
+  - JetPack/Extensions/CoreLocation (0.0.4)
+  - JetPack/Extensions/Darwin (0.0.4)
+  - JetPack/Extensions/Foundation (0.0.4):
     - JetPack/Core
     - JetPack/Extensions/Swift
-  - JetPack/Extensions/MapKit (0.0.3):
+  - JetPack/Extensions/MapKit (0.0.4):
     - JetPack/Extensions/CoreLocation
     - JetPack/Extensions/Swift
-  - JetPack/Extensions/Photos (0.0.3)
-  - JetPack/Extensions/QuartzCore (0.0.3):
+  - JetPack/Extensions/Photos (0.0.4)
+  - JetPack/Extensions/QuartzCore (0.0.4):
     - JetPack/Core
     - JetPack/Extensions/CoreGraphics
     - JetPack/Extensions/Foundation
-  - JetPack/Extensions/Swift (0.0.3):
+  - JetPack/Extensions/Swift (0.0.4):
     - JetPack/Core
     - JetPack/Extensions/Darwin
-  - JetPack/Extensions/UIKit (0.0.3):
+  - JetPack/Extensions/UIKit (0.0.4):
     - JetPack/Core
     - JetPack/Experimental
     - JetPack/Extensions/CoreGraphics
     - JetPack/Extensions/Foundation
     - JetPack/Extensions/QuartzCore
     - JetPack/Extensions/Swift
-  - JetPack/Measures (0.0.3):
+  - JetPack/Measures (0.0.4):
     - JetPack/Extensions/Foundation
     - JetPack/Extensions/Swift
-  - JetPack/UI (0.0.3):
+  - JetPack/UI (0.0.4):
     - JetPack/Core
     - JetPack/Extensions/CoreGraphics
     - JetPack/Extensions/Foundation
@@ -79,8 +79,8 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  JetPack: 201c20463cc181f4402f08e16bfc294c461b43bd
+  JetPack: 8e4dad00586b2a2a9525760303975eda793c7581
 
-PODFILE CHECKSUM: d4842a7748f5d8df675f7362316eec574c222096
+PODFILE CHECKSUM: 0b7a6d28ec42f795572bea7c5f4d61427c6b13ae
 
 COCOAPODS: 1.7.0

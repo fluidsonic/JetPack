@@ -2,53 +2,51 @@ import JetPack
 import XCTest
 
 
-internal struct EmptyStruct {}
+struct EmptyStruct {}
 
 
-internal final class EmptyEqualObject: CustomStringConvertible, Hashable {
+final class EmptyEqualObject: CustomStringConvertible, Hashable {
 
-	internal init() {}
+	init() {}
 
 
-	internal var description: String {
+	var description: String {
 		return "EmptyEqualObject(\(pointer(of: self)))"
 	}
 
 
-	internal var hashValue: Int {
-		return 0
-	}
+	func hash(into hasher: inout Hasher) {}
 }
 
 
-internal final class EmptyNonEqualObject: CustomStringConvertible, Hashable {
+final class EmptyNonEqualObject: CustomStringConvertible, Hashable {
 
-	internal init() {}
+	init() {}
 
 
-	internal var description: String {
+	var description: String {
 		return "EmptyNonEqualObject(\(pointer(of: self)))"
 	}
 
 
-	internal var hashValue: Int {
-		return ObjectIdentifier(self).hashValue
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(ObjectIdentifier(self))
 	}
 }
 
 
-internal func == (a: EmptyEqualObject, b: EmptyEqualObject) -> Bool {
+func == (a: EmptyEqualObject, b: EmptyEqualObject) -> Bool {
 	return true
 }
 
 
-internal func == (a: EmptyNonEqualObject, b: EmptyNonEqualObject) -> Bool {
+func == (a: EmptyNonEqualObject, b: EmptyNonEqualObject) -> Bool {
 	return a === b
 }
 
 
 
-internal func XCTAssertEqual<X: Equatable, Y: Equatable> (_ expression1: (X, Y)?, _ expression2: (X, Y)?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertEqual<X: Equatable, Y: Equatable> (_ expression1: (X, Y)?, _ expression2: (X, Y)?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertTrue(expression1.0 == expression2.0 && expression1.1 == expression2.1, file: file, line: line)
 		return
@@ -58,7 +56,7 @@ internal func XCTAssertEqual<X: Equatable, Y: Equatable> (_ expression1: (X, Y)?
 }
 
 
-internal func XCTAssertEqual<X: Equatable, Y: Equatable> (_ expression1: [(X, Y)]?, _ expression2: [(X, Y)]?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertEqual<X: Equatable, Y: Equatable> (_ expression1: [(X, Y)]?, _ expression2: [(X, Y)]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 
@@ -73,7 +71,7 @@ internal func XCTAssertEqual<X: Equatable, Y: Equatable> (_ expression1: [(X, Y)
 }
 
 
-internal func XCTAssertEqual<T: Equatable> (_ expression1: [T]?, _ expression2: [T]?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertEqual<T: Equatable> (_ expression1: [T]?, _ expression2: [T]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertEqual(expression1, expression2, file: file, line: line)
 		return
@@ -83,7 +81,7 @@ internal func XCTAssertEqual<T: Equatable> (_ expression1: [T]?, _ expression2: 
 }
 
 
-internal func XCTAssertEqual<T: Equatable> (_ expression1: [T?], _ expression2: [T?], file: StaticString = #file, line: UInt = #line) {
+func XCTAssertEqual<T: Equatable> (_ expression1: [T?], _ expression2: [T?], file: StaticString = #file, line: UInt = #line) {
 	XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 	for index in 0 ..< expression1.count {
 		XCTAssertEqual(expression1[index], expression2[index], file: file, line: line)
@@ -91,7 +89,7 @@ internal func XCTAssertEqual<T: Equatable> (_ expression1: [T?], _ expression2: 
 }
 
 
-internal func XCTAssertEqual<T: Equatable> (_ expression1: [T?]?, _ expression2: [T?]?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertEqual<T: Equatable> (_ expression1: [T?]?, _ expression2: [T?]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 		for index in 0 ..< expression1.count {
@@ -105,12 +103,12 @@ internal func XCTAssertEqual<T: Equatable> (_ expression1: [T?]?, _ expression2:
 }
 
 
-internal func XCTAssertIdentical<T: AnyObject> (_ expression1: T?, _ expression2: T?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertIdentical<T: AnyObject> (_ expression1: T?, _ expression2: T?, file: StaticString = #file, line: UInt = #line) {
 	XCTAssertTrue(expression1 === expression2, "\(String(describing: expression1)) is not identical to \(String(describing: expression2))", file: file, line: line)
 }
 
 
-internal func XCTAssertIdentical<T: AnyObject> (_ expression1: [T]?, _ expression2: [T]?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertIdentical<T: AnyObject> (_ expression1: [T]?, _ expression2: [T]?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 
@@ -125,7 +123,7 @@ internal func XCTAssertIdentical<T: AnyObject> (_ expression1: [T]?, _ expressio
 }
 
 
-internal func XCTAssertIdentical<T: AnyObject> (_ expression1: Set<T>?, _ expression2: Set<T>?, file: StaticString = #file, line: UInt = #line) {
+func XCTAssertIdentical<T: AnyObject> (_ expression1: Set<T>?, _ expression2: Set<T>?, file: StaticString = #file, line: UInt = #line) {
 	if let expression1 = expression1, let expression2 = expression2 {
 		XCTAssertEqual(expression1.count, expression2.count, file: file, line: line)
 
@@ -137,4 +135,12 @@ internal func XCTAssertIdentical<T: AnyObject> (_ expression1: Set<T>?, _ expres
 	}
 
 	XCTAssertTrue(expression1 == nil && expression2 == nil, file: file, line: line)
+}
+
+
+func XCTAssertEqual(_ expression1: CGRect, _ expression2: CGRect, accuracy: CGFloat, file: StaticString = #file, line: UInt = #line) {
+	XCTAssertEqual(expression1.origin.x, expression2.origin.x, accuracy: accuracy, file: file, line: line)
+	XCTAssertEqual(expression1.origin.y, expression2.origin.y, accuracy: accuracy, file: file, line: line)
+	XCTAssertEqual(expression1.width,    expression2.width,    accuracy: accuracy, file: file, line: line)
+	XCTAssertEqual(expression1.height,   expression2.height,   accuracy: accuracy, file: file, line: line)
 }

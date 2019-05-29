@@ -4,7 +4,7 @@ import UIKit
 extension NSAttributedString {
 
 	@nonobjc
-	public func capitalLetterSpacing(in range: NSRange, forLineHeight lineHeight: CGFloat? = nil, usingFontLeading: Bool = true) -> CapitalLetterSpacing? {
+	func capitalLetterSpacing(in range: NSRange, forLineHeight lineHeight: CGFloat? = nil, usingFontLeading: Bool = true) -> CapitalLetterSpacing? {
 		var smallestSpacingAboveCapitalLetters: CGFloat?
 		var smallestSpacingBelowCapitalLetters: CGFloat?
 
@@ -44,13 +44,13 @@ extension NSAttributedString {
 
 
 
-	public struct CapitalLetterSpacing {
+	struct CapitalLetterSpacing {
 
-		public var above: CGFloat
-		public var below: CGFloat
+		var above: CGFloat
+		var below: CGFloat
 
 
-		public init(above: CGFloat, below: CGFloat) {
+		init(above: CGFloat, below: CGFloat) {
 			self.above = above
 			self.below = below
 		}

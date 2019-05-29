@@ -88,6 +88,10 @@ end
 
 target 'UI' do
 	pod 'JetPack/UI', :path => '..'
+
+	target 'UI-Tests' do
+		pod 'JetPack/UI', :path => '..'
+	end
 end
 
 

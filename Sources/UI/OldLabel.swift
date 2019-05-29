@@ -1,12 +1,13 @@
 import UIKit
 
 
-open class Label: View {
+@objc(JetPack_OldLabel)
+open class OldLabel: View {
 
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
 
 	private let linkTapRecognizer = UITapGestureRecognizer()
-	private let textLayer = TextLayer()
+	private let textLayer = OldTextLayer()
 
 	open var linkTapped: ((URL) -> Void)?
 
@@ -20,6 +21,14 @@ open class Label: View {
 		layer.addSublayer(textLayer)
 
 		setUpLinkTapRecognizer()
+	}
+
+
+	@available(*, deprecated, message: "Use init() instead of init(highPrecision: true) since this is the new default. 'false' is deprecated.", renamed: "init()")
+	public convenience init(highPrecision: Bool) {
+		self.init()
+
+		textLayer.highPrecision = highPrecision
 	}
 
 
@@ -97,10 +106,18 @@ open class Label: View {
 	}
 
 
-	@available(*, deprecated, renamed: "letterSpacing")
 	open var kerning: TextLetterSpacing? {
-		get { return letterSpacing }
-		set { letterSpacing = newValue }
+		get { return textLayer.kerning }
+		set {
+			guard newValue != textLayer.kerning else {
+				return
+			}
+
+			textLayer.kerning = newValue
+
+			invalidateIntrinsicContentSize()
+			setNeedsLayout()
+		}
 	}
 
 
@@ -116,7 +133,7 @@ open class Label: View {
 		textLayer.isHidden = false
 
 		var textLayerFrame = CGRect()
-		textLayerFrame.size = textLayer.textSize(fitting: maximumTextLayerFrame.size)
+		textLayerFrame.size = textLayer.textSize(thatFits: maximumTextLayerFrame.size)
 
 		switch horizontalAlignment {
 		case .left,
@@ -145,22 +162,8 @@ open class Label: View {
 		case .bottom: textLayerFrame.bottom = maximumTextLayerFrame.bottom
 		}
 
+		textLayerFrame.insetInPlace(textLayer.contentInsets)
 		textLayer.frame = alignToGrid(textLayerFrame)
-	}
-
-
-	open var letterSpacing: TextLetterSpacing? {
-		get { return textLayer.letterSpacing }
-		set {
-			guard newValue != textLayer.letterSpacing else {
-				return
-			}
-
-			textLayer.letterSpacing = letterSpacing
-
-			invalidateIntrinsicContentSize()
-			setNeedsLayout()
-		}
 	}
 
 
@@ -179,14 +182,14 @@ open class Label: View {
 	}
 
 
-	open var lineHeight: TextLineHeight {
-		get { return textLayer.lineHeight }
+	open var lineHeightMultiple: CGFloat {
+		get { return textLayer.lineHeightMultiple }
 		set {
-			guard newValue != textLayer.lineHeight else {
+			guard newValue != textLayer.lineHeightMultiple else {
 				return
 			}
 
-			textLayer.lineHeight = newValue
+			textLayer.lineHeightMultiple = newValue
 
 			invalidateIntrinsicContentSize()
 			setNeedsLayout()
@@ -235,7 +238,7 @@ open class Label: View {
 			return .zero
 		}
 
-		return textLayer.textSize(fitting: availableSize).insetBy(padding.inverse)
+		return textLayer.textSize(thatFits: availableSize).insetBy(padding.inverse)
 	}
 
 
@@ -386,13 +389,12 @@ open class Label: View {
 	}
 
 
-
 	private final class DelegateProxy: NSObject, UIGestureRecognizerDelegate {
 
-		private unowned var label: Label
+		private unowned var label: OldLabel
 
 
-		init(label: Label) {
+		init(label: OldLabel) {
 			self.label = label
 		}
 

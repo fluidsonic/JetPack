@@ -4,10 +4,26 @@ import UIKit
 extension NSAttributedString {
 
 	@nonobjc
-	public func withDefaultAttributes(
+	func maximumFontSize(in range: NSRange) -> CGFloat? {
+		var maximumFontSize: CGFloat?
+
+		enumerateAttributes(in: range, options: .longestEffectiveRangeNotRequired) { attributes, _, _ in
+			guard let font = attributes[.font] as? UIFont else {
+				return
+			}
+
+			maximumFontSize = optionalMin(maximumFontSize, font.pointSize)
+		}
+
+		return maximumFontSize
+	}
+
+
+	@nonobjc
+	func withDefaultAttributes(
 		font: UIFont? = nil,
 		foregroundColor: UIColor? = nil,
-		kerning: TextKerning? = nil,
+		letterSpacing: TextLetterSpacing? = nil,
 		paragraphStyle: NSParagraphStyle? = nil,
 		transform: TextTransform? = nil
 	) -> NSMutableAttributedString {
@@ -27,10 +43,9 @@ extension NSAttributedString {
 			enumerateAttributes(in: NSRange(location: 0, length: length), options: .longestEffectiveRangeNotRequired) { attributes, range, _ in
 				var attributes = attributes
 
-				if let kerning = kerning {
-					let font = attributes[.font] as? UIFont ?? font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
-
-					attributes[.kern] = kerning.forFontSize(font.pointSize) as NSNumber
+				if let letterSpacing = letterSpacing {
+					let font = attributes[.font] as? UIFont ?? font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize) // TODO we can't resolve letter spacing here
+					attributes[.kern] = letterSpacing.at(fontSize: font.pointSize) as NSNumber
 				}
 
 				attributedString.addAttributes(attributes, range: range)

@@ -1,12 +1,14 @@
 import UIKit
 
 
-class TextLayer: Layer {
+class OldTextLayer: Layer {
 
 	private var configuration = Configuration()
 	private var normalTintAdjustmentMode = UIView.TintAdjustmentMode.normal
 	private var normalTintColor = UIColor.red
-	private var textLayout: TextLayout?
+	private var textLayout: OldTextLayout?
+
+	var highPrecision = true // TODO remove after migration period and make the default
 
 
 	override init() {
@@ -19,9 +21,10 @@ class TextLayer: Layer {
 
 
 	required init(layer: Any) {
-		let layer = layer as! TextLayer
+		let layer = layer as! OldTextLayer
 		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
+		highPrecision = layer.highPrecision
 		normalTextColor = layer.normalTextColor
 		normalTintAdjustmentMode = layer.normalTintAdjustmentMode
 		normalTintColor = layer.normalTintColor
@@ -76,9 +79,10 @@ class TextLayer: Layer {
 	}
 
 
-	private func buildTextLayout(maximumSize: CGSize) -> TextLayout {
-		return TextLayout.build(
+	private func buildTextLayout(maximumSize: CGSize) -> OldTextLayout {
+		return OldTextLayout.build(
 			text:                 configuration.finalText,
+			highPrecision:        highPrecision,
 			lineBreakMode:        configuration.lineBreakMode,
 			maximumNumberOfLines: configuration.maximumNumberOfLines,
 			maximumSize:          maximumSize,
@@ -95,6 +99,49 @@ class TextLayer: Layer {
 	}
 
 
+	var contentInsets: UIEdgeInsets {
+		return ensureTextLayout()?.contentInsets ?? .zero
+	}
+
+
+	private func convertPoint(point: CGPoint, fromTextLayout textLayout: OldTextLayout) -> CGPoint {
+		let contentInsets = textLayout.contentInsets
+
+		var pointFromTextLayout = point
+		pointFromTextLayout.left -= contentInsets.left
+		pointFromTextLayout.top -= contentInsets.top
+
+		return pointFromTextLayout
+	}
+
+
+	private func convertPoint(point: CGPoint, toTextLayout textLayout: OldTextLayout) -> CGPoint {
+		let contentInsets = textLayout.contentInsets
+
+		var pointInTextLayout = point
+		pointInTextLayout.left += contentInsets.left
+		pointInTextLayout.top += contentInsets.top
+
+		return pointInTextLayout
+	}
+
+
+	private func convertRect(rect: CGRect, fromTextLayout textLayout: OldTextLayout) -> CGRect {
+		var rectFromTextLayout = rect
+		rectFromTextLayout.origin = convertPoint(point: rectFromTextLayout.origin, fromTextLayout: textLayout)
+
+		return rectFromTextLayout
+	}
+
+
+	private func convertRect(rect: CGRect, toTextLayout textLayout: OldTextLayout) -> CGRect {
+		var rectFromTextLayout = rect
+		rectFromTextLayout.origin = convertPoint(point: rectFromTextLayout.origin, toTextLayout: textLayout)
+
+		return rectFromTextLayout
+	}
+
+
 	override func draw(in context: CGContext) {
 		super.draw(in: context)
 
@@ -106,7 +153,7 @@ class TextLayer: Layer {
 	}
 
 
-	private func ensureTextLayout() -> TextLayout? {
+	private func ensureTextLayout() -> OldTextLayout? {
 		if let textLayout = self.textLayout {
 			return textLayout
 		}
@@ -139,20 +186,20 @@ class TextLayer: Layer {
 	}
 
 
+	var kerning: TextLetterSpacing? {
+		get { return configuration.kerning }
+		set {
+			configuration.kerning = newValue
+			checkConfiguration()
+		}
+	}
+
+
 	private func invalidateTextLayout() {
 		_links = nil
 		textLayout = nil
 
 		setNeedsDisplay()
-	}
-
-
-	var letterSpacing: TextLetterSpacing? {
-		get { return configuration.letterSpacing }
-		set {
-			configuration.letterSpacing = newValue
-			checkConfiguration()
-		}
 	}
 
 
@@ -165,10 +212,10 @@ class TextLayer: Layer {
 	}
 
 
-	var lineHeight: TextLineHeight {
-		get { return configuration.lineHeight }
+	var lineHeightMultiple: CGFloat {
+		get { return configuration.lineHeightMultiple }
 		set {
-			configuration.lineHeight = newValue
+			configuration.lineHeightMultiple = newValue
 			checkConfiguration()
 		}
 	}
@@ -225,7 +272,7 @@ class TextLayer: Layer {
 		links = links.map { link in
 			var frames = [CGRect]()
 			textLayout.enumerateEnclosingRects(forCharacterRange: link.range) { enclosingRect in
-				frames.append(enclosingRect)
+				frames.append(convertRect(rect: enclosingRect, fromTextLayout: textLayout))
 			}
 
 			return Link(range: link.range, frames: frames, url: link.url)
@@ -323,7 +370,7 @@ class TextLayer: Layer {
 	}
 
 
-	func textSize(fitting maximumSize: CGSize) -> CGSize {
+	func textSize(thatFits maximumSize: CGSize) -> CGSize {
 		precondition(maximumSize.isPositive)
 
 		return buildTextLayout(maximumSize: maximumSize).size
@@ -421,10 +468,10 @@ class TextLayer: Layer {
 
 				let paragraphStyle = NSMutableParagraphStyle()
 				paragraphStyle.alignment = horizontalAlignment
+				paragraphStyle.lineHeightMultiple = lineHeightMultiple
 				paragraphStyle.maximumLineHeight = maximumLineHeight ?? 0
 				paragraphStyle.minimumLineHeight = minimumLineHeight ?? 0
 				paragraphStyle.paragraphSpacing = paragraphSpacing
-				paragraphStyle.set(lineHeight: lineHeight, with: font)
 
 				switch lineBreakMode {
 				case .byClipping, .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:
@@ -440,7 +487,7 @@ class TextLayer: Layer {
 
 				let finalText = text.withDefaultAttributes(
 					font:            font,
-					letterSpacing:   letterSpacing,
+					letterSpacing:   kerning,
 					paragraphStyle:  paragraphStyle,
 					transform:       textTransform
 				)
@@ -469,9 +516,9 @@ class TextLayer: Layer {
 		}
 
 
-		var letterSpacing: TextLetterSpacing? {
+		var kerning: TextLetterSpacing? {
 			didSet {
-				if letterSpacing != oldValue {
+				if kerning != oldValue {
 					_finalText = nil
 				}
 			}
@@ -487,9 +534,11 @@ class TextLayer: Layer {
 		}
 
 
-		var lineHeight = TextLineHeight.fontDefault {
+		var lineHeightMultiple = CGFloat(1) {
 			didSet {
-				if lineHeight != oldValue {
+				precondition(lineHeightMultiple > 0, ".lineHeightMultiple must be > 0")
+
+				if lineHeightMultiple != oldValue {
 					_finalText = nil
 				}
 			}
@@ -499,7 +548,7 @@ class TextLayer: Layer {
 		var maximumLineHeight: CGFloat? {
 			didSet {
 				if let maximumLineHeight = maximumLineHeight {
-					precondition(maximumLineHeight > 0, ".maximumLineHeight must be > 0 or nil")
+					precondition(maximumLineHeight > 0, ".maximumLineHeight must be > 0")
 				}
 
 				if maximumLineHeight != oldValue {
@@ -512,7 +561,7 @@ class TextLayer: Layer {
 		var maximumNumberOfLines: Int? = 1 {
 			didSet {
 				if let maximumNumberOfLines = maximumNumberOfLines {
-					precondition(maximumNumberOfLines > 0, ".maximumNumberOfLines must be > 0 or nil")
+					precondition(maximumNumberOfLines > 0, ".maximumNumberOfLines must be > 0")
 				}
 			}
 		}
@@ -521,7 +570,7 @@ class TextLayer: Layer {
 		var minimumLineHeight: CGFloat? {
 			didSet {
 				if let minimumLineHeight = minimumLineHeight {
-					precondition(minimumLineHeight > 0, ".minimumLineHeight must be > 0 or nil")
+					precondition(minimumLineHeight > 0, ".minimumLineHeight must be > 0")
 				}
 
 				if minimumLineHeight != oldValue {
