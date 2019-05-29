@@ -1,19 +1,6 @@
-#if swift(>=3.2)
+public extension SignedNumeric {
 
-	extension SignedNumeric {
-
-		public var absolute: Magnitude {
-			return magnitude
-		}
+	var absolute: Magnitude {
+		return magnitude
 	}
-
-#else
-
-	public extension AbsoluteValuable {
-
-		public var absolute: Self {
-			return Self.abs(self)
-		}
-	}
-
-#endif
+}

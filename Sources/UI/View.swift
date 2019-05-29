@@ -250,12 +250,7 @@ open class View: UIView {
 
 
 	open override var effectiveUserInterfaceLayoutDirection: UIUserInterfaceLayoutDirection {
-		if #available(iOS 10.0, *) {
-			return super.effectiveUserInterfaceLayoutDirection
-		}
-		else {
-			return UIView.userInterfaceLayoutDirection(for: self.semanticContentAttribute)
-		}
+		return super.effectiveUserInterfaceLayoutDirection
 	}
 
 

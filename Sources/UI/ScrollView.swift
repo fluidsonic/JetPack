@@ -17,9 +17,7 @@ open class ScrollView: UIScrollView {
 	public init() {
 		super.init(frame: .zero)
 
-		if #available(iOS 11.0, *) {
-			contentInsetAdjustmentBehavior = .never
-		}
+		contentInsetAdjustmentBehavior = .never
 	}
 
 
@@ -128,7 +126,6 @@ open class ScrollView: UIScrollView {
 
 
 	// reference implementation
-	
 	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		guard participatesInHitTesting else {
 			return nil
@@ -160,13 +157,11 @@ open class ScrollView: UIScrollView {
 	}
 
 
-	
 	public final override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
 		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
 	}
 
 
-	
 	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
 		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)

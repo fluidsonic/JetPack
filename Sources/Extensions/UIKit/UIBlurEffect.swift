@@ -5,13 +5,7 @@ public extension UIBlurEffect {
 
 	@nonobjc
 	fileprivate static let customBlurEffectType: UIBlurEffect.Type? = {
-		if #available(iOS 10, *) {
-			return NSClassFromString(["_", "UI", "Custom", "Blur", "Effect"].joined(separator: "")) as? UIBlurEffect.Type
-		}
-		else {
-			// The method is available on iOS 9 but it's implementation is broken and causes an endless recursion.
-			return nil
-		}
+		return NSClassFromString(["_", "UI", "Custom", "Blur", "Effect"].joined(separator: "")) as? UIBlurEffect.Type
 	}()
 
 

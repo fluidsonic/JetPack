@@ -30,8 +30,6 @@ open class ScrollViewController: ViewController {
 
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
-
-		automaticallyAdjustsScrollViewInsets = false
 	}
 
 
@@ -73,6 +71,7 @@ open class ScrollViewController: ViewController {
 		let child = SpecialScrollView()
 		child.bounces = false
 		child.canCancelContentTouches = true
+		child.contentInsetAdjustmentBehavior = .automatic
 		child.delaysContentTouches = true
 		child.delegate = self.delegateProxy
 		child.isPagingEnabled = true

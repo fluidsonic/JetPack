@@ -64,7 +64,7 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 			return false
 		}
 
-		UIApplication.shared.openURL(link)
+		UIApplication.shared.open(link, options: [:], completionHandler: nil)
 		return true
 	}
 
@@ -88,7 +88,7 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 			return false
 		}
 
-		UIApplication.shared.openURL(link)
+		UIApplication.shared.open(link, options: [:], completionHandler: nil)
 		return true
 	}
 
@@ -98,7 +98,7 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 			return false
 		}
 
-		UIApplication.shared.openURL(link)
+		UIApplication.shared.open(link, options: [:], completionHandler: nil)
 		return true
 	}
 
@@ -108,7 +108,7 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 			return false
 		}
 
-		UIApplication.shared.openURL(link)
+		UIApplication.shared.open(link, options: [:], completionHandler: nil)
 		return true
 	}
 

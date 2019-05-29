@@ -7,9 +7,7 @@ open class CollectionView: UICollectionView {
 	public init(collectionViewLayout layout: UICollectionViewLayout) {
 		super.init(frame: .zero, collectionViewLayout: layout)
 
-		if #available(iOS 11.0, *) {
-			contentInsetAdjustmentBehavior = .never
-		}
+		contentInsetAdjustmentBehavior = .never
 	}
 
 

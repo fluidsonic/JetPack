@@ -6,11 +6,9 @@ open class TableView: UITableView {
 
 	public init(style: UITableView.Style) {
 		super.init(frame: .zero, style: style)
-
-		if #available(iOS 11.0, *) {
-			contentInsetAdjustmentBehavior = .never
-			insetsContentViewsToSafeArea = false
-		}
+		
+		contentInsetAdjustmentBehavior = .never
+		insetsContentViewsToSafeArea = false
 	}
 
 

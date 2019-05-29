@@ -135,19 +135,7 @@ extension UIViewController {
 			outerDecorationInsets = parentViewController.computeOuterDecorationInsetsForChildViewController(self)
 		}
 		else {
-			var decorationInsets: UIEdgeInsets
-
-			if #available(iOS 11.0, *) {
-				decorationInsets = view.safeAreaInsets
-			}
-			else {
-				decorationInsets = UIEdgeInsets(
-					top:    topLayoutGuide.length,
-					left:   0,
-					bottom: bottomLayoutGuide.length,
-					right:  0
-				)
-			}
+			var decorationInsets = view.safeAreaInsets
 
 			let keyboardFrameInWindow = Keyboard.frameInView(window)
 			if !keyboardFrameInWindow.isNull {
