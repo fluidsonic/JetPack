@@ -30,8 +30,8 @@ class TextLayoutTests: XCTestCase {
 		XCTAssertEqual(layout.dependsOnTintColor, false)
 		XCTAssertEqual(layout.isTruncated, false)
 		XCTAssertEqual(layout.numberOfLines, 1)
-		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 457.43, height: 40), accuracy: 0.01)
-		XCTAssertEqual(layout.scaleFactor, 0.7, accuracy: 0.01)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 320, height: 27.98), accuracy: 0.05)
+		XCTAssertEqual(layout.scaleFactor, 0.7, accuracy: 0.05)
 	}
 
 
@@ -57,8 +57,8 @@ class TextLayoutTests: XCTestCase {
 		XCTAssertEqual(layout.dependsOnTintColor, false)
 		XCTAssertEqual(layout.isTruncated, true)
 		XCTAssertEqual(layout.numberOfLines, 1)
-		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 634.14, height: 40), accuracy: 0.01)
-		XCTAssertEqual(layout.scaleFactor, 0.5, accuracy: 0.01)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 320, height: 20.18), accuracy: 0.05)
+		XCTAssertEqual(layout.scaleFactor, 0.5, accuracy: 0.05)
 	}
 
 
@@ -93,9 +93,9 @@ class TextLayoutTests: XCTestCase {
 		XCTAssertEqual(layout.dependsOnTintColor, false)
 		XCTAssertEqual(layout.isTruncated, false)
 		XCTAssertEqual(layout.numberOfLines, 3)
-		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top:  0, width: 145.00, height: 40), accuracy: 0.01)
-		XCTAssertEqual(layout.rect(forLine: 1), CGRect(left: 0, top: 40, width: 144.55, height: 40), accuracy: 0.01)
-		XCTAssertEqual(layout.rect(forLine: 2), CGRect(left: 0, top: 80, width: 157.29, height: 40), accuracy: 0.01)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top:  0, width: 145.00, height: 40), accuracy: 0.05)
+		XCTAssertEqual(layout.rect(forLine: 1), CGRect(left: 0, top: 40, width: 144.55, height: 40), accuracy: 0.05)
+		XCTAssertEqual(layout.rect(forLine: 2), CGRect(left: 0, top: 80, width: 157.29, height: 40), accuracy: 0.05)
 		XCTAssertEqual(layout.scaleFactor, 1)
 	}
 
@@ -129,9 +129,9 @@ class TextLayoutTests: XCTestCase {
 		XCTAssertEqual(layout.dependsOnTintColor, false)
 		XCTAssertEqual(layout.isTruncated, false)
 		XCTAssertEqual(layout.numberOfLines, 3)
-		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top:   0, width: 145.00, height: 40), accuracy: 0.01)
-		XCTAssertEqual(layout.rect(forLine: 1), CGRect(left: 0, top:  40, width: 283.83, height: 80), accuracy: 0.01)
-		XCTAssertEqual(layout.rect(forLine: 2), CGRect(left: 0, top: 120, width: 157.29, height: 40), accuracy: 0.01)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top:   0, width: 145.00, height: 40), accuracy: 0.05)
+		XCTAssertEqual(layout.rect(forLine: 1), CGRect(left: 0, top:  40, width: 283.83, height: 80), accuracy: 0.05)
+		XCTAssertEqual(layout.rect(forLine: 2), CGRect(left: 0, top: 120, width: 157.29, height: 40), accuracy: 0.05)
 		XCTAssertEqual(layout.scaleFactor, 1)
 	}
 
@@ -156,7 +156,7 @@ class TextLayoutTests: XCTestCase {
 			renderingScale:       2
 		)
 
-		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 317.30, height: 40), accuracy: 0.01)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 317.30, height: 40), accuracy: 2) // width differs by more than 1pt between iOS 11 & 12
 	}
 
 
@@ -180,7 +180,7 @@ class TextLayoutTests: XCTestCase {
 			renderingScale:       2
 		)
 
-		XCTAssertEqual(layout.scaleFactor, 0.5, accuracy: 0.01)
-		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 320, height: 20.18), accuracy: 0.01)
+		XCTAssertEqual(layout.scaleFactor, 0.5, accuracy: 0.05)
+		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 320, height: 20.18), accuracy: 0.05)
 	}
 }
