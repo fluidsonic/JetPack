@@ -365,6 +365,12 @@ open class Label: View {
 	}
 
 
+	public var treatsLineFeedAsParagraphSeparator: Bool {
+		get { return textLayer.treatsLineFeedAsParagraphSeparator }
+		set { textLayer.treatsLineFeedAsParagraphSeparator = newValue }
+	}
+
+
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 

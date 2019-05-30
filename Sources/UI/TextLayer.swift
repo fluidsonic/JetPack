@@ -78,12 +78,13 @@ class TextLayer: Layer {
 
 	private func buildTextLayout(maximumSize: CGSize) -> TextLayout {
 		return TextLayout.build(
-			text:                 configuration.finalText,
-			lineBreakMode:        configuration.lineBreakMode,
-			maximumNumberOfLines: configuration.maximumNumberOfLines,
-			maximumSize:          maximumSize,
-			minimumScaleFactor:   configuration.minimumScaleFactor,
-			renderingScale:       contentsScale
+			text:                               configuration.finalText,
+			lineBreakMode:                      configuration.lineBreakMode,
+			maximumNumberOfLines:               configuration.maximumNumberOfLines,
+			maximumSize:                        maximumSize,
+			minimumScaleFactor:                 configuration.minimumScaleFactor,
+			renderingScale:                     contentsScale,
+			treatsLineFeedAsParagraphSeparator: configuration.treatsLineFeedAsParagraphSeparator
 		)
 	}
 
@@ -367,6 +368,22 @@ class TextLayer: Layer {
 	}
 
 
+	public var treatsLineFeedAsParagraphSeparator: Bool {
+		get { return configuration.treatsLineFeedAsParagraphSeparator }
+		set {
+			guard newValue != configuration.treatsLineFeedAsParagraphSeparator else {
+				return
+			}
+
+			configuration.treatsLineFeedAsParagraphSeparator = newValue
+
+			if attributedText.string.contains("\n" as Character) {
+				invalidateTextLayout()
+			}
+		}
+	}
+
+
 	private func updateActualTextColor() {
 		let actualTextColor = normalTextColor.tinted(with: normalTintColor, forAdjustmentMode: normalTintAdjustmentMode, dimsWithTint: textColorDimsWithTint).cgColor
 		guard actualTextColor != self.actualTextColor else {
@@ -570,6 +587,9 @@ class TextLayer: Layer {
 				}
 			}
 		}
+
+
+		var treatsLineFeedAsParagraphSeparator = false
 	}
 
 

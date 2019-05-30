@@ -20,7 +20,8 @@ internal class TextLayout {
 		maximumNumberOfLines: Int?,
 		maximumSize: CGSize,
 		minimumScaleFactor: CGFloat,
-		renderingScale: CGFloat
+		renderingScale: CGFloat,
+		treatsLineFeedAsParagraphSeparator: Bool
 	) -> TextLayout {
 		precondition(maximumSize.isPositive, "maximumSize must be positive")
 		precondition((0 ... 1).contains(minimumScaleFactor), "minimumScaleFactor must be in range 0 ... 1")
@@ -28,6 +29,11 @@ internal class TextLayout {
 
 		if let maximumNumberOfLines = maximumNumberOfLines {
 			precondition(maximumNumberOfLines > 0, "maximumNumberOfLines must be > 0, or nil")
+		}
+
+		var treatsLineFeedAsParagraphSeparator = treatsLineFeedAsParagraphSeparator
+		if treatsLineFeedAsParagraphSeparator && !text.string.contains("\n" as Character) {
+			treatsLineFeedAsParagraphSeparator = false // improve cache hits
 		}
 
 		var minimumScaleFactor = minimumScaleFactor
@@ -52,12 +58,13 @@ internal class TextLayout {
 		}
 
 		return reuseOrCreate(configuration: Configuration(
-			lineBreakMode:        lineBreakMode,
-			maximumNumberOfLines: maximumNumberOfLines,
-			maximumSize:          maximumSize,
-			minimumScaleFactor:   minimumScaleFactor,
-			renderingScale:       renderingScale,
-			text:                 text
+			lineBreakMode:                      lineBreakMode,
+			maximumNumberOfLines:               maximumNumberOfLines,
+			maximumSize:                        maximumSize,
+			minimumScaleFactor:                 minimumScaleFactor,
+			renderingScale:                     renderingScale,
+			text:                               text,
+			treatsLineFeedAsParagraphSeparator: treatsLineFeedAsParagraphSeparator
 		))
 	}
 
@@ -254,6 +261,7 @@ internal class TextLayout {
 		var minimumScaleFactor: CGFloat
 		var renderingScale: CGFloat
 		var text: NSAttributedString
+		var treatsLineFeedAsParagraphSeparator: Bool
 
 
 		fileprivate init(
@@ -262,7 +270,8 @@ internal class TextLayout {
 			maximumSize: CGSize,
 			minimumScaleFactor: CGFloat,
 			renderingScale: CGFloat,
-			text: NSAttributedString
+			text: NSAttributedString,
+			treatsLineFeedAsParagraphSeparator: Bool
 		) {
 			self.lineBreakMode = lineBreakMode
 			self.maximumNumberOfLines = maximumNumberOfLines
@@ -270,11 +279,12 @@ internal class TextLayout {
 			self.minimumScaleFactor = minimumScaleFactor
 			self.renderingScale = renderingScale
 			self.text = text
+			self.treatsLineFeedAsParagraphSeparator = treatsLineFeedAsParagraphSeparator
 		}
 
 
 		var debugDescription: String {
-			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(String(describing: maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)')"
+			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(String(describing: maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', treatsLineFeedAsParagraphSeparator: \(treatsLineFeedAsParagraphSeparator))"
 		}
 	}
 
@@ -442,7 +452,10 @@ internal class TextLayout {
 
 			if let paragraphSpacing = lineStyle.maximumParagraphSpacing, paragraphSpacing != 0 {
 				let lastCharacter = (configuration.text.string as NSString).character(at: characterRange.endLocation - 1)
-				if lastCharacter == 0x2029 { // <paragraph separator>
+				if
+					lastCharacter == 0x2029 || // <paragraph separator>
+					(configuration.treatsLineFeedAsParagraphSeparator && lastCharacter == 0x000A) // <line feed>
+				{
 					lineFragmentRect.pointee.heightFromTop += paragraphSpacing
 				}
 			}
