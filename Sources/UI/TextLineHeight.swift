@@ -20,7 +20,7 @@ public enum TextLineHeight: Equatable {
 
 
 
-extension NSParagraphStyle {
+public extension NSParagraphStyle {
 
 	func lineHeight(with font: UIFont) -> TextLineHeight {
 		let maximumLineHeight = self.maximumLineHeight
@@ -38,7 +38,7 @@ extension NSParagraphStyle {
 }
 
 
-extension NSMutableParagraphStyle {
+public extension NSMutableParagraphStyle {
 
 	func set(lineHeight: TextLineHeight, with font: UIFont) {
 		switch lineHeight {
