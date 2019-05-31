@@ -84,12 +84,14 @@ internal class TextLayout {
 			return
 		}
 
+		let origin = result.frame.origin
+
 		withoutActuallyEscaping(block) { block in
 			let scaleFactor = result.scaleFactor
 
 			let glyphRange = layoutManager.glyphRange(forCharacterRange: characterRange, actualCharacterRange: nil)
 			layoutManager.enumerateEnclosingRects(forGlyphRange: glyphRange, withinSelectedGlyphRange: .notFound, in: textContainer) { enclosingRect, _ in
-				var enclosingRect = enclosingRect
+				var enclosingRect = enclosingRect.offsetBy(dx: -origin.x, dy: -origin.y)
 				if scaleFactor < 1 {
 					enclosingRect.left *= scaleFactor
 					enclosingRect.top *= scaleFactor
@@ -126,9 +128,11 @@ internal class TextLayout {
 		var currentLine = 0
 		var rect = CGRect.null
 
+		let origin = result.frame.origin
+
 		layoutManager.enumerateLineFragments(forGlyphRange: result.glyphRange) { _, usedRect, _, _, stop in
 			if currentLine == line {
-				rect = usedRect
+				rect = usedRect.offsetBy(dx: -origin.x, dy: -origin.y)
 
 				if scaleFactor < 1 {
 					rect.left *= scaleFactor
@@ -181,7 +185,7 @@ internal class TextLayout {
 
 
 	var size: CGSize {
-		return result.size
+		return result.frame.size
 	}
 
 
@@ -238,7 +242,7 @@ internal class TextLayout {
 			}
 
 			let layoutMaximumSize = layout.configuration.maximumSize
-			let layoutSize = layout.result.size
+			let layoutSize = layout.result.frame.size
 
 			let acceptableHeights = min(layoutSize.height, layoutMaximumSize.height) ... max(layoutSize.height, layoutMaximumSize.height)
 			let acceptableWidths = min(layoutSize.width, layoutMaximumSize.width) ... max(layoutSize.width, layoutMaximumSize.width)
@@ -403,13 +407,16 @@ internal class TextLayout {
 			var numberOfLines = 0
 			layoutManager.enumerateLineFragments(forGlyphRange: visibleGlyphRange) { _, _, _, _, _ in numberOfLines += 1 }
 
-			var size = layoutManager.usedRect(for: textContainer).size
+			var frame = layoutManager.usedRect(for: textContainer)
 
 			// If scaling is allowed, figure out how much we had to scale in order to make the text fit.
 			let scaleFactor: CGFloat
 			if configuration.minimumScaleFactor < 1 {
-				scaleFactor = (configuration.maximumSize.width / size.width).coerced(atMost: 1)
-				size.scaleInPlace(scaleFactor)
+				scaleFactor = (configuration.maximumSize.width / frame.width).coerced(atMost: 1)
+
+				frame.origin.left *= scaleFactor
+				frame.origin.top *= scaleFactor
+				frame.size.scaleInPlace(scaleFactor)
 			}
 			else {
 				scaleFactor = 1
@@ -417,12 +424,12 @@ internal class TextLayout {
 
 			return Result(
 				dependsOnTintColor: dependsOnTintColor,
+				frame:              frame,
 				glyphRange:         visibleGlyphRange,
 				isTruncated:        isTruncated,
 				layoutManager:      layoutManager,
 				numberOfLines:      numberOfLines,
 				scaleFactor:        scaleFactor,
-				size:               size,
 				textContainer:      textContainer,
 				textStorage:        textStorage
 			)
@@ -577,8 +584,8 @@ internal class TextLayout {
 			self.tintColor = tintColor
 
 			layoutManager.delegate = self
-			layoutManager.drawBackground(forGlyphRange: glyphRange, at: .zero)
-			layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: .zero)
+			layoutManager.drawBackground(forGlyphRange: glyphRange, at: -layout.result.frame.origin)
+			layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: -layout.result.frame.origin)
 			layoutManager.delegate = nil
 
 			if scaleFactor < 1 {
@@ -620,12 +627,12 @@ internal class TextLayout {
 	private struct Result {
 
 		let dependsOnTintColor: Bool
+		let frame: CGRect
 		let glyphRange: NSRange
 		let isTruncated: Bool
 		let layoutManager: NSLayoutManager?
 		let numberOfLines: Int
 		let scaleFactor: CGFloat
-		let size: CGSize
 		let textContainer: NSTextContainer?
 		let textStorage: NSTextStorage? // NSLayoutManager only maintains a weak reference
 
@@ -633,12 +640,12 @@ internal class TextLayout {
 		static func empty(isTruncated: Bool) -> Result {
 			return Result(
 				dependsOnTintColor: false,
+				frame:              .zero,
 				glyphRange:         .notFound,
 				isTruncated:        isTruncated,
 				layoutManager:      nil,
 				numberOfLines:      0,
 				scaleFactor:        1,
-				size:               .zero,
 				textContainer:      nil,
 				textStorage:        nil
 			)

@@ -64,4 +64,9 @@ public extension CGPoint {
 		get { return y }
 		set { y = newValue }
 	}
+
+
+	static prefix func - (_ point: CGPoint) -> CGPoint {
+		return CGPoint(x: -point.x, y: -point.y)
+	}
 }
