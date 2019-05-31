@@ -1,6 +1,16 @@
 import UIKit
 
 
+public extension NSParagraphStyle {
+
+	static func build(_ build: (_ builder: NSMutableParagraphStyle) -> Void) -> NSParagraphStyle {
+		let builder = NSMutableParagraphStyle()
+		build(builder)
+		return builder
+	}
+}
+
+
 extension NSParagraphStyle {
 
 	public func effectiveLineHeight(for lineHeight: CGFloat) -> CGFloat {

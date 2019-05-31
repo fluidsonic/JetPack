@@ -189,6 +189,7 @@ extension UIView {
 	}
 
 
+	// FIXME make truncation the default
 	@nonobjc
 	public final func sizeThatFitsSize(_ maximumSize: CGSize, allowsTruncation: Bool) -> CGSize {
 		var fittingSize = sizeThatFitsSize(maximumSize)

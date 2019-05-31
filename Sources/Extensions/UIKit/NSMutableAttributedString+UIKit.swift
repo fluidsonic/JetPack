@@ -26,7 +26,7 @@ public extension NSMutableAttributedString {
 			attributes[.paragraphStyle] = paragraphStyle
 		}
 
-		appendString(string, maintainingPrecedingAttributes: maintainingPrecedingAttributes, additionalAttributes: attributes)
+		append(string, attributes: attributes, maintainingPrecedingAttributes: maintainingPrecedingAttributes)
 	}
 
 

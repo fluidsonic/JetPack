@@ -2,7 +2,7 @@ import UIKit
 
 
 @objc(JetPack_ScrollViewController)
-open class ScrollViewController: ViewController {
+open class ScrollViewController: ViewController { // TODO rename
 
 	public typealias ScrollCompletion = (_ cancelled: Bool) -> Void
 

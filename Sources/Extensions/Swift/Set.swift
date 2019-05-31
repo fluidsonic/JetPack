@@ -32,7 +32,13 @@ extension Set {
 	}
 
 
+	@available(*, deprecated, renamed: "mapToSet")
 	public func mapAsSet<MappedElement>(transform: (Iterator.Element) throws -> MappedElement) rethrows -> Set<MappedElement> {
+		return try mapToSet(transform)
+	}
+
+
+	public func mapToSet<MappedElement>(_ transform: (Element) throws -> MappedElement) rethrows -> Set<MappedElement> {
 		var mappedSet = Set<MappedElement>(minimumCapacity: count)
 		for element in self {
 			mappedSet.insert(try transform(element))

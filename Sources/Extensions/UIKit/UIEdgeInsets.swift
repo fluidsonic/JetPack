@@ -53,6 +53,10 @@ public extension UIEdgeInsets {
 	}
 
 
+	func copy(top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> UIEdgeInsets {
+		return UIEdgeInsets(top: top ?? self.top, left: left ?? self.left, bottom: bottom ?? self.bottom, right: right ?? self.right)
+	}
+
 	
 	func increaseBy(_ insets: UIEdgeInsets) -> UIEdgeInsets {
 		return UIEdgeInsets(top: top + insets.top, left: left + insets.left, bottom: bottom + insets.bottom, right: right + insets.right)

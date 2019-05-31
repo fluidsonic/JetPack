@@ -1,6 +1,5 @@
 public extension Dictionary {
 
-	
 	func filterAsDictionary(includeElement: (_ key: Key, _ value: Value) throws -> Bool) rethrows -> [Key : Value] {
 		var filteredDictionary = [Key : Value]()
 		for (key, value) in self where try includeElement(key, value) {
@@ -48,6 +47,13 @@ public extension Dictionary {
 		for (key, value) in self {
 			self[key] = try transform(value)
 		}
+	}
+
+
+	func plus(_ other: [Key : Value]) -> [Key : Value] {
+		var merged = self
+		merged.updateValues(other)
+		return merged
 	}
 
 
