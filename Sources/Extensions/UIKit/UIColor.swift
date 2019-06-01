@@ -175,11 +175,14 @@ public extension UIColor {
 		let fraction = 1 - overlayComponents.alpha
 		let overlayFraction = overlayComponents.alpha
 
+		let maxAlpha = max(components.alpha, overlayComponents.alpha)
+		let minAlpha = min(components.alpha, overlayComponents.alpha)
+
 		return UIColor(
 			red:   (components.red   * fraction) + (overlayComponents.red   * overlayFraction),
 			green: (components.green * fraction) + (overlayComponents.green * overlayFraction),
 			blue:  (components.blue  * fraction) + (overlayComponents.blue  * overlayFraction),
-			alpha: components.alpha
+			alpha: maxAlpha + (((1 - maxAlpha)) * minAlpha)
 		)
 	}
 

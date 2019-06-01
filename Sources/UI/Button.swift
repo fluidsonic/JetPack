@@ -254,7 +254,7 @@ open class Button: View {
 	}
 
 
-	private func layoutForSize(_ size: CGSize) -> Layout {
+	private func layout(for size: CGSize) -> Layout {
 		if size.isEmpty {
 			return Layout()
 		}
@@ -274,7 +274,8 @@ open class Button: View {
 		let imageView: ImageView? = wantsImage ? self.imageView : nil
 		let textLabel: Label? = wantsText ? self.textLabel : nil
 
-		var remainingSize = size
+		let padding = self.padding
+		var remainingSize = size.insetBy(padding)
 
 		var activityIndicatorFrame = CGRect()
 		var imageViewFrame = CGRect()
@@ -293,7 +294,6 @@ open class Button: View {
 
 		switch arrangement {
 		case .imageBottom, .imageTop: // vertical
-
 			// step 2: measure sizes
 
 			if let imageView = imageView {
@@ -408,7 +408,6 @@ open class Button: View {
 			}
 
 		case .imageLeft, .imageRight: // horizontal
-
 			// step 2: measure sizes
 
 			if let imageView = imageView {
@@ -522,7 +521,6 @@ open class Button: View {
 			}
 
 		case .imageBehindText:
-
 			// step 2: measure sizes
 
 			if let imageView = imageView {
@@ -600,6 +598,14 @@ open class Button: View {
 			activityIndicatorFrame.center = imageViewFrame.center
 		}
 
+		// step 8: apply padding
+		activityIndicatorFrame.left += padding.left
+		activityIndicatorFrame.top += padding.top
+		imageViewFrame.left += padding.left
+		imageViewFrame.top += padding.top
+		textLabelFrame.left += padding.left
+		textLabelFrame.top += padding.top
+
 		return Layout(
 			activityIndicatorFrame: wantsActivityIndicator ? alignToGrid(activityIndicatorFrame) : nil,
 			imageViewFrame:         (wantsImage && !wantsActivityIndicator) ? alignToGrid(imageViewFrame) : nil,
@@ -609,7 +615,7 @@ open class Button: View {
 
 
 	open override func layoutSubviews() {
-		let layout = layoutForSize(bounds.size)
+		let layout = self.layout(for: bounds.size)
 
 		var subviewIndex = subviews.count
 		if let imageView = _imageView, let index = subviews.indexOfIdentical(imageView) {
@@ -628,8 +634,7 @@ open class Button: View {
 			}
 			subviewIndex += 1
 
-			imageView.bounds = CGRect(size: imageViewFrame.size)
-			imageView.center = imageViewFrame.center
+			imageView.untransformedFrame = imageViewFrame
 		}
 		else {
 			_imageView?.removeFromSuperview()
@@ -641,8 +646,7 @@ open class Button: View {
 			}
 			subviewIndex += 1
 
-			textLabel.bounds = CGRect(size: textLabelFrame.size)
-			textLabel.center = textLabelFrame.center
+			textLabel.untransformedFrame = textLabelFrame
 		}
 		else {
 			_textLabel?.removeFromSuperview()
@@ -655,8 +659,7 @@ open class Button: View {
 				activityIndicator.startAnimating()
 			}
 
-			activityIndicator.bounds = CGRect(size: activityIndicatorFrame.size)
-			activityIndicator.center = activityIndicatorFrame.center
+			activityIndicator.untransformedFrame = activityIndicatorFrame
 		}
 		else {
 			_activityIndicator?.removeFromSuperview()
@@ -676,6 +679,9 @@ open class Button: View {
 
 
 	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
+		let padding = self.padding
+		let availableSize = availableSize.insetBy(padding)
+
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
 		let wantsImage = (_imageView?.image != nil || _imageView?.source != nil)
 		let wantsText = !(_textLabel?.text.isEmpty ?? true)
@@ -757,7 +763,19 @@ open class Button: View {
 			}
 		}
 
-		return fittingSize
+		return fittingSize.insetBy(padding.inverse)
+	}
+
+
+	open var padding = UIEdgeInsets.zero {
+		didSet {
+			guard padding != oldValue else {
+				return
+			}
+
+			setNeedsLayout()
+			invalidateIntrinsicContentSize()
+		}
 	}
 
 

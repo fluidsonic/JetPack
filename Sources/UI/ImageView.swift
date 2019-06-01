@@ -15,12 +15,12 @@ open class ImageView: View {
 	fileprivate var isSettingImageFromSource = false
 	fileprivate var isSettingSource = false
 	fileprivate var isSettingSourceFromImage = false
-	fileprivate var lastAppliedTintColor: UIColor?
+	fileprivate var lastAppliedImageColor: UIColor?
 	fileprivate var lastLayoutedSize = CGSize()
 	fileprivate var sourceImageRetrievalCompleted = false
 	fileprivate var sourceSession: Session?
 	fileprivate var sourceSessionConfigurationIsValid = true
-	fileprivate var tintedImage: UIImage?
+	fileprivate var colorizedImage: UIImage?
 
 	public var imageChanged: Closure?
 	public var sourceTransitionDuration = TimeInterval(0)
@@ -236,7 +236,7 @@ open class ImageView: View {
 				isSettingSourceFromImage = false
 			}
 
-			lastAppliedTintColor = nil
+			lastAppliedImageColor = nil
 
 			setNeedsLayout()
 
@@ -245,6 +245,17 @@ open class ImageView: View {
 			}
 
 			updateActivityIndicatorAnimated(true)
+		}
+	}
+
+
+	open var imageColor = UIColor.tint {
+		didSet {
+			guard imageColor != oldValue else {
+				return
+			}
+
+			setNeedsLayout()
 		}
 	}
 
@@ -285,17 +296,18 @@ open class ImageView: View {
 		imageLayer.position = imageLayerFrame.center
 
 		if let image = image, image.renderingMode == .alwaysTemplate {
-			if tintColor != lastAppliedTintColor {
-				lastAppliedTintColor = tintColor
+			let actualImageColor = imageColor.tinted(for: self, dimsWithTint: true)
+			if actualImageColor != lastAppliedImageColor {
+				lastAppliedImageColor = actualImageColor
 
-				tintedImage = image.imageWithColor(tintColor)
+				colorizedImage = image.imageWithColor(actualImageColor)
 			}
 		}
 		else {
-			tintedImage = nil
+			colorizedImage = nil
 		}
 
-		if let contentImage = tintedImage ?? image {
+		if let contentImage = colorizedImage ?? image {
 			imageLayer.contents = contentImage.cgImage
 			imageLayer.contentsScale = contentImage.scale
 			imageLayer.transform = CATransform3DMakeAffineTransform(computeImageLayerTransform())
@@ -556,7 +568,9 @@ open class ImageView: View {
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		setNeedsLayout()
+		if imageColor.isTint {
+			setNeedsLayout()
+		}
 	}
 
 
