@@ -467,17 +467,17 @@ internal class TextLayout {
 				}
 			}
 
-			if let fontSize = lineStyle.maximumFontSize {
-				let isFirstLine = glyphRange.location == 0
-				if isFirstLine {
-					baselineOffset.pointee -= (lineFragmentUsedRect.pointee.height - fontSize) / 2
+			let isFirstLine = glyphRange.location == 0
+			if isFirstLine {
+				if let maximumFontLineHeight = lineStyle.maximumFontLineHeight, let offsetForVerticalCentering = lineStyle.offsetForVerticalCentering {
+					baselineOffset.pointee += offsetForVerticalCentering + ((maximumFontLineHeight - lineFragmentUsedRect.pointee.height) / 2)
+				}
 
-					// TODO This depends on this delegate method getting called exactly once at the beginning for the first line. Is there a better way?
-					firstLineBaselineOffsetFromBottom = lineFragmentUsedRect.pointee.height - baselineOffset.pointee
-				}
-				else {
-					baselineOffset.pointee = lineFragmentUsedRect.pointee.height - firstLineBaselineOffsetFromBottom
-				}
+				// TODO This depends on this delegate method getting called exactly once at the beginning for the first line. Is there a better way?
+				firstLineBaselineOffsetFromBottom = lineFragmentUsedRect.pointee.height - baselineOffset.pointee
+			}
+			else {
+				baselineOffset.pointee = lineFragmentUsedRect.pointee.height - firstLineBaselineOffsetFromBottom
 			}
 
 			return true
@@ -669,26 +669,36 @@ private extension NSAttributedString {
 
 	@nonobjc
 	func lineStyle(for range: NSRange) -> LineStyle {
-		var maximumFontSize: CGFloat?
+		var maximumFontLineHeight: CGFloat?
 		var maximumParagraphSpacing: CGFloat?
+		var offsetForVerticalCentering: CGFloat?
 
 		enumerateAttributes(in: range, options: .longestEffectiveRangeNotRequired) { attributes, _, _ in
-			if let font = attributes[.font] as? UIFont {
-				maximumFontSize = optionalMax(maximumFontSize, font.pointSize)
-			}
 			if let paragraphStyle = attributes[.paragraphStyle] as? NSParagraphStyle {
 				maximumParagraphSpacing = optionalMax(maximumParagraphSpacing, paragraphStyle.paragraphSpacing)
 			}
+			if let font = attributes[.font] as? UIFont {
+				let topSpace = font.ascender - font.capHeight
+				let bottomSpace = -font.descender
+				offsetForVerticalCentering = optionalMin(offsetForVerticalCentering, (bottomSpace - topSpace) / 2)
+
+				maximumFontLineHeight = optionalMax(maximumFontLineHeight, font.lineHeight)
+			}
 		}
 
-		return LineStyle(maximumFontSize: maximumFontSize, maximumParagraphSpacing: maximumParagraphSpacing)
+		return LineStyle(
+			maximumFontLineHeight:      maximumFontLineHeight,
+			maximumParagraphSpacing:    maximumParagraphSpacing,
+			offsetForVerticalCentering: offsetForVerticalCentering
+		)
 	}
 
 
 
 	struct LineStyle {
 
-		var maximumFontSize: CGFloat?
+		var maximumFontLineHeight: CGFloat?
 		var maximumParagraphSpacing: CGFloat?
+		var offsetForVerticalCentering: CGFloat?
 	}
 }
