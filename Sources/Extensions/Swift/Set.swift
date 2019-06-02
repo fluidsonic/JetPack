@@ -61,3 +61,8 @@ extension Set {
 		return self
 	}
 }
+
+
+public func setOf<Element: Hashable>(_ elements: Element...) -> Set<Element> {
+	return elements.toSet()
+}
