@@ -8,21 +8,45 @@ public extension ImageView {
 
 	struct UrlSource: ImageView.Source, Equatable {
 
+		fileprivate var url: URL
+
+		public var cacheDuration: TimeInterval?
 		public var considersOptimalImageSize = true
 		public var isTemplate: Bool
 		public var placeholder: UIImage?
-		public var url: URL
 
 
-		public init(url: URL, isTemplate: Bool = false, placeholder: UIImage? = nil) {
-			self.isTemplate = isTemplate
-			self.placeholder = placeholder
-			self.url = url
+		public var urlRequest: URLRequest {
+			didSet {
+				guard let url = urlRequest.url else {
+					preconditionFailure("urlRequest.url must not be nil")
+				}
+
+				self.url = url
+			}
 		}
 
 
-		public static func cachedImageForUrl(_ url: URL) -> UIImage? {
-			return ImageCache.sharedInstance.imageForKey(url as AnyObject)
+		public init(url: URL, isTemplate: Bool = false, placeholder: UIImage? = nil, cacheDuration: TimeInterval? = nil) {
+			self.init(urlRequest: URLRequest(url: url), isTemplate: isTemplate, placeholder: placeholder, cacheDuration: cacheDuration)
+		}
+
+
+		public init(urlRequest: URLRequest, isTemplate: Bool = false, placeholder: UIImage? = nil, cacheDuration: TimeInterval? = nil) {
+			guard let url = urlRequest.url else {
+				preconditionFailure("urlRequest.url must not be nil")
+			}
+
+			self.cacheDuration = cacheDuration
+			self.isTemplate = isTemplate
+			self.placeholder = placeholder
+			self.url = url
+			self.urlRequest = urlRequest
+		}
+
+
+		public static func cachedImage(for url: URL) -> UIImage? {
+			return ImageCache.sharedInstance.image(for: url as NSURL)
 		}
 
 
@@ -31,36 +55,50 @@ public extension ImageView {
 		}
 
 
-		public static func preload(url: URL) {
-			_ = ImageDownloader.forUrl(url).download { _ in }
+		public static func preload(url: URL, cacheDuration: TimeInterval? = nil) -> Closure {
+			assert(queue: .main)
+
+			return preload(urlRequest: URLRequest(url: url))
+		}
+
+
+		public static func preload(urlRequest: URLRequest, cacheDuration: TimeInterval? = nil) -> Closure {
+			assert(queue: .main)
+
+			guard urlRequest.url != nil else {
+				preconditionFailure("urlRequest.url must not be nil")
+			}
+
+			return ImageDownloadCoordinator.sharedInstance.download(request: urlRequest, cacheDuration: cacheDuration) { _ in }
+		}
+
+
+		public static func == (a: ImageView.UrlSource, b: ImageView.UrlSource) -> Bool {
+			return a.urlRequest == b.urlRequest && a.isTemplate == b.isTemplate
 		}
 	}
-}
-
-
-public func == (a: ImageView.UrlSource, b: ImageView.UrlSource) -> Bool {
-	return a.url == b.url && a.isTemplate == b.isTemplate
 }
 
 
 
 private final class UrlSourceSession: ImageView.Session {
 
-	fileprivate let source: ImageView.UrlSource
-	fileprivate var stopLoading: Closure?
+	private var stopLoading: Closure?
+
+	let source: ImageView.UrlSource
 
 
-	fileprivate init(source: ImageView.UrlSource) {
+	init(source: ImageView.UrlSource) {
 		self.source = source
 	}
 
 
-	fileprivate func imageViewDidChangeConfiguration(_ imageView: ImageView) {
+	func imageViewDidChangeConfiguration(_ imageView: ImageView) {
 		// ignore
 	}
 
 
-	fileprivate func startRetrievingImageForImageView(_ imageView: ImageView, listener: ImageView.SessionListener) {
+	func startRetrievingImageForImageView(_ imageView: ImageView, listener: ImageView.SessionListener) {
 		precondition(stopLoading == nil)
 
 		var isLoadingImage = true
@@ -78,10 +116,15 @@ private final class UrlSourceSession: ImageView.Session {
 
 		if source.url.isFileURL && source.considersOptimalImageSize {
 			let optimalImageSize = imageView.optimalImageSize.scaleBy(imageView.optimalImageScale)
-			stopLoading = ImageFileLoader.forUrl(source.url, size: max(optimalImageSize.width, optimalImageSize.height)).load(completion)
+			stopLoading = ImageFileLoader.forURL(source.url, size: max(optimalImageSize.width, optimalImageSize.height))
+				.load(completion: completion)
 		}
 		else {
-			stopLoading = ImageDownloader.forUrl(source.url).download(completion)
+			stopLoading = ImageDownloadCoordinator.sharedInstance.download(
+				request:       source.urlRequest,
+				cacheDuration: source.cacheDuration,
+				completion:    completion
+			)
 		}
 
 		if isLoadingImage, let placeholder = source.placeholder {
@@ -90,7 +133,7 @@ private final class UrlSourceSession: ImageView.Session {
 	}
 
 
-	fileprivate func stopRetrievingImage() {
+	func stopRetrievingImage() {
 		guard let stopLoading = stopLoading else {
 			return
 		}
@@ -105,175 +148,341 @@ private final class UrlSourceSession: ImageView.Session {
 
 private final class ImageCache {
 
-	fileprivate let cache = NSCache<AnyObject, AnyObject>()
+	private let cache = NSCache<AnyObject, UIImage>()
 
 
-	fileprivate init() {}
+	private init() {}
 
 
-	fileprivate func costForImage(_ image: UIImage) -> Int {
+	private func cost(for image: UIImage) -> Int {
 		guard let cgImage = image.cgImage else {
 			return 0
 		}
 
-		// TODO does CGImageGetHeight() include the scale?
+		// TODO does cgImage.height include the scale?
 		return cgImage.bytesPerRow * cgImage.height
 	}
 
 
-	fileprivate func imageForKey(_ key: AnyObject) -> UIImage? {
-		return cache.object(forKey: key) as? UIImage
+	func image(for key: AnyObject) -> UIImage? {
+		return cache.object(forKey: key)
 	}
 
 
-	fileprivate func setImage(_ image: UIImage, forKey key: AnyObject) {
-		cache.setObject(image, forKey: key, cost: costForImage(image))
+	func set(image: UIImage, for key: AnyObject) {
+		cache.setObject(image, forKey: key, cost: cost(for: image))
 	}
 
 
-	fileprivate static let sharedInstance = ImageCache()
+	static let sharedInstance = ImageCache()
 }
 
 
 
-private class ImageDownloader {
+private final class ImageDownloadCoordinator: NSObject {
 
-	fileprivate typealias Completion = (UIImage) -> Void
+	typealias Completion = (UIImage) -> Void
 
-	fileprivate static var downloaders = [URL : ImageDownloader]()
-
-	fileprivate var completions = [Int : Completion]()
-	fileprivate var image: UIImage?
-	fileprivate var nextId = 0
-	fileprivate var task: URLSessionDataTask?
-	fileprivate let url: URL
+	static let sharedInstance = ImageDownloadCoordinator()
 
 
-	fileprivate init(url: URL) {
-		self.url = url
+	private var downloaders = [URL : Downloader]()
+
+	private let operationQueue: OperationQueue = {
+		let queue = OperationQueue()
+		queue.maxConcurrentOperationCount = 3
+		queue.name = "JetPack.ImageDownloadCoordinator"
+		queue.qualityOfService = .utility
+		return queue
+	}()
+
+	private lazy var urlSession = URLSession(
+		configuration: URLSession.shared.configuration,
+		delegate:      self,
+		delegateQueue: operationQueue
+	)
+
+
+	private override init() {
+		super.init()
 	}
 
 
-	fileprivate func cancelCompletionWithId(_ id: Int) {
-		completions[id] = nil
+	func download(request: URLRequest, cacheDuration: TimeInterval?, completion: @escaping Completion) -> CancelClosure {
+		assert(queue: .main)
 
-		if completions.isEmpty {
-			onMainQueue { // wait one cycle. maybe someone canceled just to retry immediately
-				if self.completions.isEmpty {
-					self.cancelDownload()
-				}
-			}
+		guard let url = request.url else {
+			fatalError("Cannot handle URLRequest without url")
 		}
-	}
 
-
-	fileprivate func cancelDownload() {
-		precondition(completions.isEmpty)
-
-		task?.cancel()
-		task = nil
-	}
-
-
-	fileprivate func download(_ completion: @escaping Completion) -> CancelClosure {
-		if let image = image {
-			completion(image)
+		let downloader = self.downloader(for: url)
+		guard let cancel = downloader.download(session: urlSession, request: request, cacheDuration: cacheDuration, completion: completion) else {
+			downloaders[url] = nil
 			return {}
 		}
 
-		if let image = ImageCache.sharedInstance.imageForKey(url as AnyObject) {
-			self.image = image
-
-			runAllCompletions()
-			cancelDownload()
-
-			completion(image)
-			return {}
-		}
-
-		let id = nextId
-		nextId += 1
-
-		completions[id] = completion
-
-		startDownload()
-
-		return {
-			self.cancelCompletionWithId(id)
-		}
+		return cancel
 	}
 
 
-	fileprivate static func forUrl(_ url: URL) -> ImageDownloader {
+	private func downloader(for url: URL) -> Downloader {
 		if let downloader = downloaders[url] {
 			return downloader
 		}
 
-		let downloader = ImageDownloader(url: url)
+		let downloader = Downloader(url: url)
 		downloaders[url] = downloader
 
 		return downloader
 	}
 
 
-	fileprivate func runAllCompletions() {
-		guard let image = image else {
-			fatalError("Cannot run completions unless an image was successfully loaded")
+
+	private final class Downloader {
+
+		private var cacheDuration: TimeInterval?       // background queue
+		private var completions = [Int : Completion]() // main queue
+		private var data = Data()                      // background queue
+		private var image: UIImage?                    // main queue
+		private var nextRequestId = 0                  // main queue
+		private var task: URLSessionDataTask?          // main queue
+
+		private(set) var taskIdentifier: Int?          // background queue
+
+		let url: URL
+
+
+		init(url: URL) {
+			self.url = url
 		}
 
-		// careful: a completion might get removed while we're calling another one so don't copy the dictionary
-		while let (id, completion) = self.completions.first {
-			self.completions.removeValue(forKey: id)
-			completion(image)
+
+		private func cancelCompletion(requestId: Int) {
+			completions[requestId] = nil
+
+			if completions.isEmpty {
+				onMainQueue { // wait one cycle. maybe someone canceled just to retry immediately
+					if self.completions.isEmpty {
+						self.cancelDownload()
+					}
+				}
+			}
 		}
 
-		ImageDownloader.downloaders[url] = nil
-	}
 
+		private func cancelDownload() {
+			precondition(completions.isEmpty)
 
-	fileprivate func startDownload() {
-		precondition(image == nil)
-		precondition(!completions.isEmpty)
-
-		guard self.task == nil else {
-			return
+			task?.cancel()
+			task = nil
+			taskIdentifier = nil
 		}
 
-		let url = self.url
-		let task = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
-			guard let data = data, let image = UIImage(data: data) else {
+
+		func download(session: URLSession, request: URLRequest, cacheDuration: TimeInterval?, completion: @escaping Completion) -> CancelClosure? {
+			assert(queue: .main)
+
+			if let image = image {
+				completion(image)
+				return nil
+			}
+
+			if let image = ImageCache.sharedInstance.image(for: url as NSURL) {
+				self.image = image
+
+				runAllCompletions()
+				cancelDownload()
+
+				completion(image)
+				return nil
+			}
+
+			let requestId = nextRequestId
+			nextRequestId += 1
+
+			completions[requestId] = completion
+
+			startDownload(session: session, cacheDuration: cacheDuration, request: request)
+
+			return {
+				assert(queue: .main)
+				self.cancelCompletion(requestId: requestId)
+			}
+		}
+
+
+		private func runAllCompletions() {
+			guard let image = image else {
+				fatalError("Cannot run completions unless an image was successfully loaded")
+			}
+
+			// careful: a completion might get removed while we're calling another one so don't copy the dictionary
+			while let (id, completion) = self.completions.first {
+				self.completions.removeValue(forKey: id)
+				completion(image)
+			}
+		}
+
+
+		private func startDownload(session: URLSession, cacheDuration: TimeInterval?, request: URLRequest) {
+			precondition(image == nil)
+			precondition(!completions.isEmpty)
+
+			if self.task != nil {
+				return
+			}
+
+			let task = session.dataTask(with: request)
+			self.task = task
+
+			self.data.removeAll()
+
+			session.delegateQueue.addOperation {
+				self.cacheDuration = cacheDuration
+				self.taskIdentifier = task.taskIdentifier
+			}
+
+			task.resume()
+		}
+
+
+		func task(_ task: URLSessionTask, didReceive data: Data) {
+			self.data.append(data)
+		}
+
+
+		func task(_ task: URLSessionTask, didCompleteWith error: Error?) -> Bool {
+			let data = self.data
+			self.data.removeAll()
+
+			guard let url = task.originalRequest?.url else {
+				fatalError("Cannot get original URL from task: \(task)")
+			}
+
+			if let error = error {
 				onMainQueue {
 					self.task = nil
 				}
 
-				var failureReason: String
-				if let error = error {
-					failureReason = "\(error)"
-				}
-				else {
-					failureReason = "server returned invalid response or image could not be parsed"
-				}
-
-				log("Cannot load image '\(url)': \(failureReason)")
+				log("Cannot load image from '\(url)': \(error)\n\tresponse: \(task.response.map { String(describing: $0) } ?? "nil")")
+				return false
 
 				// TODO retry, handle 4xx, etc.
-				return
+			}
+
+			guard let image = UIImage(data: data) else {
+				onMainQueue {
+					self.task = nil
+				}
+
+				log("Cannot load image from '\(url)': received data is not an image decodable by UIImage(data:)")
+				return false
+			}
+
+			let cache = URLCache.shared
+			if
+				cacheDuration != nil,
+				let currentRequest = task.currentRequest,
+				let originalRequest = task.originalRequest,
+				currentRequest != originalRequest,
+				let cachedResponse = cache.cachedResponse(for: currentRequest)
+			{
+				cache.storeCachedResponse(cachedResponse, for: originalRequest)
 			}
 
 			image.inflate() // TODO doesn't UIImage(data:) already inflate the image?
-			
+
 			onMainQueue {
 				self.task = nil
 				self.image = image
 
-				ImageCache.sharedInstance.setImage(image, forKey: url as AnyObject)
-				
+				ImageCache.sharedInstance.set(image: image, for: url as NSURL)
+
 				self.runAllCompletions()
 			}
-		}) 
-		
-		self.task = task
-		task.resume()
+
+			return true
+		}
+
+
+		func task(_ task: URLSessionTask, willCache proposedResponse: CachedURLResponse) -> CachedURLResponse {
+			guard
+				let cacheDuration = cacheDuration,
+				let response = proposedResponse.response as? HTTPURLResponse,
+				var headerFields = response.allHeaderFields as? [String : String],
+				let url = response.url
+			else {
+				return proposedResponse
+			}
+
+			headerFields = headerFields.filter { key, _ in
+				!ImageDownloadCoordinator.cachingHeaderFieldsNames.contains(key.lowercased())
+			}
+			headerFields["Cache-Control"] = "max-age=\(Int(cacheDuration.rounded()))"
+
+			guard let newResponse = HTTPURLResponse(
+				url:          url,
+				statusCode:   response.statusCode,
+				httpVersion:  "HTTP/1.1",
+				headerFields: headerFields
+			) else {
+				return proposedResponse
+			}
+
+			return CachedURLResponse(
+				response:      newResponse,
+				data:          proposedResponse.data,
+				userInfo:      proposedResponse.userInfo,
+				storagePolicy: .allowed
+			)
+		}
+	}
+}
+
+
+extension ImageDownloadCoordinator: URLSessionDataDelegate {
+
+	private static let cachingHeaderFieldsNames = setOf(
+		"cache-control",
+		"expires",
+		"pragma"
+	)
+
+
+	func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+		let taskIdentifier = dataTask.taskIdentifier
+		guard let downloader = downloaders.values.first(where: { $0.taskIdentifier == taskIdentifier }) else {
+			fatalError("Cannot find downloader for task: \(dataTask)")
+		}
+
+		downloader.task(dataTask, didReceive: data)
+	}
+
+
+	func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+		let taskIdentifier = task.taskIdentifier
+		guard let downloader = downloaders.values.first(where: { $0.taskIdentifier == taskIdentifier }) else {
+			fatalError("Cannot find downloader for task: \(task)")
+		}
+
+		if downloader.task(task, didCompleteWith: error) {
+			downloaders[downloader.url] = nil
+		}
+	}
+
+
+	func urlSession(
+		_ session: URLSession,
+		dataTask: URLSessionDataTask,
+		willCacheResponse proposedResponse: CachedURLResponse,
+		completionHandler: @escaping (CachedURLResponse?) -> Void
+	) {
+		let taskIdentifier = dataTask.taskIdentifier
+		guard let downloader = downloaders.values.first(where: { $0.taskIdentifier == taskIdentifier }) else {
+			fatalError("Cannot find downloader for task: \(dataTask)")
+		}
+
+		completionHandler(downloader.task(dataTask, willCache: proposedResponse))
 	}
 }
 
@@ -281,24 +490,24 @@ private class ImageDownloader {
 
 private final class ImageFileLoader {
 
-	fileprivate typealias Completion = (UIImage) -> Void
+	typealias Completion = (UIImage) -> Void
 
-	fileprivate static var loaders = [Query : ImageFileLoader]()
-	fileprivate static let operationQueue = OperationQueue()
+	private static var loaders = [Query : ImageFileLoader]()
+	private static let operationQueue = OperationQueue()
 
-	fileprivate var completions = [Int : Completion]()
-	fileprivate var image: UIImage?
-	fileprivate var nextId = 0
-	fileprivate var operation: Operation?
-	fileprivate let query: Query
+	private var completions = [Int : Completion]()
+	private var image: UIImage?
+	private var nextId = 0
+	private var operation: Operation?
+	private let query: Query
 
 
-	fileprivate init(query: Query) {
+	private init(query: Query) {
 		self.query = query
 	}
 
 
-	fileprivate func cancelCompletionWithId(_ id: Int) {
+	private func cancelCompletionWithId(_ id: Int) {
 		completions[id] = nil
 
 		if completions.isEmpty {
@@ -311,7 +520,7 @@ private final class ImageFileLoader {
 	}
 
 
-	fileprivate func cancelOperation() {
+	private func cancelOperation() {
 		precondition(completions.isEmpty)
 
 		operation?.cancel()
@@ -319,13 +528,27 @@ private final class ImageFileLoader {
 	}
 
 
-	fileprivate func load(_ completion: @escaping Completion) -> CancelClosure {
+	static func forURL(_ url: URL, size: CGFloat) -> ImageFileLoader {
+		let query = Query(url: url, size: size)
+
+		if let loader = loaders[query] {
+			return loader
+		}
+
+		let loader = ImageFileLoader(query: query)
+		loaders[query] = loader
+
+		return loader
+	}
+
+
+	func load(completion: @escaping Completion) -> CancelClosure {
 		if let image = image {
 			completion(image)
 			return {}
 		}
 
-		if let image = ImageCache.sharedInstance.imageForKey(query) {
+		if let image = ImageCache.sharedInstance.image(for: query) {
 			self.image = image
 
 			runAllCompletions()
@@ -348,21 +571,7 @@ private final class ImageFileLoader {
 	}
 
 
-	fileprivate static func forUrl(_ url: URL, size: CGFloat) -> ImageFileLoader {
-		let query = Query(url: url, size: size)
-
-		if let loader = loaders[query] {
-			return loader
-		}
-
-		let loader = ImageFileLoader(query: query)
-		loaders[query] = loader
-
-		return loader
-	}
-
-
-	fileprivate func runAllCompletions() {
+	private func runAllCompletions() {
 		guard let image = image else {
 			fatalError("Cannot run completions unless an image was successfully loaded")
 		}
@@ -377,7 +586,7 @@ private final class ImageFileLoader {
 	}
 
 
-	fileprivate func startOperation() {
+	private func startOperation() {
 		precondition(image == nil)
 		precondition(!completions.isEmpty)
 
@@ -400,7 +609,7 @@ private final class ImageFileLoader {
 						return
 					}
 
-					ImageCache.sharedInstance.setImage(image, forKey: query)
+					ImageCache.sharedInstance.set(image: image, for: query)
 					self.runAllCompletions()
 				}
 			}
@@ -431,29 +640,29 @@ private final class ImageFileLoader {
 
 
 
-	fileprivate final class Query: NSObject {
+	final class Query: NSObject {
 
-		fileprivate let size: CGFloat
-		fileprivate let url:  URL
+		let size: CGFloat
+		let url:  URL
 
 
-		fileprivate init(url: URL, size: CGFloat) {
+		init(url: URL, size: CGFloat) {
 			self.size = size
 			self.url = url
 		}
 
 
-		fileprivate override func copy() -> Any {
+		override func copy() -> Any {
 			return self
 		}
 
 
-		fileprivate override var hash: Int {
+		override var hash: Int {
 			return url.hashValue ^ size.hashValue
 		}
 
 
-		fileprivate override func isEqual(_ object: Any?) -> Bool {
+		override func isEqual(_ object: Any?) -> Bool {
 			guard let query = object as? Query else {
 				return false
 			}
