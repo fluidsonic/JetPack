@@ -3,18 +3,14 @@ import UIKit
 
 public struct Animation {
 
-	public typealias Completion = (_ finished: Bool) -> Void
+	public typealias Completion = (_ position: UIViewAnimatingPosition) -> Void
 	public typealias CompletionRegistration = (@escaping Completion) -> Void
 
 	public var allowsUserInteraction = false
 	public var autoreverses = false
-	public var beginsFromCurrentState = false
 	public var delay = TimeInterval(0)
 	public var duration: TimeInterval
-	public var layoutsSubviews = false
-	public var overridesInheritedDuration = false
-	public var overridesInheritedOptions = false
-	public var overridesInheritedTiming = false
+	public var isManualHitTestingEnabled = false
 	public var repeats = false
 	public var timing: Timing
 
@@ -32,76 +28,86 @@ public struct Animation {
 	}
 
 
-	public func run(_ changes: () -> Void) {
-		runWithCompletion { _ in changes() }
+	public func prepare(_ changes: @escaping () -> Void) -> UIViewPropertyAnimator {
+		return prepareWithCompletion { _ in changes() }
 	}
 
 
-	public func runWithCompletion(_ changes: (_ complete: CompletionRegistration) -> Void) {
-		let outerAnimation = Animation.current
-		Animation.current = self
-		defer { Animation.current = outerAnimation }
+	public func prepareWithCompletion(_ changes: @escaping (_ complete: CompletionRegistration) -> Void) -> UIViewPropertyAnimator {
+		let animator = UIViewPropertyAnimator(duration: duration, timingParameters: timing.toCurveProvider())
+		animator.isManualHitTestingEnabled = isManualHitTestingEnabled
+		animator.isUserInteractionEnabled = allowsUserInteraction
 
-		var completions = [Completion]()
+		let repeats = self.repeats
 
-		var options = UIView.AnimationOptions()
-		if allowsUserInteraction {
-			options.insert(.allowUserInteraction)
+		animator.addAnimations { [unowned animator] in
+			let outerAnimation = Animation.current
+			Animation.current = self
+			defer { Animation.current = outerAnimation }
+
+			changes() { completion in
+				if repeats {
+					fatalError("Cannot add a completion handler to an animation which repeats indefinitely")
+				}
+
+				animator.addCompletion(completion)
+			}
 		}
-		if autoreverses {
-			options.insert(.autoreverse)
-		}
-		if beginsFromCurrentState {
-			options.insert(.beginFromCurrentState)
-		}
-		if layoutsSubviews {
-			options.insert(.layoutSubviews)
-		}
-		if overridesInheritedDuration {
-			options.insert(.overrideInheritedDuration)
-		}
-		if overridesInheritedOptions {
-			options.insert(.overrideInheritedOptions)
-		}
-		if overridesInheritedTiming {
-			options.insert(.overrideInheritedCurve)
-		}
+
 		if repeats {
-			options.insert(.repeat)
+			Animation.repeatAnimator(animator, autoreverse: autoreverses)
 		}
+
+		return animator
+	}
+
+
+	private static func repeatAnimator(_ animator: UIViewPropertyAnimator, autoreverse: Bool) {
+		animator.pausesOnCompletion = true
+
+		var observation: NSKeyValueObservation!
+		observation = animator.observe(\.isRunning) { animator, _ in
+			guard !animator.isRunning else {
+				return
+			}
+
+			if autoreverse {
+				animator.isReversed = !animator.isReversed
+			}
+
+			animator.startAnimation()
+
+			// This seems to be the only way to detect that the CAAnimations of all animated views have been stopped
+			// i.e. the views have either been removed from the view hierarchy or their animations been removed manually.
+			if animator.fractionComplete > 0 {
+				// To avoid leaking the animator and letting it run endlessly we'll stop the repetition.
+				observation.invalidate()
+				animator.stopAnimation(true)
+			}
+		}
+
+		animator.addCompletion { _ in
+			observation.invalidate()
+		}
+	}
+
+
+	@discardableResult
+	public func run(_ changes: () -> Void) -> UIViewPropertyAnimator {
+		return runWithCompletion { _ in changes() }
+	}
+
+
+	@discardableResult
+	public func runWithCompletion(_ changes: (_ complete: CompletionRegistration) -> Void) -> UIViewPropertyAnimator {
+		var animator: UIViewPropertyAnimator! = nil
 
 		withoutActuallyEscaping(changes) { changes in
-			func performChanges() {
-				changes() { completion in
-					completions.append(completion)
-				}
-			}
-
-			func completion(_ finished: Bool) {
-				for completion in completions {
-					completion(finished)
-				}
-			}
-
-			let curveOptions: UIView.AnimationOptions?
-
-			switch timing {
-			case .easeIn:           curveOptions = .curveEaseIn
-			case .easeInEaseOut:    curveOptions = UIView.AnimationOptions()
-			case .easeOut:          curveOptions = .curveEaseOut
-			case .linear:           curveOptions = .curveLinear
-			case let .curve(curve): curveOptions = UIView.AnimationOptions(curve: curve)
-
-			case let .spring(initialVelocity, damping):
-				curveOptions = nil
-				UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity, options: options, animations: performChanges, completion: completion)
-			}
-
-			if let curveOptions = curveOptions {
-				options.insert(curveOptions)
-				UIView.animate(withDuration: duration, delay: delay, options: options, animations: performChanges, completion: completion)
-			}
+			animator = prepareWithCompletion(changes)
+			animator.startAnimation()
 		}
+
+		return animator
 	}
 
 
@@ -112,12 +118,36 @@ public struct Animation {
 
 
 	public enum Timing {
+
 		case easeIn
 		case easeInEaseOut
 		case easeOut
 		case linear
 		case curve(UIView.AnimationCurve)
 		case spring(initialVelocity: CGFloat, damping: CGFloat)
+
+
+		public func toCurveProvider() -> UITimingCurveProvider {
+			switch self {
+			case .easeIn:
+				return UICubicTimingParameters(animationCurve: .easeIn)
+
+			case .easeInEaseOut:
+				return UICubicTimingParameters(animationCurve: .easeInOut)
+
+			case .easeOut:
+				return UICubicTimingParameters(animationCurve: .easeOut)
+
+			case .linear:
+				return UICubicTimingParameters(animationCurve: .linear)
+
+			case let .curve(curve):
+				return UICubicTimingParameters(animationCurve: curve)
+
+			case let .spring(initialVelocity, dampingRatio):
+				return UISpringTimingParameters(dampingRatio: dampingRatio, initialVelocity: CGVector(dx: initialVelocity, dy: initialVelocity))
+			}
+		}
 	}
 
 
@@ -154,24 +184,12 @@ extension Animation: CustomStringConvertible {
 		if autoreverses {
 			description += ", autoreverses: true"
 		}
-		if beginsFromCurrentState {
-			description += ", beginsFromCurrentState: true"
-		}
 		if delay != 0 {
 			description += ", delay: "
 			description += String(delay)
 		}
-		if layoutsSubviews {
-			description += ", layoutsSubviews: true"
-		}
-		if overridesInheritedDuration {
-			description += ", overridesInheritedDuration: true"
-		}
-		if overridesInheritedOptions {
-			description += ", overridesInheritedOptions: true"
-		}
-		if overridesInheritedTiming {
-			description += ", overridesInheritedTiming: true"
+		if isManualHitTestingEnabled {
+			description += ", isManualHitTestingEnabled: true"
 		}
 		if repeats {
 			description += ", repeats: true"
@@ -187,44 +205,62 @@ extension Animation.Timing: CustomStringConvertible {
 
 	public var description: String {
 		switch self {
-		case .easeIn:                               return "Timing.EaseIn"
-		case .easeInEaseOut:                        return "Timing.EaseInEaseOut"
-		case .easeOut:                              return "Timing.EaseOut"
-		case .linear:                               return "Timing.Linear"
-		case let .curve(curve):                     return "Timing.Curve(\(curve))"
-		case let .spring(initialVelocity, damping): return "Timing.Spring(initialVelocity: \(initialVelocity), damping: \(damping))"
+		case .easeIn:                                    return "Timing.easeIn"
+		case .easeInEaseOut:                             return "Timing.easeInEaseOut"
+		case .easeOut:                                   return "Timing.easeOut"
+		case .linear:                                    return "Timing.linear"
+		case let .curve(curve):                          return "Timing.curve(\(curve))"
+		case let .spring(initialVelocity, dampingRatio): return "Timing.spring(initialVelocity: \(initialVelocity), dampingRatio: \(dampingRatio))"
 		}
 	}
 }
 
 
+extension Optional where Wrapped == Animation {
 
-extension _Optional where Wrapped == Animation {
+	@available(*, unavailable, message: "Makes it clear that changes are still applied and completions still called even if the animation is `nil`", renamed: "runAlways")
+	@discardableResult
+	public func run(_ changes: () -> Void) -> UIViewPropertyAnimator? {
+		return runAlways(changes)
+	}
 
-	public func runAlways(_ changes: () -> Void) {
+
+	@discardableResult
+	public func runAlways(_ changes: () -> Void) -> UIViewPropertyAnimator? {
 		if let animation = value {
-			animation.run(changes)
+			return animation.run(changes)
 		}
 		else {
 			changes()
+			return nil
 		}
 	}
 
 
-	public func runAlwaysWithCompletion(_ changes: (_ complete: Animation.CompletionRegistration) -> Void) {
+	@available(*, unavailable, message: "Makes it clear that changes are still applied and completions still called even if the animation is `nil`", renamed: "runAlwaysWithCompletion")
+	@discardableResult
+	public func runWithCompletion(_ changes: (_ complete: Animation.CompletionRegistration) -> Void) -> UIViewPropertyAnimator? {
+		return runAlwaysWithCompletion(changes)
+	}
+
+
+	@discardableResult
+	public func runAlwaysWithCompletion(_ changes: (_ complete: Animation.CompletionRegistration) -> Void) -> UIViewPropertyAnimator? {
 		if let animation = value {
-			animation.runWithCompletion(changes)
+			return animation.runWithCompletion(changes)
 		}
 		else {
-			var completions = Array<Animation.Completion>()
+			var completions = [Animation.Completion]()
 
 			changes { completion in
 				completions.append(completion)
 			}
 
 			for completion in completions {
-				completion(true)
+				completion(.end)
 			}
+
+			return nil
 		}
 	}
 }
