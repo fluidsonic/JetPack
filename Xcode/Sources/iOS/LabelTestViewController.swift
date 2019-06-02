@@ -20,15 +20,15 @@ class LabelTestViewController: ViewController {
 
 		let font = UIFont.systemFont(ofSize: 20)
 		let text = NSMutableAttributedString()
-		text.appendString("Line number one one one one one one one one xxxxxxx\n")
-		text.appendString("Line number ")
+		text.append("Line number one one one one one one one one xxxxxxx\n")
+		text.append("Line number ")
 		text.appendString("two\u{2029}", font: f, paragraphStyle: style)
-		text.appendString("Line number three three three three three three\n")
-		text.appendString("Line number three\n")
-		text.appendString("Line number three\n")
-		text.appendString("Line number three\n")
-		text.appendString("Line number three\n")
-		text.appendString("Line number three\n")
+		text.append("Line number three three three three three three\n")
+		text.append("Line number three\n")
+		text.append("Line number three\n")
+		text.append("Line number three\n")
+		text.append("Line number three\n")
+		text.append("Line number three\n")
 
 		label.attributedText = text
 		label.backgroundColor = .green

@@ -19,12 +19,13 @@ class TextLayoutTests: XCTestCase {
 		string.appendString("long line long line long line long line long line long line", font: font, paragraphStyle: paragraphStyle)
 
 		let layout = TextLayout.build(
-			text:                 string,
-			lineBreakMode:        .byTruncatingTail,
-			maximumNumberOfLines: 1,
-			maximumSize:          CGSize(width: 320, height: 640),
-			minimumScaleFactor:   0.5,
-			renderingScale:       2
+			text:                               string,
+			lineBreakMode:                      .byTruncatingTail,
+			maximumNumberOfLines:               1,
+			maximumSize:                        CGSize(width: 320, height: 640),
+			minimumScaleFactor:                 0.5,
+			renderingScale:                     2,
+			treatsLineFeedAsParagraphSeparator: false
 		)
 
 		XCTAssertEqual(layout.dependsOnTintColor, false)
@@ -46,12 +47,13 @@ class TextLayoutTests: XCTestCase {
 		string.appendString("long line long line long line long line long line long line long line long line long line long line long line long line", font: font, paragraphStyle: paragraphStyle)
 
 		let layout = TextLayout.build(
-			text:                 string,
-			lineBreakMode:        .byTruncatingTail,
-			maximumNumberOfLines: 1,
-			maximumSize:          CGSize(width: 320, height: 640),
-			minimumScaleFactor:   0.5,
-			renderingScale:       2
+			text:                               string,
+			lineBreakMode:                      .byTruncatingTail,
+			maximumNumberOfLines:               1,
+			maximumSize:                        CGSize(width: 320, height: 640),
+			minimumScaleFactor:                 0.5,
+			renderingScale:                     2,
+			treatsLineFeedAsParagraphSeparator: false
 		)
 
 		XCTAssertEqual(layout.dependsOnTintColor, false)
@@ -70,9 +72,9 @@ class TextLayoutTests: XCTestCase {
 		paragraphStyle.set(lineHeight: .relativeToFontSize(multipler: 2), with: font)
 
 		let string = NSMutableAttributedString()
-		string.appendString("Line number one\n")
-		string.appendString("Line number two\n")
-		string.appendString("Line number three")
+		string.append("Line number one\n")
+		string.append("Line number two\n")
+		string.append("Line number three")
 		string.addAttributes(
 			[
 				.font:           font,
@@ -82,12 +84,13 @@ class TextLayoutTests: XCTestCase {
 		)
 
 		let layout = TextLayout.build(
-			text:                 string,
-			lineBreakMode:        .byTruncatingTail,
-			maximumNumberOfLines: nil,
-			maximumSize:          CGSize(width: 320, height: 640),
-			minimumScaleFactor:   1,
-			renderingScale:       2
+			text:                               string,
+			lineBreakMode:                      .byTruncatingTail,
+			maximumNumberOfLines:               nil,
+			maximumSize:                        CGSize(width: 320, height: 640),
+			minimumScaleFactor:                 1,
+			renderingScale:                     2,
+			treatsLineFeedAsParagraphSeparator: false
 		)
 
 		XCTAssertEqual(layout.dependsOnTintColor, false)
@@ -118,12 +121,13 @@ class TextLayoutTests: XCTestCase {
 		string.appendString("Line number three", font: font1, paragraphStyle: paragraphStyle1)
 
 		let layout = TextLayout.build(
-			text:                 string,
-			lineBreakMode:        .byTruncatingTail,
-			maximumNumberOfLines: nil,
-			maximumSize:          CGSize(width: 320, height: 640),
-			minimumScaleFactor:   1,
-			renderingScale:       2
+			text:                               string,
+			lineBreakMode:                      .byTruncatingTail,
+			maximumNumberOfLines:               nil,
+			maximumSize:                        CGSize(width: 320, height: 640),
+			minimumScaleFactor:                 1,
+			renderingScale:                     2,
+			treatsLineFeedAsParagraphSeparator: false
 		)
 
 		XCTAssertEqual(layout.dependsOnTintColor, false)
@@ -148,12 +152,13 @@ class TextLayoutTests: XCTestCase {
 		string.appendString("long line long line long line long line long line long line long line long line long line long line long line long line", font: font, paragraphStyle: paragraphStyle)
 
 		let layout = TextLayout.build(
-			text:                 string,
-			lineBreakMode:        .byTruncatingTail,
-			maximumNumberOfLines: 1,
-			maximumSize:          CGSize(width: 320, height: 640),
-			minimumScaleFactor:   1,
-			renderingScale:       2
+			text:                               string,
+			lineBreakMode:                      .byTruncatingTail,
+			maximumNumberOfLines:               1,
+			maximumSize:                        CGSize(width: 320, height: 640),
+			minimumScaleFactor:                 1,
+			renderingScale:                     2,
+			treatsLineFeedAsParagraphSeparator: false
 		)
 
 		XCTAssertEqual(layout.rect(forLine: 0), CGRect(left: 0, top: 0, width: 317.30, height: 40), accuracy: 2) // width differs by more than 1pt between iOS 11 & 12
@@ -172,12 +177,13 @@ class TextLayoutTests: XCTestCase {
 		string.appendString("long line long line long line long line long line long line long line long line long line long line long line long line", font: font, paragraphStyle: paragraphStyle)
 
 		let layout = TextLayout.build(
-			text:                 string,
-			lineBreakMode:        .byTruncatingTail,
-			maximumNumberOfLines: 1,
-			maximumSize:          CGSize(width: 320, height: 640),
-			minimumScaleFactor:   0.5,
-			renderingScale:       2
+			text:                               string,
+			lineBreakMode:                      .byTruncatingTail,
+			maximumNumberOfLines:               1,
+			maximumSize:                        CGSize(width: 320, height: 640),
+			minimumScaleFactor:                 0.5,
+			renderingScale:                     2,
+			treatsLineFeedAsParagraphSeparator: false
 		)
 
 		XCTAssertEqual(layout.scaleFactor, 0.5, accuracy: 0.05)

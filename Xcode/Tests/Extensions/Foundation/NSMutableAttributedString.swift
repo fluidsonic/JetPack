@@ -26,7 +26,7 @@ class NSMutableAttributedString_Tests: XCTestCase {
 			let expectedString = attributedString("rednothing", attributes: [(range: 0 ... 2, name: .foregroundColor, value: UIColor.red)])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: .foregroundColor, value: UIColor.red)])
-			string.appendString("nothing")
+			string.append("nothing")
 			XCTAssertEqual(string, expectedString)
 		}
 
@@ -34,7 +34,7 @@ class NSMutableAttributedString_Tests: XCTestCase {
 			let expectedString = attributedString("redred", attributes: [(range: 0 ... 5, name: .foregroundColor, value: UIColor.red)])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: .foregroundColor, value: UIColor.red)])
-			string.appendString("red", maintainingPrecedingAttributes: true)
+			string.append("red", maintainingPrecedingAttributes: true)
 			XCTAssertEqual(string, expectedString)
 		}
 
@@ -46,7 +46,7 @@ class NSMutableAttributedString_Tests: XCTestCase {
 			])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: .foregroundColor, value: UIColor.red)])
-			string.appendString("custom", additionalAttributes: [
+			string.append("custom", attributes: [
 				testKey1: testKey1.rawValue,
 				testKey2: testKey2.rawValue
 			])
@@ -61,10 +61,10 @@ class NSMutableAttributedString_Tests: XCTestCase {
 				])
 
 			let string = attributedString("red", attributes: [(range: 0 ... 2, name: .foregroundColor, value: UIColor.red)])
-			string.appendString("custom", maintainingPrecedingAttributes: true, additionalAttributes: [
+			string.append("custom", attributes: [
 				testKey1: testKey1.rawValue,
 				testKey2: testKey2.rawValue
-			])
+			], maintainingPrecedingAttributes: true)
 			XCTAssertEqual(string, expectedString)
 		}
 	}
