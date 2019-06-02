@@ -30,18 +30,12 @@ extension UIView {
 
 
 	@nonobjc
-	public static func defaultActionForLayer(_ layer: CALayer, forKey key: String) -> CAAction? {
+	public static func defaultAction(for layer: CALayer, key: String) -> CAAction? {
 		guard key != "delegate" else {
 			return nil
 		}
 
-		let dummyLayer = dummyView.layer
-
-		let layerDelegate = layer.delegate
-		layer.delegate = dummyView
-		defer { layer.delegate = layerDelegate }
-
-		return layer.action(forKey: key)
+		return dummyView.action(for: layer, forKey: key)
 	}
 
 

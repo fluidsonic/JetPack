@@ -49,11 +49,15 @@ class TextLayer: Layer {
 	override func action(forKey key: String) -> CAAction? {
 		switch key {
 		case "actualTextColor", "actualTintColor":
-			if let animation = UIView.defaultActionForLayer(self, forKey: "backgroundColor") as? CABasicAnimation {
-				animation.fromValue = value(forKey: key)
-				animation.keyPath = key
+			if
+				let animation = UIView.defaultAction(for: self, key: "backgroundColor") as? NSObject,
+				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation),
+				let presentation = presentation()
+			{
+				basicAnimation.fromValue = presentation.value(forKey: key)
+				basicAnimation.keyPath = key
 
-				return animation
+				return animation as? CAAction
 			}
 
 			fallthrough
