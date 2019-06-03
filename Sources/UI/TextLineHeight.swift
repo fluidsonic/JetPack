@@ -6,14 +6,16 @@ public enum TextLineHeight: Equatable {
 
 	case absolute(points: CGFloat)
 	case fontDefault
+	case relativeToFontLineHeight(multipler: CGFloat)
 	case relativeToFontSize(multipler: CGFloat)
 
 
 	public func with(font: UIFont) -> CGFloat {
 		switch self {
-		case let .absolute(points):               return points
-		case .fontDefault:                        return font.lineHeight
-		case let .relativeToFontSize(multiplier): return (font.pointSize * multiplier)
+		case let .absolute(points):                     return points
+		case .fontDefault:                              return font.lineHeight
+		case let .relativeToFontLineHeight(multiplier): return (font.lineHeight * multiplier)
+		case let .relativeToFontSize(multiplier):       return (font.pointSize * multiplier)
 		}
 	}
 }
@@ -52,10 +54,15 @@ public extension NSMutableParagraphStyle {
 			minimumLineHeight = 0
 			lineHeightMultiple = 0
 
-		case let .relativeToFontSize(multipler):
+		case let .relativeToFontLineHeight(multiplier):
 			maximumLineHeight = 0
 			minimumLineHeight = 0
-			lineHeightMultiple = multipler / font.lineHeight * font.pointSize
+			lineHeightMultiple = multiplier
+
+		case let .relativeToFontSize(multiplier):
+			maximumLineHeight = 0
+			minimumLineHeight = 0
+			lineHeightMultiple = (font.pointSize / font.lineHeight) * multiplier
 		}
 	}
 }

@@ -470,11 +470,11 @@ class OldTextLayer: Layer {
 					return finalText
 				}
 
-				let paragraphStyle = NSMutableParagraphStyle()
+				var paragraphStyle = PartialParagraphStyle()
 				paragraphStyle.alignment = horizontalAlignment
-				paragraphStyle.lineHeightMultiple = lineHeightMultiple
-				paragraphStyle.maximumLineHeight = maximumLineHeight ?? 0
-				paragraphStyle.minimumLineHeight = minimumLineHeight ?? 0
+				paragraphStyle.lineHeight = .relativeToFontLineHeight(multipler: lineHeightMultiple)
+				paragraphStyle.maximumLineHeight = maximumLineHeight
+				paragraphStyle.minimumLineHeight = minimumLineHeight
 				paragraphStyle.paragraphSpacing = paragraphSpacing
 
 				switch lineBreakMode {

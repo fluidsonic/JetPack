@@ -1,7 +1,7 @@
 import Foundation
 
 
-public typealias ObservatoryExit = () -> Bool
+public typealias ObservatoryExit = Closure
 
 
 open class Observatory<Event> {
@@ -21,8 +21,6 @@ open class Observatory<Event> {
 
 		var exitedBefore = false
 		let exit: ObservatoryExit = { [ weak self ] in
-			var exited = false
-
 			if !exitedBefore { // TODO temporary non-threadsafe hack since we cannot use dispatch_once
 				exitedBefore = true
 
@@ -30,11 +28,7 @@ open class Observatory<Event> {
 					observatory.subscriptions.removeFirstIdentical(subscription!)
 					subscription = nil
 				}
-
-				exited = true
 			}
-
-			return exited
 		}
 
 		subscription = Subscription(observer: observer, exit: exit)

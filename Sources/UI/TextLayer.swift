@@ -440,12 +440,12 @@ class TextLayer: Layer {
 					return finalText
 				}
 
-				let paragraphStyle = NSMutableParagraphStyle()
+				var paragraphStyle = PartialParagraphStyle()
 				paragraphStyle.alignment = horizontalAlignment
-				paragraphStyle.maximumLineHeight = maximumLineHeight ?? 0
-				paragraphStyle.minimumLineHeight = minimumLineHeight ?? 0
+				paragraphStyle.lineHeight = lineHeight
+				paragraphStyle.maximumLineHeight = maximumLineHeight
+				paragraphStyle.minimumLineHeight = minimumLineHeight
 				paragraphStyle.paragraphSpacing = paragraphSpacing
-				paragraphStyle.set(lineHeight: lineHeight, with: font)
 
 				switch lineBreakMode {
 				case .byClipping, .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:

@@ -1,6 +1,6 @@
 import Dispatch
 
 
-func assert(queue: DispatchQueue) {
-	__dispatch_assert_queue(queue)
+public func assert(queue: DispatchQueue) {
+	dispatchPrecondition(condition: .onQueue(queue))
 }
