@@ -186,24 +186,20 @@ private final class ImageDownloadCoordinator: NSObject {
 	static let sharedInstance = ImageDownloadCoordinator()
 
 
-	private var downloaders = [URL : Downloader]()
-
-	private let operationQueue: OperationQueue = {
-		let queue = OperationQueue()
-		queue.maxConcurrentOperationCount = 3
-		queue.name = "JetPack.ImageDownloadCoordinator"
-		queue.qualityOfService = .utility
-		return queue
-	}()
+	private let backgroundQueue = DispatchQueue.global(qos: .utility)
+	private var downloadersByURL = [URL : Downloader]()
+	private var downloadersByTaskId = [Int : Downloader]()
 
 	private lazy var urlSession = URLSession(
 		configuration: URLSession.shared.configuration,
-		delegate:      self,
-		delegateQueue: operationQueue
+		delegate:      self, // memory leak is fine, we're a shared instance with indefinite lifetime
+		delegateQueue: OperationQueue.main
 	)
 
 
 	private override init() {
+		assert(queue: .main)
+
 		super.init()
 	}
 
@@ -215,23 +211,27 @@ private final class ImageDownloadCoordinator: NSObject {
 			fatalError("Cannot handle URLRequest without url")
 		}
 
-		let downloader = self.downloader(for: url)
-		guard let cancel = downloader.download(session: urlSession, request: request, cacheDuration: cacheDuration, completion: completion) else {
-			downloaders[url] = nil
+		let downloader = getOrCreateDownloader(for: url)
+		guard let (taskId, cancel) = downloader.download(session: urlSession, request: request, cacheDuration: cacheDuration, completion: completion) else {
+			downloadersByURL[url] = nil
 			return {}
 		}
+
+		downloadersByTaskId[taskId] = downloader
 
 		return cancel
 	}
 
 
-	private func downloader(for url: URL) -> Downloader {
-		if let downloader = downloaders[url] {
+	private func getOrCreateDownloader(for url: URL) -> Downloader {
+		assert(queue: .main)
+
+		if let downloader = downloadersByURL[url] {
 			return downloader
 		}
 
-		let downloader = Downloader(url: url)
-		downloaders[url] = downloader
+		let downloader = Downloader(url: url, backgroundQueue: backgroundQueue)
+		downloadersByURL[url] = downloader
 
 		return downloader
 	}
@@ -240,24 +240,26 @@ private final class ImageDownloadCoordinator: NSObject {
 
 	private final class Downloader {
 
-		private var cacheDuration: TimeInterval?       // background queue
-		private var completions = [Int : Completion]() // main queue
-		private var data = Data()                      // background queue
-		private var image: UIImage?                    // main queue
-		private var nextRequestId = 0                  // main queue
-		private var task: URLSessionDataTask?          // main queue
-
-		private(set) var taskIdentifier: Int?          // background queue
+		private let backgroundQueue: DispatchQueue
+		private var cacheDuration: TimeInterval?
+		private var completions = [Int : Completion]()
+		private var data = Data()
+		private var image: UIImage?
+		private var nextRequestId = 0
+		private var task: URLSessionDataTask?
 
 		let url: URL
 
 
-		init(url: URL) {
+		init(url: URL, backgroundQueue: DispatchQueue) {
+			self.backgroundQueue = backgroundQueue
 			self.url = url
 		}
 
 
 		private func cancelCompletion(requestId: Int) {
+			assert(queue: .main)
+
 			completions[requestId] = nil
 
 			if completions.isEmpty {
@@ -271,15 +273,23 @@ private final class ImageDownloadCoordinator: NSObject {
 
 
 		private func cancelDownload() {
+			assert(queue: .main)
+
 			precondition(completions.isEmpty)
+
+			self.data.removeAll()
 
 			task?.cancel()
 			task = nil
-			taskIdentifier = nil
 		}
 
 
-		func download(session: URLSession, request: URLRequest, cacheDuration: TimeInterval?, completion: @escaping Completion) -> CancelClosure? {
+		func download(
+			session: URLSession,
+			request: URLRequest,
+			cacheDuration: TimeInterval?,
+			completion: @escaping Completion
+		) -> (Int, CancelClosure)? {
 			assert(queue: .main)
 
 			if let image = image {
@@ -302,16 +312,19 @@ private final class ImageDownloadCoordinator: NSObject {
 
 			completions[requestId] = completion
 
-			startDownload(session: session, cacheDuration: cacheDuration, request: request)
+			let taskId = startDownload(session: session, cacheDuration: cacheDuration, request: request)
 
-			return {
+			return (taskId, {
 				assert(queue: .main)
+
 				self.cancelCompletion(requestId: requestId)
-			}
+			})
 		}
 
 
 		private func runAllCompletions() {
+			assert(queue: .main)
+
 			guard let image = image else {
 				fatalError("Cannot run completions unless an image was successfully loaded")
 			}
@@ -324,34 +337,46 @@ private final class ImageDownloadCoordinator: NSObject {
 		}
 
 
-		private func startDownload(session: URLSession, cacheDuration: TimeInterval?, request: URLRequest) {
+		private func startDownload(session: URLSession, cacheDuration: TimeInterval?, request: URLRequest) -> Int {
+			assert(queue: .main)
+
 			precondition(image == nil)
 			precondition(!completions.isEmpty)
 
-			if self.task != nil {
-				return
+			if let task = self.task {
+				return task.taskIdentifier
 			}
+
+			self.cacheDuration = cacheDuration
+			self.data.removeAll()
 
 			let task = session.dataTask(with: request)
 			self.task = task
 
-			self.data.removeAll()
-
-			session.delegateQueue.addOperation {
-				self.cacheDuration = cacheDuration
-				self.taskIdentifier = task.taskIdentifier
-			}
-
 			task.resume()
+
+			return task.taskIdentifier
 		}
 
 
 		func task(_ task: URLSessionTask, didReceive data: Data) {
+			assert(queue: .main)
+
+			guard task.taskIdentifier == self.task?.taskIdentifier else {
+				return
+			}
+
 			self.data.append(data)
 		}
 
 
-		func task(_ task: URLSessionTask, didCompleteWith error: Error?) -> Bool {
+		func task(_ task: URLSessionTask, didCompleteWith error: Error?, downloaderDidFinish: @escaping Closure) {
+			assert(queue: .main)
+
+			guard task.taskIdentifier == self.task?.taskIdentifier else {
+				return
+			}
+
 			let data = self.data
 			self.data.removeAll()
 
@@ -360,52 +385,57 @@ private final class ImageDownloadCoordinator: NSObject {
 			}
 
 			if let error = error {
-				onMainQueue {
-					self.task = nil
-				}
+				// TODO retry, handle 4xx, etc.
+				self.task = nil
 
 				log("Cannot load image from '\(url)': \(error)\n\tresponse: \(task.response.map { String(describing: $0) } ?? "nil")")
-				return false
-
-				// TODO retry, handle 4xx, etc.
+				return
 			}
 
-			guard let image = UIImage(data: data) else {
-				onMainQueue {
-					self.task = nil
+			let cacheDuration = self.cacheDuration
+
+			backgroundQueue.async {
+				guard let image = UIImage(data: data) else {
+					onMainQueue {
+						self.task = nil
+
+						log("Cannot load image from '\(url)': received data is not an image decodable by UIImage(data:)")
+					}
+
+					return
 				}
 
-				log("Cannot load image from '\(url)': received data is not an image decodable by UIImage(data:)")
-				return false
+				if
+					cacheDuration != nil,
+					let currentRequest = task.currentRequest,
+					let originalRequest = task.originalRequest,
+					currentRequest != originalRequest
+				{
+					let cache = URLCache.shared
+					if let cachedResponse = cache.cachedResponse(for: currentRequest) {
+						cache.storeCachedResponse(cachedResponse, for: originalRequest)
+					}
+				}
+
+				image.inflate() // TODO does UIImage(data:) already inflate the image?
+
+				onMainQueue {
+					self.image = image
+					self.task = nil
+
+					ImageCache.sharedInstance.set(image: image, for: url as NSURL)
+
+					self.runAllCompletions()
+
+					downloaderDidFinish()
+				}
 			}
-
-			let cache = URLCache.shared
-			if
-				cacheDuration != nil,
-				let currentRequest = task.currentRequest,
-				let originalRequest = task.originalRequest,
-				currentRequest != originalRequest,
-				let cachedResponse = cache.cachedResponse(for: currentRequest)
-			{
-				cache.storeCachedResponse(cachedResponse, for: originalRequest)
-			}
-
-			image.inflate() // TODO doesn't UIImage(data:) already inflate the image?
-
-			onMainQueue {
-				self.task = nil
-				self.image = image
-
-				ImageCache.sharedInstance.set(image: image, for: url as NSURL)
-
-				self.runAllCompletions()
-			}
-
-			return true
 		}
 
 
 		func task(_ task: URLSessionTask, willCache proposedResponse: CachedURLResponse) -> CachedURLResponse {
+			assert(queue: .main)
+
 			guard
 				let cacheDuration = cacheDuration,
 				let response = proposedResponse.response as? HTTPURLResponse,
@@ -449,40 +479,47 @@ extension ImageDownloadCoordinator: URLSessionDataDelegate {
 	)
 
 
-	func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-		let taskIdentifier = dataTask.taskIdentifier
-		guard let downloader = downloaders.values.first(where: { $0.taskIdentifier == taskIdentifier }) else {
-			fatalError("Cannot find downloader for task: \(dataTask)")
+	func urlSession(_ session: URLSession, dataTask task: URLSessionDataTask, didReceive data: Data) {
+		assert(queue: .main)
+
+		guard let downloader = downloadersByTaskId[task.taskIdentifier] else {
+			fatalError("Cannot find downloader for task: \(task)")
 		}
 
-		downloader.task(dataTask, didReceive: data)
+		downloader.task(task, didReceive: data)
 	}
 
 
 	func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-		let taskIdentifier = task.taskIdentifier
-		guard let downloader = downloaders.values.first(where: { $0.taskIdentifier == taskIdentifier }) else {
+		assert(queue: .main)
+
+		guard let downloader = downloadersByTaskId[task.taskIdentifier] else {
 			fatalError("Cannot find downloader for task: \(task)")
 		}
 
-		if downloader.task(task, didCompleteWith: error) {
-			downloaders[downloader.url] = nil
+		downloadersByTaskId[task.taskIdentifier] = nil
+
+		downloader.task(task, didCompleteWith: error) {
+			assert(queue: .main)
+
+			self.downloadersByURL[downloader.url] = nil
 		}
 	}
 
 
 	func urlSession(
 		_ session: URLSession,
-		dataTask: URLSessionDataTask,
+		dataTask task: URLSessionDataTask,
 		willCacheResponse proposedResponse: CachedURLResponse,
 		completionHandler: @escaping (CachedURLResponse?) -> Void
 	) {
-		let taskIdentifier = dataTask.taskIdentifier
-		guard let downloader = downloaders.values.first(where: { $0.taskIdentifier == taskIdentifier }) else {
-			fatalError("Cannot find downloader for task: \(dataTask)")
+		assert(queue: .main)
+
+		guard let downloader = downloadersByTaskId[task.taskIdentifier] else {
+			fatalError("Cannot find downloader for task: \(task)")
 		}
 
-		completionHandler(downloader.task(dataTask, willCache: proposedResponse))
+		completionHandler(downloader.task(task, willCache: proposedResponse))
 	}
 }
 
