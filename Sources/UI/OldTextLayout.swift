@@ -103,8 +103,8 @@ internal class OldTextLayout {
 				if scaleFactor < 1 {
 					enclosingRect.left *= scaleFactor
 					enclosingRect.top *= scaleFactor
-					enclosingRect.width *= scaleFactor
-					enclosingRect.height *= scaleFactor
+					enclosingRect.widthFromLeft *= scaleFactor
+					enclosingRect.heightFromTop *= scaleFactor
 				}
 
 				enclosingRect.left += origin.left + contentInsets.left
@@ -307,7 +307,7 @@ internal class OldTextLayout {
 
 		private func layout(configuration: Configuration, textContainerHeight: CGFloat, iteration: Int = 1) -> Result {
 			let textContainerSize = CGSize(width: configuration.maximumSize.width, height: textContainerHeight)
-				.scaleBy(1 / configuration.minimumScaleFactor)
+				.scale(by: 1 / configuration.minimumScaleFactor)
 
 			let textContainer = NSTextContainer(size: textContainerSize)
 			textContainer.lineBreakMode = configuration.lineBreakMode
@@ -501,11 +501,11 @@ internal class OldTextLayout {
 						if strippedGlyphRangeForLine != glyphRangeForLine {
 							if strippedCharacterRangeForLine.length > 0 {
 								layoutManager.enumerateEnclosingRects(forGlyphRange: NSRange(location: strippedCharacterRangeForLine.endLocation - 1, length: 1), withinSelectedGlyphRange: .notFound, in: textContainer) { glyphRect, _ in
-									usedRectForLine.width = glyphRect.right - usedRectForLine.left
+									usedRectForLine.widthFromLeft = glyphRect.right - usedRectForLine.left
 								}
 							}
 							else {
-								usedRectForLine.width = 0
+								usedRectForLine.widthFromLeft = 0
 							}
 
 							layoutManager.setLineFragmentRect(rectForLine, forGlyphRange: glyphRangeForLine, usedRect: usedRectForLine)
@@ -546,11 +546,11 @@ internal class OldTextLayout {
 				if scaleFactor < 1 {
 					boundingRect.left *= scaleFactor
 					boundingRect.top *= scaleFactor
-					boundingRect.size.scaleInPlace(scaleFactor)
+					boundingRect.size = boundingRect.size.scale(by: scaleFactor)
 
 					usedRect.left *= scaleFactor
 					usedRect.top *= scaleFactor
-					usedRect.size.scaleInPlace(scaleFactor)
+					usedRect.size = usedRect.size.scale(by: scaleFactor)
 
 					topSpacingToRemove *= scaleFactor
 					bottomSpacingToRemove *= scaleFactor
@@ -568,11 +568,11 @@ internal class OldTextLayout {
 
 			boundingRect.left = OldTextLayout.roundDownIgnoringErrors(boundingRect.left, increment: gridIncrement)
 			boundingRect.top = OldTextLayout.roundDownIgnoringErrors(boundingRect.top, increment: gridIncrement)
-			boundingRect.width = OldTextLayout.roundUpIgnoringErrors(boundingRect.width, increment: gridIncrement)
-			boundingRect.height = OldTextLayout.roundUpIgnoringErrors(boundingRect.height, increment: gridIncrement)
+			boundingRect.widthFromLeft = OldTextLayout.roundUpIgnoringErrors(boundingRect.width, increment: gridIncrement)
+			boundingRect.heightFromTop = OldTextLayout.roundUpIgnoringErrors(boundingRect.height, increment: gridIncrement)
 
-			usedRect.height = OldTextLayout.roundUpIgnoringErrors(usedRect.height, increment: gridIncrement)
-			usedRect.width = OldTextLayout.roundUpIgnoringErrors(usedRect.width, increment: gridIncrement)
+			usedRect.heightFromTop = OldTextLayout.roundUpIgnoringErrors(usedRect.height, increment: gridIncrement)
+			usedRect.widthFromLeft = OldTextLayout.roundUpIgnoringErrors(usedRect.width, increment: gridIncrement)
 
 			// If the text we've laid out is longer than allowed then we'll have to try again with a shorter text container.
 			// This is necessary since we don't have access to typesetting and cannot tell NSLayoutManager to allow the `topSpacingToRemove` and

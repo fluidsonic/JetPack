@@ -275,7 +275,7 @@ open class Button: View {
 		let textLabel: Label? = wantsText ? self.textLabel : nil
 
 		let padding = self.padding
-		var remainingSize = size.insetBy(padding)
+		var remainingSize = size.inset(by: padding)
 
 		var activityIndicatorFrame = CGRect()
 		var imageViewFrame = CGRect()
@@ -301,14 +301,14 @@ open class Button: View {
 					imageViewFrame.size = remainingSize
 				}
 				else {
-					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(imageView.transform)
 
 					if numberOfElements == 1 {
 						if verticalAlignment == .fill {
-							imageViewFrame.height = remainingSize.height
+							imageViewFrame.heightFromTop = remainingSize.height
 						}
 						else if horizontalAlignment == .fill {
-							imageViewFrame.width = remainingSize.width
+							imageViewFrame.widthFromLeft = remainingSize.width
 						}
 					}
 				}
@@ -316,12 +316,12 @@ open class Button: View {
 				remainingSize.height -= imageViewFrame.height
 			}
 			else if let activityIndicator = activityIndicator {
-				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(activityIndicator.transform)
 				remainingSize.height -= imageViewFrame.height
 			}
 
 			if let textLabel = textLabel {
-				textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+				textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(textLabel.transform)
 				remainingSize.height -= textLabelFrame.height
 			}
 
@@ -415,14 +415,14 @@ open class Button: View {
 					imageViewFrame.size = remainingSize
 				}
 				else {
-					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(imageView.transform)
 
 					if numberOfElements == 1 {
 						if verticalAlignment == .fill {
-							imageViewFrame.height = remainingSize.height
+							imageViewFrame.heightFromTop = remainingSize.height
 						}
 						else if horizontalAlignment == .fill {
-							imageViewFrame.width = remainingSize.width
+							imageViewFrame.widthFromLeft = remainingSize.width
 						}
 					}
 				}
@@ -430,12 +430,12 @@ open class Button: View {
 				remainingSize.width -= imageViewFrame.width
 			}
 			else if let activityIndicator = activityIndicator {
-				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(activityIndicator.transform)
 				remainingSize.width -= imageViewFrame.width
 			}
 
 			if let textLabel = textLabel {
-				textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+				textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(textLabel.transform)
 				remainingSize.width -= textLabelFrame.width
 			}
 
@@ -528,18 +528,18 @@ open class Button: View {
 					imageViewFrame.size = remainingSize
 				}
 				else {
-					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+					imageViewFrame.size = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(imageView.transform)
 
 					if verticalAlignment == .fill {
-						imageViewFrame.height = remainingSize.height
+						imageViewFrame.heightFromTop = remainingSize.height
 					}
 					else if horizontalAlignment == .fill {
-						imageViewFrame.width = remainingSize.width
+						imageViewFrame.widthFromLeft = remainingSize.width
 					}
 				}
 			}
 			else if let activityIndicator = activityIndicator {
-				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+				imageViewFrame.size = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(activityIndicator.transform)
 			}
 
 			if let textLabel = textLabel {
@@ -547,7 +547,7 @@ open class Button: View {
 					textLabelFrame.size = remainingSize
 				}
 				else {
-					textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+					textLabelFrame.size = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(textLabel.transform)
 				}
 			}
 
@@ -586,15 +586,15 @@ open class Button: View {
 
 		// step 6: apply offsets
 		if wantsImage || wantsActivityIndicator {
-			imageViewFrame.offsetInPlace(imageOffset)
+			imageViewFrame += imageOffset
 		}
 		if wantsText {
-			textLabelFrame.offsetInPlace(textOffset)
+			textLabelFrame += textOffset
 		}
 
 		// step 7: align activity indicator
 		if let activityIndicator = activityIndicator {
-			activityIndicatorFrame.size = activityIndicator.sizeThatFitsSize(imageViewFrame.size, allowsTruncation: true).transform(activityIndicator.transform)
+			activityIndicatorFrame.size = activityIndicator.sizeThatFitsSize(imageViewFrame.size, allowsTruncation: true).applying(activityIndicator.transform)
 			activityIndicatorFrame.center = imageViewFrame.center
 		}
 
@@ -680,7 +680,7 @@ open class Button: View {
 
 	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
 		let padding = self.padding
-		let availableSize = availableSize.insetBy(padding)
+		let availableSize = availableSize.inset(by: padding)
 
 		let wantsActivityIndicator = showsActivityIndicatorAsImage
 		let wantsImage = (_imageView?.image != nil || _imageView?.source != nil)
@@ -697,14 +697,14 @@ open class Button: View {
 		switch arrangement {
 		case .imageBottom, .imageTop: // vertical
 			if let imageView = imageView {
-				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(imageView.transform)
 
 				fittingSize.height += imageViewSize.height
 				fittingSize.width = max(fittingSize.width, imageViewSize.width)
 				remainingSize.height -= imageViewSize.height
 			}
 			else if let activityIndicator = activityIndicator {
-				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(activityIndicator.transform)
 
 				fittingSize.height += activityIndicatorSize.height
 				fittingSize.width = max(fittingSize.width, activityIndicatorSize.width)
@@ -712,7 +712,7 @@ open class Button: View {
 			}
 
 			if let textLabel = textLabel {
-				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(textLabel.transform)
 
 				fittingSize.height += textLabelSize.height
 				fittingSize.width = max(fittingSize.width, textLabelSize.width)
@@ -720,14 +720,14 @@ open class Button: View {
 
 		case .imageLeft, .imageRight: // horizontal
 			if let imageView = imageView {
-				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(imageView.transform)
 
 				fittingSize.width += imageViewSize.width
 				fittingSize.height = max(fittingSize.height, imageViewSize.height)
 				remainingSize.width -= imageViewSize.width
 			}
 			else if let activityIndicator = activityIndicator {
-				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(activityIndicator.transform)
 
 				fittingSize.width += activityIndicatorSize.width
 				fittingSize.height = max(fittingSize.height, activityIndicatorSize.height)
@@ -735,7 +735,7 @@ open class Button: View {
 			}
 
 			if let textLabel = textLabel {
-				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(textLabel.transform)
 
 				fittingSize.width += textLabelSize.width
 				fittingSize.height = max(fittingSize.height, textLabelSize.height)
@@ -743,27 +743,27 @@ open class Button: View {
 
 		case .imageBehindText:
 			if let imageView = imageView {
-				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(imageView.transform)
+				let imageViewSize = imageView.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(imageView.transform)
 
 				fittingSize.height = fittingSize.height.coerced(atLeast: imageViewSize.height)
 				fittingSize.width = fittingSize.width.coerced(atLeast: imageViewSize.width)
 			}
 			else if let activityIndicator = activityIndicator {
-				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(activityIndicator.transform)
+				let activityIndicatorSize = activityIndicator.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(activityIndicator.transform)
 
 				fittingSize.height = fittingSize.height.coerced(atLeast: activityIndicatorSize.height)
 				fittingSize.width = fittingSize.width.coerced(atLeast: activityIndicatorSize.width)
 			}
 
 			if let textLabel = textLabel {
-				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).transform(textLabel.transform)
+				let textLabelSize = textLabel.sizeThatFitsSize(remainingSize, allowsTruncation: true).applying(textLabel.transform)
 
 				fittingSize.height = fittingSize.height.coerced(atLeast: textLabelSize.height)
 				fittingSize.width = fittingSize.width.coerced(atLeast: textLabelSize.width)
 			}
 		}
 
-		return fittingSize.insetBy(padding.inverse)
+		return fittingSize.inset(by: -padding)
 	}
 
 
@@ -852,7 +852,7 @@ open class Button: View {
 
 
 	open func touchIsAcceptableForTap(_ touch: UITouch, event: UIEvent?) -> Bool {
-		return pointInside(touch.location(in: self), withEvent: event, additionalHitZone: additionalHitZone.increaseBy(UIEdgeInsets(all: touchTolerance)))
+		return pointInside(touch.location(in: self), withEvent: event, additionalHitZone: additionalHitZone + UIEdgeInsets(all: touchTolerance))
 	}
 
 

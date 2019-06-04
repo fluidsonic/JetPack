@@ -95,8 +95,8 @@ internal class TextLayout {
 				if scaleFactor < 1 {
 					enclosingRect.left *= scaleFactor
 					enclosingRect.top *= scaleFactor
-					enclosingRect.width *= scaleFactor
-					enclosingRect.height *= scaleFactor
+					enclosingRect.widthFromLeft *= scaleFactor
+					enclosingRect.heightFromTop *= scaleFactor
 				}
 
 				block(enclosingRect)
@@ -137,8 +137,8 @@ internal class TextLayout {
 				if scaleFactor < 1 {
 					rect.left *= scaleFactor
 					rect.top *= scaleFactor
-					rect.width *= scaleFactor
-					rect.height *= scaleFactor
+					rect.widthFromLeft *= scaleFactor
+					rect.heightFromTop *= scaleFactor
 				}
 
 				stop.pointee = true
@@ -416,7 +416,7 @@ internal class TextLayout {
 
 				frame.origin.left *= scaleFactor
 				frame.origin.top *= scaleFactor
-				frame.size.scaleInPlace(scaleFactor)
+				frame.size = frame.size.scale(by: scaleFactor)
 			}
 			else {
 				scaleFactor = 1

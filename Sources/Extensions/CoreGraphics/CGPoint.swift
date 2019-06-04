@@ -40,8 +40,9 @@ public extension CGPoint {
 	}
 
 
+	@available(*, unavailable, message: "+")
 	func offsetBy(_ offset: CGPoint) -> CGPoint {
-		return offsetBy(dx: offset.x, dy: offset.y)
+		return self + offset
 	}
 
 
@@ -68,5 +69,25 @@ public extension CGPoint {
 
 	static prefix func - (_ point: CGPoint) -> CGPoint {
 		return CGPoint(x: -point.x, y: -point.y)
+	}
+
+
+	static func + (_ lhs: CGPoint, _ rhs: CGPoint) -> CGPoint {
+		return CGPoint(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+	}
+
+
+	static func += (_ lhs: inout CGPoint, _ rhs: CGPoint) {
+		lhs = lhs + rhs
+	}
+
+
+	static func - (_ lhs: CGPoint, _ rhs: CGPoint) -> CGPoint {
+		return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+	}
+
+
+	static func -= (_ lhs: inout CGPoint, _ rhs: CGPoint) {
+		lhs = lhs - rhs
 	}
 }

@@ -78,7 +78,7 @@ open class ImageView: View {
 		}
 
 		let imageSize = image.size
-		let maximumImageLayerFrame = CGRect(size: bounds.size).insetBy(padding)
+		let maximumImageLayerFrame = CGRect(size: bounds.size).inset(by: padding)
 
 		guard imageSize.isPositive && maximumImageLayerFrame.size.isPositive else {
 			return .zero
@@ -98,23 +98,23 @@ open class ImageView: View {
 			let verticalScale = maximumImageLayerFrame.height / imageSize.height
 			let scale = (scaling == .fitInside ? min : max)(horizontalScale, verticalScale)
 
-			imageLayerFrame.size = imageSize.scaleBy(scale)
+			imageLayerFrame.size = imageSize.scale(by: scale)
 
 		case .fitHorizontally:
-			imageLayerFrame.width = maximumImageLayerFrame.width
-			imageLayerFrame.height = imageSize.height * (imageLayerFrame.width / imageSize.width)
+			imageLayerFrame.widthFromLeft = maximumImageLayerFrame.width
+			imageLayerFrame.heightFromTop = imageSize.height * (imageLayerFrame.width / imageSize.width)
 
 		case .fitHorizontallyIgnoringAspectRatio:
-			imageLayerFrame.width = maximumImageLayerFrame.width
-			imageLayerFrame.height = imageSize.height
+			imageLayerFrame.widthFromLeft = maximumImageLayerFrame.width
+			imageLayerFrame.heightFromTop = imageSize.height
 
 		case .fitVertically:
-			imageLayerFrame.height = maximumImageLayerFrame.height
-			imageLayerFrame.width = imageSize.width * (imageLayerFrame.height / imageSize.height)
+			imageLayerFrame.heightFromTop = maximumImageLayerFrame.height
+			imageLayerFrame.widthFromLeft = imageSize.width * (imageLayerFrame.height / imageSize.height)
 
 		case .fitVerticallyIgnoringAspectRatio:
-			imageLayerFrame.height = maximumImageLayerFrame.height
-			imageLayerFrame.width = imageSize.width
+			imageLayerFrame.heightFromTop = maximumImageLayerFrame.height
+			imageLayerFrame.widthFromLeft = imageSize.width
 
 		case .none:
 			imageLayerFrame.size = imageSize
@@ -148,8 +148,8 @@ open class ImageView: View {
 
 			let imageLayerFrameWidth = imageLayerFrame.width
 			let imageLayerFrameHeight = imageLayerFrame.height
-			imageLayerFrame.width = imageLayerFrameHeight
-			imageLayerFrame.height = imageLayerFrameWidth
+			imageLayerFrame.widthFromLeft = imageLayerFrameHeight
+			imageLayerFrame.heightFromTop = imageLayerFrameWidth
 
 			imageLayerFrame.center = center
 
@@ -288,7 +288,7 @@ open class ImageView: View {
 		}
 
 		if let activityIndicator = _activityIndicator {
-			activityIndicator.center = bounds.insetBy(padding).center
+			activityIndicator.center = bounds.inset(by: padding).center
 		}
 
 		let imageLayerFrame = computeImageLayerFrame()
@@ -339,7 +339,7 @@ open class ImageView: View {
 	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
 		let fittingSize: CGSize
 
-		let availableSize = availableSize.insetBy(padding)
+		let availableSize = availableSize.inset(by: padding)
 		if availableSize.isPositive, let imageSize = image?.size, imageSize.isPositive {
 			let imageRatio = imageSize.width / imageSize.height
 
@@ -385,7 +385,7 @@ open class ImageView: View {
 
 
 	public var optimalImageSize: CGSize {
-		let size = bounds.size.insetBy(padding)
+		let size = bounds.size.inset(by: padding)
 		guard size.width > 0 && size.height > 0 else {
 			return .zero
 		}

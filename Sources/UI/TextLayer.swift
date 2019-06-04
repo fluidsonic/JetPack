@@ -187,7 +187,7 @@ class TextLayer: Layer {
 
 		for link in links {
 			for frame in link.frames {
-				let hitTestFrame = frame.insetBy(additionalLinkHitZone.inverse)
+				let hitTestFrame = frame.inset(by: -additionalLinkHitZone)
 				guard hitTestFrame.contains(point) else {
 					continue
 				}

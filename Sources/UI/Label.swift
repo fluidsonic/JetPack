@@ -107,7 +107,7 @@ open class Label: View {
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 
-		let maximumTextLayerFrame = bounds.insetBy(padding)
+		let maximumTextLayerFrame = bounds.inset(by: padding)
 		guard maximumTextLayerFrame.size.isPositive else {
 			textLayer.isHidden = true
 			return
@@ -131,7 +131,7 @@ open class Label: View {
 
 		case .justified:
 			textLayerFrame.left = maximumTextLayerFrame.left
-			textLayerFrame.width = maximumTextLayerFrame.width
+			textLayerFrame.widthFromLeft = maximumTextLayerFrame.width
 
 		@unknown default:
 			textLayerFrame.left = maximumTextLayerFrame.left
@@ -230,12 +230,12 @@ open class Label: View {
 
 
 	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
-		let availableSize = availableSize.insetBy(padding)
+		let availableSize = availableSize.inset(by: padding)
 		guard availableSize.isPositive else {
 			return .zero
 		}
 
-		return textLayer.textSize(fitting: availableSize).insetBy(padding.inverse)
+		return textLayer.textSize(fitting: availableSize).inset(by: -padding)
 	}
 
 

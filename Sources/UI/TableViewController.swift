@@ -58,7 +58,7 @@ open class TableViewController: ViewController {
 				var scrollIndicatorInsets = outerDecorationInsets
 
 				tableViewFrame.left += contentInsets.left
-				tableViewFrame.width -= tableViewFrame.left + contentInsets.right
+				tableViewFrame.widthFromLeft -= tableViewFrame.left + contentInsets.right
 
 				contentInsets.left = 0
 				contentInsets.right = 0

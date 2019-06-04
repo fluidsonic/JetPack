@@ -53,6 +53,13 @@ extension UIView {
 
 
 	@nonobjc
+	public func frame(applying transform: CGAffineTransform) -> CGRect {
+		return untransformedFrame.applying(transform, anchorPoint: layer.anchorPoint)
+	}
+
+
+	@available(*, unavailable, renamed: "frame(applying:)")
+	@nonobjc
 	public func frameWhenApplyingTransform(_ transform: CGAffineTransform) -> CGRect {
 		return untransformedFrame.applying(transform, anchorPoint: layer.anchorPoint)
 	}
@@ -234,14 +241,14 @@ extension UIView {
 			let anchorPoint = layer.anchorPoint
 			let centerOffset = CGPoint(left: (0.5 - anchorPoint.left) * size.width, top: (0.5 - anchorPoint.top) * size.height)
 
-			return CGRect(size: size).centered(at: center.offsetBy(centerOffset))
+			return CGRect(size: size).centered(at: center + centerOffset)
 		}
 		set {
 			let anchorPoint = layer.anchorPoint
 			let centerOffset = CGPoint(left: (0.5 - anchorPoint.left) * -newValue.width, top: (0.5 - anchorPoint.top) * -newValue.height)
 
 			bounds = CGRect(origin: bounds.origin, size: newValue.size)
-			center = newValue.center.offsetBy(centerOffset)
+			center = newValue.center + centerOffset
 		}
 	}
 

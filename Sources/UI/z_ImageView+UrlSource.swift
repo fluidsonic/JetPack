@@ -115,7 +115,7 @@ private final class UrlSourceSession: ImageView.Session {
 		}
 
 		if source.url.isFileURL && source.considersOptimalImageSize {
-			let optimalImageSize = imageView.optimalImageSize.scaleBy(imageView.optimalImageScale)
+			let optimalImageSize = imageView.optimalImageSize.scale(by: imageView.optimalImageScale)
 			stopLoading = ImageFileLoader.forURL(source.url, size: max(optimalImageSize.width, optimalImageSize.height))
 				.load(completion: completion)
 		}

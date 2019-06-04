@@ -42,6 +42,7 @@ public extension CGSize {
 	}
 
 
+	@available(*, deprecated, message: "size = size.coerced(atMost: …)")
 	mutating func constrainInPlace(_ constrain: CGSize) {
 		self = coerced(atMost: constrain)
 	}
@@ -67,23 +68,57 @@ public extension CGSize {
 		return (height >= 0 && width >= 0)
 	}
 
-	
-	func scaleBy(_ scale: CGFloat) -> CGSize {
+
+	func scale(by scale: CGFloat) -> CGSize {
 		return CGSize(width: width * scale, height: height * scale)
 	}
 
 
+	@available(*, unavailable, renamed: "scale(by:)")
+	func scaleBy(_ scale: CGFloat) -> CGSize {
+		return self.scale(by: scale)
+	}
+
+
+	@available(*, deprecated, message: "size = size.scale(by: …)")
 	mutating func scaleInPlace(_ scale: CGFloat) {
-		self = scaleBy(scale)
+		self = self.scale(by: scale)
 	}
 
 
+	@available(*, unavailable, renamed: "applying")
 	func transform(_ transform: CGAffineTransform) -> CGSize {
-		return self.applying(transform)
+		return applying(transform)
 	}
 
 
+	@available(*, deprecated, message: "size = size.applying(…)")
 	mutating func transformInPlace(_ transform: CGAffineTransform) {
-		self = self.transform(transform)
+		self = applying(transform)
+	}
+
+
+	static prefix func - (_ size: CGSize) -> CGSize {
+		return CGSize(width: -size.width, height: -size.height)
+	}
+
+
+	static func + (_ lhs: CGSize, _ rhs: CGSize) -> CGSize {
+		return CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+	}
+
+
+	static func += (_ lhs: inout CGSize, _ rhs: CGSize) {
+		lhs = lhs + rhs
+	}
+
+
+	static func - (_ lhs: CGSize, _ rhs: CGSize) -> CGSize {
+		return CGSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
+	}
+
+
+	static func -= (_ lhs: inout CGSize, _ rhs: CGSize) {
+		lhs = lhs - rhs
 	}
 }

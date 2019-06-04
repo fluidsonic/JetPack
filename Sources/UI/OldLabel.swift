@@ -124,7 +124,7 @@ open class OldLabel: View {
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 
-		let maximumTextLayerFrame = bounds.insetBy(padding)
+		let maximumTextLayerFrame = bounds.inset(by: padding)
 		guard maximumTextLayerFrame.size.isPositive else {
 			textLayer.isHidden = true
 			return
@@ -148,7 +148,7 @@ open class OldLabel: View {
 
 		case .justified:
 			textLayerFrame.left = maximumTextLayerFrame.left
-			textLayerFrame.width = maximumTextLayerFrame.width
+			textLayerFrame.widthFromLeft = maximumTextLayerFrame.width
 
 		@unknown default:
 			textLayerFrame.left = maximumTextLayerFrame.left
@@ -162,7 +162,7 @@ open class OldLabel: View {
 		case .bottom: textLayerFrame.bottom = maximumTextLayerFrame.bottom
 		}
 
-		textLayerFrame.insetInPlace(textLayer.contentInsets)
+		textLayerFrame = textLayerFrame.inset(by: textLayer.contentInsets)
 		textLayer.frame = alignToGrid(textLayerFrame)
 	}
 
@@ -233,12 +233,12 @@ open class OldLabel: View {
 
 
 	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
-		let availableSize = availableSize.insetBy(padding)
+		let availableSize = availableSize.inset(by: padding)
 		guard availableSize.isPositive else {
 			return .zero
 		}
 
-		return textLayer.textSize(thatFits: availableSize).insetBy(padding.inverse)
+		return textLayer.textSize(thatFits: availableSize).inset(by: -padding)
 	}
 
 

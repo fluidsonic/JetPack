@@ -64,7 +64,7 @@ open class TextField: UITextField {
 	
 	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
-		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
+		let extendedHitZone = originalHitZone.inset(by: -additionalHitZone)
 
 		let hitZoneCornerRadius: CGFloat
 		if hitZoneFollowsCornerRadius && cornerRadius > 0 {

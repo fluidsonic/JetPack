@@ -37,20 +37,6 @@ class CGSize_Tests: XCTestCase {
 
 	func testScale() {
 		let size = CGSize(width: 2, height: 4)
-		XCTAssertEqual(size.scaleBy(2), CGSize(width: 4, height: 8))
-
-		var mutableSize = size
-		mutableSize.scaleInPlace(2)
-		XCTAssertEqual(mutableSize, CGSize(width: 4, height: 8))
-	}
-
-
-	func testTransform() {
-		let size = CGSize(width: 2, height: 4)
-		XCTAssertEqual(size.transform(CGAffineTransform(scaleX: 2, y: 2)), CGSize(width: 4, height: 8))
-
-		var mutableSize = size
-		mutableSize.transformInPlace(CGAffineTransform(scaleX: 2, y: 2))
-		XCTAssertEqual(mutableSize, CGSize(width: 4, height: 8))
+		XCTAssertEqual(size.scale(by: 2), CGSize(width: 4, height: 8))
 	}
 }

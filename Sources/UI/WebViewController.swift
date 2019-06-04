@@ -190,12 +190,12 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 			}
 
 			// WKWebView doesn't properly support non-zero scrollView.contentInset at the moment causing .contentSize to be too large.
-			var webViewFrame = bounds.insetBy(innerDecorationInsets)
+			var webViewFrame = bounds.inset(by: innerDecorationInsets)
 
 			// WKWebView rounds up it's scollView's contentSize no matter what the display scale is.
 			// That means the user would be able to scroll for less than a point even if they shouldn't be able to scroll at all in that axis.
-			webViewFrame.height = ceil(webViewFrame.height)
-			webViewFrame.width = ceil(webViewFrame.width)
+			webViewFrame.heightFromTop = ceil(webViewFrame.height)
+			webViewFrame.widthFromLeft = ceil(webViewFrame.width)
 			webView.frame = webViewFrame
 
 			//webView.scrollView.scrollIndicatorInsets = outerDecorationInsets.increaseBy(innerDecorationInsets.inverse)
@@ -203,7 +203,7 @@ open class WebViewController: ViewController, KeyValueObserver, WKNavigationDele
 			if activityIndicator.superview != nil {
 				var activityIndicatorFrame = CGRect()
 				activityIndicatorFrame.size = activityIndicator.sizeThatFits()
-				activityIndicatorFrame.center = bounds.insetBy(innerDecorationInsets).center
+				activityIndicatorFrame.center = bounds.inset(by: innerDecorationInsets).center
 				activityIndicator.frame = view.alignToGrid(activityIndicatorFrame)
 			}
 		}

@@ -157,7 +157,7 @@ open class TextView: UITextView {
 			var insets = textContainerInset
 			insets.left += textContainer.lineFragmentPadding
 
-			var placeholderLabelFrame = bounds.insetBy(insets)
+			var placeholderLabelFrame = bounds.inset(by: insets)
 			placeholderLabelFrame.size = placeholderLabel.sizeThatFitsSize(placeholderLabelFrame.size, allowsTruncation: true)
 			placeholderLabel.frame = placeholderLabelFrame
 		}

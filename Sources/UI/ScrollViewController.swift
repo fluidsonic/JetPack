@@ -122,7 +122,7 @@ open class ScrollViewController: ViewController { // TODO rename
 		ignoresScrollViewDidScroll += 1
 		defer { ignoresScrollViewDidScroll -= 1 }
 
-		let scrollViewFrame = CGRect(size: view.bounds.size).insetBy(scrollViewInsets)
+		let scrollViewFrame = CGRect(size: view.bounds.size).inset(by: scrollViewInsets)
 		let contentSize = CGSize(width: CGFloat(viewControllers.count) * scrollViewFrame.width, height: scrollViewFrame.height)
 
 		let contentOffset = scrollView.contentOffset

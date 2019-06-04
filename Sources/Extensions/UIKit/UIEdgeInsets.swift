@@ -57,24 +57,52 @@ public extension UIEdgeInsets {
 		return UIEdgeInsets(top: top ?? self.top, left: left ?? self.left, bottom: bottom ?? self.bottom, right: right ?? self.right)
 	}
 
-	
+
+	@available(*, unavailable, message: "a + b")
 	func increaseBy(_ insets: UIEdgeInsets) -> UIEdgeInsets {
-		return UIEdgeInsets(top: top + insets.top, left: left + insets.left, bottom: bottom + insets.bottom, right: right + insets.right)
+		return self + insets
 	}
 
 
+	@available(*, deprecated, message: "insets = insets.increase(by: …)")
 	mutating func increaseInPlace(_ insets: UIEdgeInsets) {
-		self = increaseBy(insets)
+		self += insets
 	}
 
 
+	@available(*, unavailable, renamed: "-")
 	var inverse: UIEdgeInsets {
-		return UIEdgeInsets(top: -top, left: -left, bottom: -bottom, right: -right)
+		return -self
 	}
 
 
 	var isEmpty: Bool {
-		return (top == 0 && left == 0 && bottom == 0 && right == 0)
+		return self == .zero
+	}
+
+
+	static prefix func - (_ insets: UIEdgeInsets) -> UIEdgeInsets {
+		return UIEdgeInsets(top: -insets.top, left: -insets.left, bottom: -insets.bottom, right: -insets.right)
+	}
+
+
+	static func + (_ lhs: UIEdgeInsets, _ rhs: UIEdgeInsets) -> UIEdgeInsets {
+		return UIEdgeInsets(top: lhs.top + rhs.top, left: lhs.left + rhs.left, bottom: lhs.bottom + rhs.bottom, right: lhs.right + rhs.right)
+	}
+
+
+	static func += (_ lhs: inout UIEdgeInsets, _ rhs: UIEdgeInsets) {
+		lhs = lhs + rhs
+	}
+
+
+	static func - (_ lhs: UIEdgeInsets, _ rhs: UIEdgeInsets) -> UIEdgeInsets {
+		return UIEdgeInsets(top: lhs.top - rhs.top, left: lhs.left - rhs.left, bottom: lhs.bottom - rhs.bottom, right: lhs.right - rhs.right)
+	}
+
+
+	static func -= (_ lhs: inout UIEdgeInsets, _ rhs: UIEdgeInsets) {
+		lhs = lhs - rhs
 	}
 }
 
@@ -82,19 +110,15 @@ public extension UIEdgeInsets {
 
 public extension CGRect {
 
-	
+	@available(*, unavailable, renamed: "inset(by:)")
 	func insetBy(_ insets: UIEdgeInsets) -> CGRect {
-		return CGRect(
-			left:   left + insets.left,
-			top:    top + insets.top,
-			width:  width - insets.left - insets.right,
-			height: height - insets.top - insets.bottom
-		)
+		return inset(by: insets)
 	}
 
 
+	@available(*, deprecated, message: "rect = rect.inset(by: …)")
 	mutating func insetInPlace(_ insets: UIEdgeInsets) {
-		self = insetBy(insets)
+		self = inset(by: insets)
 	}
 }
 
@@ -102,8 +126,7 @@ public extension CGRect {
 
 public extension CGSize {
 
-	
-	func insetBy(_ insets: UIEdgeInsets) -> CGSize {
+	func inset(by insets: UIEdgeInsets) -> CGSize {
 		return CGSize(
 			width:  width - insets.left - insets.right,
 			height: height - insets.top - insets.bottom
@@ -111,7 +134,14 @@ public extension CGSize {
 	}
 
 
+	@available(*, unavailable, renamed: "inset(by:)")
+	func insetBy(_ insets: UIEdgeInsets) -> CGSize {
+		return inset(by: insets)
+	}
+
+
+	@available(*, deprecated, message: "size = size.inset(by: …)")
 	mutating func insetInPlace(_ insets: UIEdgeInsets) {
-		self = insetBy(insets)
+		self = inset(by: insets)
 	}
 }

@@ -81,7 +81,7 @@ public extension UIImage {
 		let verticalScale = orientedMaximumSize.height / currentSize.height
 		let scale = min(horizontalScale, verticalScale)
 
-		var targetSize = currentSize.scaleBy(scale)
+		var targetSize = currentSize.scale(by: scale)
 		targetSize.height = floor(targetSize.height)
 		targetSize.width = floor(targetSize.width)
 

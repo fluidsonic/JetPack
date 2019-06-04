@@ -51,7 +51,7 @@ private final class AVAssetSourceSession: ImageView.Session {
 
 
 	fileprivate func startOrRestartRequestForImageView(_ imageView: ImageView) {
-		let optimalSize = imageView.optimalImageSize.scaleBy(imageView.optimalImageScale)
+		let optimalSize = imageView.optimalImageSize.scale(by: imageView.optimalImageScale)
 		var size = self.lastRequestedSize
 		size.width = max(size.width, optimalSize.width, size.height, optimalSize.height)
 		size.height = size.width
@@ -81,7 +81,7 @@ private final class AVAssetSourceSession: ImageView.Session {
 			}
 
 			let image = UIImage(cgImage: cgImage)
-			let imageSize = image.size.scaleBy(image.scale)
+			let imageSize = image.size.scale(by: image.scale)
 
 			self.lastRequestedSize.width = max(self.lastRequestedSize.width, imageSize.width)
 			self.lastRequestedSize.height = max(self.lastRequestedSize.height, imageSize.height)

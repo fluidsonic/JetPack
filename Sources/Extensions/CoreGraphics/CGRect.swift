@@ -26,10 +26,10 @@ public extension CGRect {
 			let t1 = CGAffineTransform(horizontalTranslation: anchorLeft, verticalTranslation: anchorTop)
 			let t2 = CGAffineTransform(horizontalTranslation: -anchorLeft, verticalTranslation: -anchorTop)
 
-			return self.applying(t2 * transform * t1)
+			return applying(t2 * transform * t1)
 		}
 		else {
-			return self.applying(transform)
+			return applying(transform)
 		}
 	}
 
@@ -157,6 +157,7 @@ public extension CGRect {
 
 	internal var height: CGFloat { // public doesn't work due getter ambigutity
 		get { return size.height }
+		@available(*, deprecated, renamed: "heightFromTop")
 		mutating set { size.height = newValue }
 	}
 
@@ -238,6 +239,7 @@ public extension CGRect {
 
 	internal var width: CGFloat { // public doesn't work due getter ambigutity
 		get { return size.width }
+		@available(*, deprecated, renamed: "widthFromLeft")
 		mutating set { size.width = newValue }
 	}
 

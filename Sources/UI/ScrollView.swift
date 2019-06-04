@@ -35,7 +35,7 @@ open class ScrollView: UIScrollView {
 			return
 		}
 
-		let availableSize = bounds.size.insetBy(self.contentInset)
+		let availableSize = bounds.size.inset(by: self.contentInset)
 
 		var viewForZoomingFrame = viewForZooming.convert(viewForZooming.bounds, to: self)
 		if viewForZoomingFrame.width < availableSize.width {
@@ -164,7 +164,7 @@ open class ScrollView: UIScrollView {
 
 	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let originalHitZone = bounds
-		let extendedHitZone = originalHitZone.insetBy(additionalHitZone.inverse)
+		let extendedHitZone = originalHitZone.inset(by: -additionalHitZone)
 
 		let hitZoneCornerRadius: CGFloat
 		if hitZoneFollowsCornerRadius && cornerRadius > 0 {

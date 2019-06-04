@@ -32,11 +32,10 @@ class CGPoint_Tests: XCTestCase {
 
 	func testOffset() {
 		let point = CGPoint(x: 1, y: 2)
-		XCTAssertEqual(point.offsetBy(dx: 3),               CGPoint(x: 4, y: 2))
-		XCTAssertEqual(point.offsetBy(dy: 4),               CGPoint(x: 1, y: 6))
-		XCTAssertEqual(point.offsetBy(dx: 3, dy: 4),        CGPoint(x: 4, y: 6))
-		XCTAssertEqual(point.offsetBy(CGPoint(x: 3, y: 4)), CGPoint(x: 4, y: 6))
-		XCTAssertEqual(point, CGPoint(x: 1, y: 2))
+		XCTAssertEqual(point.offsetBy(dx: 3),        CGPoint(x: 4, y: 2))
+		XCTAssertEqual(point.offsetBy(dy: 4),        CGPoint(x: 1, y: 6))
+		XCTAssertEqual(point.offsetBy(dx: 3, dy: 4), CGPoint(x: 4, y: 6))
+		XCTAssertEqual(point + CGPoint(x: 3, y: 4),  CGPoint(x: 4, y: 6))
 	}
 
 

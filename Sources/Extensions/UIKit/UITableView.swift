@@ -106,11 +106,11 @@ public extension UITableView {
 	func scrollRowAtIndexPathToVisible(_ indexPath: IndexPath, insets: UIEdgeInsets = .zero, animated: Bool = false) -> Bool {
 		let contentSize = self.contentSize
 
-		var rect = rectForRow(at: indexPath).insetBy(insets.inverse)
+		var rect = rectForRow(at: indexPath).inset(by: -insets)
 		rect.left = rect.left.coerced(in: 0 ... max(contentSize.width - rect.width, 0))
 		rect.top = rect.top.coerced(in: 0 ... max(contentSize.height - rect.height, 0))
 
-		guard !bounds.insetBy(contentInset).contains(rect) else {
+		guard !bounds.inset(by: contentInset).contains(rect) else {
 			return false
 		}
 
