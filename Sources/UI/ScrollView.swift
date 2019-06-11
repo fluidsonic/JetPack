@@ -188,7 +188,6 @@ open class ScrollView: UIScrollView {
 
 	// Override `sizeThatFitsSize(_:)` instead!
 	@available(*, unavailable, renamed: "sizeThatFitsSize")
-	
 	public final override func sizeThatFits(_ maximumSize: CGSize) -> CGSize {
 		return sizeThatFitsSize(maximumSize)
 	}

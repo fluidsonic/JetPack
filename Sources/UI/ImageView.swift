@@ -526,8 +526,9 @@ open class ImageView: View {
 
 					imageView.updateActivityIndicatorAnimated(true)
 
+					// we only transition from an empty ImageView and not if there was another image shown (which can happen if the image is loaded instantly)
 					let transitionDuration = imageView.sourceTransitionDuration
-					if transitionDuration > 0 {
+					if transitionDuration > 0 && imageView.imageLayer.presentation()?.contents == nil {
 						let transition = CATransition()
 						transition.duration = transitionDuration
 						imageView.imageLayer.add(transition, forKey: kCATransition)

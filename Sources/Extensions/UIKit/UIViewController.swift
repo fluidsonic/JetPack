@@ -363,6 +363,12 @@ extension UIViewController {
 
 
 	@nonobjc
+	public func present(_ viewControllerToPresent: UIViewController, completion: Closure? = nil) {
+		present(viewControllerToPresent, animated: true, completion: completion)
+	}
+
+
+	@nonobjc
 	public func presentAlertWithMessage(_ message: String, okayHandler: Closure? = nil) {
 		presentAlertWithTitle("", message: message, okayHandler: okayHandler)
 	}
@@ -373,16 +379,18 @@ extension UIViewController {
 		let alertController = UIAlertController(alertWithTitle: title, message: message)
 		alertController.addOkayAction(okayHandler)
 
-		presentViewController(alertController)
+		present(alertController)
 	}
 
 
+	@available(*, unavailable, renamed: "present(_:animated:)")
 	@nonobjc
 	public func presentViewController(_ viewControllerToPresent: UIViewController, animated: Bool) {
 		present(viewControllerToPresent, animated: animated, completion: nil)
 	}
 
 
+	@available(*, unavailable, renamed: "present(_:completion:)")
 	@nonobjc
 	public func presentViewController(_ viewControllerToPresent: UIViewController, completion: Closure? = nil) {
 		present(viewControllerToPresent, animated: true, completion: completion)
