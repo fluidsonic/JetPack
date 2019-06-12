@@ -55,6 +55,7 @@ class TextLayer: Layer {
 				let presentation = presentation()
 			{
 				basicAnimation.fromValue = presentation.value(forKey: key)
+				basicAnimation.isRemovedOnCompletion = true
 				basicAnimation.keyPath = key
 
 				return animation as? CAAction
