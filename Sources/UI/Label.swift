@@ -55,6 +55,9 @@ open class Label: View {
 		if window != nil {
 			textLayer.contentsScale = gridScaleFactor
 		}
+		else {
+			textLayer.removeAllAnimations()
+		}
 	}
 
 
