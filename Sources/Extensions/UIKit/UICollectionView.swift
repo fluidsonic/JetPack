@@ -21,10 +21,4 @@ public extension UICollectionView {
 
 		return nil
 	}
-
-
-	@nonobjc
-	func performBatchUpdates(_ updates: @escaping Closure) {
-		self.performBatchUpdates(updates, completion: nil)
-	}
 }

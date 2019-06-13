@@ -201,6 +201,11 @@ public extension CGRect {
 	}
 
 
+	func offsetBy(_ offset: CGPoint) -> CGRect {
+		return offsetBy(dx: offset.x, dy: offset.y)
+	}
+
+
 	var right: CGFloat {
 		get { return origin.left + size.width }
 		mutating set { origin.left = newValue - size.width }

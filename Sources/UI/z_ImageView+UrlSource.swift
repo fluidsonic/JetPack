@@ -516,7 +516,9 @@ extension ImageDownloadCoordinator: URLSessionDataDelegate {
 		assert(queue: .main)
 
 		guard let downloader = downloadersByTaskId[task.taskIdentifier] else {
-			fatalError("Cannot find downloader for task: \(task)")
+			// can actually happen when the task was canceled
+			completionHandler(nil)
+			return
 		}
 
 		completionHandler(downloader.task(task, willCache: proposedResponse))

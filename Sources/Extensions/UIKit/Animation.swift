@@ -104,7 +104,7 @@ public struct Animation {
 
 		withoutActuallyEscaping(changes) { changes in
 			animator = prepareWithCompletion(changes)
-			animator.startAnimation()
+			animator.startAnimation(afterDelay: delay)
 		}
 
 		return animator
