@@ -7,11 +7,9 @@ public struct Animation {
 	public typealias CompletionRegistration = (@escaping Completion) -> Void
 
 	public var allowsUserInteraction = false
-	public var autoreverses = false
 	public var delay = TimeInterval(0)
 	public var duration: TimeInterval
 	public var isManualHitTestingEnabled = false
-	public var repeats = false
 	public var timing: Timing
 
 	public private(set) static var current: Animation?
@@ -38,57 +36,15 @@ public struct Animation {
 		animator.isManualHitTestingEnabled = isManualHitTestingEnabled
 		animator.isUserInteractionEnabled = allowsUserInteraction
 
-		let repeats = self.repeats
-
 		animator.addAnimations { [unowned animator] in
 			let outerAnimation = Animation.current
 			Animation.current = self
 			defer { Animation.current = outerAnimation }
 
-			changes() { completion in
-				if repeats {
-					fatalError("Cannot add a completion handler to an animation which repeats indefinitely")
-				}
-
-				animator.addCompletion(completion)
-			}
-		}
-
-		if repeats {
-			Animation.repeatAnimator(animator, autoreverse: autoreverses)
+			changes(animator.addCompletion)
 		}
 
 		return animator
-	}
-
-
-	private static func repeatAnimator(_ animator: UIViewPropertyAnimator, autoreverse: Bool) {
-		animator.pausesOnCompletion = true
-
-		var observation: NSKeyValueObservation!
-		observation = animator.observe(\.isRunning) { animator, _ in
-			guard !animator.isRunning else {
-				return
-			}
-
-			if autoreverse {
-				animator.isReversed = !animator.isReversed
-			}
-
-			animator.startAnimation()
-
-			// This seems to be the only way to detect that the CAAnimations of all animated views have been stopped
-			// i.e. the views have either been removed from the view hierarchy or their animations been removed manually.
-			if animator.fractionComplete > 0 {
-				// To avoid leaking the animator and letting it run endlessly we'll stop the repetition.
-				observation.invalidate()
-				animator.stopAnimation(true)
-			}
-		}
-
-		animator.addCompletion { _ in
-			observation.invalidate()
-		}
 	}
 
 
@@ -181,18 +137,12 @@ extension Animation: CustomStringConvertible {
 		if allowsUserInteraction {
 			description += ", allowsUserInteraction: true"
 		}
-		if autoreverses {
-			description += ", autoreverses: true"
-		}
 		if delay != 0 {
 			description += ", delay: "
 			description += String(delay)
 		}
 		if isManualHitTestingEnabled {
 			description += ", isManualHitTestingEnabled: true"
-		}
-		if repeats {
-			description += ", repeats: true"
 		}
 		description += ")"
 
