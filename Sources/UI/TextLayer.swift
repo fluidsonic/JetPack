@@ -58,7 +58,7 @@ class TextLayer: Layer {
 				basicAnimation.isRemovedOnCompletion = true
 				basicAnimation.keyPath = key
 
-				return animation as? CAAction
+				return basicAnimation
 			}
 
 			fallthrough

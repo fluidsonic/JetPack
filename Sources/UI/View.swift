@@ -41,11 +41,15 @@ open class View: UIView {
 	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
 		switch event {
 		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
-			if let animation = super.action(for: layer, forKey: "opacity") as? CABasicAnimation {
-				animation.fromValue = layer.value(forKey: event)
-				animation.keyPath = event
+			if
+				let animation = super.action(for: layer, forKey: "opacity") as? NSObject,
+				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation)
+			{
+				basicAnimation.fromValue = layer.value(forKey: event)
+				basicAnimation.isRemovedOnCompletion = true
+				basicAnimation.keyPath = event
 
-				return animation
+				return basicAnimation
 			}
 
 			fallthrough
@@ -475,6 +479,11 @@ open class View: UIView {
 		}
 
 		layer.borderColor = borderColor
+	}
+
+
+	open override var wantsSafeAreaInsets: Bool {
+		return false
 	}
 
 

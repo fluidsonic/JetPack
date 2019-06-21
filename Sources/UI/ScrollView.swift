@@ -191,6 +191,19 @@ open class ScrollView: UIScrollView {
 	public final override func sizeThatFits(_ maximumSize: CGSize) -> CGSize {
 		return sizeThatFitsSize(maximumSize)
 	}
+
+
+	open override func touchesShouldCancel(in view: UIView) -> Bool {
+		guard super.touchesShouldCancel(in: view) else {
+			return false
+		}
+
+		guard let button = view as? Button else {
+			return true
+		}
+
+		return button.cancelsTouchForScrollViewTracking
+	}
 }
 
 

@@ -42,4 +42,17 @@ open class CollectionView: UICollectionView {
 
 		return hitView
 	}
+
+
+	open override func touchesShouldCancel(in view: UIView) -> Bool {
+		guard super.touchesShouldCancel(in: view) else {
+			return false
+		}
+
+		guard let button = view as? Button else {
+			return true
+		}
+
+		return button.cancelsTouchForScrollViewTracking
+	}
 }

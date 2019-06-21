@@ -1,14 +1,14 @@
 import CoreGraphics
 
 
-public struct CornerRadii {
+public struct CornerRadii: Equatable {
+
+	public static let zero = CornerRadii()
 
 	public var bottomLeft: CGFloat
 	public var bottomRight: CGFloat
 	public var topLeft: CGFloat
 	public var topRight: CGFloat
-
-	public static let zero = CornerRadii()
 
 
 	public init(all: CGFloat) {
@@ -57,13 +57,4 @@ public struct CornerRadii {
 	public var isZero: Bool {
 		return bottomLeft == 0 && bottomRight == 0 && topLeft == 0 && topRight == 0
 	}
-}
-
-
-extension CornerRadii: Equatable {}
-
-
-
-public func == (a: CornerRadii, b: CornerRadii) -> Bool {
-	return a.bottomLeft == b.bottomLeft && a.bottomRight == b.bottomRight && a.topLeft == b.topLeft && a.topRight == b.topRight
 }

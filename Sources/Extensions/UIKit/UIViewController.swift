@@ -462,6 +462,12 @@ extension UIViewController {
 	}
 
 
+	@objc(JetPack_subviewDidInvalidateIntrinsicContentSize:)
+	open func subviewDidInvalidateIntrinsicContentSize(_ subview: UIView) {
+		// override in subclasses
+	}
+
+
 	@objc(JetPack_didMoveToParentViewController:)
 	fileprivate dynamic func swizzled_didMoveToParentViewController(_ parentViewController: UIViewController?) {
 		let oldContainmentState = self.containmentState

@@ -35,17 +35,30 @@ open class ShapeView: View {
 	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
 		switch event {
 		case "fillColor", "path", "strokeColor":
-			if let animation = super.action(for: layer, forKey: "opacity") as? CABasicAnimation {
-				animation.fromValue = shapeLayer.path
-				animation.keyPath = event
+			if
+				let animation = super.action(for: layer, forKey: "opacity") as? NSObject,
+				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation)
+			{
+				basicAnimation.fromValue = layer.value(forKey: event)
+				basicAnimation.isRemovedOnCompletion = true
+				basicAnimation.keyPath = event
 
-				return animation
+				return basicAnimation
 			}
 
 			fallthrough
 
 		default:
 			return super.action(for: layer, forKey: event)
+		}
+	}
+
+
+	open override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window != nil {
+			layer.rasterizationScale = gridScaleFactor
 		}
 	}
 

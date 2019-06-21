@@ -204,7 +204,9 @@ extension UIView {
 
 	@objc(JetPack_subviewDidInvalidateIntrinsicContentSize:)
 	open func subviewDidInvalidateIntrinsicContentSize(_ view: UIView) {
-		// override in subclasses
+		if let viewController = delegateViewController {
+			viewController.subviewDidInvalidateIntrinsicContentSize(view)
+		}
 	}
 
 
@@ -250,6 +252,23 @@ extension UIView {
 			bounds = CGRect(origin: bounds.origin, size: newValue.size)
 			center = newValue.center + centerOffset
 		}
+	}
+
+
+	@objc(JetPack_update_safe_area_insets)
+	fileprivate dynamic func swizzled_updateSafeAreaInsets() {
+		guard wantsSafeAreaInsets else {
+			// optimization because iOS keeps re-layouting views during scrolling because of safeAreaInsets changes even if you don't care about them
+			return
+		}
+
+		swizzled_updateSafeAreaInsets()
+	}
+
+
+	@objc(JetPack_wantsSafeAreaInsets)
+	open var wantsSafeAreaInsets: Bool {
+		return true
 	}
 
 
@@ -384,5 +403,6 @@ private class StaticInitialization: NSObject, StaticInitializable {
 		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "did", "Move", "From", "Window:", "to", "Window:"), to: #selector(UIView.swizzled_didChangeWindow(from:to:)))
 		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "invalidate", "Intrinsic", "Content", "Size", "Needing", "Layout:"), to: #selector(UIView.swizzled_invalidateIntrinsicContentSizeNeedingLayout(_:)))
 		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "remove", "All", "Animations:"), to: #selector(UIView.swizzled_removeAllAnimations(_:)))
+		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "update", "Safe", "Area", "Insets"), to: #selector(UIView.swizzled_updateSafeAreaInsets))
 	}
 }

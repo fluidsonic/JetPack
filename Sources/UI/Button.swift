@@ -4,15 +4,17 @@ import UIKit
 @objc(JetPack_Button)
 open class Button: View {
 
-	fileprivate var _activityIndicator: UIActivityIndicatorView?
-	fileprivate var _imageView: ImageView?
-	fileprivate var _textLabel: Label?
+	private var _activityIndicator: UIActivityIndicatorView?
+	private var _imageView: ImageView?
+	private var _textLabel: Label?
 
-	fileprivate var defaultAlpha = CGFloat(1)
-	fileprivate var defaultBackgroundColor: UIColor?
-	fileprivate var defaultBorderColor: UIColor?
-	fileprivate var defaultTintColor: UIColor?
+	private var defaultAlpha = CGFloat(1)
+	private var defaultBackgroundColor: UIColor?
+	private var defaultBorderColor: UIColor?
+	private var defaultTintColor: UIColor?
+	private var highlightingTouch: UITouch?
 
+	open var cancelsTouchForScrollViewTracking = false
 	open var tapped: Closure?
 	open var touchTolerance = CGFloat(75)
 
@@ -153,13 +155,11 @@ open class Button: View {
 				return
 			}
 
-			if highlightedAlpha != defaultAlpha || highlightedBackgroundColor != defaultBackgroundColor || highlightedBorderColor != defaultBorderColor || highlightedTintColor != defaultTintColor {
-				var animation: Animation? = highlighted ? nil : Animation(duration: 0.3)
-				animation?.allowsUserInteraction = true
+			var animation: Animation? = highlighted ? nil : Animation(duration: 0.3)
+			animation?.allowsUserInteraction = true
 
-				animation.runAlways {
-					updateHighlightState()
-				}
+			animation.runAlways {
+				updateHighlightState()
 			}
 		}
 	}
@@ -857,8 +857,14 @@ open class Button: View {
 
 
 	open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		guard !isUserInteractionLimitedToSubviews else {
+			super.touchesBegan(touches, with: event)
+			return
+		}
+
 		if let touch = touches.first, touchIsAcceptableForTap(touch, event: event) {
 			highlighted = true
+			highlightingTouch = touch
 		}
 		else {
 			highlighted = false
@@ -867,11 +873,21 @@ open class Button: View {
 
 
 	open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+		guard let highlightingTouch = highlightingTouch, touches.contains(highlightingTouch) else {
+			super.touchesCancelled(touches, with: event)
+			return
+		}
+
 		highlighted = false
 	}
 
 
 	open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		guard let highlightingTouch = highlightingTouch, touches.contains(highlightingTouch) else {
+			super.touchesEnded(touches, with: event)
+			return
+		}
+
 		highlighted = false
 
 		if enabled, let tapped = tapped, let touch = touches.first, touchIsAcceptableForTap(touch, event: event) {
@@ -881,6 +897,11 @@ open class Button: View {
 
 
 	open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+		guard let highlightingTouch = highlightingTouch, touches.contains(highlightingTouch) else {
+			super.touchesMoved(touches, with: event)
+			return
+		}
+
 		if let touch = touches.first, touchIsAcceptableForTap(touch, event: event) {
 			highlighted = true
 		}
@@ -890,7 +911,7 @@ open class Button: View {
 	}
 	
 
-	fileprivate func updateAlpha() {
+	private func updateAlpha() {
 		let alpha: CGFloat
 		if !enabled, let disabledAlpha = disabledAlpha {
 			alpha = disabledAlpha
@@ -906,7 +927,7 @@ open class Button: View {
 	}
 
 
-	fileprivate func updateBackgroundColor() {
+	private func updateBackgroundColor() {
 		let backgroundColor: UIColor?
 		if !enabled, let disabledBackgroundColor = disabledBackgroundColor {
 			backgroundColor = disabledBackgroundColor
@@ -922,7 +943,7 @@ open class Button: View {
 	}
 
 
-	fileprivate func updateBorderColor() {
+	private func updateBorderColor() {
 		let borderColor: UIColor?
 		if highlighted, let highlightedBorderColor = highlightedBorderColor {
 			borderColor = highlightedBorderColor
@@ -942,7 +963,7 @@ open class Button: View {
 	}
 
 
-	fileprivate func updateTintColor() {
+	private func updateTintColor() {
 		let tintColor: UIColor?
 		if highlighted, let highlightedTintColor = highlightedTintColor {
 			tintColor = highlightedTintColor
