@@ -33,17 +33,6 @@ open class ViewController: UIViewController {
 	}
 
 
-	open override func dismissViewController(animated: Bool = true, completion: Closure? = nil) {
-		super.dismiss(animated: animated, completion: completion)
-	}
-
-
-	@available(*, unavailable, renamed: "dismissViewController")
-	public final override func dismiss(animated flag: Bool, completion: Closure?) {
-		presentedViewController?.dismissViewController(completion: completion)
-	}
-
-
 	open override func loadView() {
 		view = View()
 		view.frame = UIScreen.main.bounds // required or else UISplitViewController's overlay animation gets broken

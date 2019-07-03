@@ -35,17 +35,6 @@ open class NavigationController: UINavigationController {
 	}
 
 
-	open override func dismissViewController(animated: Bool = true, completion: Closure? = nil) {
-		super.dismiss(animated: animated, completion: completion)
-	}
-
-
-	@available(*, unavailable, renamed: "dismissViewController")
-	public final override func dismiss(animated flag: Bool, completion: Closure?) {
-		presentedViewController?.dismissViewController(completion: completion)
-	}
-
-
 	public var interactivePopGestureRequiresNavigationBar = true {
 		didSet {
 			guard interactivePopGestureRequiresNavigationBar != oldValue else {

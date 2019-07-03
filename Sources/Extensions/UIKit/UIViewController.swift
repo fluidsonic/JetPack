@@ -242,18 +242,9 @@ extension UIViewController {
 	}
 
 
-	@objc(JetPack_dismissViewControllerAnimated:completion:)
-	public func dismissViewController(animated: Bool = true, completion: Closure? = nil) {
-		if let presentedViewController = presentedViewController {
-			log("Cannot dismiss view controller \(self) while it is presenting view controller \(presentedViewController).")
-			return
-		}
-		guard presentingViewController != nil else {
-			log("Cannot dismiss view controller \(self) which was not presented modally.")
-			return
-		}
-
-		dismiss(animated: animated, completion: completion)
+	@objc(JetPack_dismissWithCompletion:)
+	public func dismiss(completion: Closure? = nil) {
+		dismiss(animated: true, completion: completion)
 	}
 
 
