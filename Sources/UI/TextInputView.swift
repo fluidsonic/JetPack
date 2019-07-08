@@ -3,10 +3,14 @@ import UIKit
 
 open class TextInputView: View {
 
+	public typealias Delegate = _TextInputViewDelegate
+
 	private var lastLayoutedSize = CGSize.zero
 	private var lastMeasuredNativeHeight = CGFloat(0)
 	private let nativeView = NativeView()
 	private var placeholderView: Label?
+
+	public weak var delegate: Delegate?
 
 
 	public override init() {
@@ -27,6 +31,7 @@ open class TextInputView: View {
 	}
 
 
+	@discardableResult
 	open override func becomeFirstResponder() -> Bool {
 		return nativeView.becomeFirstResponder()
 	}
@@ -86,6 +91,8 @@ open class TextInputView: View {
 	fileprivate func nativeViewDidChange() {
 		updatePlaceholderView()
 		checkIntrinsicContentSize()
+
+		delegate?.textInputViewDidChange(self)
 	}
 
 
@@ -118,6 +125,7 @@ open class TextInputView: View {
 	}
 
 
+	@discardableResult
 	open override func resignFirstResponder() -> Bool {
 		return nativeView.resignFirstResponder()
 	}
@@ -200,6 +208,12 @@ open class TextInputView: View {
 			placeholderView.text = placeholder
 		}
 	}
+}
+
+
+public protocol _TextInputViewDelegate: class {
+
+	func textInputViewDidChange (_ inputView: TextInputView)
 }
 
 
