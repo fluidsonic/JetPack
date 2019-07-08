@@ -49,6 +49,7 @@ open class TextInputView: View {
 	}
 
 
+	@discardableResult
 	open override func endEditing(_ force: Bool) -> Bool {
 		return nativeView.endEditing(force)
 	}

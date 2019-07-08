@@ -26,6 +26,7 @@ class TextLayer: Layer {
 		normalTintAdjustmentMode = layer.normalTintAdjustmentMode
 		normalTintColor = layer.normalTintColor
 		textLayout = layer.textLayout
+		textSize = layer.textSize
 
 		_links = layer._links
 
@@ -329,13 +330,6 @@ class TextLayer: Layer {
 	}
 
 
-	func textSize(fitting maximumSize: CGSize) -> CGSize {
-		precondition(maximumSize.isPositive)
-
-		return buildTextLayout(maximumSize: maximumSize).size
-	}
-
-
 	var text: String {
 		get { return attributedText.string }
 		set { attributedText = NSAttributedString(string: newValue) }
@@ -361,6 +355,13 @@ class TextLayer: Layer {
 
 			invalidateTextLayout()
 		}
+	}
+
+
+	func textSize(fitting maximumSize: CGSize) -> CGSize {
+		precondition(maximumSize.isPositive)
+
+		return buildTextLayout(maximumSize: maximumSize).size
 	}
 
 

@@ -448,7 +448,7 @@ extension UIViewController {
 		notificationCenter.addObserver(forName: UIApplication.willResignActiveNotification, object: application, queue: nil, using: applicationWillResignActive)
 
 		_ = Keyboard.eventBus.subscribe { (_: Keyboard.Event.WillChangeFrame) in
-			self.invalidateTopLevelDecorationInsetsWithAnimation(Keyboard.animation)
+			self.invalidateTopLevelDecorationInsetsWithAnimation(Animation.current ?? Keyboard.animation)
 		}
 	}
 
