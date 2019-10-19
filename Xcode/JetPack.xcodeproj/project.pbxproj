@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08A0EFF08AD2C338D4E9A769 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		08A0EFF08AD2C338D4E9A769 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		12528736DDD55EC797C1929D /* Pods_Extensions_CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41EDDB030829CCA1535CCAB3 /* Pods_Extensions_CoreGraphics.framework */; };
 		1686C12E0B19491D33002A46 /* Pods_Extensions_Swift_Extensions_Swift_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D77F2EF4491A687F77C6E4C4 /* Pods_Extensions_Swift_Extensions_Swift_Tests.framework */; };
 		195AAA63580B43CBE55E0695 /* Pods_Extensions_Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7732EF36E223C0D6E21C0F4 /* Pods_Extensions_Foundation.framework */; };
@@ -82,21 +82,21 @@
 		49CDDE671C94520300FB7DEF /* Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CE61BE5A475001FDCE8 /* Support.swift */; };
 		49CDDE6B1C94520300FB7DEF /* FloatingPointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A72CC31BE588C2001FDCE8 /* FloatingPointType.swift */; };
 		49CDDE791C9453B900FB7DEF /* String+Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CDDE781C9453B900FB7DEF /* String+Foundation.swift */; };
-		49FFFEFDE891773B6164B27A /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		49FFFEFDE891773B6164B27A /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		4F30A3DF4DB872C7D9E0A154 /* Pods_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A144D70BD967A43CF4727B /* Pods_Core.framework */; };
 		53883118E526C50906572FEA /* Pods_Extensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD0034D122583C057107807 /* Pods_Extensions.framework */; };
 		69764DE5143A346246927782 /* Pods_Extensions_Foundation_Extensions_Foundation_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 560F1937E24DC30C99C6321B /* Pods_Extensions_Foundation_Extensions_Foundation_Tests.framework */; };
 		6AD2DD84733CD08A5C4060E3 /* Pods_Experimental.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F21ABABCC518113C7EB5A50F /* Pods_Experimental.framework */; };
-		6DC7DA3B7CEA2E12D8BB943B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		6DC7DA3B7CEA2E12D8BB943B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7AE869F03593272D207CA6A3 /* Pods_Deprecated.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94EA569DD4074BBAD9DB8CFB /* Pods_Deprecated.framework */; };
-		8893EE28E83298B9D6BC355F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		8893EE28E83298B9D6BC355F /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		8CFD8EC63EF786BE6CE8FB1A /* Pods_UI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E709C4A7369E3221861F3D1 /* Pods_UI.framework */; };
 		963879DC5C8C08CC6C9B59F3 /* Pods_Extensions_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69ED71B9F3B9905F2AC1DDFF /* Pods_Extensions_Swift.framework */; };
 		A64D5FC1ABB6C6A02A5C6358 /* Pods_Extensions_UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA35972D7BDD2AB69841DD8D /* Pods_Extensions_UIKit.framework */; };
 		B41B9365EF08B87CF28D91C5 /* Pods_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D825567F600FC7D1E796A6C5 /* Pods_macOS.framework */; };
-		B9A062E1309A287A5D871572 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		B9A062E1309A287A5D871572 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		C785404190DA89CB4842319F /* Pods_Measures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA224096E2A319FE8318DF16 /* Pods_Measures.framework */; };
-		D92A5F69554450B3C0AD13CC /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		D92A5F69554450B3C0AD13CC /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		DFE22D41AD8927D074DB4DB5 /* Pods_Extensions_MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861219B7A665CD5D97779F45 /* Pods_Extensions_MapKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -263,7 +263,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D92A5F69554450B3C0AD13CC /* BuildFile in Frameworks */,
+				D92A5F69554450B3C0AD13CC /* (null) in Frameworks */,
 				4F30A3DF4DB872C7D9E0A154 /* Pods_Core.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,7 +288,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9A062E1309A287A5D871572 /* BuildFile in Frameworks */,
+				B9A062E1309A287A5D871572 /* (null) in Frameworks */,
 				7AE869F03593272D207CA6A3 /* Pods_Deprecated.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,7 +313,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49FFFEFDE891773B6164B27A /* BuildFile in Frameworks */,
+				49FFFEFDE891773B6164B27A /* (null) in Frameworks */,
 				12528736DDD55EC797C1929D /* Pods_Extensions_CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,7 +338,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DC7DA3B7CEA2E12D8BB943B /* BuildFile in Frameworks */,
+				6DC7DA3B7CEA2E12D8BB943B /* (null) in Frameworks */,
 				195AAA63580B43CBE55E0695 /* Pods_Extensions_Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,7 +363,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8893EE28E83298B9D6BC355F /* BuildFile in Frameworks */,
+				8893EE28E83298B9D6BC355F /* (null) in Frameworks */,
 				963879DC5C8C08CC6C9B59F3 /* Pods_Extensions_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +388,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08A0EFF08AD2C338D4E9A769 /* BuildFile in Frameworks */,
+				08A0EFF08AD2C338D4E9A769 /* (null) in Frameworks */,
 				1686C12E0B19491D33002A46 /* Pods_Extensions_Swift_Extensions_Swift_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1011,7 +1011,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = JetPack;
 				TargetAttributes = {
 					49361017229E053400095CD8 = {
