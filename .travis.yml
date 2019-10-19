@@ -11,14 +11,14 @@ env:
     - POD_LINT="yes"
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                           CONFIGURATION="Debug"   DESTINATION="OS=13.1,name=iPhone 11"
     - SDK="$IOS_SIMULATOR_SDK" SCHEME="All"                           CONFIGURATION="Release" DESTINATION="OS=13.1,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics-Tests" CONFIGURATION="Debug"   DESTINATION="OS=12.4,name=iPhone 11"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics-Tests" CONFIGURATION="Release" DESTINATION="OS=12.4,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation-Tests"   CONFIGURATION="Debug"   DESTINATION="OS=12.4,name=iPhone 11"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation-Tests"   CONFIGURATION="Release" DESTINATION="OS=12.4,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift-Tests"        CONFIGURATION="Debug"   DESTINATION="OS=12.4,name=iPhone 11"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift-Tests"        CONFIGURATION="Release" DESTINATION="OS=12.4,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="UI-Tests"                      CONFIGURATION="Debug"   DESTINATION="OS=12.4,name=iPhone 11"
-    - SDK="$IOS_SIMULATOR_SDK" SCHEME="UI-Tests"                      CONFIGURATION="Release" DESTINATION="OS=12.4,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics-Tests" CONFIGURATION="Debug"   DESTINATION="OS=13.1,name=iPhone 11"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-CoreGraphics-Tests" CONFIGURATION="Release" DESTINATION="OS=13.1,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation-Tests"   CONFIGURATION="Debug"   DESTINATION="OS=13.1,name=iPhone 11"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Foundation-Tests"   CONFIGURATION="Release" DESTINATION="OS=13.1,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift-Tests"        CONFIGURATION="Debug"   DESTINATION="OS=13.1,name=iPhone 11"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="Extensions-Swift-Tests"        CONFIGURATION="Release" DESTINATION="OS=13.1,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="UI-Tests"                      CONFIGURATION="Debug"   DESTINATION="OS=13.1,name=iPhone 11"
+    - SDK="$IOS_SIMULATOR_SDK" SCHEME="UI-Tests"                      CONFIGURATION="Release" DESTINATION="OS=13.1,name=iPhone 11" SWIFT_OPTIMIZATION_LEVEL="-Owholemodule"
     
 before_install:
   - gem install cocoapods xcpretty xcpretty-travis-formatter --no-document --quiet
