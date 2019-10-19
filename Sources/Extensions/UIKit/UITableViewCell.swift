@@ -59,7 +59,7 @@ public extension UITableViewCell {
 			predictedConfiguration = nil
 		}
 
-		var contentFrame = layoutManager.private_contentFrameForCell(self, editing: editing, showingDeleteConfirmation: showingDeleteConfirmation, width: maximumSize.width)
+		let contentFrame = layoutManager.private_contentFrameForCell(self, editing: editing, showingDeleteConfirmation: showingDeleteConfirmation, width: maximumSize.width)
 		predictedConfiguration = nil
 
 		guard !contentFrame.isNull else {

@@ -218,7 +218,7 @@ extension UIViewController {
 		}
 
 		switch modalPresentationStyle {
-		case .pageSheet, .formSheet:
+		case .automatic, .pageSheet, .formSheet:
 			return .all
 
 		case .blurOverFullScreen, .currentContext, .custom, .fullScreen, .none, .overCurrentContext, .overFullScreen, .popover:
