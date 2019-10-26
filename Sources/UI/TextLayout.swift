@@ -21,7 +21,8 @@ internal class TextLayout {
 		maximumSize: CGSize,
 		minimumScaleFactor: CGFloat,
 		renderingScale: CGFloat,
-		treatsLineFeedAsParagraphSeparator: Bool
+		treatsLineFeedAsParagraphSeparator: Bool,
+		verticalAlignment: TextAlignment.Vertical
 	) -> TextLayout {
 		precondition(maximumSize.isPositive, "maximumSize must be positive")
 		precondition((0 ... 1).contains(minimumScaleFactor), "minimumScaleFactor must be in range 0 ... 1")
@@ -64,7 +65,8 @@ internal class TextLayout {
 			minimumScaleFactor:                 minimumScaleFactor,
 			renderingScale:                     renderingScale,
 			text:                               text,
-			treatsLineFeedAsParagraphSeparator: treatsLineFeedAsParagraphSeparator
+			treatsLineFeedAsParagraphSeparator: treatsLineFeedAsParagraphSeparator,
+			verticalAlignment:                  verticalAlignment
 		))
 	}
 
@@ -74,8 +76,19 @@ internal class TextLayout {
 	}
 
 
-	func draw(in context: CGContext, defaultTextColor: UIColor, tintColor: UIColor) {
-		Renderer.instance.draw(layout: self, in: context, defaultTextColor: defaultTextColor, tintColor: tintColor)
+	func draw(
+		in frame: CGRect,
+		context: CGContext,
+		defaultTextColor: UIColor,
+		tintColor: UIColor
+	) {
+		Renderer.instance.draw(
+			layout: self,
+			in: frame,
+			context: context,
+			defaultTextColor: defaultTextColor,
+			tintColor: tintColor
+		)
 	}
 
 
@@ -266,6 +279,7 @@ internal class TextLayout {
 		var renderingScale: CGFloat
 		var text: NSAttributedString
 		var treatsLineFeedAsParagraphSeparator: Bool
+		var verticalAlignment: TextAlignment.Vertical
 
 
 		fileprivate init(
@@ -275,7 +289,8 @@ internal class TextLayout {
 			minimumScaleFactor: CGFloat,
 			renderingScale: CGFloat,
 			text: NSAttributedString,
-			treatsLineFeedAsParagraphSeparator: Bool
+			treatsLineFeedAsParagraphSeparator: Bool,
+			verticalAlignment: TextAlignment.Vertical
 		) {
 			self.lineBreakMode = lineBreakMode
 			self.maximumNumberOfLines = maximumNumberOfLines
@@ -284,11 +299,12 @@ internal class TextLayout {
 			self.renderingScale = renderingScale
 			self.text = text
 			self.treatsLineFeedAsParagraphSeparator = treatsLineFeedAsParagraphSeparator
+			self.verticalAlignment = verticalAlignment
 		}
 
 
 		var debugDescription: String {
-			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(String(describing: maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', treatsLineFeedAsParagraphSeparator: \(treatsLineFeedAsParagraphSeparator))"
+			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(String(describing: maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', treatsLineFeedAsParagraphSeparator: \(treatsLineFeedAsParagraphSeparator), verticalAlignment: \(verticalAlignment))"
 		}
 	}
 
@@ -565,10 +581,24 @@ internal class TextLayout {
 		}
 
 
-		func draw(layout: TextLayout, in context: CGContext, defaultTextColor: UIColor, tintColor: UIColor) {
+		func draw(
+			layout: TextLayout,
+			in frame: CGRect,
+			context: CGContext,
+			defaultTextColor: UIColor,
+			tintColor: UIColor
+		) {
 			let glyphRange = layout.result.glyphRange
 			guard glyphRange.length > 0, let layoutManager = layout.result.layoutManager else {
 				return
+			}
+
+			var origin = frame.origin - layout.result.frame.origin
+
+			switch layout.configuration.verticalAlignment {
+			case .top:    break
+			case .center: origin.top += (frame.height - layout.result.frame.height) / 2
+			case .bottom: origin.top += frame.height - layout.result.frame.height
 			}
 
 			UIGraphicsPushContext(context)
@@ -584,8 +614,8 @@ internal class TextLayout {
 			self.tintColor = tintColor
 
 			layoutManager.delegate = self
-			layoutManager.drawBackground(forGlyphRange: glyphRange, at: -layout.result.frame.origin)
-			layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: -layout.result.frame.origin)
+			layoutManager.drawBackground(forGlyphRange: glyphRange, at: origin)
+			layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: origin)
 			layoutManager.delegate = nil
 
 			if scaleFactor < 1 {

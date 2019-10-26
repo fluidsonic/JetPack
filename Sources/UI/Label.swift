@@ -6,7 +6,6 @@ open class Label: View {
 	private lazy var delegateProxy: DelegateProxy = DelegateProxy(label: self)
 
 	private let linkTapRecognizer = UITapGestureRecognizer()
-	private let textLayer = TextLayer()
 
 	open var linkTapped: ((URL) -> Void)?
 
@@ -14,10 +13,8 @@ open class Label: View {
 	public override init() {
 		super.init()
 
-		clipsToBounds = false
-
-		textLayer.contentsScale = gridScaleFactor
-		layer.addSublayer(textLayer)
+		isOpaque = false
+		layer.contentsScale = gridScaleFactor
 
 		setUpLinkTapRecognizer()
 	}
@@ -29,22 +26,21 @@ open class Label: View {
 
 
 	open var additionalLinkHitZone: UIEdgeInsets {
-		get { return textLayer.additionalLinkHitZone }
-		set { textLayer.additionalLinkHitZone = newValue }
+		get { return labelLayer.additionalLinkHitZone }
+		set { labelLayer.additionalLinkHitZone = newValue }
 	}
 
 
 	open var attributedText: NSAttributedString {
-		get { return textLayer.attributedText }
+		get { return labelLayer.attributedText }
 		set {
-			guard newValue != textLayer.attributedText else {
+			guard newValue != labelLayer.attributedText else {
 				return
 			}
 
-			textLayer.attributedText = newValue
+			labelLayer.attributedText = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
@@ -53,25 +49,24 @@ open class Label: View {
 		super.didMoveToWindow()
 
 		if window != nil {
-			textLayer.contentsScale = gridScaleFactor
+			layer.contentsScale = gridScaleFactor
 		}
 		else {
-			textLayer.removeAllAnimations()
+			layer.removeAllAnimations()
 		}
 	}
 
 
 	open var font: UIFont {
-		get { return textLayer.font }
+		get { return labelLayer.font }
 		set {
-			guard newValue != textLayer.font else {
+			guard newValue != labelLayer.font else {
 				return
 			}
 
-			textLayer.font = newValue
+			labelLayer.font = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
@@ -87,16 +82,8 @@ open class Label: View {
 
 
 	open var horizontalAlignment: TextAlignment.Horizontal {
-		get { return textLayer.horizontalAlignment }
-		set {
-			guard newValue != textLayer.horizontalAlignment else {
-				return
-			}
-
-			textLayer.horizontalAlignment = newValue
-
-			setNeedsLayout()
-		}
+		get { return labelLayer.horizontalAlignment }
+		set { labelLayer.horizontalAlignment = newValue }
 	}
 
 
@@ -107,208 +94,164 @@ open class Label: View {
 	}
 
 
-	open override func layoutSubviews() {
-		super.layoutSubviews()
+	private var labelLayer: LabelLayer {
+		return layer as! LabelLayer
+	}
 
-		let maximumTextLayerFrame = bounds.inset(by: padding)
-		guard maximumTextLayerFrame.size.isPositive else {
-			textLayer.isHidden = true
-			return
-		}
 
-		textLayer.isHidden = false
-
-		var textLayerFrame = CGRect()
-		textLayerFrame.size = textLayer.textSize(fitting: maximumTextLayerFrame.size)
-
-		switch horizontalAlignment {
-		case .left,
-		     .natural where effectiveUserInterfaceLayoutDirection == .leftToRight:
-			textLayerFrame.left = maximumTextLayerFrame.left
-
-		case .center:
-			textLayerFrame.horizontalCenter = maximumTextLayerFrame.horizontalCenter
-
-		case .right, .natural:
-			textLayerFrame.right = maximumTextLayerFrame.right
-
-		case .justified:
-			textLayerFrame.left = maximumTextLayerFrame.left
-			textLayerFrame.widthFromLeft = maximumTextLayerFrame.width
-
-		@unknown default:
-			textLayerFrame.left = maximumTextLayerFrame.left
-		}
-
-		textLayer.textSize = textLayerFrame.size
-
-		switch verticalAlignment {
-		case .top:    textLayerFrame.top = maximumTextLayerFrame.top
-		case .center: textLayerFrame.verticalCenter = maximumTextLayerFrame.verticalCenter
-		case .bottom: textLayerFrame.bottom = maximumTextLayerFrame.bottom
-		}
-
-		textLayer.frame = alignToGrid(textLayerFrame)
+	public final override class var layerClass: AnyObject.Type {
+		return LabelLayer.self
 	}
 
 
 	open var letterSpacing: TextLetterSpacing? {
-		get { return textLayer.letterSpacing }
+		get { return labelLayer.letterSpacing }
 		set {
-			guard newValue != textLayer.letterSpacing else {
+			guard newValue != labelLayer.letterSpacing else {
 				return
 			}
 
-			textLayer.letterSpacing = letterSpacing
+			labelLayer.letterSpacing = letterSpacing
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open var lineBreakMode: NSLineBreakMode {
-		get { return textLayer.lineBreakMode }
+		get { return labelLayer.lineBreakMode }
 		set {
-			guard newValue != textLayer.lineBreakMode else {
+			guard newValue != labelLayer.lineBreakMode else {
 				return
 			}
 
-			textLayer.lineBreakMode = newValue
+			labelLayer.lineBreakMode = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open var lineHeight: TextLineHeight {
-		get { return textLayer.lineHeight }
+		get { return labelLayer.lineHeight }
 		set {
-			guard newValue != textLayer.lineHeight else {
+			guard newValue != labelLayer.lineHeight else {
 				return
 			}
 
-			textLayer.lineHeight = newValue
+			labelLayer.lineHeight = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	public func link(at point: CGPoint) -> URL? {
-		return textLayer.link(at: layer.convert(point, to: textLayer))?.url
+		return labelLayer.link(at: layer.convert(point, to: labelLayer))?.url
 	}
 
 
 	open var maximumLineHeight: CGFloat? {
-		get { return textLayer.maximumLineHeight }
+		get { return labelLayer.maximumLineHeight }
 		set {
-			guard newValue != textLayer.maximumLineHeight else {
+			guard newValue != labelLayer.maximumLineHeight else {
 				return
 			}
 
-			textLayer.maximumLineHeight = newValue
+			labelLayer.maximumLineHeight = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open var maximumNumberOfLines: Int? {
-		get { return textLayer.maximumNumberOfLines }
+		get { return labelLayer.maximumNumberOfLines }
 		set {
-			guard newValue != textLayer.maximumNumberOfLines else {
+			guard newValue != labelLayer.maximumNumberOfLines else {
 				return
 			}
 
-			textLayer.maximumNumberOfLines = newValue
+			labelLayer.maximumNumberOfLines = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open override func measureOptimalSize(forAvailableSize availableSize: CGSize) -> CGSize {
-		let availableSize = availableSize.inset(by: padding)
 		guard availableSize.isPositive else {
 			return .zero
 		}
 
-		return textLayer.textSize(fitting: availableSize).inset(by: -padding)
+		return labelLayer.size(thatFits: availableSize)
 	}
 
 
 	open var minimumLineHeight: CGFloat? {
-		get { return textLayer.minimumLineHeight }
+		get { return labelLayer.minimumLineHeight }
 		set {
-			guard newValue != textLayer.minimumLineHeight else {
+			guard newValue != labelLayer.minimumLineHeight else {
 				return
 			}
 
-			textLayer.minimumLineHeight = newValue
+			labelLayer.minimumLineHeight = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open var minimumScaleFactor: CGFloat {
-		get { return textLayer.minimumScaleFactor }
+		get { return labelLayer.minimumScaleFactor }
 		set {
-			guard newValue != textLayer.minimumScaleFactor else {
+			guard newValue != labelLayer.minimumScaleFactor else {
 				return
 			}
 
-			textLayer.minimumScaleFactor = newValue
+			labelLayer.minimumScaleFactor = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open var numberOfLines: Int {
-		layoutIfNeeded()
-
-		return textLayer.numberOfLines
+		return labelLayer.numberOfLines
 	}
 
 
-	open var padding = UIEdgeInsets.zero {
-		didSet {
-			guard padding != oldValue else {
+	open var padding: UIEdgeInsets {
+		get { return labelLayer.padding }
+		set {
+			guard newValue != labelLayer.padding else {
 				return
 			}
 
+			labelLayer.padding = newValue
+
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open var paragraphSpacing: CGFloat {
-		get { return textLayer.paragraphSpacing }
+		get { return labelLayer.paragraphSpacing }
 		set {
-			guard newValue != textLayer.paragraphSpacing else {
+			guard newValue != labelLayer.paragraphSpacing else {
 				return
 			}
 
-			textLayer.paragraphSpacing = newValue
+			labelLayer.paragraphSpacing = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	open override func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
 		let isInsideLabel = super.pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
-		guard isInsideLabel || textLayer.contains(layer.convert(point, to: textLayer)) else {
+		guard isInsideLabel || labelLayer.contains(layer.convert(point, to: labelLayer)) else {
 			return false
 		}
 		guard userInteractionLimitedToLinks else {
@@ -320,9 +263,7 @@ open class Label: View {
 
 
 	public func rect(forLine line: Int, in referenceView: UIView) -> CGRect {
-		layoutIfNeeded()
-
-		return textLayer.rect(forLine: line, in: referenceView.layer)
+		return labelLayer.rect(forLine: line, in: referenceView.layer)
 	}
 
 
@@ -342,56 +283,50 @@ open class Label: View {
 
 
 	open var textColor: UIColor {
-		get { return textLayer.normalTextColor }
-		set { textLayer.normalTextColor = newValue }
+		get { return labelLayer.normalTextColor }
+		set { labelLayer.normalTextColor = newValue }
 	}
 
 
 	public var textColorDimsWithTint: Bool {
-		get { return textLayer.textColorDimsWithTint }
-		set { textLayer.textColorDimsWithTint = newValue }
+		get { return labelLayer.textColorDimsWithTint }
+		set { labelLayer.textColorDimsWithTint = newValue }
 	}
 
 
 	open var textTransform: TextTransform? {
-		get { return textLayer.textTransform }
+		get { return labelLayer.textTransform }
 		set {
-			guard newValue != textLayer.textTransform else {
+			guard newValue != labelLayer.textTransform else {
 				return
 			}
 
-			textLayer.textTransform = newValue
+			labelLayer.textTransform = newValue
 
 			invalidateIntrinsicContentSize()
-			setNeedsLayout()
 		}
 	}
 
 
 	public var treatsLineFeedAsParagraphSeparator: Bool {
-		get { return textLayer.treatsLineFeedAsParagraphSeparator }
-		set { textLayer.treatsLineFeedAsParagraphSeparator = newValue }
+		get { return labelLayer.treatsLineFeedAsParagraphSeparator }
+		set { labelLayer.treatsLineFeedAsParagraphSeparator = newValue }
 	}
 
 
 	open override func tintColorDidChange() {
 		super.tintColorDidChange()
 
-		textLayer.updateTintColor(tintColor, adjustmentMode: tintAdjustmentMode)
+		labelLayer.updateTintColor(tintColor, adjustmentMode: tintAdjustmentMode)
 	}
 
 
 	open var userInteractionLimitedToLinks = true
 
 
-	open var verticalAlignment = TextAlignment.Vertical.center {
-		didSet {
-			guard verticalAlignment != oldValue else {
-				return
-			}
-
-			setNeedsLayout()
-		}
+	open var verticalAlignment: TextAlignment.Vertical {
+		get { return labelLayer.verticalAlignment }
+		set { labelLayer.verticalAlignment = newValue }
 	}
 
 

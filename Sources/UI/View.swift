@@ -4,8 +4,6 @@ import UIKit
 @objc(JetPack_View)
 open class View: UIView {
 
-	private static let _dummyView = View()
-
 	private var normalBackgroundColor: UIColor?
 	private var normalBorderColor: UIColor?
 

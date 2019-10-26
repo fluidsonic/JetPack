@@ -431,7 +431,7 @@ extension UIViewController {
 	@nonobjc
 	fileprivate var shouldReportLifecycleProblems: Bool {
 		let typeName = NSStringFromClass(type(of: self))
-		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("SFSafari") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIInput") {
+		if typeName.hasPrefix("_") || typeName.hasPrefix("MFMail") || typeName.hasPrefix("MFMessage") || typeName.hasPrefix("PUUI") || typeName.hasPrefix("SFSafari") || typeName.hasPrefix("UICompatibility") || typeName.hasPrefix("UIEditing") || typeName.hasPrefix("UIInput") || typeName.hasPrefix("UIPrediction") || typeName.hasPrefix("UISystem") {
 			// broken implementations in public and private UIKit view controllers
 			return false
 		}

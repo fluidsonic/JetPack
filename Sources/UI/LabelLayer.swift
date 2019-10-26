@@ -1,7 +1,7 @@
 import UIKit
 
 
-class TextLayer: Layer {
+class LabelLayer: Layer {
 
 	private var configuration = Configuration()
 	private var normalTintAdjustmentMode = UIView.TintAdjustmentMode.normal
@@ -14,19 +14,18 @@ class TextLayer: Layer {
 
 		actualTextColor = normalTextColor.cgColor
 		actualTintColor = normalTintColor.cgColor
-		isOpaque = false
 	}
 
 
 	required init(layer: Any) {
-		let layer = layer as! TextLayer
+		let layer = layer as! LabelLayer
 		additionalLinkHitZone = layer.additionalLinkHitZone
 		configuration = layer.configuration
 		normalTextColor = layer.normalTextColor
 		normalTintAdjustmentMode = layer.normalTintAdjustmentMode
 		normalTintColor = layer.normalTintColor
+		padding = layer.padding
 		textLayout = layer.textLayout
-		textSize = layer.textSize
 
 		_links = layer._links
 
@@ -51,7 +50,7 @@ class TextLayer: Layer {
 		switch key {
 		case "actualTextColor", "actualTintColor":
 			if
-				let animation = UIView.defaultAction(for: self, key: "backgroundColor") as? NSObject,
+				let animation = super.action(forKey: "backgroundColor") as? NSObject,
 				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation),
 				let presentation = presentation()
 			{
@@ -90,7 +89,8 @@ class TextLayer: Layer {
 			maximumSize:                        maximumSize,
 			minimumScaleFactor:                 configuration.minimumScaleFactor,
 			renderingScale:                     contentsScale,
-			treatsLineFeedAsParagraphSeparator: configuration.treatsLineFeedAsParagraphSeparator
+			treatsLineFeedAsParagraphSeparator: configuration.treatsLineFeedAsParagraphSeparator,
+			verticalAlignment:                  verticalAlignment
 		)
 	}
 
@@ -106,7 +106,8 @@ class TextLayer: Layer {
 		super.draw(in: context)
 
 		ensureTextLayout()?.draw(
-			in:               context,
+			in:               bounds.inset(by: padding),
+			context:          context,
 			defaultTextColor: UIColor(cgColor: actualTextColor),
 			tintColor:        UIColor(cgColor: actualTintColor)
 		)
@@ -118,12 +119,14 @@ class TextLayer: Layer {
 			return textLayout
 		}
 
-		guard textSize.isPositive else {
+		let contentSize = bounds.size.inset(by: padding)
+		guard contentSize.isPositive else {
 			return nil
 		}
 
-		let textLayout = buildTextLayout(maximumSize: textSize)
+		let textLayout = buildTextLayout(maximumSize: contentSize)
 		self.textLayout = textLayout
+
 		return textLayout
 	}
 
@@ -237,7 +240,7 @@ class TextLayer: Layer {
 
 			return Link(range: link.range, frames: frames, url: link.url)
 		}
-		
+
 		_links = links
 		return links
 	}
@@ -312,6 +315,17 @@ class TextLayer: Layer {
 	}
 
 
+	var padding = UIEdgeInsets.zero {
+		didSet {
+			guard padding != oldValue else {
+				return
+			}
+
+			invalidateTextLayout()
+		}
+	}
+
+
 	var paragraphSpacing: CGFloat {
 		get { return configuration.paragraphSpacing }
 		set {
@@ -330,6 +344,18 @@ class TextLayer: Layer {
 	}
 
 
+	override func size(thatFits maximumSize: CGSize) -> CGSize {
+		precondition(maximumSize.isPositive, "maximumSize must be positive")
+
+		let maximumContentSize = maximumSize.inset(by: padding)
+		if !maximumContentSize.isPositive {
+			return .zero
+		}
+
+		return buildTextLayout(maximumSize: maximumContentSize).size.inset(by: -padding)
+	}
+
+
 	var text: String {
 		get { return attributedText.string }
 		set { attributedText = NSAttributedString(string: newValue) }
@@ -344,24 +370,6 @@ class TextLayer: Layer {
 
 			updateActualTextColor()
 		}
-	}
-
-
-	var textSize = CGSize.zero {
-		didSet {
-			guard textSize != oldValue else {
-				return
-			}
-
-			invalidateTextLayout()
-		}
-	}
-
-
-	func textSize(fitting maximumSize: CGSize) -> CGSize {
-		precondition(maximumSize.isPositive)
-
-		return buildTextLayout(maximumSize: maximumSize).size
 	}
 
 
@@ -420,6 +428,17 @@ class TextLayer: Layer {
 
 		updateActualTextColor()
 		updateActualTintColor()
+	}
+
+
+	var verticalAlignment = TextAlignment.Vertical.center {
+		didSet {
+			guard verticalAlignment != oldValue else {
+				return
+			}
+
+			invalidateTextLayout()
+		}
 	}
 
 
