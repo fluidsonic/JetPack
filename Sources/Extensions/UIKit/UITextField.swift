@@ -30,6 +30,11 @@ private class StaticInitialization: NSObject, StaticInitializable {
 	static func staticInitialize() {
 		// yep, private API necessary :(
 		// If the private method is removed/renamed the related feature will cease to work but we won't crash.
-		swizzleMethod(in: UITextField.self, from: obfuscatedSelector("scroll", "Text", "Field", "To", "Visible"), to: #selector(UITextField.swizzled_scrollIntoSight))
+		if #available(iOS 13, *) {
+			swizzleMethod(in: UITextField.self, from: obfuscatedSelector("scroll", "Text", "Field", "To", "Visible", "If", "Necessary"), to: #selector(UITextField.swizzled_scrollIntoSight))
+		}
+		else {
+			swizzleMethod(in: UITextField.self, from: obfuscatedSelector("scroll", "Text", "Field", "To", "Visible"), to: #selector(UITextField.swizzled_scrollIntoSight))
+		}
 	}
 }
