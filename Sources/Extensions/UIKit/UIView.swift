@@ -154,6 +154,12 @@ extension UIView {
 	}
 
 
+	@objc(JetPack_shouldAnimateProperty:)
+	open func shouldAnimateProperty(_ property: String) -> Bool {
+		return swizzled_shouldAnimatePropertyWithKey(property)
+	}
+
+
 	@nonobjc
 	public final func sizeThatFits() -> CGSize {
 		return sizeThatFitsSize(.max)
@@ -224,6 +230,23 @@ extension UIView {
 	}
 
 
+	@objc(JetPack_should_animate_property_with_key:)
+	fileprivate dynamic func swizzled_shouldAnimatePropertyWithKey(_ propertyKey: String) -> Bool {
+		return shouldAnimateProperty(propertyKey)
+	}
+
+
+	@objc(JetPack_update_safe_area_insets)
+	fileprivate dynamic func swizzled_updateSafeAreaInsets() {
+		guard wantsSafeAreaInsets else {
+			// optimization because iOS keeps re-layouting views during scrolling because of safeAreaInsets changes even if you don't care about them
+			return
+		}
+
+		swizzled_updateSafeAreaInsets()
+	}
+
+
 	@nonobjc
 	public var untransformedFrame: CGRect {
 		get {
@@ -240,17 +263,6 @@ extension UIView {
 			bounds = CGRect(origin: bounds.origin, size: newValue.size)
 			center = newValue.center + centerOffset
 		}
-	}
-
-
-	@objc(JetPack_update_safe_area_insets)
-	fileprivate dynamic func swizzled_updateSafeAreaInsets() {
-		guard wantsSafeAreaInsets else {
-			// optimization because iOS keeps re-layouting views during scrolling because of safeAreaInsets changes even if you don't care about them
-			return
-		}
-
-		swizzled_updateSafeAreaInsets()
 	}
 
 
@@ -392,5 +404,6 @@ private class StaticInitialization: NSObject, StaticInitializable {
 		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "invalidate", "Intrinsic", "Content", "Size", "Needing", "Layout:"), to: #selector(UIView.swizzled_invalidateIntrinsicContentSizeNeedingLayout(_:)))
 		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "remove", "All", "Animations:"), to: #selector(UIView.swizzled_removeAllAnimations(_:)))
 		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "update", "Safe", "Area", "Insets"), to: #selector(UIView.swizzled_updateSafeAreaInsets))
+		swizzleMethod(in: UIView.self, from: obfuscatedSelector("_", "should", "Animate", "Property", "With", "Key:"), to: #selector(UIView.swizzled_shouldAnimatePropertyWithKey(_:)))
 	}
 }

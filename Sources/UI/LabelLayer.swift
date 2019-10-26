@@ -46,29 +46,6 @@ class LabelLayer: Layer {
 	private dynamic var actualTintColor: CGColor
 
 
-	override func action(forKey key: String) -> CAAction? {
-		switch key {
-		case "actualTextColor", "actualTintColor":
-			if
-				let animation = super.action(forKey: "backgroundColor") as? NSObject,
-				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation),
-				let presentation = presentation()
-			{
-				basicAnimation.fromValue = presentation.value(forKey: key)
-				basicAnimation.isRemovedOnCompletion = true
-				basicAnimation.keyPath = key
-
-				return basicAnimation
-			}
-
-			fallthrough
-
-		default:
-			return nil
-		}
-	}
-
-
 	var additionalLinkHitZone = UIEdgeInsets(all: 8) // TODO don't use UIEdgeInsets because we outset
 
 

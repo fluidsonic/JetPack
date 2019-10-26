@@ -276,6 +276,21 @@ open class Label: View {
 	}
 
 
+	open override func shouldAnimateProperty(_ property: String) -> Bool {
+		if super.shouldAnimateProperty(property) {
+			return true
+		}
+
+		switch property {
+		case "actualTextColor", "actualTintColor":
+			return true
+
+		default:
+			return false
+		}
+	}
+
+
 	open var text: String {
 		get { return attributedText.string }
 		set { attributedText = NSAttributedString(string: newValue) }

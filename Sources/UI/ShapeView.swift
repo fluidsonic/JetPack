@@ -32,28 +32,6 @@ open class ShapeView: View {
 	}
 
 
-	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
-		switch event {
-		case "fillColor", "path", "strokeColor":
-			if
-				let animation = super.action(for: layer, forKey: "opacity") as? NSObject,
-				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation)
-			{
-				basicAnimation.fromValue = layer.value(forKey: event)
-				basicAnimation.isRemovedOnCompletion = true
-				basicAnimation.keyPath = event
-
-				return basicAnimation
-			}
-
-			fallthrough
-
-		default:
-			return super.action(for: layer, forKey: event)
-		}
-	}
-
-
 	open override func didMoveToWindow() {
 		super.didMoveToWindow()
 
@@ -144,6 +122,21 @@ open class ShapeView: View {
 
 
 	public private(set) final lazy var shapeLayer: CAShapeLayer = self.layer as! CAShapeLayer
+
+
+	open override func shouldAnimateProperty(_ property: String) -> Bool {
+		if super.shouldAnimateProperty(property) {
+			return true
+		}
+
+		switch property {
+		case "fillColor", "path", "strokeColor":
+			return true
+
+		default:
+			return false
+		}
+	}
 
 
 	open var strokeEnd: CGFloat {

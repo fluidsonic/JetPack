@@ -19,28 +19,6 @@ open class TextField: UITextField {
 	}
 
 
-	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
-		switch event {
-		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
-			if
-				let animation = super.action(for: layer, forKey: "opacity") as? NSObject,
-				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation)
-			{
-				basicAnimation.fromValue = layer.value(forKey: event)
-				basicAnimation.isRemovedOnCompletion = true
-				basicAnimation.keyPath = event
-
-				return basicAnimation
-			}
-
-			fallthrough
-
-		default:
-			return super.action(for: layer, forKey: event)
-		}
-	}
-
-
 	open var borderColor: UIColor? {
 		get { return layer.borderColor.map { UIColor(cgColor: $0) } }
 		set { layer.borderColor = newValue?.cgColor }
@@ -59,33 +37,7 @@ open class TextField: UITextField {
 	}
 
 
-	
-	public final override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
-	}
-
-
-	
-	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
-		let originalHitZone = bounds
-		let extendedHitZone = originalHitZone.inset(by: -additionalHitZone)
-
-		let hitZoneCornerRadius: CGFloat
-		if hitZoneFollowsCornerRadius && cornerRadius > 0 {
-			let halfOriginalHitZoneSize = (originalHitZone.width + originalHitZone.height) / 4  // middle between half height and half width
-			let halfExtendedHitZoneSize = (extendedHitZone.width + extendedHitZone.height) / 4  // middle between half extended height and half extended width
-			hitZoneCornerRadius = halfExtendedHitZoneSize * (cornerRadius / halfOriginalHitZoneSize)
-		}
-		else {
-			hitZoneCornerRadius = 0
-		}
-
-		return extendedHitZone.contains(point, cornerRadius: hitZoneCornerRadius)
-	}
-
-
 	// reference implementation
-	
 	open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		guard participatesInHitTesting else {
 			return nil
@@ -107,5 +59,43 @@ open class TextField: UITextField {
 		}
 
 		return hitView
+	}
+
+	
+	public final override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+		return pointInside(point, withEvent: event, additionalHitZone: additionalHitZone)
+	}
+
+
+	open func pointInside(_ point: CGPoint, withEvent event: UIEvent?, additionalHitZone: UIEdgeInsets) -> Bool {
+		let originalHitZone = bounds
+		let extendedHitZone = originalHitZone.inset(by: -additionalHitZone)
+
+		let hitZoneCornerRadius: CGFloat
+		if hitZoneFollowsCornerRadius && cornerRadius > 0 {
+			let halfOriginalHitZoneSize = (originalHitZone.width + originalHitZone.height) / 4  // middle between half height and half width
+			let halfExtendedHitZoneSize = (extendedHitZone.width + extendedHitZone.height) / 4  // middle between half extended height and half extended width
+			hitZoneCornerRadius = halfExtendedHitZoneSize * (cornerRadius / halfOriginalHitZoneSize)
+		}
+		else {
+			hitZoneCornerRadius = 0
+		}
+
+		return extendedHitZone.contains(point, cornerRadius: hitZoneCornerRadius)
+	}
+
+
+	open override func shouldAnimateProperty(_ property: String) -> Bool {
+		if super.shouldAnimateProperty(property) {
+			return true
+		}
+
+		switch property {
+		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
+			return true
+
+		default:
+			return false
+		}
 	}
 }

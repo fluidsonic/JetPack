@@ -36,28 +36,6 @@ open class View: UIView {
 	}
 
 
-	open override func action(for layer: CALayer, forKey event: String) -> CAAction? {
-		switch event {
-		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
-			if
-				let animation = super.action(for: layer, forKey: "opacity") as? NSObject,
-				let basicAnimation = (animation as? CABasicAnimation) ?? (animation.value(forKey: "pendingAnimation") as? CABasicAnimation)
-			{
-				basicAnimation.fromValue = layer.value(forKey: event)
-				basicAnimation.isRemovedOnCompletion = true
-				basicAnimation.keyPath = event
-
-				return basicAnimation
-			}
-
-			fallthrough
-
-		default:
-			return super.action(for: layer, forKey: event)
-		}
-	}
-
-
 	@available(*, deprecated, message: "use Animation()")
 	@nonobjc
 	open class func animate(duration: TimeInterval, changes: @escaping () -> Void) {
@@ -388,6 +366,21 @@ open class View: UIView {
 	open var shadowRadius: CGFloat {
 		get { return layer.shadowRadius }
 		set { layer.shadowRadius = newValue }
+	}
+
+
+	open override func shouldAnimateProperty(_ property: String) -> Bool {
+		if super.shouldAnimateProperty(property) {
+			return true
+		}
+
+		switch property {
+		case "borderColor", "cornerRadius", "shadowColor", "shadowOffset", "shadowOpacity", "shadowPath", "shadowRadius":
+			return true
+
+		default:
+			return false
+		}
 	}
 
 
