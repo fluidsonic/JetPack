@@ -66,8 +66,7 @@ class LabelLayer: Layer {
 			maximumSize:                        maximumSize,
 			minimumScaleFactor:                 configuration.minimumScaleFactor,
 			renderingScale:                     contentsScale,
-			treatsLineFeedAsParagraphSeparator: configuration.treatsLineFeedAsParagraphSeparator,
-			verticalAlignment:                  verticalAlignment
+			treatsLineFeedAsParagraphSeparator: configuration.treatsLineFeedAsParagraphSeparator
 		)
 	}
 
@@ -83,10 +82,11 @@ class LabelLayer: Layer {
 		super.draw(in: context)
 
 		ensureTextLayout()?.draw(
-			in:               bounds.inset(by: padding),
-			context:          context,
-			defaultTextColor: UIColor(cgColor: actualTextColor),
-			tintColor:        UIColor(cgColor: actualTintColor)
+			in:                textLayoutFrame,
+			context:           context,
+			defaultTextColor:  UIColor(cgColor: actualTextColor),
+			tintColor:         UIColor(cgColor: actualTintColor),
+			verticalAlignment: verticalAlignment
 		)
 	}
 
@@ -96,12 +96,12 @@ class LabelLayer: Layer {
 			return textLayout
 		}
 
-		let contentSize = bounds.size.inset(by: padding)
-		guard contentSize.isPositive else {
+		let maximumTextLayoutSize = self.maximumTextLayoutSize
+		guard maximumTextLayoutSize.isPositive else {
 			return nil
 		}
 
-		let textLayout = buildTextLayout(maximumSize: contentSize)
+		let textLayout = buildTextLayout(maximumSize: maximumTextLayoutSize)
 		self.textLayout = textLayout
 
 		return textLayout
@@ -209,10 +209,12 @@ class LabelLayer: Layer {
 			links.append(Link(range: range, frames: [], url: url))
 		}
 
+		let textLayoutOrigin = self.textLayoutFrame.origin
+
 		links = links.map { link in
 			var frames = [CGRect]()
 			textLayout.enumerateEnclosingRects(forCharacterRange: link.range) { enclosingRect in
-				frames.append(enclosingRect)
+				frames.append(enclosingRect.offsetBy(textLayoutOrigin))
 			}
 
 			return Link(range: link.range, frames: frames, url: link.url)
@@ -267,6 +269,11 @@ class LabelLayer: Layer {
 	}
 
 
+	private var maximumTextLayoutSize: CGSize {
+		return bounds.size.inset(by: padding)
+	}
+
+
 	override class func needsDisplay(forKey key: String) -> Bool {
 		switch key {
 		case "actualTextColor": return true
@@ -317,7 +324,10 @@ class LabelLayer: Layer {
 			return .null
 		}
 
-		return convert(textLayout.rect(forLine: line), to: referenceLayer)
+		return convert(
+			textLayout.rect(forLine: line).offsetBy(textLayoutFrame.origin),
+			to: referenceLayer
+		)
 	}
 
 
@@ -347,6 +357,17 @@ class LabelLayer: Layer {
 
 			updateActualTextColor()
 		}
+	}
+
+
+	private var textLayoutFrame: CGRect {
+		guard let textLayout = ensureTextLayout() else {
+			return .null
+		}
+
+		return CGRect(size: textLayout.size)
+			.offsetBy(dx: padding.left, dy: padding.top)
+			.offsetBy(dx: 0, dy: textLayout.verticalOffset(for: verticalAlignment, in: CGRect(size: maximumTextLayoutSize)))
 	}
 
 
@@ -414,7 +435,7 @@ class LabelLayer: Layer {
 				return
 			}
 
-			invalidateTextLayout()
+			setNeedsDisplay()
 		}
 	}
 

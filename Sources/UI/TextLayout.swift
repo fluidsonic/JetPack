@@ -21,8 +21,7 @@ internal class TextLayout {
 		maximumSize: CGSize,
 		minimumScaleFactor: CGFloat,
 		renderingScale: CGFloat,
-		treatsLineFeedAsParagraphSeparator: Bool,
-		verticalAlignment: TextAlignment.Vertical
+		treatsLineFeedAsParagraphSeparator: Bool
 	) -> TextLayout {
 		precondition(maximumSize.isPositive, "maximumSize must be positive")
 		precondition((0 ... 1).contains(minimumScaleFactor), "minimumScaleFactor must be in range 0 ... 1")
@@ -65,8 +64,7 @@ internal class TextLayout {
 			minimumScaleFactor:                 minimumScaleFactor,
 			renderingScale:                     renderingScale,
 			text:                               text,
-			treatsLineFeedAsParagraphSeparator: treatsLineFeedAsParagraphSeparator,
-			verticalAlignment:                  verticalAlignment
+			treatsLineFeedAsParagraphSeparator: treatsLineFeedAsParagraphSeparator
 		))
 	}
 
@@ -80,14 +78,16 @@ internal class TextLayout {
 		in frame: CGRect,
 		context: CGContext,
 		defaultTextColor: UIColor,
-		tintColor: UIColor
+		tintColor: UIColor,
+		verticalAlignment: TextAlignment.Vertical
 	) {
 		Renderer.instance.draw(
 			layout: self,
 			in: frame,
 			context: context,
 			defaultTextColor: defaultTextColor,
-			tintColor: tintColor
+			tintColor: tintColor,
+			verticalAlignment: verticalAlignment
 		)
 	}
 
@@ -202,6 +202,19 @@ internal class TextLayout {
 	}
 
 
+	func verticalOffset(for verticalAlignment: TextAlignment.Vertical, in frame: CGRect) -> CGFloat {
+		guard frame.size.isPositive else {
+			return 0
+		}
+
+		switch verticalAlignment {
+		case .top:    return 0
+		case .center: return (frame.height - result.frame.height) / 2
+		case .bottom: return frame.height - result.frame.height
+		}
+	}
+
+
 
 	// FIXME cache purging - we shouldn't grow the cache forever
 	private struct Cache {
@@ -279,7 +292,6 @@ internal class TextLayout {
 		var renderingScale: CGFloat
 		var text: NSAttributedString
 		var treatsLineFeedAsParagraphSeparator: Bool
-		var verticalAlignment: TextAlignment.Vertical
 
 
 		fileprivate init(
@@ -289,8 +301,7 @@ internal class TextLayout {
 			minimumScaleFactor: CGFloat,
 			renderingScale: CGFloat,
 			text: NSAttributedString,
-			treatsLineFeedAsParagraphSeparator: Bool,
-			verticalAlignment: TextAlignment.Vertical
+			treatsLineFeedAsParagraphSeparator: Bool
 		) {
 			self.lineBreakMode = lineBreakMode
 			self.maximumNumberOfLines = maximumNumberOfLines
@@ -299,12 +310,11 @@ internal class TextLayout {
 			self.renderingScale = renderingScale
 			self.text = text
 			self.treatsLineFeedAsParagraphSeparator = treatsLineFeedAsParagraphSeparator
-			self.verticalAlignment = verticalAlignment
 		}
 
 
 		var debugDescription: String {
-			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(String(describing: maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', treatsLineFeedAsParagraphSeparator: \(treatsLineFeedAsParagraphSeparator), verticalAlignment: \(verticalAlignment))"
+			return "TextLayout.Configuration(lineBreakMode: \(lineBreakMode), maximumNumberOfLines: \(String(describing: maximumNumberOfLines)), maximumSize: \(maximumSize), minimumScaleFactor: \(minimumScaleFactor), renderingScale: \(renderingScale), text: '\(text.string)', treatsLineFeedAsParagraphSeparator: \(treatsLineFeedAsParagraphSeparator))"
 		}
 	}
 
@@ -586,19 +596,12 @@ internal class TextLayout {
 			in frame: CGRect,
 			context: CGContext,
 			defaultTextColor: UIColor,
-			tintColor: UIColor
+			tintColor: UIColor,
+			verticalAlignment: TextAlignment.Vertical
 		) {
 			let glyphRange = layout.result.glyphRange
 			guard glyphRange.length > 0, let layoutManager = layout.result.layoutManager else {
 				return
-			}
-
-			var origin = frame.origin - layout.result.frame.origin
-
-			switch layout.configuration.verticalAlignment {
-			case .top:    break
-			case .center: origin.top += (frame.height - layout.result.frame.height) / 2
-			case .bottom: origin.top += frame.height - layout.result.frame.height
 			}
 
 			UIGraphicsPushContext(context)
@@ -612,6 +615,8 @@ internal class TextLayout {
 
 			self.defaultTextColor = defaultTextColor.tinted(with: tintColor)
 			self.tintColor = tintColor
+
+			let origin = frame.origin - layout.result.frame.origin
 
 			layoutManager.delegate = self
 			layoutManager.drawBackground(forGlyphRange: glyphRange, at: origin)

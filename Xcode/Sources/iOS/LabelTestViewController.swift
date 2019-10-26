@@ -23,12 +23,17 @@ class LabelTestViewController: ViewController {
 		text.append("Line number one one one one one one one one xxxxxxx\n")
 		text.append("Line number ")
 		text.appendString("two\u{2029}", font: f, paragraphStyle: style)
-		text.append("Line number three three three three three three\n")
-		text.append("Line number three\n")
-		text.append("Line number three\n")
-		text.append("Line number three\n")
-		text.append("Line number three\n")
-		text.append("Line number three\n")
+		text.append("Line number three three ")
+		text.append("three", attributes: [
+			.foregroundColor: UIColor.blue,
+			.link:            URL(string: "https://apple.com")!
+		])
+		text.append(" three three three\n")
+		text.append("Line number 4\n")
+		text.append("Line number 5\n")
+		text.append("Line number 6\n")
+		text.append("Line number 7\n")
+		text.append("Line number 8\n")
 
 		label.attributedText = text
 		label.backgroundColor = .green
@@ -38,31 +43,21 @@ class LabelTestViewController: ViewController {
 		label.lineHeight = .relativeToFontSize(multipler: 1)
 		label.maximumNumberOfLines = 5
 		label.minimumScaleFactor = 0.1
+		label.padding = .zero
 		label.textColor = .white
 		label.linkTapped = { url in
-			print("link tapped!")
+			print("link tapped: \(url)")
 		}
 
 		var frame = CGRect(left: 30, top: 120, width: 0, height: 0)
 		frame.size = label.sizeThatFitsWidth(300, allowsTruncation: true)
+		frame.size.height += 100
 		label.frame = frame
 
-		let style2 = NSMutableParagraphStyle()
-		style2.lineBreakMode = .byTruncatingTail
-		style2.maximumLineHeight = 20
-		style2.minimumLineHeight = 20
-		style2.lineHeightMultiple = 0
-
-		let style3 = NSMutableParagraphStyle()
-		style2.lineBreakMode = .byTruncatingTail
-		style2.maximumLineHeight = 20
-		style2.minimumLineHeight = 20
-		style2.lineHeightMultiple = 0
-		style2.paragraphSpacing = 60
-
-		let text2 = NSMutableAttributedString(attributedString: text)
-		text2.addAttributes([ .paragraphStyle: style2 ], range: NSRange(forString: text2.string))
-		text2.addAttributes([ .paragraphStyle: style3 ], range: NSRange(location: 64, length: 1))
+		let labelOverlay = View()
+		labelOverlay.backgroundColor = UIColor(white: 0, alpha: 0.2)
+		labelOverlay.frame = label.rect(forLine: 2, in: label)
+		label.addSubview(labelOverlay)
 
 		let label2 = UILabel()
 		label2.adjustsFontSizeToFitWidth = false
@@ -73,10 +68,11 @@ class LabelTestViewController: ViewController {
 		label2.numberOfLines = 5
 		label2.textAlignment = .left
 		label2.textColor = .white
-		label2.attributedText = text2
+		label2.attributedText = text
 
 		var frame2 = CGRect(left: 30, top: 400, width: 0, height: 0)
 		frame2.size = label2.sizeThatFitsWidth(300, allowsTruncation: true)
+		frame2.size.height += 100
 		label2.frame = frame2
 
 		view.addSubview(label)
